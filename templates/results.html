@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Receta Óptima
+{% endblock %}
+
+{% block main %}
+<div class="optimizer">
+
+  <!-- MATRIX -->
+  <fieldset class="card">
+    <legend><strong>Receta Óptima</strong></legend>
+
+      <div class="ingredients-grid result-grid">
+        {% for i in range(alpha_matrix|length * alpha_matrix[0]|length) %}
+          {% set val = alpha_matrix[i // 4][i % 4] %}
+              <div class="ingredient-card {{ 'zero' if val == 0 else '' }}">
+                <img
+                  class="ingredient-icon"
+                  src="{{ url_for('static', filename=ingredient_icons[i]) }}"
+                  alt=""
+                >
+                <div class="value-overlay">{{ val }}</div>
+              </div>
+        {% endfor %}
+      </div>
+  </fieldset>
+
+  <fieldset class="card">
+    <div class="result-score">
+      <legend><strong>Score</strong></legend>
+      <span class="result-score-value">
+        {{ "%.2f"|format(score) }}
+      </span>
+    </div>
+  </fieldset>
+</div>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block title %}Receta{% endblock %}
+
+{% block main %}
+<form id="optimizerForm" class="optimizer" method="post" action="/optimize">
+  <!-- Diplomas + weights -->
+  <fieldset class="card">
+    <legend><strong>Diplomas &amp; Efectos Deseados</strong></legend>
+
+    <div class="diploma-row">
+    <div class="diploma-input">
+        <input
+        type="number"
+        id="n_diploma"
+        name="n_diploma"
+        min="1"
+        max="21"
+        step="1"
+        value="5"
+        required
+        class="n-diploma"
+        />
+        <span class="hint">Max 21</span>
+    </div>
+    </div>
+
+    <div id="weightsContainer" class="weights-grid"></div>
+  </fieldset>
+
+  <!-- Premium ingredients -->
+  <fieldset class="card">
+    <legend><strong>Evitar Ingredientes Premium</strong></legend>
+
+    <div class="ingredients-grid">
+      <label><input type="checkbox" name="premium_ingredients[]" value="Espora Ignea"> Espora Ignea</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="Escarabanuez"> Escarabanuez</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="Cascaron de Mana"> Cascaron de Mana</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="Iris Volador"> Iris Volador</label>
+
+      <label><input type="checkbox" name="premium_ingredients[]" value="Huevo de Medusa"> Huevo de Medusa</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="Lima de Oruga"> Lima de Oruga</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="Flor de hierba mora"> Flor de hierba mora</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="Lenguas burlonas"> Lenguas burlonas</label>
+
+      <label><input type="checkbox" name="premium_ingredients[]" value="Brote ocular"> Brote ocular</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="hoja de agricabello"> hoja de agricabello</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="capullo de nube de algodon"> capullo de nube de algodon</label>
+      <label><input type="checkbox" name="premium_ingredients[]" value="trufa orejera"> trufa orejera</label>
+    </div>
+  </fieldset>
+
+  <!-- Bounds -->
+  <fieldset class="card">
+    <legend><strong>Limitar Búsqueda</strong></legend>
+
+    <div class="bounds-row">
+      <div class="bound-item">
+        <label for="alpha_UB"><strong>max # ingredientes</strong></label>
+        <input type="number" id="alpha_UB" name="alpha_UB" min="1" max="25" value="25" />
+      </div>
+
+      <div class="bound-item">
+        <label for="prob_UB"><strong>max prob de efecto</strong></label>
+        <input type="number" id="prob_UB" name="prob_UB" min="1" max="100" value="100" />
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="submit-row">
+    <button type="submit" class="btn-submit">Buscar Receta</button>
+  </div>
+</form>
+
+
+<script>
+  const nDiplomaEl = document.getElementById("n_diploma");
+  const weightsContainer = document.getElementById("weightsContainer");
+
+  const EFFECT_NAMES = [
+    "Monedas",
+    "Provisiones",
+    "Cuartel Fuerza",
+    "Ordinarios Básicos",
+    "Ordinarios Refinados",
+    "Ordinarios Preciosos",
+    "Entrenamiento Fuerza",
+    "Asentamiento",
+    "Orcos",
+    "Mana",
+    "Mercenarios Fuerza",
+    "Semillas",
+    "Sensitivos Básicos",
+    "Sensitivos Refinados",
+    "Sensitivos Preciosos",
+    "Entrenamiento Salud",
+    "Mercenarios Salud",
+    "Unurium",
+    "Ascendidos Básicos",
+    "Ascendidos Refinados",
+    "Ascendidos Preciosos",
+  ];
+
+  const format2 = (x) => Number(x).toFixed(2);
+
+  function makeWeightSlider(i) {
+    const card = document.createElement("div");
+    card.className = "weight-card";
+
+    const title = document.createElement("div");
+    title.className = "weight-title";
+
+    const label = document.createElement("span");
+    label.className = "weight-label";
+    label.textContent = EFFECT_NAMES[i] ?? `Effect ${i + 1}`;
+
+    const valueText = document.createElement("span");
+    valueText.className = "weight-value";
+    valueText.textContent = "0.00";
+
+    title.append(label, valueText);
+
+    const slider = document.createElement("input");
+    slider.type = "range";
+    slider.name = "effect_weights[]";
+    slider.min = "0";
+    slider.max = "1";
+    slider.step = "0.01";
+    slider.value = "0.00";
+    slider.style.width = "100%";
+    slider.style.marginTop = "6px";
+
+    slider.addEventListener("input", () => {
+      valueText.textContent = format2(slider.value);
+    });
+
+    card.append(title, slider);
+    return card;
+  }
+
+  function rebuildWeights() {
+    const n = Number(nDiplomaEl.value);
+    weightsContainer.innerHTML = "";
+    if (!Number.isInteger(n) || n < 1 || n > 21) return;
+
+    for (let i = 0; i < n; i++) {
+      weightsContainer.appendChild(makeWeightSlider(i));
+    }
+  }
+
+  rebuildWeights();
+  nDiplomaEl.addEventListener("change", rebuildWeights);
+</script>
+{% endblock %}

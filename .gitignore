@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Flask
+flask_session/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Env / build
+.env
+venv/
+.envrc
+
+# OS
+.DS_Store
