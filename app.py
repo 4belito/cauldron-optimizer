@@ -150,14 +150,14 @@ def optimize():
 
     # bounds
     try:
-        alpha_ub_scalar = int(request.form.get("alpha_UB", "25"))
-        prob_ub_scalar = int(request.form.get("prob_UB", "100"))
+        alpha_ub = int(request.form.get("alpha_UB", "25"))
+        prob_ub = int(request.form.get("prob_UB", "100"))
     except ValueError:
         return error("Los limites de la busqueda deben ser enumeros enteros")
 
-    if not (1 <= alpha_ub_scalar <= 25):
+    if not (1 <= alpha_ub <= 25):
         return error("El limmite de los ingredientes debe estar entre 1 y 25")
-    if not (1 <= prob_ub_scalar <= 100):
+    if not (1 <= prob_ub <= 100):
         return error(
             "El limmite de la probabliidad de efecto deseado debe estar entre 1 y 100", 400
         )
@@ -186,16 +186,12 @@ def optimize():
             return error(f"Ingrediente premium desconocido: {name}")
         premium_ingr.append(name_to_idx[name])
 
-    # ---- 3) Build optimizer arrays ----  # should be 12
-    alpha_UB = np.full(N_INGRIDIENTS, alpha_ub_scalar, dtype=int)
-    prob_UB = np.full(n_dipl, prob_ub_scalar, dtype=int)
-
     # ---- 4) Run optimizer ----
     opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
-        alpha_UB=alpha_UB,
-        prob_UB=prob_UB,
+        alpha_UB=alpha_ub,
+        prob_UB=prob_ub,
     )
 
     alpha_best, val_best = opt.multistart(n_starts=100)
