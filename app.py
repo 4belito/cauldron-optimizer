@@ -2,18 +2,16 @@ import numpy as np
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from caldero_optimizer import CalderoOptimizer
+from cauldron_optimizer import CauldronOptimizer
 from flask_session import Session
-from helpers import error, login_required, lookup, usd
+from helpers import error, login_required
 from sql import SQL
 
-MAX_NDIPLOMAS = 21
+MAX_NDIPLOMAS = CauldronOptimizer.max_ndiplomas
+N_INGRIDIENTS = CauldronOptimizer.n_ingredients
 
 # Configure application
 app = Flask(__name__)
-
-# Custom filter
-app.jinja_env.filters["usd"] = usd
 
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
@@ -21,7 +19,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("finance.db")
+db = SQL("users.db")
 
 
 @app.after_request
@@ -36,26 +34,8 @@ def after_request(response):
 @app.route("/")
 @login_required
 def index():
-    """Show portfolio of stocks"""
-    symbols = db.execute(
-        "SELECT symbol, SUM(shares) AS total_shares FROM history WHERE user_id = ? GROUP BY symbol;",
-        session["user_id"],
-    )
-    grand_total = 0
-    for symbol in symbols:
-        quote = lookup(symbol["symbol"])
-        symbol["price"] = int(quote["price"])
-        symbol["total"] = symbol["price"] * symbol["total_shares"]
-        grand_total += symbol["total"]
-
-    cash = db.execute("SELECT cash FROM users WHERE id = ?", session["user_id"])[0]["cash"]
-    grand_total += cash
-    return render_template(
-        "index.html",
-        symbols=symbols,
-        cash=cash,
-        grand_total=grand_total,
-    )
+    """Show recipe input form"""
+    return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -69,18 +49,18 @@ def login():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return error("must provide username", 403)
+            return error("must provide username")
 
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return error("must provide password", 403)
+            return error("must provide password")
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return error("invalid username and/or password", 403)
+            return error("invalid username and/or password")
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["id"]
@@ -161,7 +141,7 @@ def optimize():
         return error("Los pesos de los efectos deben ser numeros")
 
     if np.any(effect_weights < 0) or np.any(effect_weights > 1):
-        return error("Los pesos de los efectos deben esta en [0, 1]")
+        return error("Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)")
 
     if np.sum(effect_weights) == 0:
         return error("Al menos debes querer algun efecto")
@@ -206,13 +186,12 @@ def optimize():
             return error(f"Ingrediente premium desconocido: {name}")
         premium_ingr.append(name_to_idx[name])
 
-    # ---- 3) Build optimizer arrays ----
-    n_ingr = CalderoOptimizer.n_ingr  # should be 12
-    alpha_UB = np.full(n_ingr, alpha_ub_scalar, dtype=int)
+    # ---- 3) Build optimizer arrays ----  # should be 12
+    alpha_UB = np.full(N_INGRIDIENTS, alpha_ub_scalar, dtype=int)
     prob_UB = np.full(n_dipl, prob_ub_scalar, dtype=int)
 
     # ---- 4) Run optimizer ----
-    opt = CalderoOptimizer(
+    opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
         alpha_UB=alpha_UB,

@@ -17,7 +17,7 @@ B = np.loadtxt(BASE_DIR / "B_values.csv", delimiter=",", skiprows=1)
 V = np.loadtxt(BASE_DIR / "V_values.csv", delimiter=",", skiprows=1)
 
 
-class CalderoOptimizer:
+class CauldronOptimizer:
     """
     B: (n_dipl, n_ingr) matrix.
     V: (n_dipl, n_ingr) matrix.
@@ -31,10 +31,10 @@ class CalderoOptimizer:
     max_sum: constraint sum(alpha) <= max_sum.
     """
 
-    max_sum = 25
+    sum_ingredients = 25
     B_full: np.ndarray = np.asarray(B, dtype=float)
     V_full: np.ndarray = np.asarray(V, dtype=float)
-    n_max, n_ingr = B_full.shape
+    max_ndiplomas, n_ingredients = B_full.shape
 
     def __init__(
         self,
@@ -46,7 +46,7 @@ class CalderoOptimizer:
 
         effect_weights = np.asarray(effect_weights, dtype=float)
         self.n_dipl = len(effect_weights)
-        assert self.n_dipl <= self.n_max, "n_dipl  > number of rows in B/V"
+        assert self.n_dipl <= self.max_ndiplomas, "n_dipl  > number of rows in B/V"
 
         # truncate matrices to the diplomas we care about
         self.B = self.B_full[: self.n_dipl]
@@ -60,12 +60,14 @@ class CalderoOptimizer:
 
         # alpha upper bounds
         if alpha_UB is None:
-            self.alpha_UB = np.full(self.n_ingr, self.max_sum, dtype=int)
+            self.alpha_UB = np.full(
+                shape=self.n_ingredients, fill_value=self.sum_ingredients, dtype=int
+            )
         else:
             a_ub = np.asarray(alpha_UB, dtype=int)
             if a_ub.ndim == 0:
-                a_ub = np.full(self.n_ingr, int(a_ub), dtype=int)
-            assert len(a_ub) == self.n_ingr
+                a_ub = np.full(self.n_ingredients, int(a_ub), dtype=int)
+            assert len(a_ub) == self.n_ingredients
             self.alpha_UB = a_ub
 
         # prob upper bounds
@@ -115,7 +117,7 @@ class CalderoOptimizer:
             return -1e12
         if (alpha > self.alpha_UB + 1e-9).any():
             return -1e12
-        if alpha.sum() > self.max_sum:
+        if alpha.sum() > self.sum_ingredients:
             return -1e12
 
         probs = self.effect_probabilities(alpha)
@@ -136,7 +138,7 @@ class CalderoOptimizer:
           sum(alpha) <= max_sum.
           alpha[j] = 0 for j in fixed_zero.
         """
-        n_ingr = self.n_ingr
+        n_ingr = self.n_ingredients
 
         # initial alpha
         if start_alpha is None:
@@ -148,7 +150,7 @@ class CalderoOptimizer:
         alpha = np.clip(alpha, 0, self.alpha_UB)
 
         # trim if above sum limit
-        while alpha.sum() > self.max_sum:
+        while alpha.sum() > self.sum_ingredients:
             candidates = [j for j in range(n_ingr) if j not in self.fixed_zero and alpha[j] > 0]
             if not candidates:
                 break
@@ -165,7 +167,7 @@ class CalderoOptimizer:
             total = alpha.sum()
 
             # 1) +1 moves
-            if total < self.max_sum:
+            if total < self.sum_ingredients:
                 for j in range(n_ingr):
                     if j in self.fixed_zero:
                         continue
@@ -212,7 +214,7 @@ class CalderoOptimizer:
         """Run multi-start greedy optimization to find the best recipe."""
         best_alpha = None
         best_val = -1e18
-        n_ingr = self.n_ingr
+        n_ingr = self.n_ingredients
 
         for _ in range(n_starts):
             alpha0 = np.zeros(n_ingr, dtype=int)
@@ -220,7 +222,7 @@ class CalderoOptimizer:
                 j for j in range(n_ingr) if j not in self.fixed_zero and self.alpha_UB[j] > 0
             ]
 
-            remaining = np.random.randint(1, self.max_sum + 1)
+            remaining = np.random.randint(1, self.sum_ingredients + 1)
             while remaining > 0 and free_idx:
                 j = np.random.choice(free_idx)
                 max_add = min(remaining, self.alpha_UB[j] - alpha0[j])
