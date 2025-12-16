@@ -152,15 +152,16 @@ def optimize():
     try:
         alpha_ub = int(request.form.get("alpha_UB", "25"))
         prob_ub = int(request.form.get("prob_UB", "100"))
+        n_starts = int(request.form.get("n_starts", "20"))
     except ValueError:
         return error("Los limites de la busqueda deben ser enumeros enteros")
 
     if not (1 <= alpha_ub <= 25):
         return error("El limmite de los ingredientes debe estar entre 1 y 25")
     if not (1 <= prob_ub <= 100):
-        return error(
-            "El limmite de la probabliidad de efecto deseado debe estar entre 1 y 100", 400
-        )
+        return error("El limmite de la probabliidad de efecto deseado debe estar entre 1 y 100")
+    if not (1 <= n_starts <= 100):
+        return error("La profundidad de busquedad debe ser entre 1 y 100")
 
     # ---- 2) Convert premium names -> indices ----
     INGREDIENT_NAMES = [
@@ -194,7 +195,7 @@ def optimize():
         prob_UB=prob_ub,
     )
 
-    alpha_best, val_best = opt.multistart(n_starts=100)
+    alpha_best, val_best = opt.multistart(n_starts)
 
     # alpha_best is length 12 -> reshape 3x4
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()

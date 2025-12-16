@@ -56,13 +56,18 @@
 
     <div class="bounds-row">
       <div class="bound-item">
-        <label for="alpha_UB"><strong>max # ingredientes</strong></label>
+        <label for="alpha_UB"><strong>máx por ingrediente</strong></label>
         <input type="number" id="alpha_UB" name="alpha_UB" min="1" max="25" value="25" />
       </div>
 
       <div class="bound-item">
-        <label for="prob_UB"><strong>max prob de efecto</strong></label>
+        <label for="prob_UB"><strong>max prob por efecto</strong></label>
         <input type="number" id="prob_UB" name="prob_UB" min="1" max="100" value="100" />
+      </div>
+
+      <div class="bound-item">
+        <label for="n_starts"><strong>profundidaad de busqueda</strong></label>
+        <input type="number" id="n_starts" name="n_starts" min="1" max="100" value="30" />
       </div>
     </div>
   </fieldset>
