@@ -98,6 +98,8 @@ nav .navbar-brand .elvenar-title {
 
 .weight-value {
   font-family: monospace;
+  width: 2.5em;
+  text-align: right;
   font-size: 0.85em;
   color: #555;
 }

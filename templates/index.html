@@ -53,23 +53,7 @@
   <!-- Bounds -->
   <fieldset class="card">
     <legend><strong>Limitar Búsqueda</strong></legend>
-
-    <div class="bounds-row">
-      <div class="bound-item">
-        <label for="alpha_UB"><strong>máx por ingrediente</strong></label>
-        <input type="number" id="alpha_UB" name="alpha_UB" min="1" max="25" value="25" />
-      </div>
-
-      <div class="bound-item">
-        <label for="prob_UB"><strong>max prob por efecto</strong></label>
-        <input type="number" id="prob_UB" name="prob_UB" min="1" max="100" value="100" />
-      </div>
-
-      <div class="bound-item">
-        <label for="n_starts"><strong>profundidaad de busqueda</strong></label>
-        <input type="number" id="n_starts" name="n_starts" min="1" max="100" value="30" />
-      </div>
-    </div>
+    <div id="boundsContainer" class="bounds-row"></div>
   </fieldset>
 
   <div class="submit-row">
@@ -81,7 +65,8 @@
 <script>
   const nDiplomaEl = document.getElementById("n_diploma");
   const weightsContainer = document.getElementById("weightsContainer");
-
+  const boundsContainer = document.getElementById("boundsContainer");
+  
   const EFFECT_NAMES = [
     "Monedas",
     "Provisiones",
@@ -108,40 +93,48 @@
 
   const format2 = (x) => Number(x).toFixed(2);
 
-  function makeWeightSlider(i) {
-    const card = document.createElement("div");
-    card.className = "weight-card";
+  function makeRangeCard({
+  labelText,
+  name,
+  min,
+  max,
+  step,
+  value,
+  format = (x) => x,
+}) {
+  const card = document.createElement("div");
+  card.className = "weight-card";
 
-    const title = document.createElement("div");
-    title.className = "weight-title";
+  const title = document.createElement("div");
+  title.className = "weight-title";
 
-    const label = document.createElement("span");
-    label.className = "weight-label";
-    label.textContent = EFFECT_NAMES[i] ?? `Effect ${i + 1}`;
+  const label = document.createElement("span");
+  label.className = "weight-label";
+  label.textContent = labelText;
 
-    const valueText = document.createElement("span");
-    valueText.className = "weight-value";
-    valueText.textContent = "0.00";
+  const valueText = document.createElement("span");
+  valueText.className = "weight-value";
+  valueText.textContent = format(value);
 
-    title.append(label, valueText);
+  title.append(label, valueText);
 
-    const slider = document.createElement("input");
-    slider.type = "range";
-    slider.name = "effect_weights[]";
-    slider.min = "0";
-    slider.max = "1";
-    slider.step = "0.01";
-    slider.value = "0.00";
-    slider.style.width = "100%";
-    slider.style.marginTop = "6px";
+  const slider = document.createElement("input");
+  slider.type = "range";
+  slider.name = name;
+  slider.min = min;
+  slider.max = max;
+  slider.step = step;
+  slider.value = value;
+  slider.style.width = "100%";
+  slider.style.marginTop = "6px";
 
-    slider.addEventListener("input", () => {
-      valueText.textContent = format2(slider.value);
-    });
+  slider.addEventListener("input", () => {
+    valueText.textContent = format(slider.value);
+  });
 
-    card.append(title, slider);
-    return card;
-  }
+  card.append(title, slider);
+  return card;
+}
 
   function rebuildWeights() {
     const n = Number(nDiplomaEl.value);
@@ -149,10 +142,49 @@
     if (!Number.isInteger(n) || n < 1 || n > 21) return;
 
     for (let i = 0; i < n; i++) {
-      weightsContainer.appendChild(makeWeightSlider(i));
+      weightsContainer.appendChild(
+        makeRangeCard({
+          labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
+          name: "effect_weights[]",
+          min: 0,
+          max: 1,
+          step: 0.01,
+          value: 0,
+          format: (x) => Number(x).toFixed(2),
+        })
+      );
     }
   }
 
+  boundsContainer.append(
+    makeRangeCard({
+      labelText: "máx cantidad por ingrediente",
+      name: "alpha_UB",
+      min: 1,
+      max: 25,
+      step: 1,
+      value: 25,
+      format: (x) => x,
+    }),
+    makeRangeCard({
+      labelText: "máx probabilidad por efecto",
+      name: "prob_UB",
+      min: 1,
+      max: 100,
+      step: 1,
+      value: 100,
+      format: (x) => x,
+    }),
+    makeRangeCard({
+      labelText: "profundidad de búsqueda",
+      name: "n_starts",   // 🔥 better name than n_starts
+      min: 1,
+      max: 100,
+      step: 1,
+      value: 50,
+      format: (x) => x,
+    })
+  );
   rebuildWeights();
   nDiplomaEl.addEventListener("change", rebuildWeights);
 </script>
