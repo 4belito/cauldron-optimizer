@@ -1,5 +1,6 @@
 Flask
 Flask-Session
-requests
-numpy
 gunicorn
+numpy
+requests
+Werkzeug
