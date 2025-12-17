@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 from flask import Flask, redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -19,7 +21,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("users.db")
+db = SQL("cauldron.db")
 
 
 @app.after_request
@@ -35,7 +37,22 @@ def after_request(response):
 @login_required
 def index():
     """Show recipe input form"""
-    return render_template("index.html")
+    user_id = session["user_id"]
+
+    settings = db.execute("SELECT * FROM user_settings WHERE user_id = ?", user_id)[0]
+    effect_weights = json.loads(settings["effect_weights"])
+    n_diplomas = len(effect_weights)
+    max_ingredients = int(settings["max_ingredients"])
+    max_effect_prob = int(settings["max_effects"])
+    search_depth = int(settings["search_depth"])
+    return render_template(
+        "index.html",
+        effect_weights=effect_weights,
+        n_diplomas=n_diplomas,
+        max_ingredients=max_ingredients,
+        max_effect_prob=max_effect_prob,
+        search_depth=search_depth,
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -106,14 +123,14 @@ def register():
             return error("passwords do not match")
         # Check if username already exists
         try:
-            db.execute(
+            user_id = db.execute(
                 "INSERT INTO users (username, hash) VALUES (?, ?)",
                 username,
                 generate_password_hash(password),
             )
         except ValueError:
             return error("username already exists")
-
+        db.execute("INSERT INTO user_settings (user_id) VALUES (?)", user_id)
         return redirect("/login")
     return render_template("register.html")
 
@@ -162,6 +179,25 @@ def optimize():
         return error("El limmite de la probabliidad de efecto deseado debe estar entre 1 y 100")
     if not (1 <= n_starts <= 100):
         return error("La profundidad de busquedad debe ser entre 1 y 100")
+    user_id = session["user_id"]
+
+    query = """
+    UPDATE user_settings
+    SET effect_weights   = ?,
+        max_ingredients  = ?,
+        max_effects      = ?,
+        search_depth     = ?,
+    WHERE user_id = ?
+    """.strip()
+
+    db.execute(
+        query,
+        json.dumps(effect_weights.tolist()),
+        int(alpha_ub),
+        int(prob_ub),
+        int(n_starts),
+        int(user_id),
+    )
 
     # ---- 2) Convert premium names -> indices ----
     INGREDIENT_NAMES = [

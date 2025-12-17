@@ -9,20 +9,20 @@
     <legend><strong>Diplomas &amp; Efectos Deseados</strong></legend>
 
     <div class="diploma-row">
-    <div class="diploma-input">
+      <div class="diploma-input">
         <input
-        type="number"
-        id="n_diploma"
-        name="n_diploma"
-        min="1"
-        max="21"
-        step="1"
-        value="5"
-        required
-        class="n-diploma"
+          type="number"
+          id="n_diploma"
+          name="n_diploma"
+          min="1"
+          max="21"
+          step="1"
+          value="{{ n_diplomas }}"
+          required
+          class="n-diploma"
         />
-        <span class="hint">Max 21</span>
-    </div>
+        <span class="hint">max 21</span>
+      </div>
     </div>
 
     <div id="weightsContainer" class="weights-grid"></div>
@@ -61,80 +61,60 @@
   </div>
 </form>
 
-
 <script>
+  // ----- Defaults coming from Flask -----
+  const DEFAULT_N_DIPLOMAS    = {{ n_diplomas | tojson }};
+  const DEFAULT_WEIGHTS       = {{ effect_weights | tojson }};  // array length = n_diplomas
+  const DEFAULT_MAX_INGR      = {{ max_ingredients | tojson }};
+  const DEFAULT_MAX_PROB      = {{ max_effect_prob | tojson }};
+  const DEFAULT_SEARCH_DEPTH  = {{ search_depth | tojson }};
+
   const nDiplomaEl = document.getElementById("n_diploma");
   const weightsContainer = document.getElementById("weightsContainer");
   const boundsContainer = document.getElementById("boundsContainer");
-  
+
   const EFFECT_NAMES = [
-    "Monedas",
-    "Provisiones",
-    "Cuartel Fuerza",
-    "Ordinarios Básicos",
-    "Ordinarios Refinados",
-    "Ordinarios Preciosos",
-    "Entrenamiento Fuerza",
-    "Asentamiento",
-    "Orcos",
-    "Mana",
-    "Mercenarios Fuerza",
-    "Semillas",
-    "Sensitivos Básicos",
-    "Sensitivos Refinados",
-    "Sensitivos Preciosos",
-    "Entrenamiento Salud",
-    "Mercenarios Salud",
-    "Unurium",
-    "Ascendidos Básicos",
-    "Ascendidos Refinados",
-    "Ascendidos Preciosos",
+    "Monedas","Provisiones","Cuartel Fuerza","Ordinarios Básicos","Ordinarios Refinados",
+    "Ordinarios Preciosos","Entrenamiento Fuerza","Asentamiento","Orcos","Mana",
+    "Mercenarios Fuerza","Semillas","Sensitivos Básicos","Sensitivos Refinados",
+    "Sensitivos Preciosos","Entrenamiento Salud","Mercenarios Salud","Unurium",
+    "Ascendidos Básicos","Ascendidos Refinados","Ascendidos Preciosos",
   ];
 
-  const format2 = (x) => Number(x).toFixed(2);
+  function makeRangeCard({ labelText, name, min, max, step, value, format = (x) => x }) {
+    const card = document.createElement("div");
+    card.className = "weight-card";
 
-  function makeRangeCard({
-  labelText,
-  name,
-  min,
-  max,
-  step,
-  value,
-  format = (x) => x,
-}) {
-  const card = document.createElement("div");
-  card.className = "weight-card";
+    const title = document.createElement("div");
+    title.className = "weight-title";
 
-  const title = document.createElement("div");
-  title.className = "weight-title";
+    const label = document.createElement("span");
+    label.className = "weight-label";
+    label.textContent = labelText;
 
-  const label = document.createElement("span");
-  label.className = "weight-label";
-  label.textContent = labelText;
+    const valueText = document.createElement("span");
+    valueText.className = "weight-value";
+    valueText.textContent = format(value);
 
-  const valueText = document.createElement("span");
-  valueText.className = "weight-value";
-  valueText.textContent = format(value);
+    title.append(label, valueText);
 
-  title.append(label, valueText);
+    const slider = document.createElement("input");
+    slider.type = "range";
+    slider.name = name;
+    slider.min = String(min);
+    slider.max = String(max);
+    slider.step = String(step);
+    slider.value = String(value);
+    slider.style.width = "100%";
+    slider.style.marginTop = "6px";
 
-  const slider = document.createElement("input");
-  slider.type = "range";
-  slider.name = name;
-  slider.min = min;
-  slider.max = max;
-  slider.step = step;
-  slider.value = value;
-  slider.style.width = "100%";
-  slider.style.marginTop = "6px";
+    slider.addEventListener("input", () => {
+      valueText.textContent = format(slider.value);
+    });
 
-  slider.addEventListener("input", () => {
-    valueText.textContent = format(slider.value);
-  });
-
-  card.append(title, slider);
-  return card;
-}
+    card.append(title, slider);
+    return card;
+  }
 
   function rebuildWeights() {
     const n = Number(nDiplomaEl.value);
@@ -142,6 +122,7 @@
     if (!Number.isInteger(n) || n < 1 || n > 21) return;
 
     for (let i = 0; i < n; i++) {
+      const defaultW = (DEFAULT_WEIGHTS[i] ?? 0);
       weightsContainer.appendChild(
         makeRangeCard({
           labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
@@ -149,13 +130,14 @@
           min: 0,
           max: 1,
           step: 0.01,
-          value: 0,
+          value: defaultW,
           format: (x) => Number(x).toFixed(2),
         })
       );
     }
   }
 
+  // Build bounds (defaults from Flask)
   boundsContainer.append(
     makeRangeCard({
       labelText: "máx cantidad por ingrediente",
@@ -163,8 +145,8 @@
       min: 1,
       max: 25,
       step: 1,
-      value: 25,
-      format: (x) => x,
+      value: DEFAULT_MAX_INGR,
+      format: (x) => String(parseInt(x, 10)),
     }),
     makeRangeCard({
       labelText: "máx probabilidad por efecto",
@@ -172,19 +154,22 @@
       min: 1,
       max: 100,
       step: 1,
-      value: 100,
-      format: (x) => x,
+      value: DEFAULT_MAX_PROB,
+      format: (x) => String(parseInt(x, 10)),
     }),
     makeRangeCard({
       labelText: "profundidad de búsqueda",
-      name: "n_starts",   // 🔥 better name than n_starts
+      name: "n_starts",
       min: 1,
       max: 100,
       step: 1,
-      value: 50,
-      format: (x) => x,
+      value: DEFAULT_SEARCH_DEPTH,
+      format: (x) => String(parseInt(x, 10)),
     })
   );
+
+  // Initialize n_diploma + sliders from defaults
+  nDiplomaEl.value = DEFAULT_N_DIPLOMAS;
   rebuildWeights();
   nDiplomaEl.addEventListener("change", rebuildWeights);
 </script>

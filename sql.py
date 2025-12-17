@@ -1,32 +1,31 @@
-"""
-A simple wrapper for SQLite database operations imitating CS50 wrapper
-as first training wheels.
-"""
-
 import sqlite3
 
 
 class SQL:
-    """
-    A simple wrapper for SQLite database operations imitating CS50 wrapper
-    as first training wheels.
-    """
-
     def __init__(self, database: str):
         self.database = database
 
-    def execute(self, query: str, *params) -> list[dict] | None:
+    def execute(self, query: str, *params):
         """
-        Execute a SQL query and return results as a list of dictionaries.
-        If the query is not a SELECT statement, return None.
+        - SELECT  -> returns list[dict]
+        - INSERT  -> returns lastrowid (int)
+        - UPDATE/DELETE -> returns rowcount (int)
         """
         with sqlite3.connect(self.database) as conn:
             conn.row_factory = sqlite3.Row
-            cursor = conn.cursor()
-            cursor.execute(query, params)
+            cur = conn.cursor()
+
+            try:
+                cur.execute(query, params)
+            except sqlite3.IntegrityError:
+                # let the caller decide what to do (duplicate username, FK fail, etc.)
+                raise
 
             is_select = query.lstrip().upper().startswith("SELECT")
             if is_select:
-                rows = cursor.fetchall()
-                return [dict(row) for row in rows]
-            conn.commit()
+                return [dict(r) for r in cur.fetchall()]
+
+            # for INSERT/UPDATE/DELETE
+            if query.lstrip().upper().startswith("INSERT"):
+                return cur.lastrowid
+            return cur.rowcount
