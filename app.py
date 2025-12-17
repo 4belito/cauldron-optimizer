@@ -1,4 +1,5 @@
 import json
+import sqlite3
 from pathlib import Path
 
 import numpy as np
@@ -124,15 +125,19 @@ def register():
         if password != confirmation:
             return error("passwords do not match")
         # Check if username already exists
+
         try:
             user_id = db.execute(
                 "INSERT INTO users (username, hash) VALUES (?, ?)",
                 username,
                 generate_password_hash(password),
             )
-        except ValueError:
-            return error("username already exists")
-        db.execute("INSERT INTO user_settings (user_id) VALUES (?)", user_id)
+            db.execute("INSERT INTO user_settings (user_id) VALUES (?)", user_id)
+        except Exception as e:
+            if "users.username" in str(e):
+                return error("username already exists")
+            raise
+
         return redirect("/login")
     return render_template("register.html")
 
