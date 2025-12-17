@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 from flask import Flask, redirect, render_template, request, session
@@ -11,6 +12,7 @@ from sql import SQL
 
 MAX_NDIPLOMAS = CauldronOptimizer.max_ndiplomas
 N_INGRIDIENTS = CauldronOptimizer.n_ingredients
+BASE_DIR = Path(__file__).resolve().parent
 
 # Configure application
 app = Flask(__name__)
@@ -21,7 +23,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("cauldron.db")
+db = SQL(str(BASE_DIR / "cauldron.db"))
 
 
 @app.after_request
