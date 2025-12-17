@@ -185,10 +185,11 @@ def optimize():
 
     query = """
     UPDATE user_settings
-    SET effect_weights   = ?,
-        max_ingredients  = ?,
-        max_effects      = ?,
-        search_depth     = ?,
+    SET effect_weights  = ?,
+        max_ingredients = ?,
+        max_effects     = ?,
+        search_depth    = ?,
+        updated_at      = CURRENT_TIMESTAMP
     WHERE user_id = ?
     """.strip()
 
