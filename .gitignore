@@ -15,3 +15,8 @@ venv/
 
 # OS
 .DS_Store
+
+# test code
+migration.ipynb
+read_neondb.ipynb
+

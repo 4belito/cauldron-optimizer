@@ -1,19 +1,23 @@
 import json
-import sqlite3
+import os
 from pathlib import Path
 
 import numpy as np
+from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session
+from psycopg.errors import UniqueViolation
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from cauldron_optimizer import CauldronOptimizer
+from db import DB
 from flask_session import Session
 from helpers import error, login_required
-from sql import SQL
 
+load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
 MAX_NDIPLOMAS = CauldronOptimizer.max_ndiplomas
 N_INGRIDIENTS = CauldronOptimizer.n_ingredients
-BASE_DIR = Path(__file__).resolve().parent
+DATABASE_URL = os.environ["NEONDB_USER"]  # Get the database URL from environment variable
+# BASE_DIR = Path(__file__).resolve().parent
 
 # Configure application
 app = Flask(__name__)
@@ -24,7 +28,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL(str(BASE_DIR / "cauldron.db"))
+db = DB(DATABASE_URL)
 
 
 @app.after_request
@@ -42,15 +46,14 @@ def index():
     """Show recipe input form"""
     user_id = session["user_id"]
 
-    settings = db.execute("SELECT * FROM user_settings WHERE user_id = ?", user_id)[0]
-    effect_weights = json.loads(settings["effect_weights"])
-    n_diplomas = len(effect_weights)
+    settings = db.execute("SELECT * FROM user_settings WHERE user_id = %s", user_id)[0]
+    n_diplomas = len(settings["effect_weights"])
     max_ingredients = int(settings["max_ingredients"])
     max_effect_prob = int(settings["max_effects"])
     search_depth = int(settings["search_depth"])
     return render_template(
         "index.html",
-        effect_weights=effect_weights,
+        effect_weights=settings["effect_weights"],
         n_diplomas=n_diplomas,
         max_ingredients=max_ingredients,
         max_effect_prob=max_effect_prob,
@@ -76,7 +79,7 @@ def login():
             return error("must provide password")
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        rows = db.execute("SELECT * FROM users WHERE username = %s", request.form.get("username"))
 
         # Ensure username exists and password is correct
         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
@@ -128,15 +131,16 @@ def register():
 
         try:
             user_id = db.execute(
-                "INSERT INTO users (username, hash) VALUES (?, ?)",
+                "INSERT INTO users (username, hash) VALUES (%s, %s) RETURNING id",
                 username,
                 generate_password_hash(password),
             )
-            db.execute("INSERT INTO user_settings (user_id) VALUES (?)", user_id)
-        except Exception as e:
-            if "users.username" in str(e):
-                return error("username already exists")
-            raise
+            db.execute(
+                "INSERT INTO user_settings (user_id) VALUES (%s)",
+                user_id,
+            )
+        except UniqueViolation:
+            return error("username already exists")
 
         return redirect("/login")
     return render_template("register.html")
@@ -154,7 +158,6 @@ def optimize():
     if not (1 <= n_dipl <= MAX_NDIPLOMAS):
         return error(f"numero de diplomas debe estar entre 1 y {MAX_NDIPLOMAS}")
 
-    # effect_weights[] comes as a list of strings
     weights_raw = request.form.getlist("effect_weights[]")
     if len(weights_raw) != n_dipl:
         return error("El numero de effectos debe conicidir con el numero de diplomas")
@@ -190,12 +193,12 @@ def optimize():
 
     query = """
     UPDATE user_settings
-    SET effect_weights  = ?,
-        max_ingredients = ?,
-        max_effects     = ?,
-        search_depth    = ?,
+    SET effect_weights  = %s,
+        max_ingredients = %s,
+        max_effects     = %s,
+        search_depth    = %s,
         updated_at      = CURRENT_TIMESTAMP
-    WHERE user_id = ?
+    WHERE user_id = %s
     """.strip()
 
     db.execute(

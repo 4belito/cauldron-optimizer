@@ -2,5 +2,7 @@ Flask
 Flask-Session
 gunicorn
 numpy
+psycopg[binary]
+python-dotenv 
 requests
 Werkzeug
