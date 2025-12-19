@@ -16,9 +16,14 @@
     <title>Caldero: {% block title %}{% endblock %}</title>
   </head>
 
-  <body>
+  <body class="{% block body_class %}{% endblock %}">
     <nav class="navbar navbar-expand-md navbar-light main-navbar position-relative">
       <div class="container-fluid main-navbar-inner">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('contact') }}" style="margin-left: 12px;">
+            Contact
+          </a>
+        </li>
         <a class="navbar-brand position-absolute top-50 start-50 translate-middle" href="{{url_for('index')}}">
             <span class="elvenar-title">Optimizador del Caldero</span>
           </a>
@@ -37,6 +42,7 @@
               <li class="nav-item"><a class="nav-link" href="{{url_for('register')}}">Register</a></li>
               <li class="nav-item"><a class="nav-link" href="{{url_for('login')}}">Log In</a></li>
             {% endif %}
+            
           </ul>
         </div>
       </div>

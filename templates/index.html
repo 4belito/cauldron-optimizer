@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}Receta{% endblock %}
-
+{% block body_class %}book-page{% endblock %}
 {% block main %}
 <form id="optimizerForm" class="optimizer" method="post" action="/optimize">
   <!-- Diplomas + weights -->
@@ -21,7 +21,6 @@
           required
           class="n-diploma"
         />
-        <span class="hint">max {{effect_names| length}}</span>
       </div>
     </div>
 
@@ -34,9 +33,16 @@
 
     <div class="ingredients-grid">
       {% for name in ingredient_names %}
-        <label>
+        <label class="ingredient-check">
           <input type="checkbox" name="premium_ingredients[]" value="{{ name }}">
-          {{ name }}
+
+          <img
+            class="ingredient-check-icon"
+            src="{{ url_for('static', filename='ingredients/ingredient' ~ loop.index ~ '.png') }}"
+            alt=""
+          >
+
+          <span class="ingredient-check-text">{{ name }}</span>
         </label>
       {% endfor %}
     </div>
@@ -49,7 +55,7 @@
   </fieldset>
 
   <div class="submit-row">
-    <button type="submit" class="btn-submit">Buscar Receta</button>
+    <button type="submit" class="game-error-btn"><span>Buscar Receta</span> </button>
   </div>
 </form>
 
@@ -133,19 +139,22 @@
     for (let i = 0; i < n; i++) {
       const defaultW = (DEFAULT_WEIGHTS[i] ?? 0);
 
-      weightsContainer.appendChild(
-        makeRangeCard({
-          labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
-          iconSrc: `/static/effects/effect${i + 1}.png`,
-          name: "effect_weights[]",
-          min: 0,
-          max: 1,
-          step: 0.01,
-          value: defaultW,
-          format: (x) => Number(x).toFixed(2),
-        })
-      );
+      const card = makeRangeCard({
+        labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
+        iconSrc: `/static/effects/effect${i + 1}.png`,
+        name: "effect_weights[]",
+        min: 0,
+        max: 1,
+        step: 0.01,
+        value: defaultW,
+        format: (x) => Number(x).toFixed(2),
+      });
+
+      weightsContainer.appendChild(card);
     }
+
+    // ✅ IMPORTANT: initialize fill for the newly created sliders
+    initRangeFills(weightsContainer);
   }
 
   // Build bounds (defaults from Flask)
@@ -183,5 +192,25 @@
   nDiplomaEl.value = DEFAULT_N_DIPLOMAS;
   rebuildWeights();
   nDiplomaEl.addEventListener("change", rebuildWeights);
+
+  function setRangeFill(el){
+    const min = Number(el.min ?? 0);
+    const max = Number(el.max ?? 100);
+    const val = Number(el.value ?? 0);
+    const p = ((val - min) / (max - min)) * 100;
+    el.style.setProperty("--p", p + "%");
+  }
+
+  function initRangeFills(root=document){
+    root.querySelectorAll('input[type="range"]').forEach(el => {
+      setRangeFill(el);
+      el.addEventListener("input", () => setRangeFill(el));
+    });
+  }
+
+  // call once on page load
+  initRangeFills();
+
+
 </script>
 {% endblock %}

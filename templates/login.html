@@ -3,7 +3,7 @@
 {% block title %}
     Log In
 {% endblock %}
-
+{% block body_class %}cauldron-page{% endblock %}
 {% block main %}
     <form action="/login" method="post">
         <div class="mb-3">
@@ -12,6 +12,6 @@
         <div class="mb-3">
             <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password" required>
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+        <button class="game-error-btn" type="submit"><span>Log In<span></button>
     </form>
 {% endblock %}

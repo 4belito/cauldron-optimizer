@@ -215,3 +215,8 @@ def optimize():
         effect_weights=effect_weights[order].tolist(),
         score=score,
     )
+
+
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
