@@ -816,7 +816,6 @@ input[type="range"]::-webkit-slider-thumb{
   margin-top: -4px;
   background: #582d1a;
   border-radius: 50%;
-  border: 2px solid rgba(0,0,0,0.35);
   cursor: pointer;
 }
 input[type="range"]::-moz-range-thumb{
@@ -837,156 +836,66 @@ input[type="checkbox"] {
 /* =========================
    Contact page (Elvenar style)
    ========================= */
-
-.contact-card {
-  padding: 28px 32px;
-}
-
-.contact-content {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-.contact-avatar {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow:
-    inset 0 0 0 2px rgba(120, 90, 40, 0.35),
-    0 8px 18px rgba(0, 0, 0, 0.25);
-}
-
-.contact-text h2 {
-  margin: 0 0 10px;
-  font-size: 1.8rem;
-}
-
-.contact-text p {
-  margin: 8px 0;
-  line-height: 1.45;
-}
-
-.contact-links {
-  margin-top: 12px;
-  font-weight: 600;
-  color: #5a3d16;
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-  .contact-content {
-    flex-direction: column;
-    text-align: center;
-  }
-}
-
-
-.contact-content {
-  display: grid;
-  grid-template-columns: 300px 1fr; /* ← bigger image column */
-  min-height: 280px;               /* ← taller card */
-}
-.contact-image {
-  position: relative;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.35);
-  box-shadow:
-    inset -2px 0 0 rgba(120, 90, 40, 0.35);
-}
-
-.contact-image img {
-  width: 100%;
-  height: 120%;        /* ← taller than container */
-  object-fit: cover;
-  object-position: top center; /* ← push image upward */
-  display: block;
-  transform: translateY(-10%); /* ← lift image */
-}
-
-.contact-image {
-  position: relative;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.35);
-  box-shadow:
-    inset -2px 0 0 rgba(120, 90, 40, 0.35);
-}
-
-.contact-image img {
-  width: 100%;
-  height: 120%;        /* ← taller than container */
-  object-fit: cover;
-  object-position: top center; /* ← push image upward */
-  display: block;
-  transform: translateY(-10%); /* ← lift image */
-}
-
-
-.contact-text {
-  padding: 34px 40px;
-}
-
-
-/* =========================
-   CONTACT CARD – POLISHED
-   ========================= */
-
+/* CONTACT CARD */
 .contact-card{
-  max-width: 980px;              /* smaller width */
-  margin: 30px auto;             /* centered, less tall */
-  border-radius: 26px;           /* softer, elegant rounding */
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 24px;
+  border-radius: 22px;
   overflow: hidden;
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.18),
-    inset 0 0 0 2px rgba(90,65,25,0.35);
 }
 
-/* Layout */
+/* TWO-COLUMN LAYOUT */
 .contact-content{
   display: grid;
-  grid-template-columns: 260px 1fr;  /* slimmer image column */
-  min-height: 260px;                 /* less tall overall */
+  grid-template-columns: auto 1fr;
+  gap: 36px;
+  align-items: center; /* ✅ vertical centering */
 }
 
-/* Left image */
+/* IMAGE COLUMN */
 .contact-image{
-  background: rgba(255,255,255,0.25);
-  border-right: 2px solid rgba(120,90,40,0.35);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18px;
+  overflow: hidden;
 }
 
+/* DIVIDER (does NOT break rounding) */
+.contact-image::after{
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  right: -18px;
+  width: 2px;
+  background: rgba(120,90,40,0.35);
+}
+
+/* IMAGE ITSELF */
 .contact-image img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  width: 220px;
+  height: auto;
+  display: block;
+  border-radius: 18px;
 }
 
-/* Text area */
-.contact-text{
-  padding: 28px 36px;
-}
-
-/* Title */
-.contact-text h2{
-  margin: 0 0 10px 0;
-  font-size: 1.75rem;
-  letter-spacing: 0.3px;
-}
-
-/* Paragraphs */
+/* TEXT COLUMN */
 .contact-text p{
-  margin: 8px 0;
-  line-height: 1.5;
-  color: #3f2c12;
+  text-align: justify;
+  text-justify: inter-word;
+  max-width: 520px;   /* prevents long ugly lines */
+  padding: 0% 1%;
+  padding-top: 5%;
 }
 
-/* Contact lines */
+
 .contact-links{
   margin-top: 14px;
   font-weight: 600;
-  color: #5a3d16;
 }
 
 .contact-links a{
@@ -998,177 +907,18 @@ input[type="checkbox"] {
   text-decoration: underline;
 }
 
-/* Mobile */
+/* MOBILE */
 @media (max-width: 700px){
   .contact-content{
     grid-template-columns: 1fr;
-  }
-
-  .contact-image{
-    height: 220px;
-    border-right: none;
-    border-bottom: 2px solid rgba(120,90,40,0.35);
-  }
-
-  .contact-text{
     text-align: center;
-    padding: 24px 22px;
+  }
+
+  .contact-image::after{
+    display: none;
+  }
+
+  .contact-image img{
+    width: 180px;
   }
 }
-
-/* Left image column */
-.contact-image{
-  position: relative;
-  overflow: hidden;              /* CRITICAL */
-  border-right: 2px solid rgba(120,90,40,0.35);
-  border-top-left-radius: 26px;
-  border-bottom-left-radius: 26px;
-  background: none;              /* remove beige layer */
-}
-
-/* Image itself */
-.contact-image img{
-  display: block;                /* removes inline gaps */
-  width: 100%;
-  height: 100%;
-  object-fit: cover;             /* fills area cleanly */
-  object-position: center top;
-}
-
-.contact-content{
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  align-items: stretch;   /* image stretches perfectly */
-}
-
-
-.contact-image::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  box-shadow: inset 0 0 0 2px rgba(80,60,25,0.35);
-  pointer-events: none;
-}
-
-
-.contact-content{
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-  align-items: stretch;           /* make both columns same height */
-}
-
-/* the box that holds the image */
-.contact-image{
-  border-top-left-radius: 26px;
-  border-bottom-left-radius: 26px;
-  overflow: hidden;              /* crop to rounded corners */
-  background: transparent;       /* IMPORTANT: no beige background */
-  display: flex;                 /* IMPORTANT: removes bottom gap */
-}
-
-/* the actual image */
-.contact-image img{
-  display: block;                /* removes inline gap */
-  width: 100%;
-  height: 100%;                  /* fills the full container height */
-  object-fit: cover;
-  object-position: center top;
-}
-
-
-
-.contact-content {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  align-items: stretch;
-}
-
-/* Left icon column */
-.contact-image {
-  display: flex;
-  align-items: center;       /* center vertically */
-  justify-content: center;   /* center horizontally */
-  border-top-left-radius: 26px;
-  border-bottom-left-radius: 26px;
-  overflow: hidden;
-}
-
-/* Icon itself */
-.contact-image img {
-  width: 120px;              /* control size explicitly */
-  height: 120px;
-  object-fit: contain;
-  display: block;
-}
-
-
-.avatar-frame-png{
-  position: relative;
-  width: 220px;
-  height: 220px;
-
-  /* tu marco PNG */
-  background: url("/static/favicon_4bel.png") center / contain no-repeat;
-}
-
-/* retrato circular por encima */
-.avatar-frame-png .avatar-img{
-  position: absolute;
-
-  /* ajusta estos 4 valores hasta que “caiga” perfecto dentro del marco */
-  width: 140px;
-  height: 140px;
-  left: 50%;
-  top: 46%;
-  transform: translate(-50%, -50%);
-
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-
-.contact-card{
-  max-width: 900px;          /* más compacto */
-  margin: 40px auto;
-  border-radius: 22px;       /* esquinas más suaves */
-}
-
-/* layout */
-.contact-content{
-  display: grid;
-  grid-template-columns: 260px 1fr;  /* imagen | texto */
-  gap: zpx;
-  align-items: stretch;      /* 🔴 CLAVE */
-}
-
-/* CONTENEDOR DE LA IMAGEN */
-.contact-image{
-  position: relative;
-  overflow: hidden;          /* 🔴 evita sobrantes */
-  border-radius: 18px;
-}
-
-/* IMAGEN */
-.contact-image img{
-  width: 100%;
-  height: 185%;              /* 🔴 CLAVE */
-  object-fit: cover;         /* rellena todo sin deformar */
-}
-
-
-.contact-content {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 28px;
-  align-items: start;   /* 🔴 NO stretch */
-}
-
-.contact-content {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  height: 120;
-  gap: 28px;
-  align-items: start;   /* 🔴 NO stretch */
-}
-

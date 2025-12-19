@@ -3,35 +3,25 @@
 {% block title %}
   Contact
 {% endblock %}
-
+{% block body_class %}cauldron-page{% endblock %}
 {% block main %}
 <fieldset class="card contact-card">
-  <legend><strong>Contacto</strong></legend>
-
   <div class="contact-content">
 
     <!-- Imagen grande a la izquierda -->
-        <div class="contact-image">
-        <img src="/static/favicon_4bel.ico" alt="4bel avatar">
-        </div>
+    <div class="contact-image">
+      <img src="{{ url_for('static', filename='favicon_4bel.png') }}" alt="4bel avatar">
+    </div>
+
 
     <!-- Texto -->
     <div class="contact-text">
-    
-
       <p>
         Esta página es un <strong>proyecto creado por 4bel</strong> y no tiene
         afiliación oficial con Elvenar ni con InnoGames.
-      </p>
 
-      <p>
-        Juego actualmente en los mundos <strong>Winyandor</strong> y
-        <strong>Arendyll</strong> de. España.
-      </p>
-
-      <p>
-        Si tienes dudas, sugerencias o ideas para mejorar el optimizador,
-        puedes contactarme directamente en el juego o por Discord.
+        Si tienes dudas en como usar el optimizador, o sugerencias para mejorarlo,
+        puedes contactarme directamente en el juego, por Discord o via email.
       </p>
 
       <p class="contact-links">
