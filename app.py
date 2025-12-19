@@ -1,240 +1,185 @@
-import json
+# ---- stdlib ----
 import os
-from pathlib import Path
 
-import numpy as np
+# ---- third-party ----
 from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, request, session
-from psycopg.errors import UniqueViolation
+from flask import Flask, redirect, render_template, request, session, url_for
+from sqlalchemy import create_engine, func, select
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.orm import sessionmaker
 from werkzeug.security import check_password_hash, generate_password_hash
 
+# ---- app / domain ----
 from cauldron_optimizer import CauldronOptimizer
-from db import DB
+from constants import INGREDIENT_ICONS, INGREDIENT_NAMES
+from db_model import User, UserSettings
 from flask_session import Session
 from helpers import error, login_required
+from validators import (
+    AuthData,
+    parse_auth_form,
+    parse_effect_weights,
+    parse_int,
+    parse_premium_ingredients,
+)
 
 load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
-MAX_NDIPLOMAS = CauldronOptimizer.max_ndiplomas
-N_INGRIDIENTS = CauldronOptimizer.n_ingredients
-DATABASE_URL = os.environ["NEONDB_USER"]  # Get the database URL from environment variable
-# BASE_DIR = Path(__file__).resolve().parent
+engine = create_engine(os.environ["NEONDB_USER"], pool_pre_ping=True)
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-# Configure application
+
 app = Flask(__name__)
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure CS50 Library to use SQLite database
-db = DB(DATABASE_URL)
-
 
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
+    if session.get("user_id"):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Expires"] = 0
+        response.headers["Pragma"] = "no-cache"
     return response
 
 
 @app.route("/")
+@app.route("/home")
 @login_required
 def index():
     """Show recipe input form"""
     user_id = session["user_id"]
-
-    settings = db.execute("SELECT * FROM user_settings WHERE user_id = %s", user_id)[0]
-    n_diplomas = len(settings["effect_weights"])
-    max_ingredients = int(settings["max_ingredients"])
-    max_effect_prob = int(settings["max_effects"])
-    search_depth = int(settings["search_depth"])
-    return render_template(
-        "index.html",
-        effect_weights=settings["effect_weights"],
-        n_diplomas=n_diplomas,
-        max_ingredients=max_ingredients,
-        max_effect_prob=max_effect_prob,
-        search_depth=search_depth,
-    )
+    db_sa = SessionLocal()
+    try:
+        settings = db_sa.get(UserSettings, user_id)
+        if settings is None:
+            return error("User settings not found", url=url_for("logout"))
+        return render_template(
+            "index.html",
+            effect_weights=settings.effect_weights,
+            n_diplomas=len(settings.effect_weights),
+            max_ingredients=int(settings.max_ingredients),
+            max_effect_prob=int(settings.max_effects),
+            search_depth=int(settings.search_depth),
+            ingredient_names=INGREDIENT_NAMES,
+        )
+    finally:
+        db_sa.close()
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
-    # Forget any user_id
     session.clear()
 
-    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return error("must provide username")
+        try:
+            data: AuthData = parse_auth_form(request.form, mode="login")
+        except ValueError as e:
+            return error(str(e), url=url_for("login"))
 
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return error("must provide password")
+        db_sa = SessionLocal()
+        try:
+            user = db_sa.execute(
+                select(User).where(User.username == data.username)
+            ).scalar_one_or_none()
 
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = %s", request.form.get("username"))
+            if user is None or not check_password_hash(user.hash, data.password):
+                return error("nombre de usuario o contraseña incorrectos", url=url_for("login"))
 
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return error("invalid username and/or password")
+            session["user_id"] = user.id
+            return redirect(url_for("index"))
+        finally:
+            db_sa.close()
 
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
-        return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("login.html")
+    return render_template("login.html")
 
 
 @app.route("/logout")
 def logout():
     """Log user out"""
-
-    # Forget any user_id
     session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
+    return redirect(url_for("login"))
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
     if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirmation = request.form.get("confirmation")
-
-        if username is None:
-            return error("must provide username")
-        if not isinstance(username, str) or len(username) < 1:
-            return error("invalid username")
-        if password is None:
-            return error("must provide password")
-        if not isinstance(password, str) or len(password) < 1:
-            return error("invalid password")
-        if confirmation is None:
-            return error("must provide password confirmation")
-        if password != confirmation:
-            return error("passwords do not match")
-        # Check if username already exists
-
         try:
-            user_id = db.execute(
-                "INSERT INTO users (username, hash) VALUES (%s, %s) RETURNING id",
-                username,
-                generate_password_hash(password),
-            )
-            db.execute(
-                "INSERT INTO user_settings (user_id) VALUES (%s)",
-                user_id,
-            )
-        except UniqueViolation:
-            return error("username already exists")
-
-        return redirect("/login")
+            data: AuthData = parse_auth_form(request.form, mode="register")
+        except ValueError as e:
+            return error(str(e), url=url_for("register"))
+        db_sa = SessionLocal()
+        try:
+            new_user = User(username=data.username, hash=generate_password_hash(data.password))
+            db_sa.add(new_user)
+            db_sa.flush()  # makes new_user.id available without committing
+            db_sa.add(UserSettings(user=new_user))
+            db_sa.commit()
+        except IntegrityError:
+            db_sa.rollback()
+            return error("username already exists", url=url_for("register"))
+        finally:
+            db_sa.close()
+        return redirect(url_for("login"))
     return render_template("register.html")
 
 
 @app.route("/optimize", methods=["POST"])
 @login_required
 def optimize():
-    # ---- 1) Read inputs ----
     try:
-        n_dipl = int(request.form.get("n_diploma", "0"))
-    except ValueError:
-        return error("numero de diplomas debe ser un numero entero")
+        n_dipl = parse_int(
+            request.form,
+            "n_diploma",
+            label="EL número de diplomas",
+            min_val=1,
+            max_val=CauldronOptimizer.max_ndiplomas,
+        )
+        effect_weights = parse_effect_weights(request.form, n_dipl)
+        alpha_ub = parse_int(
+            request.form,
+            "alpha_UB",
+            label="El número máximo de ingtedientes",
+            min_val=1,
+            max_val=25,
+        )
+        prob_ub = parse_int(
+            request.form,
+            "prob_UB",
+            label="La probabilidad máxima por por efecto",
+            min_val=1,
+            max_val=100,
+        )
+        n_starts = parse_int(
+            request.form, "n_starts", label="La profundidad de la búsqueda", min_val=1, max_val=100
+        )
+        premium_ingr = parse_premium_ingredients(request.form)
+    except ValueError as e:
+        return error(str(e), url=url_for("index"))
 
-    if not (1 <= n_dipl <= MAX_NDIPLOMAS):
-        return error(f"numero de diplomas debe estar entre 1 y {MAX_NDIPLOMAS}")
-
-    weights_raw = request.form.getlist("effect_weights[]")
-    if len(weights_raw) != n_dipl:
-        return error("El numero de effectos debe conicidir con el numero de diplomas")
-
-    try:
-        effect_weights = np.array([float(x) for x in weights_raw], dtype=float)
-    except ValueError:
-        return error("Los pesos de los efectos deben ser numeros")
-
-    if np.any(effect_weights < 0) or np.any(effect_weights > 1):
-        return error("Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)")
-
-    if np.sum(effect_weights) == 0:
-        return error("Al menos debes querer algun efecto")
-
-    premium_names = request.form.getlist("premium_ingredients[]")
-
-    # bounds
-    try:
-        alpha_ub = int(request.form.get("alpha_UB", "25"))
-        prob_ub = int(request.form.get("prob_UB", "100"))
-        n_starts = int(request.form.get("n_starts", "20"))
-    except ValueError:
-        return error("Los limites de la busqueda deben ser enumeros enteros")
-
-    if not (1 <= alpha_ub <= 25):
-        return error("El limmite de los ingredientes debe estar entre 1 y 25")
-    if not (1 <= prob_ub <= 100):
-        return error("El limmite de la probabliidad de efecto deseado debe estar entre 1 y 100")
-    if not (1 <= n_starts <= 100):
-        return error("La profundidad de busquedad debe ser entre 1 y 100")
     user_id = session["user_id"]
 
-    query = """
-    UPDATE user_settings
-    SET effect_weights  = %s,
-        max_ingredients = %s,
-        max_effects     = %s,
-        search_depth    = %s,
-        updated_at      = CURRENT_TIMESTAMP
-    WHERE user_id = %s
-    """.strip()
+    db_sa = SessionLocal()
+    try:
+        settings = db_sa.get(UserSettings, user_id)
+        if settings is None:
+            return error("Missing user settings for this user.", url=url_for("index"))
+        settings.effect_weights = effect_weights.tolist()
+        settings.max_ingredients = int(alpha_ub)
+        settings.max_effects = int(prob_ub)
+        settings.search_depth = int(n_starts)
+        settings.updated_at = func.now()
+        db_sa.commit()
+    except SQLAlchemyError:
+        db_sa.rollback()
+        return error("Database error", url=url_for("index"))
+    finally:
+        db_sa.close()
 
-    db.execute(
-        query,
-        json.dumps(effect_weights.tolist()),
-        int(alpha_ub),
-        int(prob_ub),
-        int(n_starts),
-        int(user_id),
-    )
-
-    # ---- 2) Convert premium names -> indices ----
-    INGREDIENT_NAMES = [
-        "Espora Ignea",
-        "Escarabanuez",
-        "Cascaron de Mana",
-        "Iris Volador",
-        "Huevo de Medusa",
-        "Lima de Oruga",
-        "Flor de hierba mora",
-        "Lenguas burlonas",
-        "Brote ocular",
-        "hoja de agricabello",
-        "capullo de nube de algodon",
-        "trufa orejera",
-    ]
-    ingredient_icons = [f"ingr{i}.png" for i in range(1, 13)]
-    name_to_idx = {name: i for i, name in enumerate(INGREDIENT_NAMES)}
-
-    premium_ingr = []
-    for name in premium_names:
-        if name not in name_to_idx:
-            return error(f"Ingrediente premium desconocido: {name}")
-        premium_ingr.append(name_to_idx[name])
-
-    # ---- 4) Run optimizer ----
     opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
@@ -243,13 +188,9 @@ def optimize():
     )
 
     alpha_best, val_best = opt.multistart(n_starts)
-
-    # alpha_best is length 12 -> reshape 3x4
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
-
-    # val_best maybe already percent; just pass it through
     score = float(val_best)
 
     return render_template(
-        "results.html", alpha_matrix=alpha_matrix, ingredient_icons=ingredient_icons, score=score
+        "results.html", alpha_matrix=alpha_matrix, ingredient_icons=INGREDIENT_ICONS, score=score
     )

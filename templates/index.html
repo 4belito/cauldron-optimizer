@@ -30,23 +30,15 @@
 
   <!-- Premium ingredients -->
   <fieldset class="card">
-    <legend><strong>Evitar Ingredientes Premium</strong></legend>
+    <legend><strong>Evitar Ingredientes (Premium)</strong></legend>
 
     <div class="ingredients-grid">
-      <label><input type="checkbox" name="premium_ingredients[]" value="Espora Ignea"> Espora Ignea</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="Escarabanuez"> Escarabanuez</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="Cascaron de Mana"> Cascaron de Mana</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="Iris Volador"> Iris Volador</label>
-
-      <label><input type="checkbox" name="premium_ingredients[]" value="Huevo de Medusa"> Huevo de Medusa</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="Lima de Oruga"> Lima de Oruga</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="Flor de hierba mora"> Flor de hierba mora</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="Lenguas burlonas"> Lenguas burlonas</label>
-
-      <label><input type="checkbox" name="premium_ingredients[]" value="Brote ocular"> Brote ocular</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="hoja de agricabello"> hoja de agricabello</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="capullo de nube de algodon"> capullo de nube de algodon</label>
-      <label><input type="checkbox" name="premium_ingredients[]" value="trufa orejera"> trufa orejera</label>
+      {% for name in ingredient_names %}
+        <label>
+          <input type="checkbox" name="premium_ingredients[]" value="{{ name }}">
+          {{ name }}
+        </label>
+      {% endfor %}
     </div>
   </fieldset>
 

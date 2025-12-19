@@ -6,11 +6,9 @@ BASE_DIR = Path(__file__).resolve().parent
 B = np.loadtxt(BASE_DIR / "B_values.csv", delimiter=",", skiprows=1)
 V = np.loadtxt(BASE_DIR / "V_values.csv", delimiter=",", skiprows=1)
 
-SUM_INGREDIENTS = 25
-
 
 class CauldronOptimizer:
-    sum_ingredients = SUM_INGREDIENTS
+    sum_ingredients = 25
     B_full: np.ndarray = np.asarray(B, dtype=float)
     V_full: np.ndarray = np.asarray(V, dtype=float)
     max_ndiplomas, n_ingredients = B_full.shape
@@ -19,11 +17,13 @@ class CauldronOptimizer:
         self,
         effect_weights: np.ndarray,
         premium_ingr: list[int] = [],
-        alpha_UB: int = SUM_INGREDIENTS,
+        alpha_UB: int | None = None,
         prob_UB: int = 100,
         cache_max_size: int = 1_000_000,
     ):
         effect_weights = np.asarray(effect_weights, dtype=float)
+        if alpha_UB is None:
+            alpha_UB = self.sum_ingredients
         self.n_dipl = len(effect_weights)
         assert self.n_dipl <= self.max_ndiplomas, "n_dipl > number of rows in B/V"
 

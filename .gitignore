@@ -12,6 +12,7 @@ flask_session/
 .env
 venv/
 .envrc
+.flaskenv
 
 # OS
 .DS_Store
@@ -19,4 +20,6 @@ venv/
 # test code
 migration.ipynb
 read_neondb.ipynb
+sqlalchemy_connection.ipynb
+sqlalchemy_seesion.ipynb
 

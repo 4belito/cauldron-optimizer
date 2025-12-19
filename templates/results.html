@@ -9,7 +9,7 @@
 
   <!-- MATRIX -->
   <fieldset class="card">
-    <legend><strong>Receta Óptima</strong></legend>
+    <legend><strong>Receta</strong></legend>
 
       <div class="ingredients-grid result-grid">
         {% for i in range(alpha_matrix|length * alpha_matrix[0]|length) %}
@@ -23,7 +23,6 @@
                 <div class="value-overlay">{{ val }}</div>
               </div>
         {% endfor %}
-      </div>
   </fieldset>
 
   <fieldset class="card">
