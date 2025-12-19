@@ -1,7 +1,6 @@
 /* =========================
    Navbar brand (CS50 style)
    ========================= */
-
 nav .navbar-brand {
   font-size: xx-large;
 }
@@ -11,11 +10,9 @@ nav .navbar-brand .elvenar-title {
   margin-left: 0.7rem;
 }
 
-
 /* =========================
    Finance table helpers
    ========================= */
-
 .action-col {
   white-space: nowrap;
   width: 10px;
@@ -26,11 +23,9 @@ nav .navbar-brand .elvenar-title {
   padding-right: 50px !important;
 }
 
-
 /* =========================
    Caldero optimizer layout
    ========================= */
-
 .optimizer {
   max-width: 1000px;
   margin: 0 auto;
@@ -41,7 +36,9 @@ nav .navbar-brand .elvenar-title {
   margin-bottom: 14px;
 }
 
-.hint { color: #666; }
+.hint {
+  color: #666;
+}
 
 .row {
   display: flex;
@@ -50,10 +47,17 @@ nav .navbar-brand .elvenar-title {
   margin-bottom: 10px;
 }
 
-.row.center { justify-content: center; }
-.row.space-between { justify-content: space-between; }
+.row.center {
+  justify-content: center;
+}
 
-.n-diploma { width: 110px; }
+.row.space-between {
+  justify-content: space-between;
+}
+
+.n-diploma {
+  width: 110px;
+}
 
 .diploma-row {
   display: flex;
@@ -67,6 +71,7 @@ nav .navbar-brand .elvenar-title {
   gap: 12px;
 }
 
+/* sliders grid */
 .weights-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -78,6 +83,15 @@ nav .navbar-brand .elvenar-title {
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.weight-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .weight-title {
@@ -87,17 +101,28 @@ nav .navbar-brand .elvenar-title {
   gap: 10px;
 }
 
+.effect-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .weight-label {
-  font-size: 0.85em;
+  font-size: 0.85rem;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .weight-value {
   font-family: monospace;
+  font-size: 0.9rem;
+  color: #555;
+  font-variant-numeric: tabular-nums;
   width: 2.5em;
   text-align: right;
-  font-size: 0.85em;
-  color: #555;
 }
 
 /* Premium ingredients checkbox grid (input page) */
@@ -109,6 +134,7 @@ nav .navbar-brand .elvenar-title {
   text-align: left;
 }
 
+/* bounds */
 .bounds-row {
   display: flex;
   justify-content: center;
@@ -122,7 +148,9 @@ nav .navbar-brand .elvenar-title {
   text-align: left;
 }
 
-.bound-item input { width: 120px; }
+.bound-item input {
+  width: 120px;
+}
 
 .submit-row {
   margin-top: 24px;
@@ -135,79 +163,75 @@ nav .navbar-brand .elvenar-title {
   font-size: 1rem;
 }
 
-
 /* =========================
    Error popup
    ========================= */
-
-:root{
+:root {
   --popup-w: min(662px, 96vw);
   --popup-ratio: 662 / 489;
   --popup-header-h: 9%;
 }
 
-.game-error-overlay{
+.game-error-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.35);
+  background: rgba(0, 0, 0, 0.35);
   display: grid;
   place-items: center;
   z-index: 2000;
 }
 
-.game-error-box{
+.game-error-box {
   width: var(--popup-w);
   aspect-ratio: var(--popup-ratio);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
 }
 
-.game-error-header{
+.game-error-header {
   flex: 0 0 var(--popup-header-h);
   position: relative;
-  background: url("/static/popup_header.png") center / 100% 100% no-repeat;
+  background: url("/static/error/popup_header.png") center / 100% 100% no-repeat;
   display: grid;
   place-items: center;
 }
 
-.game-error-title{
+.game-error-title {
   margin: 0;
   color: #f0d27a;
   font-size: clamp(0.95rem, 2.2vw, 1.25rem);
   letter-spacing: 0.6px;
-  text-shadow:
-    0 1px 0 #DBC496,
-    0 2px 2px rgba(0,0,0,0.6);
+  text-shadow: 0 1px 0 #dbc496, 0 2px 2px rgba(0, 0, 0, 0.6);
 }
 
-.game-error-close{
+.game-error-close {
   position: absolute;
   top: 16%;
   right: 1%;
   width: min(32px, 6vw);
   aspect-ratio: 1 / 1;
   display: block;
-  background: url("/static/close_nohover.png") center / contain no-repeat;
+  background: url("/static/error/close_nohover.png") center / contain no-repeat;
   cursor: pointer;
 }
 
-.game-error-close:hover{
-  background-image: url("/static/close_hover.png");
+.game-error-close:hover {
+  background-image: url("/static/error/close_hover.png");
 }
 
-.game-error-body{
+.game-error-body {
   flex: 1;
-  background: url("/static/popup_body.png") center / cover no-repeat;
+  background: url("/static/error/popup_body.png") center / cover no-repeat;
   padding: 4% 6%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.game-error-text-wrap{
+.game-error-text-wrap {
   flex: 0 0 80%;
   display: flex;
   align-items: center;
@@ -215,16 +239,16 @@ nav .navbar-brand .elvenar-title {
   width: 100%;
 }
 
-.game-error-text{
+.game-error-text {
   margin: 0;
   max-width: 70%;
-  color: #51200D;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+  color: #51200d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
   font-size: clamp(1.05rem, 2.2vw, 1.35rem);
   line-height: 1.4;
 }
 
-.game-error-actions{
+.game-error-actions {
   flex: 2;
   width: 100%;
   display: flex;
@@ -232,10 +256,10 @@ nav .navbar-brand .elvenar-title {
   align-items: flex-end;
 }
 
-.game-error-btn{
+.game-error-btn {
   width: min(220px, 40%);
   aspect-ratio: 4 / 1;
-  background: url("/static/ok_nohover.png") center / contain no-repeat;
+  background: url("/static/error/ok_nohover.png") center / contain no-repeat;
   border: 0;
   padding: 0;
   cursor: pointer;
@@ -245,49 +269,32 @@ nav .navbar-brand .elvenar-title {
   text-decoration: none;
 }
 
-.game-error-btn:hover{
-  background-image: url("/static/ok_hover.png");
+.game-error-btn:hover {
+  background-image: url("/static/error/ok_hover.png");
 }
 
-.game-error-btn span{
+.game-error-btn span {
   font-family: "Trebuchet MS", "Arial Black", sans-serif;
   font-size: clamp(0.9rem, 2vw, 1.1rem);
   font-weight: 800;
   text-transform: uppercase;
   color: #fff;
-  text-shadow:
-    0 2px 0 rgba(0,0,0,0.7),
-    0 0 4px rgba(0,0,0,0.4);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.7), 0 0 4px rgba(0, 0, 0, 0.4);
   pointer-events: none;
 }
-
 
 /* =========================
    Main navbar (image header)
    ========================= */
-
 .main-navbar {
-  background-image: url("/static/main_header.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100% 100%;
+  background: url("/static/main_header.png") center / 100% 100% no-repeat;
   height: 78px;
   padding: 0;
   border: none;
 }
 
-.main-navbar-inner {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.main-navbar-collapse {
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
+.main-navbar-inner,
+.main-navbar-collapse,
 .main-navbar .navbar-nav {
   height: 100%;
   display: flex;
@@ -305,79 +312,148 @@ nav .navbar-brand .elvenar-title {
 }
 
 .main-navbar .nav-link:hover {
-  color: #ffffff !important;
+  color: #fff !important;
   text-decoration: underline;
 }
 
-
 /* =========================
-   Ingredient result cards (RESULTS PAGE)
+   RESULTS PAGE: Ingredient cards
    ========================= */
-
-/* Results grid only (does NOT affect the checkbox grid above) */
-.ingredients-grid.result-grid{
-  display: grid;
-  grid-template-columns: repeat(4, 120px); /* columnas fijas */
-  gap: 12px;                               /* más juntas */
-  justify-content: center;                 /* centra el bloque entero */
+.ingredients-grid.result-grid {
+  grid-template-columns: repeat(4, 120px);
+  gap: 12px;
+  justify-content: center;
 }
 
-/* Smaller fixed card */
-.ingredient-card{
+.ingredient-card {
   position: relative;
   width: 120px;
   height: 150px;
-
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.20);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.85),
-    0 6px 16px rgba(0,0,0,0.14);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 6px 16px rgba(0, 0, 0, 0.14);
 }
 
-/* Image fills the card */
-.ingredient-icon{
+.ingredient-icon {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;        /* fills the card */
+  object-fit: cover;
   object-position: center;
 }
 
-/* Number overlay (auto fits) */
-.value-overlay{
+.value-overlay {
   position: absolute;
   bottom: 3px;
   left: 50%;
-  width: 65%;
   transform: translateX(-50%);
+  width: 65%;
   z-index: 2;
 
-  /* box sizing */
   min-width: 52px;
   max-width: calc(100% - 16px);
   padding: 6px 12px;
 
   border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.35);
-  background: rgba(245,245,245,0.96);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  background: rgba(245, 245, 245, 0.96);
 
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 3px 10px rgba(0,0,0,0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 3px 10px rgba(0, 0, 0, 0.18);
 
   font-family: monospace;
   font-weight: 900;
-  font-size: clamp(1.05rem, 2.2vw, 1.35rem);  /* fits 0..25 nicely */
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
   line-height: 1;
   text-align: center;
   white-space: nowrap;
 }
 
-/* Disabled look for zeros */
-.ingredient-card.zero{
+.ingredient-card.zero {
   opacity: 0.55;
+}
+
+/* =========================
+   RESULTS PAGE: Recipe split + effects list
+   ========================= */
+.recipe-split {
+  display: grid;
+  grid-template-columns: 1fr 1px 320px; /* left | divider | right */
+  gap: 20px;
+  align-items: start;
+}
+
+.recipe-divider {
+  background: #ddd;
+  align-self: stretch;
+}
+
+/* left section: center header + grid */
+.recipe-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-left-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 14px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+/* right section */
+.recipe-right {
+  justify-self: start;
+}
+
+.recipe-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Each effect row (gold highlight intensity: --hl in [0,1]) */
+.recipe-row {
+  display: grid;
+  grid-template-columns: 72px 34px 1fr; /* number | icon | name */
+  align-items: center;
+  column-gap: 12px;
+  width: 100%;
+
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  background: rgba(205, 170, 95, calc(var(--hl, 0) * 0.18));
+  box-shadow: inset 0 0 0 1px rgba(160, 130, 70, calc(var(--hl, 0) * 0.25));
+  transition: background 120ms ease;
+}
+
+.recipe-row:hover {
+  background: rgba(205, 170, 95, calc((var(--hl, 0) * 0.18) + 0.06));
+}
+
+.recipe-row-value {
+  text-align: right;
+  font-weight: 600;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.recipe-row-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.recipe-row-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1rem;
 }

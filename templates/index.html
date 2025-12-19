@@ -15,13 +15,13 @@
           id="n_diploma"
           name="n_diploma"
           min="1"
-          max="21"
+          max="{{ effect_names| length}}"
           step="1"
           value="{{ n_diplomas }}"
           required
           class="n-diploma"
         />
-        <span class="hint">max 21</span>
+        <span class="hint">max {{effect_names| length}}</span>
       </div>
     </div>
 
@@ -60,36 +60,47 @@
   const DEFAULT_MAX_INGR      = {{ max_ingredients | tojson }};
   const DEFAULT_MAX_PROB      = {{ max_effect_prob | tojson }};
   const DEFAULT_SEARCH_DEPTH  = {{ search_depth | tojson }};
-
+  const EFFECT_NAMES          = {{ effect_names | tojson }};
+  
   const nDiplomaEl = document.getElementById("n_diploma");
   const weightsContainer = document.getElementById("weightsContainer");
   const boundsContainer = document.getElementById("boundsContainer");
 
-  const EFFECT_NAMES = [
-    "Monedas","Provisiones","Cuartel Fuerza","Ordinarios Básicos","Ordinarios Refinados",
-    "Ordinarios Preciosos","Entrenamiento Fuerza","Asentamiento","Orcos","Mana",
-    "Mercenarios Fuerza","Semillas","Sensitivos Básicos","Sensitivos Refinados",
-    "Sensitivos Preciosos","Entrenamiento Salud","Mercenarios Salud","Unurium",
-    "Ascendidos Básicos","Ascendidos Refinados","Ascendidos Preciosos",
-  ];
+  
 
-  function makeRangeCard({ labelText, name, min, max, step, value, format = (x) => x }) {
+  function makeRangeCard({
+    labelText,
+    name,
+    iconSrc,
+    min,
+    max,
+    step,
+    value,
+    format = (x) => x
+  }) {
     const card = document.createElement("div");
     card.className = "weight-card";
 
-    const title = document.createElement("div");
-    title.className = "weight-title";
+    // --- top row: icon + value ---
+    const topRow = document.createElement("div");
+    topRow.className = "weight-top-row";
 
-    const label = document.createElement("span");
-    label.className = "weight-label";
-    label.textContent = labelText;
+    if (iconSrc) {
+      const img = document.createElement("img");
+      img.src = iconSrc;
+      img.className = "effect-icon";
+      img.alt = labelText;
+      topRow.appendChild(img);
+    }
 
     const valueText = document.createElement("span");
     valueText.className = "weight-value";
     valueText.textContent = format(value);
 
-    title.append(label, valueText);
+    topRow.appendChild(valueText);
+    card.appendChild(topRow);
 
+    // --- slider ---
     const slider = document.createElement("input");
     slider.type = "range";
     slider.name = name;
@@ -97,27 +108,35 @@
     slider.max = String(max);
     slider.step = String(step);
     slider.value = String(value);
-    slider.style.width = "100%";
-    slider.style.marginTop = "6px";
+
+    card.appendChild(slider);
+
+    // --- label below slider ---
+    const label = document.createElement("div");
+    label.className = "weight-label";
+    label.textContent = labelText;
+    label.title = labelText; // tooltip on hover
+
+    card.appendChild(label);
 
     slider.addEventListener("input", () => {
       valueText.textContent = format(slider.value);
     });
 
-    card.append(title, slider);
     return card;
   }
-
   function rebuildWeights() {
     const n = Number(nDiplomaEl.value);
     weightsContainer.innerHTML = "";
-    if (!Number.isInteger(n) || n < 1 || n > 21) return;
+    if (n < 1 || n > EFFECT_NAMES.length) return;
 
     for (let i = 0; i < n; i++) {
       const defaultW = (DEFAULT_WEIGHTS[i] ?? 0);
+
       weightsContainer.appendChild(
         makeRangeCard({
           labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
+          iconSrc: `/static/effects/effect${i + 1}.png`,
           name: "effect_weights[]",
           min: 0,
           max: 1,

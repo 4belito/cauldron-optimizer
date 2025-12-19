@@ -1,6 +1,8 @@
 # ---- stdlib ----
 import os
 
+import numpy as np
+
 # ---- third-party ----
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
@@ -11,7 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # ---- app / domain ----
 from cauldron_optimizer import CauldronOptimizer
-from constants import INGREDIENT_ICONS, INGREDIENT_NAMES
+from constants import EFFECT_NAMES, INGREDIENT_ICONS, INGREDIENT_NAMES
 from db_model import User, UserSettings
 from flask_session import Session
 from helpers import error, login_required
@@ -74,6 +76,7 @@ def index():
             max_effect_prob=int(settings.max_effects),
             search_depth=int(settings.search_depth),
             ingredient_names=INGREDIENT_NAMES,
+            effect_names=EFFECT_NAMES,
         )
     finally:
         db_sa.close()
@@ -200,7 +203,15 @@ def optimize():
     alpha_best, val_best = opt.multistart(n_starts)
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = float(val_best)
-
+    out_effects = opt.effect_probabilities(alpha_best)
+    order = np.argsort(out_effects)[::-1]
     return render_template(
-        "results.html", alpha_matrix=alpha_matrix, ingredient_icons=INGREDIENT_ICONS, score=score
+        "results.html",
+        alpha_matrix=alpha_matrix,
+        ingredient_icons=INGREDIENT_ICONS,
+        out_effects=out_effects[order].round(2).tolist(),
+        effect_names=[EFFECT_NAMES[i] for i in order],
+        effect_indices=order.tolist(),
+        effect_weights=effect_weights[order].tolist(),
+        score=score,
     )
