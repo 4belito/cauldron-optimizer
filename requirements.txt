@@ -5,4 +5,5 @@ numpy
 psycopg[binary]
 python-dotenv 
 requests
+SQLAlchemy
 Werkzeug
