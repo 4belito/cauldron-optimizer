@@ -24,7 +24,11 @@ from validators import (
 )
 
 load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
-engine = create_engine(os.environ["NEONDB_USER"], pool_pre_ping=True)
+DATABASE_URL = os.environ["NEONDB_USER"]
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
+
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
@@ -43,6 +47,12 @@ def after_request(response):
         response.headers["Expires"] = 0
         response.headers["Pragma"] = "no-cache"
     return response
+
+
+@app.route("/about")
+def about():
+    """Show about page"""
+    return "about.html"
 
 
 @app.route("/")
