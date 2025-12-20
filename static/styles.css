@@ -1218,3 +1218,36 @@ main.container {
     font-size: 0.9rem;
   }
 }
+
+
+/* ===== iOS Safari ONLY: fieldset + legend fix ===== */
+@supports (-webkit-touch-callout: none) {
+
+  /* kill native fieldset border/spacing quirks */
+  fieldset.card{
+    border: 0;
+    min-inline-size: 0;
+
+    /* push content down so the legend doesn't sit on the frame */
+    padding: 28px 16px 16px;
+  }
+
+  /* make legend act like a normal header inside the panel */
+  fieldset.card > legend{
+    float: none;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0 0 12px 0;
+    text-align: center;
+    background: transparent;
+
+    /* ensures it doesn't "hang" on the border area */
+    position: relative;
+    z-index: 1;
+  }
+
+  fieldset.card > legend > strong{
+    display: inline-block;
+  }
+}
