@@ -3,7 +3,13 @@
 {% block title %}
     Error
 {% endblock %}
-
+<body class="{% block body_class %}
+  {% if session.get('user_id') %}
+    book-page
+  {% else %}
+    cauldron-page
+  {% endif %}
+{% endblock %}">
 {% block main %}
     <div class="game-error-overlay">
         <div class="game-error-box">

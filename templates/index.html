@@ -6,21 +6,23 @@
 <form id="optimizerForm" class="optimizer" method="post" action="/optimize">
   <!-- Diplomas + weights -->
   <fieldset class="card">
-    <legend><strong>Diplomas &amp; Efectos Deseados</strong></legend>
+    <legend class="card-legend"><strong>Diplomas &amp; Efectos Deseados</strong></legend>
+    <div class="card-body">
 
-    <div class="diploma-row">
-      <div class="diploma-input">
-        <input
-          type="number"
-          id="n_diploma"
-          name="n_diploma"
-          min="1"
-          max="{{ effect_names| length}}"
-          step="1"
-          value="{{ n_diplomas }}"
-          required
-          class="n-diploma"
-        />
+      <div class="diploma-row">
+        <div class="diploma-input">
+          <input
+            type="number"
+            id="n_diploma"
+            name="n_diploma"
+            min="1"
+            max="{{ effect_names| length}}"
+            step="1"
+            value="{{ n_diplomas }}"
+            required
+            class="n-diploma"
+          />
+        </div>
       </div>
     </div>
 
@@ -29,29 +31,32 @@
 
   <!-- Premium ingredients -->
   <fieldset class="card">
-    <legend><strong>Evitar Ingredientes (Premium)</strong></legend>
+    <legend class="card-legend"><strong>Evitar Ingredientes (Premium)</strong></legend>
+    <div class="card-body">
+      <div class="ingredients-grid">
+        {% for name in ingredient_names %}
+          <label class="ingredient-check">
+            <input type="checkbox" name="premium_ingredients[]" value="{{ name }}">
 
-    <div class="ingredients-grid">
-      {% for name in ingredient_names %}
-        <label class="ingredient-check">
-          <input type="checkbox" name="premium_ingredients[]" value="{{ name }}">
+            <img
+              class="ingredient-check-icon"
+              src="{{ url_for('static', filename='ingredients/ingredient' ~ loop.index ~ '.png') }}"
+              alt=""
+            >
 
-          <img
-            class="ingredient-check-icon"
-            src="{{ url_for('static', filename='ingredients/ingredient' ~ loop.index ~ '.png') }}"
-            alt=""
-          >
-
-          <span class="ingredient-name" title="{{ name }}">{{ name }}</span>
-        </label>
-      {% endfor %}
+            <span class="ingredient-name" title="{{ name }}">{{ name }}</span>
+          </label>
+        {% endfor %}
+      </div>
     </div>
   </fieldset>
 
   <!-- Bounds -->
   <fieldset class="card">
-    <legend><strong>Limitar Búsqueda</strong></legend>
+    <legend class="card-legend" ><strong>Limitar Búsqueda</strong></legend>
+    <div class="card-body">
     <div id="boundsContainer" class="bounds-row"></div>
+    </div>
   </fieldset>
 
   <div class="submit-row">

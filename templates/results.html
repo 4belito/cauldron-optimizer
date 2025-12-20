@@ -49,10 +49,9 @@
                     src="{{ url_for('static', filename='effects/effect' ~ (effect_indices[i] + 1) ~ '.png') }}"
                     alt=""
                   >
-
-                  <span class="recipe-row-name" title="{{ effect_names[i] }}">
-                    {{ effect_names[i] }}
-                  </span>
+                <span class="recipe-row-name" title="{{ effect_names[i] }}">
+                  {{ effect_names[i] }}
+                </span>
                 </div>
             {% endif %}
           {% endfor %}

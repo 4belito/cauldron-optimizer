@@ -134,7 +134,7 @@ def register():
             db_sa.commit()
         except IntegrityError:
             db_sa.rollback()
-            return error("username already exists", url=url_for("register"))
+            return error("El nombre de usuario ya existe", url=url_for("register"))
         finally:
             db_sa.close()
         return redirect(url_for("login"))
