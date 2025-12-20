@@ -719,36 +719,49 @@ fieldset.card > legend.card-legend{
 
 fieldset.card > .card-body{ padding: 0.5rem; }
 
-/* Mobile navbar (relative breakpoint) */
-@media (max-width: 48rem) {
-  .main-navbar-inner{
-    display: grid !important;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
+/* Mobile navbar: dropdown should NOT push content around */
+@media (max-width: 48rem){
+
+  /* make navbar a positioning context */
+  .main-navbar{
+    position: relative;
   }
 
-  .main-navbar-inner > .nav-item{
-    grid-column: 1;
-    justify-self: start;
-  }
-
-  .main-navbar .navbar-brand{
-    grid-column: 2;
-    justify-self: center;
-    position: static !important;
-    transform: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
+  /* take the collapsed menu OUT of the layout flow */
   .main-navbar-collapse{
-    grid-column: 3;
-    justify-self: end;
+    position: absolute;
+    top: 100%;          /* right under the navbar */
+    right: 0;
+    z-index: 3000;
+
     height: auto !important;
+    width: max-content; /* menu width fits items */
+    max-width: 90vw;
+
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+
+    /* pick one background: solid or your wood-ish */
+    background: rgba(45, 26, 16, 0.92);
+
+    /* IMPORTANT: hidden by default */
+    display: none;
   }
 
+  /* show only when Bootstrap adds .show */
+  .main-navbar-collapse.show{
+    display: block;
+  }
+
+  /* stack links one below the other */
   .main-navbar .navbar-nav{
-    flex-direction: row;
+    flex-direction: column !important;
+    align-items: flex-end;
     gap: 0.75rem;
+  }
+
+  .main-navbar .nav-link{
+    display: block;
+    white-space: nowrap;
   }
 }
