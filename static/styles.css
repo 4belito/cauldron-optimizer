@@ -278,11 +278,17 @@ nav .navbar-brand .elvenar-title {
 
 .game-error-btn span {
   font-family: "Trebuchet MS", "Arial Black", sans-serif;
-  font-size: clamp(0.9rem, 2vw, 1.1rem);
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
+
+  /* 👇 key line */
+  font-size: clamp(0.9rem, 3.2vw, 1.6rem);
+
   color: #fff;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.7), 0 0 4px rgba(0, 0, 0, 0.4);
+  text-shadow:
+    0 2px 0 rgba(0,0,0,0.7),
+    0 0 4px rgba(0,0,0,0.4);
+
   pointer-events: none;
 }
 
@@ -322,10 +328,12 @@ nav .navbar-brand .elvenar-title {
 /* =========================
    RESULTS PAGE: Ingredient cards
    ========================= */
-.ingredients-grid.result-grid {
-  grid-template-columns: repeat(4, 120px);
-  gap: 12px;
-  justify-content: center;
+.ingredients-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(190px, 1fr));
+  gap: 12px 18px;
+  justify-items: center;
+  text-align: center;
 }
 
 .ingredient-card {
@@ -424,17 +432,18 @@ nav .navbar-brand .elvenar-title {
 /* Each effect row (gold highlight intensity: --hl in [0,1]) */
 .recipe-row {
   display: grid;
-  grid-template-columns: 72px 34px 1fr; /* number | icon | name */
+  grid-template-columns: 80px 36px 1fr; /* value | icon | name */
   align-items: center;
+  justify-content: start;   /* 👈 force left alignment */
+  justify-items: left;
   column-gap: 12px;
   width: 100%;
 
-  padding: 10px 12px;
+  padding: 10px 16px;
   border-radius: 12px;
 
   background: rgba(94, 55, 36, calc(var(--hl, 0) * 0.18));
   box-shadow: inset 0 0 0 2px rgba(84, 45, 26, calc(var(--hl, 0) * 0.25));
-  transition: background 120ms ease;
 }
 
 .recipe-row:hover {
@@ -457,6 +466,7 @@ nav .navbar-brand .elvenar-title {
 }
 
 .recipe-row-name {
+  align-self: left;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -491,7 +501,13 @@ nav .navbar-brand .elvenar-title {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px 10px;
   }
-
+  /* each item centered and consistent */
+  .ingredients-grid .ingredient-check{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
   /* Bounds: stack */
   .bounds-row {
     flex-direction: column;
@@ -644,32 +660,90 @@ nav .navbar-brand .elvenar-title {
   }
 }
 
-/* Premium ingredients — mobile: 3 columns with short labels */
-@media (max-width: 600px) {
-  .ingredients-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px 8px;
+/* =========================
+   Premium ingredients grid
+   ========================= */
+
+/* Keep 4 columns ALWAYS (game-like 4x3) */
+.ingredients-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* minmax(0,1fr) is key */
+  gap: 14px 10px;
+  justify-items: center;
+}
+
+/* Default = DESKTOP/TRADITIONAL: [check] [icon] [name] */
+.ingredient-check{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;     /* take full grid cell width */
+  min-width: 0;    /* CRITICAL for ellipsis inside grid */
+}
+
+/* checkbox fixed size, doesn't shrink */
+.ingredient-check input[type="checkbox"]{
+  flex: 0 0 auto;
+}
+
+/* icon fixed size */
+.ingredient-check-icon{
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+/* name: ONE LINE + ellipsis + tooltip */
+.ingredient-name{
+  flex: 1 1 auto;      /* take remaining space */
+  min-width: 0;        /* CRITICAL */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font-size: 0.95rem;
+  line-height: 1.1;
+}
+
+@media (min-width: 601px){
+  .ingredient-check{
+    justify-content: flex-start;   /* pack items to the left */
+    text-align: left;
   }
 
-  .ingredients-grid label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    max-width: 100%;       /* respect grid column */
-    font-size: 0.78rem;    /* smaller text */
-    line-height: 1.1;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .ingredients-grid input[type="checkbox"] {
-    flex-shrink: 0;
+  .ingredient-name{
+    text-align: left;              /* text hugs the icon */
   }
 }
 
+/* =========================
+   MOBILE: stacked layout
+   ========================= */
+@media (max-width: 600px){
+  .ingredient-check{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .ingredient-name{
+    width: 100%;
+    text-align: center;
+    font-size: 0.85rem;
+  }
+}
+
+/* tiny phones: keep 4 columns but smaller text */
+@media (max-width: 380px){
+  .ingredient-name{
+    font-size: 0.78rem;
+  }
+}
 
 
 .value-overlay::before{
@@ -908,6 +982,21 @@ input[type="checkbox"] {
   .contact-image img{
     width: 180px;
   }
+  .ingredients-grid{
+    grid-template-columns: repeat(4, minmax(0, 1fr)); /* always 4 columns */
+    gap: 10px 8px;
+  }
+
+  .ingredient-check-icon{
+    width: 34px;
+    height: 34px;
+  }
+
+  .ingredients-grid .ingredient-check-text{
+    font-size: 0.85rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
 }
 
 
@@ -928,4 +1017,204 @@ input[type="checkbox"] {
 
 .login-register-hint a:hover{
   text-decoration: underline;
+}
+
+
+/* =========================================================
+   GLOBAL MOBILE FIT
+   ========================================================= */
+
+* { box-sizing: border-box; }
+
+main.container {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+/* Cards breathe less on phones */
+@media (max-width: 600px) {
+  .card {
+    padding: 12px;
+  }
+
+  .optimizer {
+    padding: 0;
+  }
+
+  /* Weights grid: 2 columns is usually best on phones */
+  .weights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .weight-label { font-size: 0.78rem; }
+  .weight-value { font-size: 0.78rem; }
+
+  /* Recipe page stacks nicely */
+  .recipe-split {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .recipe-divider { display: none; }
+}
+
+
+/* =========================
+   Mobile navbar: prevent overlap
+   ========================= */
+@media (max-width: 768px) {
+
+  /* Make the navbar container a 3-column grid */
+  .main-navbar-inner{
+    display: grid !important;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+
+  /* Put Contact on the left */
+  .main-navbar-inner > .nav-item{
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  /* Center the title, and STOP absolute positioning on mobile */
+  .main-navbar .navbar-brand{
+    grid-column: 2;
+    justify-self: center;
+
+    position: static !important;
+    transform: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Put auth links on the right */
+  .main-navbar-collapse{
+    grid-column: 3;
+    justify-self: end;
+    height: auto !important;
+  }
+
+  .main-navbar .navbar-nav{
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  /* Slightly smaller title so it fits */
+  nav .navbar-brand{
+    font-size: 1.25rem;
+  }
+}
+
+
+/* Main action buttons (Login / Buscar Receta) */
+.game-main-btn {
+  width: clamp(200px, 40vw, 320px);
+  aspect-ratio: 4 / 1;
+  background: url("/static/error/ok_nohover.png") center / contain no-repeat;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-main-btn:hover {
+  background-image: url("/static/error/ok_hover.png");
+}
+
+.game-main-btn span {
+  font-family: "Trebuchet MS", "Arial Black", sans-serif;
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow:
+    0 2px 0 rgba(0,0,0,0.7),
+    0 0 4px rgba(0,0,0,0.4);
+  pointer-events: none;
+}
+
+/* Premium ingredient label text */
+.ingredient-name {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;        /* one line only */
+  overflow: hidden;           /* hide overflow */
+  text-overflow: ellipsis;    /* show … */
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+
+/* =========================================================
+   INDEX premium ingredients: align text close to icon (DESKTOP ONLY)
+   (targets the index page grid, NOT the results grid)
+   ========================================================= */
+@media (min-width: 601px) {
+  /* grid cells should start from the left, not centered */
+  .ingredients-grid:not(.result-grid) {
+    justify-items: start;
+    text-align: left;
+  }
+
+  /* [checkbox][icon][text] packed left */
+  .ingredients-grid:not(.result-grid) .ingredient-check {
+    justify-content: flex-start;
+  }
+
+  /* text hugs the icon (override your global center rule) */
+  .ingredients-grid:not(.result-grid) .ingredient-name {
+    text-align: left !important;
+  }
+}
+
+
+/* =========================================================
+   RESULTS PAGE: keep 4 columns (4x3) even on mobile
+   ========================================================= */
+
+/* Always 4 columns for the results grid */
+.ingredients-grid.result-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  justify-items: center;
+  gap: 10px;
+}
+
+/* Mobile: shrink cards (but keep 4 columns) */
+@media (max-width: 600px){
+  .ingredients-grid.result-grid{
+    gap: 8px;
+  }
+
+  .ingredients-grid.result-grid .ingredient-card{
+    width: 70px;
+    height: 88px;
+    border-radius: 10px;
+  }
+
+  .ingredients-grid.result-grid .value-overlay{
+    width: 54px;
+    height: 24px;
+    font-size: 0.95rem;
+    bottom: 4px;
+  }
+}
+
+/* Tiny phones: shrink a bit more (still 4 columns) */
+@media (max-width: 380px){
+  .ingredients-grid.result-grid .ingredient-card{
+    width: 62px;
+    height: 80px;
+  }
+
+  .ingredients-grid.result-grid .value-overlay{
+    width: 50px;
+    height: 22px;
+    font-size: 0.9rem;
+  }
 }

@@ -43,7 +43,7 @@
             {% if val > 0 %}
               {% set alpha = effect_weights[i] if effect_weights is defined else 0 %}
                 <div class="recipe-row" style = "--hl: {{ alpha }};">
-                  <span class="recipe-row-value">{{ "%.2f"|format(val) }}</span>
+                  <span class="recipe-row-value">{{ "%.2f"|format(val) }}%</span>
                   <img
                     class="recipe-row-icon"
                     src="{{ url_for('static', filename='effects/effect' ~ (effect_indices[i] + 1) ~ '.png') }}"
