@@ -17,8 +17,13 @@
 
     <title>Caldero: {% block title %}{% endblock %}</title>
   </head>
-
-  <body class="{% block body_class %}{% endblock %}">
+  <body class="{% block body_class %}
+    {% if session.get('user_id') %}
+      book-page
+    {% else %}
+      cauldron-page
+    {% endif %}
+  {% endblock %}">
     <nav class="navbar navbar-expand-md navbar-light main-navbar position-relative">
       <div class="container-fluid main-navbar-inner">
 
