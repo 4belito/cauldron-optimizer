@@ -1,20 +1,47 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Register
+    Crear cuenta
 {% endblock %}
+
 {% block body_class %}cauldron-page{% endblock %}
+
 {% block main %}
-    <form action="/register" method="post">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text" required>
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password" required>
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="confirmation" placeholder="Password" type="password" required>
-        </div>
-        <button class="game-error-btn" type="submit"><span>Register</span></button>
-    </form>
+<form action="/register" method="post">
+    <div class="mb-3">
+        <input
+            autocomplete="off"
+            autofocus
+            class="form-control mx-auto w-auto"
+            name="username"
+            placeholder="Usuario"
+            type="text"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <input
+            class="form-control mx-auto w-auto"
+            name="password"
+            placeholder="Contraseña"
+            type="password"
+            required
+        >
+    </div>
+
+    <div class="mb-3">
+        <input
+            class="form-control mx-auto w-auto"
+            name="confirmation"
+            placeholder="Confirmar contraseña"
+            type="password"
+            required
+        >
+    </div>
+
+    <button class="game-error-btn" type="submit">
+        <span>Crear cuenta</span>
+    </button>
+</form>
 {% endblock %}

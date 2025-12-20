@@ -3,7 +3,13 @@
 {% block title %}
   Contact
 {% endblock %}
-{% block body_class %}cauldron-page{% endblock %}
+<body class="{% block body_class %}
+  {% if session.get('user_id') %}
+    book-page
+  {% else %}
+    cauldron-page
+  {% endif %}
+{% endblock %}">
 {% block main %}
 <fieldset class="card contact-card">
   <div class="contact-content">

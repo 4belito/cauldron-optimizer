@@ -1,5 +1,5 @@
 /* =========================
-   Navbar brand (CS50 style)
+   Navbar brand 
    ========================= */
 nav .navbar-brand {
   font-size: xx-large;
@@ -8,14 +8,6 @@ nav .navbar-brand {
 nav .navbar-brand .elvenar-title {
   color: #f0d27a;
   margin-left: 0.7rem;
-}
-
-/* =========================
-   Finance table helpers
-   ========================= */
-.action-col {
-  white-space: nowrap;
-  width: 10px;
 }
 
 .center-col {
@@ -355,30 +347,32 @@ nav .navbar-brand .elvenar-title {
   object-position: center;
 }
 
-.value-overlay {
+.value-overlay{
   position: absolute;
-  bottom: 3px;
   left: 50%;
+  bottom: 6px;                 /* ✅ was -1px -> caused overlap */
   transform: translateX(-50%);
-  width: 65%;
   z-index: 2;
 
-  min-width: 52px;
-  max-width: calc(100% - 16px);
-  padding: 6px 12px;
+  width: 84px;
+  height: 38px;
 
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.35);
-  background: rgba(245, 245, 245, 0.96);
+  background: url("/static/overlays/value_bg.png") center / contain no-repeat;
 
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 3px 10px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  font-family: monospace;
+  font-family: "Trebuchet MS", Arial, sans-serif;
   font-weight: 900;
-  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
+  font-size: 1.25rem;
+
+  line-height: 1;              /* ✅ prevents weird vertical math */
+  color: #3b3b3b;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.55);
+
+  user-select: none;
+  pointer-events: none;
 }
 
 .ingredient-card.zero {
@@ -721,15 +715,8 @@ nav .navbar-brand .elvenar-title {
 
 .value-text{
   position: relative;
-  top: -3px;          /* 👈 THIS is the key (try -3px to -5px) */
-  line-height: 1;     /* remove font descent space */
-
-  font-family: "Trebuchet MS", Arial, sans-serif;
-  font-weight: 900;
-  font-size: 1.25rem;
-  color: #3b3b3b;
-
-  text-shadow: 0 1px 0 rgba(255,255,255,0.55);
+  top: -1px;                   /* ✅ gentler nudge (was -3px) */
+  line-height: 1;
 }
 
 
@@ -921,4 +908,24 @@ input[type="checkbox"] {
   .contact-image img{
     width: 180px;
   }
+}
+
+
+
+
+.login-register-hint{
+  margin-top: -7px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #e6d7b0;
+}
+
+.login-register-hint a{
+  color: #f0d27a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-register-hint a:hover{
+  text-decoration: underline;
 }

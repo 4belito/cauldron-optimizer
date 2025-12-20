@@ -1,3 +1,5 @@
+"""Validators for form data."""
+
 from dataclasses import dataclass
 from typing import Literal
 
