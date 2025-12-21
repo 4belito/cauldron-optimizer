@@ -432,8 +432,12 @@ nav .navbar-brand .elvenar-title {
 }
 
 .recipe-divider {
-  background: #ddd;
+  background: #7a5a1c;
   align-self: stretch;
+
+  /* visual inset */
+  margin-block: 0.875rem;     /* SAME top & bottom spacing */
+  width: 3px;
 }
 
 .recipe-left {
@@ -442,14 +446,19 @@ nav .navbar-brand .elvenar-title {
   align-items: center;
 }
 
-.recipe-left-header {
+.recipe-header {
   width: 100%;
   text-align: center;
+  margin-top: 0;              /* 👈 ADD THIS */
   margin-bottom: 0.875rem;
   font-size: clamp(1.4rem, 3.2vw, 2rem);
   font-weight: 800;
+  color: #51200d;
 }
-
+.recipe-right-header {
+  margin-top: 0;
+  margin-bottom: 0.875rem;
+}
 .recipe-right { justify-self: start; }
 
 .recipe-list {
@@ -721,12 +730,13 @@ fieldset.card > legend.card-legend{
   background: transparent;
   display: table;
   max-width: 100%;
+  color: #51200d;
 }
 
 fieldset.card > .card-body{ padding: 0.5rem; }
 
 /* Mobile navbar: dropdown should NOT push content around */
-@media (max-width: 48rem){
+@media (max-width: 47.999rem){
 
   /* make navbar a positioning context */
   .main-navbar{
@@ -798,3 +808,13 @@ fieldset.card > .card-body{ padding: 0.5rem; }
 .main-navbar .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(245,230,200,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
+
+
+.result-score legend {
+  color: #51200d;
+}
+
+.result-score-value {
+  font-weight: 700;
+}
+
