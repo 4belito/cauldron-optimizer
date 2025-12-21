@@ -55,6 +55,12 @@
         <!-- Right menu -->
         <div class="collapse navbar-collapse main-navbar-collapse" id="navbar">
           <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <!-- Tutorial -->
+                <a class="nav-link" href="https://youtu.be/hMw3CE8PuMs" target="_blank">
+                  Tutorial
+                </a>
+              </li>
             {% if session.get("user_id") %}
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('logout') }}">
