@@ -7,8 +7,6 @@ import numpy as np
 import numpy.typing as npt
 from werkzeug.datastructures import ImmutableMultiDict
 
-from constants import INGREDIENT_NAME_TO_IDX
-
 
 @dataclass(frozen=True)
 class AuthData:
@@ -97,12 +95,5 @@ def parse_effect_weights(
     return w
 
 
-def parse_premium_ingredients(
-    form,
-) -> list[int]:
-    premium_names = form.getlist("premium_ingredients[]")
-    unknown = set(premium_names) - INGREDIENT_NAME_TO_IDX.keys()
-    if unknown:
-        raise ValueError(f"Ingrediente premium desconocido: {next(iter(unknown))}")
-
-    return [INGREDIENT_NAME_TO_IDX[name] for name in premium_names]
+def parse_premium_ingredients(form):
+    return [int(i) for i in form.getlist("premium_ingredients[]")]

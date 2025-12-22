@@ -1,4 +1,5 @@
 Flask
+Flask-Babel
 Flask-Session
 gunicorn
 numpy

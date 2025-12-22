@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Receta Óptima
+    {{ _("Receta Óptima") }}
 {% endblock %}
 {% block main %}
 <div class="optimizer">
@@ -12,7 +12,7 @@
 
       <!-- LEFT: grid -->
       <div class="recipe-left">
-        <div class="recipe-header"><strong>Receta</strong></div>
+        <div class="recipe-header"><strong>{{ _("Receta") }}</strong></div>
         <div class="ingredients-grid result-grid">
           {% for i in range(alpha_matrix|length * alpha_matrix[0]|length) %}
             {% set val = alpha_matrix[i // 4][i % 4] %}
@@ -35,22 +35,22 @@
 
       <!-- RIGHT: effects list -->
       <div class="recipe-right">
-        <div class="recipe-header"><strong>Efectos</strong></div>
+        <div class="recipe-header"><strong>{{ _("Efectos") }}</strong></div>
         <div class="recipe-list">
           {% for i in range(out_effects|length) %}
             {% set val = out_effects[i] %}
             {% if val > 0 %}
               {% set alpha = effect_weights[i] if effect_weights is defined else 0 %}
-                <div class="recipe-row" style = "--hl: {{ alpha }};">
+                <div class="recipe-row" style="--hl: {{ alpha }};">
                   <span class="recipe-row-value">{{ "%.2f"|format(val) }}%</span>
                   <img
                     class="recipe-row-icon"
                     src="{{ url_for('static', filename='effects/effect' ~ (effect_indices[i] + 1) ~ '.png') }}"
                     alt=""
                   >
-                <span class="recipe-row-name" title="{{ effect_names[i] }}">
-                  {{ effect_names[i] }}
-                </span>
+                  <span class="recipe-row-name" title="{{ _(effect_names[i]) }}">
+                    {{ _(effect_names[i]) }}
+                  </span>
                 </div>
             {% endif %}
           {% endfor %}
@@ -62,7 +62,7 @@
 
   <fieldset class="card">
     <div class="result-score">
-      <legend><strong>Score</strong></legend>
+      <legend><strong>{{ _("Score") }}</strong></legend>
       <span class="result-score-value">
         {{ "%.2f"|format(score) }}
       </span>

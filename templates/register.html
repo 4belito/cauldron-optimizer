@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Crear cuenta
+    {{ _("Crear cuenta") }}
 {% endblock %}
 
 {% block main %}
@@ -12,7 +12,7 @@
             autofocus
             class="form-control mx-auto w-auto"
             name="username"
-            placeholder="Usuario"
+            placeholder="{{ _('Usuario') }}"
             type="text"
             required
         >
@@ -22,7 +22,7 @@
         <input
             class="form-control mx-auto w-auto"
             name="password"
-            placeholder="Contraseña"
+            placeholder="{{ _('Contraseña') }}"
             type="password"
             required
         >
@@ -32,14 +32,14 @@
         <input
             class="form-control mx-auto w-auto"
             name="confirmation"
-            placeholder="Confirmar contraseña"
+            placeholder="{{ _('Confirmar contraseña') }}"
             type="password"
             required
         >
     </div>
 
     <button class="game-main-btn" type="submit">
-        <span>Crear cuenta</span>
+        <span>{{ _("Crear cuenta") }}</span>
     </button>
 </form>
 {% endblock %}

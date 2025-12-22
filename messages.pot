@@ -1,0 +1,314 @@
+# Translations template for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-12-22 04:57-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: app.py:99 app.py:217
+msgid "No se encontró la configuracion del ususario"
+msgstr ""
+
+#: app.py:133
+msgid "nombre de usuario o contraseña incorrectos"
+msgstr ""
+
+#: app.py:167
+msgid "El nombre de usuario ya existe"
+msgstr ""
+
+#: app.py:181
+msgid "EL número de diplomas"
+msgstr ""
+
+#: app.py:189
+msgid "El número máximo de ingtedientes"
+msgstr ""
+
+#: app.py:196
+msgid "La probabilidad máxima por por efecto"
+msgstr ""
+
+#: app.py:203
+msgid "La profundidad de la búsqueda"
+msgstr ""
+
+#: app.py:226
+msgid "Error de base de datos"
+msgstr ""
+
+#: constants.py:15
+msgid "Espora Ígnea"
+msgstr ""
+
+#: constants.py:16
+msgid "Escarabanuez"
+msgstr ""
+
+#: constants.py:17
+msgid "Cáscaron de Maná"
+msgstr ""
+
+#: constants.py:18
+msgid "Iris Volador"
+msgstr ""
+
+#: constants.py:19
+msgid "Huevo de Medusa"
+msgstr ""
+
+#: constants.py:20
+msgid "Lima de Oruga"
+msgstr ""
+
+#: constants.py:21
+msgid "Flor de Hierba Mora"
+msgstr ""
+
+#: constants.py:22
+msgid "Lenguas Burlonas"
+msgstr ""
+
+#: constants.py:23
+msgid "Brote Ocular"
+msgstr ""
+
+#: constants.py:24
+msgid "Hoja de Agricabello"
+msgstr ""
+
+#: constants.py:25
+msgid "Capullo de Nube de Algodón"
+msgstr ""
+
+#: constants.py:26
+msgid "Trufa Orejera"
+msgstr ""
+
+#: constants.py:30
+msgid "Monedas"
+msgstr ""
+
+#: constants.py:31
+msgid "Provisiones"
+msgstr ""
+
+#: constants.py:32
+msgid "Cuartel Fuerza"
+msgstr ""
+
+#: constants.py:33
+msgid "Ordinarios Básicos"
+msgstr ""
+
+#: constants.py:34
+msgid "Ordinarios Refinados"
+msgstr ""
+
+#: constants.py:35
+msgid "Ordinarios Preciosos"
+msgstr ""
+
+#: constants.py:36
+msgid "Entrenamiento Fuerza"
+msgstr ""
+
+#: constants.py:37
+msgid "Portal"
+msgstr ""
+
+#: constants.py:38
+msgid "Orcos"
+msgstr ""
+
+#: constants.py:39
+msgid "Maná"
+msgstr ""
+
+#: constants.py:40
+msgid "Mercenarios Fuerza"
+msgstr ""
+
+#: constants.py:41
+msgid "Semillas"
+msgstr ""
+
+#: constants.py:42
+msgid "Sensitivos Básicos"
+msgstr ""
+
+#: constants.py:43
+msgid "Sensitivos Refinados"
+msgstr ""
+
+#: constants.py:44
+msgid "Sensitivos Preciosos"
+msgstr ""
+
+#: constants.py:45
+msgid "Entrenamiento Salud"
+msgstr ""
+
+#: constants.py:46
+msgid "Mercenarios Salud"
+msgstr ""
+
+#: constants.py:47
+msgid "Unurium"
+msgstr ""
+
+#: constants.py:48
+msgid "Ascendidos Básicos"
+msgstr ""
+
+#: constants.py:49
+msgid "Ascendidos Refinados"
+msgstr ""
+
+#: constants.py:50
+msgid "Ascendidos Preciosos"
+msgstr ""
+
+#: constants.py:51
+msgid "Cuartel Salud"
+msgstr ""
+
+#: constants.py:52
+msgid "Trabajo Comunitario"
+msgstr ""
+
+#: constants.py:53
+msgid "Productos en Conserva"
+msgstr ""
+
+#: templates/contact.html:4
+msgid "Contact"
+msgstr ""
+
+#: templates/contact.html:17
+#, python-format
+msgid ""
+"Esta página es un %(project)s y no tiene afiliación oficial con Elvenar "
+"ni con InnoGames."
+msgstr ""
+
+#: templates/contact.html:18
+msgid "proyecto creado por 4bel"
+msgstr ""
+
+#: templates/contact.html:23
+msgid ""
+"Si tienes dudas en cómo usar el optimizador, o sugerencias para "
+"mejorarlo, puedes contactarme directamente en el juego, por Discord o vía"
+" email."
+msgstr ""
+
+#: templates/contact.html:27
+msgid "En juego"
+msgstr ""
+
+#: templates/contact.html:28
+msgid "Mundos"
+msgstr ""
+
+#: templates/index.html:3 templates/results.html:15
+msgid "Receta"
+msgstr ""
+
+#: templates/index.html:10
+msgid "Diplomas & Efectos Deseados"
+msgstr ""
+
+#: templates/index.html:36
+msgid "Evitar Ingredientes (Premium)"
+msgstr ""
+
+#: templates/index.html:60
+msgid "Limitar Búsqueda"
+msgstr ""
+
+#: templates/index.html:69
+msgid "Buscar Receta"
+msgstr ""
+
+#: templates/index.html:173
+msgid "máx cantidad por ingrediente"
+msgstr ""
+
+#: templates/index.html:182
+msgid "máx probabilidad por efecto"
+msgstr ""
+
+#: templates/index.html:191
+msgid "profundidad de búsqueda"
+msgstr ""
+
+#: templates/layout.html:18
+msgid "Caldero"
+msgstr ""
+
+#: templates/layout.html:32
+msgid "Optimizador del Caldero"
+msgstr ""
+
+#: templates/layout.html:43
+msgid "Mostrar navegación"
+msgstr ""
+
+#: templates/layout.html:52
+msgid "Contacto"
+msgstr ""
+
+#: templates/layout.html:57
+msgid "Tutorial"
+msgstr ""
+
+#: templates/layout.html:63
+msgid "Cerrar sesión"
+msgstr ""
+
+#: templates/layout.html:67 templates/login.html:36 templates/register.html:4
+#: templates/register.html:42
+msgid "Crear cuenta"
+msgstr ""
+
+#: templates/layout.html:70 templates/login.html:4 templates/login.html:32
+msgid "Iniciar sesión"
+msgstr ""
+
+#: templates/login.html:15 templates/register.html:15
+msgid "Usuario"
+msgstr ""
+
+#: templates/login.html:25 templates/register.html:25
+msgid "Contraseña"
+msgstr ""
+
+#: templates/register.html:35
+msgid "Confirmar contraseña"
+msgstr ""
+
+#: templates/results.html:4
+msgid "Receta Óptima"
+msgstr ""
+
+#: templates/results.html:38
+msgid "Efectos"
+msgstr ""
+
+#: templates/results.html:65
+msgid "Score"
+msgstr ""
+

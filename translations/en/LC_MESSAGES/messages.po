@@ -1,0 +1,336 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-12-22 04:57-0600\n"
+"PO-Revision-Date: 2025-12-22 02:20-0600\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+# ###################
+# Backend errors / labels
+#: app.py:99 app.py:217
+msgid "No se encontró la configuracion del ususario"
+msgstr "User settings were not found"
+
+#: app.py:133
+msgid "nombre de usuario o contraseña incorrectos"
+msgstr "Incorrect username or password"
+
+#: app.py:167
+msgid "El nombre de usuario ya existe"
+msgstr "That username already exists"
+
+#: app.py:181
+msgid "EL número de diplomas"
+msgstr "Number of diplomas"
+
+#: app.py:189
+msgid "El número máximo de ingtedientes"
+msgstr "Maximum number of ingredients"
+
+#: app.py:196
+msgid "La probabilidad máxima por por efecto"
+msgstr "Maximum probability per effect"
+
+#: app.py:203
+msgid "La profundidad de la búsqueda"
+msgstr "Search depth"
+
+#: app.py:226
+msgid "Error de base de datos"
+msgstr "Database error"
+
+# ###################
+# Ingredients
+#: constants.py:15
+msgid "Espora Ígnea"
+msgstr "Fiery Spore"
+
+#: constants.py:16
+msgid "Escarabanuez"
+msgstr "Nut Scarab"
+
+#: constants.py:17
+msgid "Cáscaron de Maná"
+msgstr "Mana Shell"
+
+#: constants.py:18
+msgid "Iris Volador"
+msgstr "Flying Iris"
+
+#: constants.py:19
+msgid "Huevo de Medusa"
+msgstr "Jellyfish Egg"
+
+#: constants.py:20
+msgid "Lima de Oruga"
+msgstr "Caterpillar Lime"
+
+#: constants.py:21
+msgid "Flor de Hierba Mora"
+msgstr "Nightshade Flower"
+
+#: constants.py:22
+msgid "Lenguas Burlonas"
+msgstr "Mocking Tongues"
+
+#: constants.py:23
+msgid "Brote Ocular"
+msgstr "Ocular Sprout"
+
+#: constants.py:24
+msgid "Hoja de Agricabello"
+msgstr "Agricabello Leaf"
+
+#: constants.py:25
+msgid "Capullo de Nube de Algodón"
+msgstr "Cotton Cloud Cocoon"
+
+#: constants.py:26
+msgid "Trufa Orejera"
+msgstr "Ear Truffle"
+
+# ###################
+# Effects
+#: constants.py:30
+msgid "Monedas"
+msgstr "Coins"
+
+#: constants.py:31
+msgid "Provisiones"
+msgstr "Supplies"
+
+#: constants.py:32
+msgid "Cuartel Fuerza"
+msgstr "Barracks Power"
+
+#: constants.py:33
+msgid "Ordinarios Básicos"
+msgstr "Basic Goods"
+
+#: constants.py:34
+msgid "Ordinarios Refinados"
+msgstr "Refined Goods"
+
+#: constants.py:35
+msgid "Ordinarios Preciosos"
+msgstr "Precious Goods"
+
+#: constants.py:36
+msgid "Entrenamiento Fuerza"
+msgstr "Training Power"
+
+#: constants.py:37
+msgid "Portal"
+msgstr "Portal"
+
+#: constants.py:38
+msgid "Orcos"
+msgstr "Orcs"
+
+#: constants.py:39
+msgid "Maná"
+msgstr "Mana"
+
+#: constants.py:40
+msgid "Mercenarios Fuerza"
+msgstr "Mercenary Power"
+
+#: constants.py:41
+msgid "Semillas"
+msgstr "Seeds"
+
+#: constants.py:42
+msgid "Sensitivos Básicos"
+msgstr "Basic Sentient Goods"
+
+#: constants.py:43
+msgid "Sensitivos Refinados"
+msgstr "Refined Sentient Goods"
+
+#: constants.py:44
+msgid "Sensitivos Preciosos"
+msgstr "Precious Sentient Goods"
+
+#: constants.py:45
+msgid "Entrenamiento Salud"
+msgstr "Training Health"
+
+#: constants.py:46
+msgid "Mercenarios Salud"
+msgstr "Mercenary Health"
+
+#: constants.py:47
+msgid "Unurium"
+msgstr "Unurium"
+
+#: constants.py:48
+msgid "Ascendidos Básicos"
+msgstr "Basic Ascended Goods"
+
+#: constants.py:49
+msgid "Ascendidos Refinados"
+msgstr "Refined Ascended Goods"
+
+#: constants.py:50
+msgid "Ascendidos Preciosos"
+msgstr "Precious Ascended Goods"
+
+#: constants.py:51
+msgid "Cuartel Salud"
+msgstr "Barracks Health"
+
+#: constants.py:52
+msgid "Trabajo Comunitario"
+msgstr "Community Service"
+
+#: constants.py:53
+msgid "Productos en Conserva"
+msgstr "Preserved Goods"
+
+# ###################
+# Contact page
+#: templates/contact.html:4
+msgid "Contact"
+msgstr "Contact"
+
+#: templates/contact.html:17
+#, python-format
+msgid ""
+"Esta página es un %(project)s y no tiene afiliación oficial con Elvenar "
+"ni con InnoGames."
+msgstr ""
+"This page is a %(project)s and has no official affiliation with Elvenar "
+"or InnoGames."
+
+#: templates/contact.html:18
+msgid "proyecto creado por 4bel"
+msgstr "project created by 4bel"
+
+#: templates/contact.html:23
+msgid ""
+"Si tienes dudas en cómo usar el optimizador, o sugerencias para "
+"mejorarlo, puedes contactarme directamente en el juego, por Discord o vía"
+" email."
+msgstr ""
+"If you have questions about how to use the optimizer, or suggestions for "
+"improving it, you can contact me directly in the game, via Discord, or by"
+" email."
+
+#: templates/contact.html:27
+msgid "En juego"
+msgstr "In game"
+
+#: templates/contact.html:28
+msgid "Mundos"
+msgstr "Worlds"
+
+# ###################
+# Index / Optimizer
+#: templates/index.html:3 templates/results.html:15
+msgid "Receta"
+msgstr "Recipe"
+
+#: templates/index.html:10
+msgid "Diplomas & Efectos Deseados"
+msgstr "Diplomas & Desired Effects"
+
+#: templates/index.html:36
+msgid "Evitar Ingredientes (Premium)"
+msgstr "Avoid Ingredients (Premium)"
+
+#: templates/index.html:60
+msgid "Limitar Búsqueda"
+msgstr "Limit Search"
+
+#: templates/index.html:69
+msgid "Buscar Receta"
+msgstr "Find Recipe"
+
+#: templates/index.html:173
+msgid "máx cantidad por ingrediente"
+msgstr "Max quantity per ingredient"
+
+#: templates/index.html:182
+msgid "máx probabilidad por efecto"
+msgstr "Max probability per effect"
+
+#: templates/index.html:191
+msgid "profundidad de búsqueda"
+msgstr "Search depth"
+
+# ###################
+# Layout / UI
+#: templates/layout.html:18
+msgid "Caldero"
+msgstr "Cauldron"
+
+#: templates/layout.html:32
+msgid "Optimizador del Caldero"
+msgstr "Cauldron Optimizer"
+
+#: templates/layout.html:43
+msgid "Mostrar navegación"
+msgstr "Toggle navigation"
+
+#: templates/layout.html:52
+msgid "Contacto"
+msgstr "Contact"
+
+#: templates/layout.html:57
+msgid "Tutorial"
+msgstr "Tutorial"
+
+#: templates/layout.html:63
+msgid "Cerrar sesión"
+msgstr "Log out"
+
+#: templates/layout.html:67 templates/login.html:36 templates/register.html:4
+#: templates/register.html:42
+msgid "Crear cuenta"
+msgstr "Create account"
+
+#: templates/layout.html:70 templates/login.html:4 templates/login.html:32
+msgid "Iniciar sesión"
+msgstr "Log in"
+
+# ###################
+# Forms
+#: templates/login.html:15 templates/register.html:15
+msgid "Usuario"
+msgstr "Username"
+
+#: templates/login.html:25 templates/register.html:25
+msgid "Contraseña"
+msgstr "Password"
+
+#: templates/register.html:35
+msgid "Confirmar contraseña"
+msgstr "Confirm password"
+
+# ###################
+# Results
+#: templates/results.html:4
+msgid "Receta Óptima"
+msgstr "Optimal Recipe"
+
+#: templates/results.html:38
+msgid "Efectos"
+msgstr "Effects"
+
+#: templates/results.html:65
+msgid "Score"
+msgstr "Score"
+

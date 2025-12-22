@@ -1,31 +1,31 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  Contact
+  {{ _("Contact") }}
 {% endblock %}
+
 {% block main %}
 <fieldset class="card contact-card">
   <div class="contact-content">
 
-    <!-- Imagen grande a la izquierda -->
     <div class="contact-image">
       <img src="{{ url_for('static', filename='favicon_4bel.png') }}" alt="4bel avatar">
     </div>
 
-
-    <!-- Texto -->
     <div class="contact-text">
       <p>
-        Esta página es un <strong>proyecto creado por 4bel</strong> y no tiene
-        afiliación oficial con Elvenar ni con InnoGames.
+      {{ _("Esta página es un %(project)s y no tiene afiliación oficial con Elvenar ni con InnoGames.")
+        | format(project="<strong>" ~ _('proyecto creado por 4bel') ~ "</strong>")
+        | safe }}
+      </p>
 
-        Si tienes dudas en como usar el optimizador, o sugerencias para mejorarlo,
-        puedes contactarme directamente en el juego, por Discord o via email.
+      <p>
+        {{ _("Si tienes dudas en cómo usar el optimizador, o sugerencias para mejorarlo, puedes contactarme directamente en el juego, por Discord o vía email.") }}
       </p>
 
       <p class="contact-links">
-        🧙 En juego: <strong>4bel</strong><br>
-        🌍 Mundos: <strong>Winyandor · Arendyll</strong> - ES<br>
+        🧙 {{ _("En juego") }}: <strong>4bel</strong><br>
+        🌍 {{ _("Mundos") }}: <strong>Winyandor · Arendyll</strong> - ES<br>
         💬 Discord: <strong>4bel</strong><br>
         📧 Email:
         <a href="mailto:4belcatan@gmail.com">4belcatan@gmail.com</a>

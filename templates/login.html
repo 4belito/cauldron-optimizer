@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Iniciar sesión
+    {{ _("Iniciar sesión") }}
 {% endblock %}
 
 {% block main %}
@@ -12,7 +12,7 @@
             autofocus
             class="form-control mx-auto w-auto"
             name="username"
-            placeholder="Usuario"
+            placeholder="{{ _('Usuario') }}"
             type="text"
             required
         >
@@ -22,18 +22,18 @@
         <input
             class="form-control mx-auto w-auto"
             name="password"
-            placeholder="Contraseña"
+            placeholder="{{ _('Contraseña') }}"
             type="password"
             required
         >
     </div>
 
     <button class="game-main-btn" type="submit">
-        <span>Iniciar sesión</span>
+        <span>{{ _("Iniciar sesión") }}</span>
     </button>
 
     <div class="login-register-hint">
-        <a href="{{ url_for('register') }}">Crear cuenta</a>
+        <a href="{{ url_for('register') }}">{{ _("Crear cuenta") }}</a>
     </div>
 </form>
 {% endblock %}

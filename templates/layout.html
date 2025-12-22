@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="{{ get_locale() }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
@@ -15,7 +15,7 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=12">
 
-    <title>Caldero: {% block title %}{% endblock %}</title>
+    <title>{{ _("Caldero") }}: {% block title %}{% endblock %}</title>
   </head>
   <body class="{% block body_class %}
     {% if session.get('user_id') %}
@@ -29,7 +29,7 @@
 
       <!-- Brand (no absolute positioning) -->
       <a class="navbar-brand" href="{{ url_for('index') }}">
-        <span class="elvenar-title">Optimizador del Caldero</span>
+        <span class="elvenar-title">{{ _("Optimizador del Caldero") }}</span>
       </a>
 
       <!-- Mobile toggle -->
@@ -40,7 +40,7 @@
         data-bs-target="#navbar"
         aria-controls="navbar"
         aria-expanded="false"
-        aria-label="Mostrar navegación">
+        aria-label="{{ _('Mostrar navegación') }}">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -49,25 +49,25 @@
         <ul class="navbar-nav ms-auto">
 
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('contact') }}">Contacto</a>
+            <a class="nav-link" href="{{ url_for('contact') }}">{{ _("Contacto") }}</a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link" href="https://youtu.be/hMw3CE8PuMs" target="_blank" rel="noopener">
-              Tutorial
+              {{ _("Tutorial") }}
             </a>
           </li>
 
           {% if session.get("user_id") %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('logout') }}">Cerrar sesión</a>
+              <a class="nav-link" href="{{ url_for('logout') }}">{{ _("Cerrar sesión") }}</a>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('register') }}">Crear cuenta</a>
+              <a class="nav-link" href="{{ url_for('register') }}">{{ _("Crear cuenta") }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('login') }}">Iniciar sesión</a>
+              <a class="nav-link" href="{{ url_for('login') }}">{{ _("Iniciar sesión") }}</a>
             </li>
           {% endif %}
         </ul>

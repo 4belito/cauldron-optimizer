@@ -6,6 +6,8 @@ import numpy as np
 # ---- third-party ----
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
+from flask_babel import Babel, force_locale, get_locale
+from flask_babel import gettext as _
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
@@ -13,7 +15,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # ---- app / domain ----
 from cauldron_optimizer import CauldronOptimizer
-from constants import EFFECT_NAMES, INGREDIENT_ICONS, INGREDIENT_NAMES
+from constants import EFFECT_NAMES, INGREDIENT_ICONS, INGREDIENT_NAMES, LANGUAGES
 from db_model import User, UserSettings
 from flask_session import Session
 from helpers import error, login_required
@@ -41,6 +43,38 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
+def select_locale():
+    # 1) Override manual: /?lang=en o /?lang=es
+    lang = request.args.get("lang")
+    if lang in LANGUAGES:
+        session["lang"] = lang
+        return lang
+
+    # 2) Preferencia guardada en sesión
+    lang = session.get("lang")
+    if lang in LANGUAGES:
+        return lang
+
+    # 3) Detección automática por navegador
+    browser_lang = request.accept_languages.best_match(LANGUAGES)
+    if browser_lang:
+        return browser_lang
+
+    # 4) Fallback final: español
+    return "es"
+
+
+babel = Babel(app, locale_selector=select_locale)
+
+
+@app.context_processor
+def inject_i18n():
+    return {
+        "_": _,
+        "get_locale": get_locale,
+    }
+
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -51,12 +85,7 @@ def after_request(response):
     return response
 
 
-@app.route("/about")
-def about():
-    """Show about page"""
-    return "about.html"
-
-
+# constants.py
 @app.route("/")
 @app.route("/home")
 @login_required
@@ -67,7 +96,8 @@ def index():
     try:
         settings = db_sa.get(UserSettings, user_id)
         if settings is None:
-            return error("User settings not found", url=url_for("logout"))
+            return error(_("No se encontró la configuracion del ususario"), url=url_for("logout"))
+
         return render_template(
             "index.html",
             effect_weights=settings.effect_weights,
@@ -75,8 +105,8 @@ def index():
             max_ingredients=int(settings.max_ingredients),
             max_effect_prob=int(settings.max_effects),
             search_depth=int(settings.search_depth),
-            ingredient_names=INGREDIENT_NAMES,
             effect_names=EFFECT_NAMES,
+            ingredient_names=INGREDIENT_NAMES,
         )
     finally:
         db_sa.close()
@@ -100,7 +130,7 @@ def login():
             ).scalar_one_or_none()
 
             if user is None or not check_password_hash(user.hash, data.password):
-                return error("nombre de usuario o contraseña incorrectos", url=url_for("login"))
+                return error(_("nombre de usuario o contraseña incorrectos"), url=url_for("login"))
 
             session["user_id"] = user.id
             return redirect(url_for("index"))
@@ -134,7 +164,7 @@ def register():
             db_sa.commit()
         except IntegrityError:
             db_sa.rollback()
-            return error("El nombre de usuario ya existe", url=url_for("register"))
+            return error(_("El nombre de usuario ya existe"), url=url_for("register"))
         finally:
             db_sa.close()
         return redirect(url_for("login"))
@@ -148,7 +178,7 @@ def optimize():
         n_dipl = parse_int(
             request.form,
             "n_diploma",
-            label="EL número de diplomas",
+            label=_("EL número de diplomas"),
             min_val=1,
             max_val=CauldronOptimizer.max_ndiplomas,
         )
@@ -156,19 +186,23 @@ def optimize():
         alpha_ub = parse_int(
             request.form,
             "alpha_UB",
-            label="El número máximo de ingtedientes",
+            label=_("El número máximo de ingtedientes"),
             min_val=1,
             max_val=25,
         )
         prob_ub = parse_int(
             request.form,
             "prob_UB",
-            label="La probabilidad máxima por por efecto",
+            label=_("La probabilidad máxima por por efecto"),
             min_val=1,
             max_val=100,
         )
         n_starts = parse_int(
-            request.form, "n_starts", label="La profundidad de la búsqueda", min_val=1, max_val=100
+            request.form,
+            "n_starts",
+            label=_("La profundidad de la búsqueda"),
+            min_val=1,
+            max_val=100,
         )
         premium_ingr = parse_premium_ingredients(request.form)
     except ValueError as e:
@@ -180,7 +214,7 @@ def optimize():
     try:
         settings = db_sa.get(UserSettings, user_id)
         if settings is None:
-            return error("Missing user settings for this user.", url=url_for("index"))
+            return error(_("No se encontró la configuracion del ususario"), url=url_for("index"))
         settings.effect_weights = effect_weights.tolist()
         settings.max_ingredients = int(alpha_ub)
         settings.max_effects = int(prob_ub)
@@ -189,7 +223,7 @@ def optimize():
         db_sa.commit()
     except SQLAlchemyError:
         db_sa.rollback()
-        return error("Database error", url=url_for("index"))
+        return error(_("Error de base de datos"), url=url_for("index"))
     finally:
         db_sa.close()
 
@@ -205,6 +239,7 @@ def optimize():
     score = float(val_best)
     out_effects = opt.effect_probabilities(alpha_best)
     order = np.argsort(out_effects)[::-1]
+
     return render_template(
         "results.html",
         alpha_matrix=alpha_matrix,

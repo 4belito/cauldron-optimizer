@@ -1,12 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}Receta{% endblock %}
+{% block title %}{{ _("Receta") }}{% endblock %}
 
 {% block main %}
 <form id="optimizerForm" class="optimizer" method="post" action="/optimize">
   <!-- Diplomas + weights -->
   <fieldset class="card">
-    <legend class="card-legend"><strong>Diplomas &amp; Efectos Deseados</strong></legend>
+    <legend class="card-legend">
+      <strong>{{ _("Diplomas & Efectos Deseados") }}</strong>
+    </legend>
     <div class="card-body">
 
       <div class="diploma-row">
@@ -16,7 +18,7 @@
             id="n_diploma"
             name="n_diploma"
             min="1"
-            max="{{ effect_names| length}}"
+            max="{{ effect_names | length }}"
             step="1"
             value="{{ n_diplomas }}"
             required
@@ -24,18 +26,20 @@
           />
         </div>
       </div>
-    <div id="weightsContainer" class="weights-grid"></div>
+      <div id="weightsContainer" class="weights-grid"></div>
     </div>
   </fieldset>
 
   <!-- Premium ingredients -->
   <fieldset class="card">
-    <legend class="card-legend"><strong>Evitar Ingredientes (Premium)</strong></legend>
+    <legend class="card-legend">
+      <strong>{{ _("Evitar Ingredientes (Premium)") }}</strong>
+    </legend>
     <div class="card-body">
       <div class="ingredients-grid">
         {% for name in ingredient_names %}
           <label class="ingredient-check">
-            <input type="checkbox" name="premium_ingredients[]" value="{{ name }}">
+            <input type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}">
 
             <img
               class="ingredient-check-icon"
@@ -43,7 +47,7 @@
               alt=""
             >
 
-            <span class="ingredient-name" title="{{ name }}">{{ name }}</span>
+            <span class="ingredient-name" title="{{ _(name) }}">{{ _(name) }}</span>
           </label>
         {% endfor %}
       </div>
@@ -52,31 +56,37 @@
 
   <!-- Bounds -->
   <fieldset class="card">
-    <legend class="card-legend" ><strong>Limitar Búsqueda</strong></legend>
+    <legend class="card-legend">
+      <strong>{{ _("Limitar Búsqueda") }}</strong>
+    </legend>
     <div class="card-body">
-    <div id="boundsContainer" class="bounds-row"></div>
+      <div id="boundsContainer" class="bounds-row"></div>
     </div>
   </fieldset>
 
   <div class="submit-row">
-    <button type="submit" class="game-main-btn"><span>Buscar Receta</span> </button>
+    <button type="submit" class="game-main-btn">
+      <span>{{ _("Buscar Receta") }}</span>
+    </button>
   </div>
 </form>
 
 <script>
   // ----- Defaults coming from Flask -----
   const DEFAULT_N_DIPLOMAS    = {{ n_diplomas | tojson }};
-  const DEFAULT_WEIGHTS       = {{ effect_weights | tojson }};  // array length = n_diplomas
+  const DEFAULT_WEIGHTS       = {{ effect_weights | tojson }};
   const DEFAULT_MAX_INGR      = {{ max_ingredients | tojson }};
   const DEFAULT_MAX_PROB      = {{ max_effect_prob | tojson }};
   const DEFAULT_SEARCH_DEPTH  = {{ search_depth | tojson }};
-  const EFFECT_NAMES          = {{ effect_names | tojson }};
-  
+  const EFFECT_NAMES = [
+    {% for n in effect_names %}
+      {{ _(n) | tojson }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ];
+
   const nDiplomaEl = document.getElementById("n_diploma");
   const weightsContainer = document.getElementById("weightsContainer");
   const boundsContainer = document.getElementById("boundsContainer");
-
-  
 
   function makeRangeCard({
     labelText,
@@ -91,7 +101,6 @@
     const card = document.createElement("div");
     card.className = "weight-card";
 
-    // --- top row: icon + value ---
     const topRow = document.createElement("div");
     topRow.className = "weight-top-row";
 
@@ -110,7 +119,6 @@
     topRow.appendChild(valueText);
     card.appendChild(topRow);
 
-    // --- slider ---
     const slider = document.createElement("input");
     slider.type = "range";
     slider.name = name;
@@ -121,11 +129,10 @@
 
     card.appendChild(slider);
 
-    // --- label below slider ---
     const label = document.createElement("div");
     label.className = "weight-label";
     label.textContent = labelText;
-    label.title = labelText; // tooltip on hover
+    label.title = labelText;
 
     card.appendChild(label);
 
@@ -135,6 +142,7 @@
 
     return card;
   }
+
   function rebuildWeights() {
     const n = Number(nDiplomaEl.value);
     weightsContainer.innerHTML = "";
@@ -157,14 +165,12 @@
       weightsContainer.appendChild(card);
     }
 
-    // ✅ IMPORTANT: initialize fill for the newly created sliders
     initRangeFills(weightsContainer);
   }
 
-  // Build bounds (defaults from Flask)
   boundsContainer.append(
     makeRangeCard({
-      labelText: "máx cantidad por ingrediente",
+      labelText: "{{ _('máx cantidad por ingrediente') }}",
       name: "alpha_UB",
       min: 1,
       max: 25,
@@ -173,7 +179,7 @@
       format: (x) => String(parseInt(x, 10)),
     }),
     makeRangeCard({
-      labelText: "máx probabilidad por efecto",
+      labelText: "{{ _('máx probabilidad por efecto') }}",
       name: "prob_UB",
       min: 1,
       max: 100,
@@ -182,7 +188,7 @@
       format: (x) => String(parseInt(x, 10)),
     }),
     makeRangeCard({
-      labelText: "profundidad de búsqueda",
+      labelText: "{{ _('profundidad de búsqueda') }}",
       name: "n_starts",
       min: 1,
       max: 100,
@@ -192,7 +198,6 @@
     })
   );
 
-  // Initialize n_diploma + sliders from defaults
   nDiplomaEl.value = DEFAULT_N_DIPLOMAS;
   rebuildWeights();
   nDiplomaEl.addEventListener("change", rebuildWeights);
@@ -212,9 +217,6 @@
     });
   }
 
-  // call once on page load
   initRangeFills();
-
-
 </script>
 {% endblock %}
