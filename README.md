@@ -1,19 +1,31 @@
 # Cauldron Optimizer
 
+<p align="center">
+  <img src="docs/screenshot.png" alt="Cauldron Optimizer web app screenshot" width="900">
+</p>
+<p align="center">
+  <em>
+    Web interface for selecting target effects and constraints before running the recipe optimization.
+    After configuration, the optimizer computes and displays the recommended ingredient recipe
+    and the corresponding effect probabilities.
+  </em>
+</p>
+
 **Probabilistic Recipe Optimization for Elvenar**
 
-This repository contains a production web application that helps players choose ingredient combinations for the Elvenar Cauldron to maximize the expected value of desired effects.
+This repository contains a production web application that helps players choose
+ingredient combinations for the Elvenar Cauldron to maximize the expected value
+of desired effects.
 
 The underlying cauldron mechanics produce probabilistic outcomes: for a fixed
 recipe, the realized effect is random. The optimization *objective and scoring
 model* are deterministic, while the search procedure may use randomized
-initialization to explore the solution space. The final recommendation is
-chosen by maximizing a weighted expected-effect objective.
+initialization to explore the solution space. The final recommendation is chosen
+by maximizing a weighted expected-effect objective.
 
 **Deployed:** Render (web service) + Neon (PostgreSQL)  
-**Used by:** active players (accounts stored in the database)\
+**Used by:** active players (accounts stored in the database)  
 **Live application:** https://cauldron-optimizer.onrender.com
-
 
 
 ## What the app does
