@@ -47,7 +47,14 @@
       <!-- Collapsible menu (ALL links go here) -->
       <div class="collapse navbar-collapse main-navbar-collapse" id="navbar">
         <ul class="navbar-nav ms-auto">
-
+          {% set loc = get_locale()|string %}
+          <li class="nav-item d-flex align-items-center ms-3 language-switch">
+            <a class="lang-link {{ 'active' if loc.startswith('es') }}"
+              href="{{ url_for('set_lang', lang='es') }}">ES</a>
+            <span class="lang-sep">|</span>
+            <a class="lang-link {{ 'active' if loc.startswith('en') }}"
+              href="{{ url_for('set_lang', lang='en') }}">EN</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('contact') }}">{{ _("Contacto") }}</a>
           </li>
@@ -57,7 +64,6 @@
               {{ _("Tutorial") }}
             </a>
           </li>
-
           {% if session.get("user_id") %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('logout') }}">{{ _("Cerrar sesión") }}</a>

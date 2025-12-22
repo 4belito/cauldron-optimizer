@@ -1,9 +1,6 @@
 """Constants for the Cauldron optimizer."""
 
-# constants.py
 LANGUAGES = ["es", "en"]
-
-# constants.py
 
 
 # Babel extraction marker: extracted, but does NOT translate.
@@ -53,5 +50,4 @@ EFFECT_NAMES = [
     N_("Productos en Conserva"),
 ]
 
-INGREDIENT_ICONS = [f"ingredients/ingr{i}.png" for i in range(1, len(INGREDIENT_NAMES) + 1)]
 N_INGREDIENTS = len(INGREDIENT_NAMES)

@@ -19,7 +19,7 @@
             <div class="ingredient-card {{ 'zero' if val == 0 else '' }}">
               <img
                 class="ingredient-icon"
-                src="{{ url_for('static', filename=ingredient_icons[i]) }}"
+                src="{{ url_for('static', filename='ingredients/ingr' ~ loop.index ~ '.png') }}"
                 alt=""
               >
               <div class="value-overlay">

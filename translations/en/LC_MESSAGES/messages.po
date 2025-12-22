@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-22 04:57-0600\n"
+"POT-Creation-Date: 2025-12-22 05:16-0600\n"
 "PO-Revision-Date: 2025-12-22 02:20-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -52,15 +52,15 @@ msgstr "Search depth"
 msgid "Error de base de datos"
 msgstr "Database error"
 
-# ###################
-# Ingredients
+# ===================
+# Ingredients (Official English names)
 #: constants.py:15
 msgid "Espora Ígnea"
 msgstr "Fiery Spore"
 
 #: constants.py:16
 msgid "Escarabanuez"
-msgstr "Nut Scarab"
+msgstr "Scarab Nut"
 
 #: constants.py:17
 msgid "Cáscaron de Maná"
@@ -76,7 +76,7 @@ msgstr "Jellyfish Egg"
 
 #: constants.py:20
 msgid "Lima de Oruga"
-msgstr "Caterpillar Lime"
+msgstr "Caterpillar Fruit"
 
 #: constants.py:21
 msgid "Flor de Hierba Mora"
@@ -88,7 +88,7 @@ msgstr "Mocking Tongues"
 
 #: constants.py:23
 msgid "Brote Ocular"
-msgstr "Ocular Sprout"
+msgstr "Ocular Bud"
 
 #: constants.py:24
 msgid "Hoja de Agricabello"
@@ -102,7 +102,7 @@ msgstr "Cotton Cloud Cocoon"
 msgid "Trufa Orejera"
 msgstr "Ear Truffle"
 
-# ###################
+# ===================
 # Effects
 #: constants.py:30
 msgid "Monedas"
@@ -114,7 +114,7 @@ msgstr "Supplies"
 
 #: constants.py:32
 msgid "Cuartel Fuerza"
-msgstr "Barracks Power"
+msgstr "Barracks Strength"
 
 #: constants.py:33
 msgid "Ordinarios Básicos"
@@ -130,7 +130,7 @@ msgstr "Precious Goods"
 
 #: constants.py:36
 msgid "Entrenamiento Fuerza"
-msgstr "Training Power"
+msgstr "Training Strength"
 
 #: constants.py:37
 msgid "Portal"
@@ -146,7 +146,7 @@ msgstr "Mana"
 
 #: constants.py:40
 msgid "Mercenarios Fuerza"
-msgstr "Mercenary Power"
+msgstr "Mercenary Strength"
 
 #: constants.py:41
 msgid "Semillas"
@@ -194,11 +194,11 @@ msgstr "Barracks Health"
 
 #: constants.py:52
 msgid "Trabajo Comunitario"
-msgstr "Community Service"
+msgstr "Community Work"
 
 #: constants.py:53
 msgid "Productos en Conserva"
-msgstr "Preserved Goods"
+msgstr "Canned Goods"
 
 # ###################
 # Contact page

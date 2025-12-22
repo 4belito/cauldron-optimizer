@@ -818,3 +818,29 @@ fieldset.card > .card-body{ padding: 0.5rem; }
   font-weight: 700;
 }
 
+.language-switch {
+  font-size: 0.9rem;
+}
+
+.language-switch .lang-link {
+  color: #eee;
+  text-decoration: none;
+  padding: 0 4px;
+  opacity: 0.6;
+}
+
+.language-switch .lang-link:hover {
+  opacity: 1;
+}
+
+.language-switch .lang-link.active {
+  font-weight: 700;
+  color: #ffd27d; /* gold-like, fits Elvenar theme */
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.language-switch .lang-sep {
+  color: #bbb;
+  padding: 0 2px;
+}

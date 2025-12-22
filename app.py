@@ -6,7 +6,7 @@ import numpy as np
 # ---- third-party ----
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
-from flask_babel import Babel, force_locale, get_locale
+from flask_babel import Babel, get_locale
 from flask_babel import gettext as _
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -15,7 +15,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # ---- app / domain ----
 from cauldron_optimizer import CauldronOptimizer
-from constants import EFFECT_NAMES, INGREDIENT_ICONS, INGREDIENT_NAMES, LANGUAGES
+from constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
 from db_model import User, UserSettings
 from flask_session import Session
 from helpers import error, login_required
@@ -73,6 +73,14 @@ def inject_i18n():
         "_": _,
         "get_locale": get_locale,
     }
+
+
+@app.route("/lang/<lang>")
+def set_lang(lang):
+    if lang not in LANGUAGES:
+        lang = "es"
+    session["lang"] = lang
+    return redirect(request.referrer or url_for("index"))
 
 
 @app.after_request
@@ -243,7 +251,6 @@ def optimize():
     return render_template(
         "results.html",
         alpha_matrix=alpha_matrix,
-        ingredient_icons=INGREDIENT_ICONS,
         out_effects=out_effects[order].round(2).tolist(),
         effect_names=[EFFECT_NAMES[i] for i in order],
         effect_indices=order.tolist(),
