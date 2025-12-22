@@ -123,7 +123,10 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
+    lang = session.get("lang")
     session.clear()
+    if lang:
+        session["lang"] = lang
 
     if request.method == "POST":
         try:
@@ -150,8 +153,10 @@ def login():
 
 @app.route("/logout")
 def logout():
-    """Log user out"""
+    lang = session.get("lang")
     session.clear()
+    if lang:
+        session["lang"] = lang
     return redirect(url_for("login"))
 
 
