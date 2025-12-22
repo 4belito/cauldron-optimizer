@@ -17,6 +17,9 @@ This repository contains a production web application that helps players choose
 ingredient combinations for the Elvenar Cauldron to maximize the expected value
 of desired effects.
 
+The application is **deployed and actively used by players**.  
+**Live application:** https://cauldron-optimizer.onrender.com
+
 The underlying cauldron mechanics produce probabilistic outcomes: for a fixed
 recipe, the realized effect is random. The optimization *objective and scoring
 model* are deterministic, while the search procedure may use randomized
@@ -25,8 +28,6 @@ by maximizing a weighted expected-effect objective.
 
 **Deployed:** Render (web service) + Neon (PostgreSQL)  
 **Used by:** active players (accounts stored in the database)  
-**Live application:** https://cauldron-optimizer.onrender.com
-
 
 ## What the app does
 
@@ -84,7 +85,6 @@ See: CauldronOptimizer.greedy() and CauldronOptimizer.multistart().
 * Flask (web backend)
 * PostgreSQL (Neon)
 * Hosted deployment (Render)
-
 
 
 ## Notebook (explanation and examples)
