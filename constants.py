@@ -3,8 +3,9 @@
 LANGUAGES = ["es", "en"]
 
 
-# Babel extraction marker: extracted, but does NOT translate.
+# Babel extraction marker: extracted, but does NOT translate at definition time.
 def N_(s: str) -> str:
+    """Mark a string for translation extraction without translating it."""
     return s
 
 
@@ -51,3 +52,4 @@ EFFECT_NAMES = [
 ]
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
+MAX_STARTS = 100

@@ -1,4 +1,5 @@
 # ---- stdlib ----
+import json
 import os
 
 import numpy as np
@@ -8,6 +9,7 @@ from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_babel import Babel, get_locale
 from flask_babel import gettext as _
+from flask_wtf.csrf import CSRFError, CSRFProtect
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
@@ -18,14 +20,9 @@ from cauldron_optimizer import CauldronOptimizer
 from constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
 from db_model import User, UserSettings
 from flask_session import Session
+from forms import LoginForm, RegisterForm, SearchForm
 from helpers import error, login_required
-from validators import (
-    AuthData,
-    parse_auth_form,
-    parse_effect_weights,
-    parse_int,
-    parse_premium_ingredients,
-)
+from validators import parse_premium_ingredients
 
 load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
 DATABASE_URL = os.environ["NEONDB_USER"]
@@ -37,10 +34,11 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 Session(app)
+csrf = CSRFProtect(app)
 
 
 def select_locale():
@@ -75,12 +73,37 @@ def inject_i18n():
     }
 
 
+def first_form_error(form) -> str:
+    if "csrf_token" in form.errors:
+        return _(
+            "Sesión expirada o formulario inválido. Por favor recarga la página e inténtalo de nuevo."
+        )
+
+    for errors in form.errors.values():
+        return errors[0]
+
+    return _("Formulario inválido")
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    # Common if user stays too long on page, opens in new tab, etc.
+    return (
+        error(_("Sesión expirada. Recarga la página e inténtalo de nuevo."), url=url_for("login")),
+        400,
+    )
+
+
 @app.route("/lang/<lang>")
 def set_lang(lang):
     if lang not in LANGUAGES:
         lang = "es"
     session["lang"] = lang
-    return redirect(request.referrer or url_for("index"))
+    referrer = request.referrer or ""
+    # Avoid redirecting back to POST-only routes like /optimize after a form submit
+    if "/optimize" in referrer:
+        return redirect(url_for("index"))
+    return redirect(referrer or url_for("index"))
 
 
 @app.after_request
@@ -106,13 +129,18 @@ def index():
         if settings is None:
             return error(_("No se encontró la configuracion del ususario"), url=url_for("logout"))
 
+        form = SearchForm()
+        form.n_diploma.data = len(settings.effect_weights)
+        # Set dynamic max bound for diplomas based on available effects
+        form.n_diploma.render_kw = {"max": len(EFFECT_NAMES)}
+        form.alpha_UB.data = int(settings.max_ingredients)
+        form.prob_UB.data = int(settings.max_effects)
+        form.n_starts.data = int(settings.search_depth)
+        form.effect_weights_json.data = json.dumps(settings.effect_weights)
+
         return render_template(
             "index.html",
-            effect_weights=settings.effect_weights,
-            n_diplomas=len(settings.effect_weights),
-            max_ingredients=int(settings.max_ingredients),
-            max_effect_prob=int(settings.max_effects),
-            search_depth=int(settings.search_depth),
+            form=form,
             effect_names=EFFECT_NAMES,
             ingredient_names=INGREDIENT_NAMES,
         )
@@ -123,32 +151,34 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
+
+    ## Preserve language selection across logout
     lang = session.get("lang")
     session.clear()
     if lang:
         session["lang"] = lang
 
-    if request.method == "POST":
-        try:
-            data: AuthData = parse_auth_form(request.form, mode="login")
-        except ValueError as e:
-            return error(str(e), url=url_for("login"))
-
+    # Login form handling
+    form = LoginForm()
+    if form.validate_on_submit():
         db_sa = SessionLocal()
         try:
             user = db_sa.execute(
-                select(User).where(User.username == data.username)
+                select(User).where(User.username == form.username.data)
             ).scalar_one_or_none()
 
-            if user is None or not check_password_hash(user.hash, data.password):
+            if user is None or not check_password_hash(user.hash, form.password.data):
                 return error(_("nombre de usuario o contraseña incorrectos"), url=url_for("login"))
 
             session["user_id"] = user.id
             return redirect(url_for("index"))
         finally:
             db_sa.close()
+    if form.errors:
+        msg = next(iter(form.errors.values()))[0]
+        return error(msg, url=url_for("login"))
 
-    return render_template("login.html")
+    return render_template("login.html", form=form)
 
 
 @app.route("/logout")
@@ -163,60 +193,45 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-    if request.method == "POST":
-        try:
-            data: AuthData = parse_auth_form(request.form, mode="register")
-        except ValueError as e:
-            return error(str(e), url=url_for("register"))
+
+    form = RegisterForm()
+    if form.validate_on_submit():
         db_sa = SessionLocal()
         try:
-            new_user = User(username=data.username, hash=generate_password_hash(data.password))
+            new_user = User(
+                username=form.username.data, hash=generate_password_hash(form.password.data)
+            )
             db_sa.add(new_user)
             db_sa.flush()  # makes new_user.id available without committing
             db_sa.add(UserSettings(user=new_user))
             db_sa.commit()
+            return redirect(url_for("login"))
         except IntegrityError:
             db_sa.rollback()
             return error(_("El nombre de usuario ya existe"), url=url_for("register"))
+        except SQLAlchemyError:
+            db_sa.rollback()
+            return error(_("Error de base de datos"), url=url_for("register"))
         finally:
             db_sa.close()
-        return redirect(url_for("login"))
-    return render_template("register.html")
+    if form.errors:
+        return error(first_form_error(form), url=url_for("register"))
+
+    return render_template("register.html", form=form)
 
 
-@app.route("/optimize", methods=["POST"])
+@app.route("/optimize", methods=["GET", "POST"])
 @login_required
 def optimize():
+    form = SearchForm()
+    if not form.validate_on_submit():
+        return error(first_form_error(form), url=url_for("index"))
     try:
-        n_dipl = parse_int(
-            request.form,
-            "n_diploma",
-            label=_("EL número de diplomas"),
-            min_val=1,
-            max_val=CauldronOptimizer.max_ndiplomas,
-        )
-        effect_weights = parse_effect_weights(request.form, n_dipl)
-        alpha_ub = parse_int(
-            request.form,
-            "alpha_UB",
-            label=_("El número máximo de ingtedientes"),
-            min_val=1,
-            max_val=25,
-        )
-        prob_ub = parse_int(
-            request.form,
-            "prob_UB",
-            label=_("La probabilidad máxima por por efecto"),
-            min_val=1,
-            max_val=100,
-        )
-        n_starts = parse_int(
-            request.form,
-            "n_starts",
-            label=_("La profundidad de la búsqueda"),
-            min_val=1,
-            max_val=100,
-        )
+        # effect weights are validated and parsed by the form validator
+        effect_weights = np.array(getattr(form, "_parsed_effect_weights", []), dtype=np.float64)
+        alpha_ub = int(form.alpha_UB.data)
+        prob_ub = int(form.prob_UB.data)
+        n_starts = int(form.n_starts.data)
         premium_ingr = parse_premium_ingredients(request.form)
     except ValueError as e:
         return error(str(e), url=url_for("index"))

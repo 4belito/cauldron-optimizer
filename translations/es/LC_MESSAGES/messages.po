@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-22 05:16-0600\n"
+"POT-Creation-Date: 2025-12-23 05:49-0600\n"
 "PO-Revision-Date: 2025-12-21 23:51-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,180 +18,230 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:99 app.py:217
+#: app.py:78
+msgid ""
+"Sesión expirada o formulario inválido. Por favor recarga la página e "
+"inténtalo de nuevo."
+msgstr ""
+
+#: app.py:84
+msgid "Formulario inválido"
+msgstr ""
+
+#: app.py:91
+msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
+msgstr ""
+
+#: app.py:125 app.py:256
 msgid "No se encontró la configuracion del ususario"
 msgstr ""
 
-#: app.py:133
+#: app.py:161
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr ""
 
-#: app.py:167
+#: app.py:201
 msgid "El nombre de usuario ya existe"
 msgstr ""
 
-#: app.py:181
-msgid "EL número de diplomas"
-msgstr ""
-
-#: app.py:189
-msgid "El número máximo de ingtedientes"
-msgstr ""
-
-#: app.py:196
-msgid "La probabilidad máxima por por efecto"
-msgstr ""
-
-#: app.py:203
-msgid "La profundidad de la búsqueda"
-msgstr ""
-
-#: app.py:226
+#: app.py:204 app.py:265
 msgid "Error de base de datos"
 msgstr ""
 
-#: constants.py:15
+#: app.py:220
+msgid "EL número de diplomas"
+msgstr ""
+
+#: app.py:228
+msgid "El número máximo de ingtedientes"
+msgstr ""
+
+#: app.py:235
+msgid "La probabilidad máxima por por efecto"
+msgstr ""
+
+#: app.py:242
+msgid "La profundidad de la búsqueda"
+msgstr ""
+
+#: constants.py:13
 msgid "Espora Ígnea"
 msgstr ""
 
-#: constants.py:16
+#: constants.py:14
 msgid "Escarabanuez"
 msgstr ""
 
-#: constants.py:17
+#: constants.py:15
 msgid "Cáscaron de Maná"
 msgstr ""
 
-#: constants.py:18
+#: constants.py:16
 msgid "Iris Volador"
 msgstr ""
 
-#: constants.py:19
+#: constants.py:17
 msgid "Huevo de Medusa"
 msgstr ""
 
-#: constants.py:20
+#: constants.py:18
 msgid "Lima de Oruga"
 msgstr ""
 
-#: constants.py:21
+#: constants.py:19
 msgid "Flor de Hierba Mora"
 msgstr ""
 
-#: constants.py:22
+#: constants.py:20
 msgid "Lenguas Burlonas"
 msgstr ""
 
-#: constants.py:23
+#: constants.py:21
 msgid "Brote Ocular"
 msgstr ""
 
-#: constants.py:24
+#: constants.py:22
 msgid "Hoja de Agricabello"
 msgstr ""
 
-#: constants.py:25
+#: constants.py:23
 msgid "Capullo de Nube de Algodón"
 msgstr ""
 
-#: constants.py:26
+#: constants.py:24
 msgid "Trufa Orejera"
 msgstr ""
 
-#: constants.py:30
+#: constants.py:28
 msgid "Monedas"
 msgstr ""
 
-#: constants.py:31
+#: constants.py:29
 msgid "Provisiones"
 msgstr ""
 
-#: constants.py:32
+#: constants.py:30
 msgid "Cuartel Fuerza"
 msgstr ""
 
-#: constants.py:33
+#: constants.py:31
 msgid "Ordinarios Básicos"
 msgstr ""
 
-#: constants.py:34
+#: constants.py:32
 msgid "Ordinarios Refinados"
 msgstr ""
 
-#: constants.py:35
+#: constants.py:33
 msgid "Ordinarios Preciosos"
 msgstr ""
 
-#: constants.py:36
+#: constants.py:34
 msgid "Entrenamiento Fuerza"
 msgstr ""
 
-#: constants.py:37
+#: constants.py:35
 msgid "Portal"
 msgstr ""
 
-#: constants.py:38
+#: constants.py:36
 msgid "Orcos"
 msgstr ""
 
-#: constants.py:39
+#: constants.py:37
 msgid "Maná"
 msgstr ""
 
-#: constants.py:40
+#: constants.py:38
 msgid "Mercenarios Fuerza"
 msgstr ""
 
-#: constants.py:41
+#: constants.py:39
 msgid "Semillas"
 msgstr ""
 
-#: constants.py:42
+#: constants.py:40
 msgid "Sensitivos Básicos"
 msgstr ""
 
-#: constants.py:43
+#: constants.py:41
 msgid "Sensitivos Refinados"
 msgstr ""
 
-#: constants.py:44
+#: constants.py:42
 msgid "Sensitivos Preciosos"
 msgstr ""
 
-#: constants.py:45
+#: constants.py:43
 msgid "Entrenamiento Salud"
 msgstr ""
 
-#: constants.py:46
+#: constants.py:44
 msgid "Mercenarios Salud"
 msgstr ""
 
-#: constants.py:47
+#: constants.py:45
 msgid "Unurium"
 msgstr ""
 
-#: constants.py:48
+#: constants.py:46
 msgid "Ascendidos Básicos"
 msgstr ""
 
-#: constants.py:49
+#: constants.py:47
 msgid "Ascendidos Refinados"
 msgstr ""
 
-#: constants.py:50
+#: constants.py:48
 msgid "Ascendidos Preciosos"
 msgstr ""
 
-#: constants.py:51
+#: constants.py:49
 msgid "Cuartel Salud"
 msgstr ""
 
-#: constants.py:52
+#: constants.py:50
 msgid "Trabajo Comunitario"
 msgstr ""
 
-#: constants.py:53
+#: constants.py:51
 msgid "Productos en Conserva"
+msgstr ""
+
+#: forms.py:15 forms.py:36
+msgid "Usuario"
+msgstr ""
+
+#: forms.py:17 forms.py:38
+msgid "Debe introducir el nombre de usuario"
+msgstr ""
+
+#: forms.py:21 forms.py:42
+msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
+msgstr ""
+
+#: forms.py:26 forms.py:47
+msgid "Contraseña"
+msgstr ""
+
+#: forms.py:28 forms.py:49
+msgid "Debe introducir una contraseña"
+msgstr ""
+
+#: forms.py:29 forms.py:50
+msgid "La contraseña debe tener entre 1 y 32 caracteres"
+msgstr ""
+
+#: forms.py:54
+msgid "Confirmar contraseña"
+msgstr ""
+
+#: forms.py:56
+msgid "Debe confirmar su contraseña"
+msgstr ""
+
+#: forms.py:57
+msgid "Las contraseñas no coinciden"
 msgstr ""
 
 #: templates/contact.html:4
@@ -268,37 +318,25 @@ msgstr ""
 msgid "Mostrar navegación"
 msgstr ""
 
-#: templates/layout.html:52
+#: templates/layout.html:59
 msgid "Contacto"
 msgstr ""
 
-#: templates/layout.html:57
+#: templates/layout.html:64
 msgid "Tutorial"
 msgstr ""
 
-#: templates/layout.html:63
+#: templates/layout.html:69
 msgid "Cerrar sesión"
 msgstr ""
 
-#: templates/layout.html:67 templates/login.html:36 templates/register.html:4
-#: templates/register.html:42
+#: templates/layout.html:73 templates/login.html:31 templates/register.html:4
+#: templates/register.html:34
 msgid "Crear cuenta"
 msgstr ""
 
-#: templates/layout.html:70 templates/login.html:4 templates/login.html:32
+#: templates/layout.html:76 templates/login.html:4 templates/login.html:27
 msgid "Iniciar sesión"
-msgstr ""
-
-#: templates/login.html:15 templates/register.html:15
-msgid "Usuario"
-msgstr ""
-
-#: templates/login.html:25 templates/register.html:25
-msgid "Contraseña"
-msgstr ""
-
-#: templates/register.html:35
-msgid "Confirmar contraseña"
 msgstr ""
 
 #: templates/results.html:4
@@ -314,5 +352,140 @@ msgid "Score"
 msgstr ""
 
 #~ msgid "Database error"
+#~ msgstr ""
+
+#~ msgid "Usuario"
+#~ msgstr ""
+
+#~ msgid "Contraseña"
+#~ msgstr ""
+
+#~ msgid "Confirmar contraseña"
+#~ msgstr ""
+
+#~ msgid "Espora Ígnea"
+#~ msgstr ""
+
+#~ msgid "Escarabanuez"
+#~ msgstr ""
+
+#~ msgid "Cáscaron de Maná"
+#~ msgstr ""
+
+#~ msgid "Iris Volador"
+#~ msgstr ""
+
+#~ msgid "Huevo de Medusa"
+#~ msgstr ""
+
+#~ msgid "Lima de Oruga"
+#~ msgstr ""
+
+#~ msgid "Flor de Hierba Mora"
+#~ msgstr ""
+
+#~ msgid "Lenguas Burlonas"
+#~ msgstr ""
+
+#~ msgid "Brote Ocular"
+#~ msgstr ""
+
+#~ msgid "Hoja de Agricabello"
+#~ msgstr ""
+
+#~ msgid "Capullo de Nube de Algodón"
+#~ msgstr ""
+
+#~ msgid "Trufa Orejera"
+#~ msgstr ""
+
+#~ msgid "Monedas"
+#~ msgstr ""
+
+#~ msgid "Provisiones"
+#~ msgstr ""
+
+#~ msgid "Cuartel Fuerza"
+#~ msgstr ""
+
+#~ msgid "Ordinarios Básicos"
+#~ msgstr ""
+
+#~ msgid "Ordinarios Refinados"
+#~ msgstr ""
+
+#~ msgid "Ordinarios Preciosos"
+#~ msgstr ""
+
+#~ msgid "Entrenamiento Fuerza"
+#~ msgstr ""
+
+#~ msgid "Portal"
+#~ msgstr ""
+
+#~ msgid "Orcos"
+#~ msgstr ""
+
+#~ msgid "Maná"
+#~ msgstr ""
+
+#~ msgid "Mercenarios Fuerza"
+#~ msgstr ""
+
+#~ msgid "Semillas"
+#~ msgstr ""
+
+#~ msgid "Sensitivos Básicos"
+#~ msgstr ""
+
+#~ msgid "Sensitivos Refinados"
+#~ msgstr ""
+
+#~ msgid "Sensitivos Preciosos"
+#~ msgstr ""
+
+#~ msgid "Entrenamiento Salud"
+#~ msgstr ""
+
+#~ msgid "Mercenarios Salud"
+#~ msgstr ""
+
+#~ msgid "Unurium"
+#~ msgstr ""
+
+#~ msgid "Ascendidos Básicos"
+#~ msgstr ""
+
+#~ msgid "Ascendidos Refinados"
+#~ msgstr ""
+
+#~ msgid "Ascendidos Preciosos"
+#~ msgstr ""
+
+#~ msgid "Cuartel Salud"
+#~ msgstr ""
+
+#~ msgid "Trabajo Comunitario"
+#~ msgstr ""
+
+#~ msgid "Productos en Conserva"
+#~ msgstr ""
+
+#~ msgid "Debe introducir el nombre de usuario"
+#~ msgstr ""
+
+#~ msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
+#~ msgstr ""
+
+#~ msgid "Debe introducir una contraseña"
+#~ msgstr ""
+
+#~ msgid "La contraseña debe tener entre 1 y 32 caracteres"
+#~ msgstr ""
+
+#~ msgid "Debe confirmar su contraseña"
+#~ msgstr ""
+
+#~ msgid "Las contraseñas no coinciden"
 #~ msgstr ""
 

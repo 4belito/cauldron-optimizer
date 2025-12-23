@@ -3,7 +3,9 @@
 {% block title %}{{ _("Receta") }}{% endblock %}
 
 {% block main %}
-<form id="optimizerForm" class="optimizer" method="post" action="/optimize">
+<form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}">
+  {{ form.hidden_tag() }}
+  {{ form.effect_weights_json(id="effect_weights_json") }}
   <!-- Diplomas + weights -->
   <fieldset class="card">
     <legend class="card-legend">
@@ -13,17 +15,7 @@
 
       <div class="diploma-row">
         <div class="diploma-input">
-          <input
-            type="number"
-            id="n_diploma"
-            name="n_diploma"
-            min="1"
-            max="{{ effect_names | length }}"
-            step="1"
-            value="{{ n_diplomas }}"
-            required
-            class="n-diploma"
-          />
+              {{ form.n_diploma(class="n-diploma") }}
         </div>
       </div>
       <div id="weightsContainer" class="weights-grid"></div>
@@ -73,20 +65,25 @@
 
 <script>
   // ----- Defaults coming from Flask -----
-  const DEFAULT_N_DIPLOMAS    = {{ n_diplomas | tojson }};
-  const DEFAULT_WEIGHTS       = {{ effect_weights | tojson }};
-  const DEFAULT_MAX_INGR      = {{ max_ingredients | tojson }};
-  const DEFAULT_MAX_PROB      = {{ max_effect_prob | tojson }};
-  const DEFAULT_SEARCH_DEPTH  = {{ search_depth | tojson }};
+  const DEFAULT_N_DIPLOMAS    = {{ form.n_diploma.data | tojson }};
+  const DEFAULT_WEIGHTS       = JSON.parse({{ form.effect_weights_json.data | tojson }});
+  const DEFAULT_MAX_INGR      = {{ form.alpha_UB.data | tojson }};
+  const DEFAULT_MAX_PROB      = {{ form.prob_UB.data | tojson }};
+  const DEFAULT_SEARCH_DEPTH  = {{ form.n_starts.data | tojson }};
   const EFFECT_NAMES = [
     {% for n in effect_names %}
       {{ _(n) | tojson }}{% if not loop.last %},{% endif %}
     {% endfor %}
   ];
 
-  const nDiplomaEl = document.getElementById("n_diploma");
+  const nDiplomaEl = document.getElementById("{{ form.n_diploma.id }}");
   const weightsContainer = document.getElementById("weightsContainer");
   const boundsContainer = document.getElementById("boundsContainer");
+  const weightsHidden = document.getElementById("effect_weights_json");
+
+  function updateHiddenWeights(values){
+    if (weightsHidden) weightsHidden.value = JSON.stringify(values);
+  }
 
   function makeRangeCard({
     labelText,
@@ -148,13 +145,15 @@
     weightsContainer.innerHTML = "";
     if (n < 1 || n > EFFECT_NAMES.length) return;
 
+    const current = [];
     for (let i = 0; i < n; i++) {
       const defaultW = (DEFAULT_WEIGHTS[i] ?? 0);
 
       const card = makeRangeCard({
         labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
         iconSrc: `/static/effects/effect${i + 1}.png`,
-        name: "effect_weights[]",
+        // no name; we submit weights via hidden JSON field
+        name: "",
         min: 0,
         max: 1,
         step: 0.01,
@@ -162,16 +161,25 @@
         format: (x) => Number(x).toFixed(2),
       });
 
+      // Keep current values in sync
+      const slider = card.querySelector('input[type="range"]');
+      current[i] = defaultW;
+      slider.addEventListener("input", () => {
+        current[i] = Number(slider.value);
+        updateHiddenWeights(current);
+      });
+
       weightsContainer.appendChild(card);
     }
 
     initRangeFills(weightsContainer);
+    updateHiddenWeights(current);
   }
 
   boundsContainer.append(
     makeRangeCard({
       labelText: "{{ _('máx cantidad por ingrediente') }}",
-      name: "alpha_UB",
+      name: "{{ form.alpha_UB.name }}",
       min: 1,
       max: 25,
       step: 1,
@@ -180,7 +188,7 @@
     }),
     makeRangeCard({
       labelText: "{{ _('máx probabilidad por efecto') }}",
-      name: "prob_UB",
+      name: "{{ form.prob_UB.name }}",
       min: 1,
       max: 100,
       step: 1,
@@ -189,7 +197,7 @@
     }),
     makeRangeCard({
       labelText: "{{ _('profundidad de búsqueda') }}",
-      name: "n_starts",
+      name: "{{ form.n_starts.name }}",
       min: 1,
       max: 100,
       step: 1,
@@ -198,7 +206,6 @@
     })
   );
 
-  nDiplomaEl.value = DEFAULT_N_DIPLOMAS;
   rebuildWeights();
   nDiplomaEl.addEventListener("change", rebuildWeights);
 
