@@ -22,7 +22,6 @@ from db_model import User, UserSettings
 from flask_session import Session
 from forms import LoginForm, RegisterForm, SearchForm
 from helpers import error, login_required
-from validators import parse_premium_ingredients
 
 load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
 DATABASE_URL = os.environ["NEONDB_USER"]
@@ -131,8 +130,11 @@ def index():
 
         form = SearchForm()
         form.n_diploma.data = len(settings.effect_weights)
-        # Set dynamic max bound for diplomas based on available effects
-        form.n_diploma.render_kw = {"max": len(EFFECT_NAMES)}
+        # Set dynamic max bound for diplomas based on available effects (preserve type/min/step)
+        form.n_diploma.render_kw = {
+            **(form.n_diploma.render_kw or {}),
+            "max": len(EFFECT_NAMES),
+        }
         form.alpha_UB.data = int(settings.max_ingredients)
         form.prob_UB.data = int(settings.max_effects)
         form.n_starts.data = int(settings.search_depth)
@@ -232,7 +234,7 @@ def optimize():
         alpha_ub = int(form.alpha_UB.data)
         prob_ub = int(form.prob_UB.data)
         n_starts = int(form.n_starts.data)
-        premium_ingr = parse_premium_ingredients(request.form)
+        premium_ingr = request.form.getlist("premium_ingredients[]", type=int)
     except ValueError as e:
         return error(str(e), url=url_for("index"))
 
@@ -244,9 +246,9 @@ def optimize():
         if settings is None:
             return error(_("No se encontró la configuracion del ususario"), url=url_for("index"))
         settings.effect_weights = effect_weights.tolist()
-        settings.max_ingredients = int(alpha_ub)
-        settings.max_effects = int(prob_ub)
-        settings.search_depth = int(n_starts)
+        settings.max_ingredients = alpha_ub
+        settings.max_effects = prob_ub
+        settings.search_depth = n_starts
         settings.updated_at = func.now()
         db_sa.commit()
     except SQLAlchemyError:
