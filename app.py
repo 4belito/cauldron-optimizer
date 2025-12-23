@@ -37,7 +37,7 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
 app = Flask(__name__)
-# Configure session to use filesystem (instead of signed cookies)
+app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
