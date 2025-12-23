@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-23 05:49-0600\n"
+"POT-Creation-Date: 2025-12-23 10:19-0600\n"
 "PO-Revision-Date: 2025-12-22 02:20-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -34,37 +34,21 @@ msgstr "Session expired. Reload the page and try again."
 
 # ###################
 # Backend errors / labels
-#: app.py:125 app.py:256
+#: app.py:129 app.py:247
 msgid "No se encontró la configuracion del ususario"
 msgstr "User settings were not found"
 
-#: app.py:161
+#: app.py:173
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr "Incorrect username or password"
 
-#: app.py:201
+#: app.py:213
 msgid "El nombre de usuario ya existe"
 msgstr "That username already exists"
 
-#: app.py:204 app.py:265
+#: app.py:216 app.py:256
 msgid "Error de base de datos"
 msgstr "Database error"
-
-#: app.py:220
-msgid "EL número de diplomas"
-msgstr "Number of diplomas"
-
-#: app.py:228
-msgid "El número máximo de ingtedientes"
-msgstr "Maximum number of ingredients"
-
-#: app.py:235
-msgid "La probabilidad máxima por por efecto"
-msgstr "Maximum probability per effect"
-
-#: app.py:242
-msgid "La profundidad de la búsqueda"
-msgstr "Search depth"
 
 #: constants.py:13
 msgid "Espora Ígnea"
@@ -210,41 +194,81 @@ msgstr "Community Work"
 msgid "Productos en Conserva"
 msgstr "Canned Goods"
 
-#: forms.py:15 forms.py:36
+#: forms.py:26 forms.py:51
 msgid "Usuario"
 msgstr "Username"
 
-#: forms.py:17 forms.py:38
+#: forms.py:28 forms.py:53
 msgid "Debe introducir el nombre de usuario"
 msgstr "You must enter a username"
 
-#: forms.py:21 forms.py:42
+#: forms.py:32 forms.py:57
 msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
 msgstr "Username must be between 1 and 16 characters"
 
-#: forms.py:26 forms.py:47
+#: forms.py:37 forms.py:62
 msgid "Contraseña"
 msgstr "Password"
 
-#: forms.py:28 forms.py:49
+#: forms.py:39 forms.py:64
 msgid "Debe introducir una contraseña"
 msgstr "You must enter a password"
 
-#: forms.py:29 forms.py:50
+#: forms.py:43 forms.py:68
 msgid "La contraseña debe tener entre 1 y 32 caracteres"
 msgstr "Password must be between 1 and 32 characters"
 
-#: forms.py:54
+#: forms.py:73
 msgid "Confirmar contraseña"
 msgstr "Confirm password"
 
-#: forms.py:56
+#: forms.py:75
 msgid "Debe confirmar su contraseña"
 msgstr "You must confirm your password"
 
-#: forms.py:57
+#: forms.py:76
 msgid "Las contraseñas no coinciden"
 msgstr "Passwords do not match"
+
+#: forms.py:87 templates/index.html:12
+msgid "Diplomas & Efectos Deseados"
+msgstr "Diplomas & Desired Effects"
+
+#: forms.py:92 templates/index.html:181
+msgid "máx cantidad por ingrediente"
+msgstr "Max quantity per ingredient"
+
+#: forms.py:97 templates/index.html:190
+msgid "máx probabilidad por efecto"
+msgstr "Max probability per effect"
+
+#: forms.py:102 templates/index.html:199
+msgid "profundidad de búsqueda"
+msgstr "Search depth"
+
+#: forms.py:117
+msgid "Los pesos de los efectos deben ser un JSON válido"
+msgstr "Effect weights must be valid JSON"
+
+#: forms.py:120
+msgid "Los pesos de los efectos deben ser una lista"
+msgstr "Effect weights must be a list"
+
+#: forms.py:125
+msgid "El numero de effectos debe conicidir con el numero de diplomas"
+msgstr "The number of effects must match the number of diplomas"
+
+#: forms.py:135
+msgid "Los pesos de los efectos deben ser numeros"
+msgstr "Effect weights must be numbers"
+
+#: forms.py:139
+msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
+msgstr "Effect weights must be between 0 and 1 (inclusive)"
+
+#: forms.py:143
+msgid "Al menos debes querer algun efecto"
+msgstr "You must want at least one effect"
 
 # ###################
 # Contact page
@@ -289,33 +313,17 @@ msgstr "Worlds"
 msgid "Receta"
 msgstr "Recipe"
 
-#: templates/index.html:10
-msgid "Diplomas & Efectos Deseados"
-msgstr "Diplomas & Desired Effects"
-
-#: templates/index.html:36
+#: templates/index.html:28
 msgid "Evitar Ingredientes (Premium)"
 msgstr "Avoid Ingredients (Premium)"
 
-#: templates/index.html:60
+#: templates/index.html:52
 msgid "Limitar Búsqueda"
 msgstr "Limit Search"
 
-#: templates/index.html:69
+#: templates/index.html:61
 msgid "Buscar Receta"
 msgstr "Find Recipe"
-
-#: templates/index.html:173
-msgid "máx cantidad por ingrediente"
-msgstr "Max quantity per ingredient"
-
-#: templates/index.html:182
-msgid "máx probabilidad por efecto"
-msgstr "Max probability per effect"
-
-#: templates/index.html:191
-msgid "profundidad de búsqueda"
-msgstr "Search depth"
 
 # ###################
 # Layout / UI
@@ -365,3 +373,4 @@ msgstr "Effects"
 #: templates/results.html:65
 msgid "Score"
 msgstr "Score"
+

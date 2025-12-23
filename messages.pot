@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-23 05:49-0600\n"
+"POT-Creation-Date: 2025-12-23 10:19-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,36 +31,20 @@ msgstr ""
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr ""
 
-#: app.py:125 app.py:256
+#: app.py:129 app.py:247
 msgid "No se encontró la configuracion del ususario"
 msgstr ""
 
-#: app.py:161
+#: app.py:173
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr ""
 
-#: app.py:201
+#: app.py:213
 msgid "El nombre de usuario ya existe"
 msgstr ""
 
-#: app.py:204 app.py:265
+#: app.py:216 app.py:256
 msgid "Error de base de datos"
-msgstr ""
-
-#: app.py:220
-msgid "EL número de diplomas"
-msgstr ""
-
-#: app.py:228
-msgid "El número máximo de ingtedientes"
-msgstr ""
-
-#: app.py:235
-msgid "La probabilidad máxima por por efecto"
-msgstr ""
-
-#: app.py:242
-msgid "La profundidad de la búsqueda"
 msgstr ""
 
 #: constants.py:13
@@ -207,40 +191,80 @@ msgstr ""
 msgid "Productos en Conserva"
 msgstr ""
 
-#: forms.py:15 forms.py:36
+#: forms.py:26 forms.py:51
 msgid "Usuario"
 msgstr ""
 
-#: forms.py:17 forms.py:38
+#: forms.py:28 forms.py:53
 msgid "Debe introducir el nombre de usuario"
 msgstr ""
 
-#: forms.py:21 forms.py:42
+#: forms.py:32 forms.py:57
 msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
 msgstr ""
 
-#: forms.py:26 forms.py:47
+#: forms.py:37 forms.py:62
 msgid "Contraseña"
 msgstr ""
 
-#: forms.py:28 forms.py:49
+#: forms.py:39 forms.py:64
 msgid "Debe introducir una contraseña"
 msgstr ""
 
-#: forms.py:29 forms.py:50
+#: forms.py:43 forms.py:68
 msgid "La contraseña debe tener entre 1 y 32 caracteres"
 msgstr ""
 
-#: forms.py:54
+#: forms.py:73
 msgid "Confirmar contraseña"
 msgstr ""
 
-#: forms.py:56
+#: forms.py:75
 msgid "Debe confirmar su contraseña"
 msgstr ""
 
-#: forms.py:57
+#: forms.py:76
 msgid "Las contraseñas no coinciden"
+msgstr ""
+
+#: forms.py:87 templates/index.html:12
+msgid "Diplomas & Efectos Deseados"
+msgstr ""
+
+#: forms.py:92 templates/index.html:181
+msgid "máx cantidad por ingrediente"
+msgstr ""
+
+#: forms.py:97 templates/index.html:190
+msgid "máx probabilidad por efecto"
+msgstr ""
+
+#: forms.py:102 templates/index.html:199
+msgid "profundidad de búsqueda"
+msgstr ""
+
+#: forms.py:117
+msgid "Los pesos de los efectos deben ser un JSON válido"
+msgstr ""
+
+#: forms.py:120
+msgid "Los pesos de los efectos deben ser una lista"
+msgstr ""
+
+#: forms.py:125
+msgid "El numero de effectos debe conicidir con el numero de diplomas"
+msgstr ""
+
+#: forms.py:135
+msgid "Los pesos de los efectos deben ser numeros"
+msgstr ""
+
+#: forms.py:139
+msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
+msgstr ""
+
+#: forms.py:143
+msgid "Al menos debes querer algun efecto"
 msgstr ""
 
 #: templates/contact.html:4
@@ -277,32 +301,16 @@ msgstr ""
 msgid "Receta"
 msgstr ""
 
-#: templates/index.html:10
-msgid "Diplomas & Efectos Deseados"
-msgstr ""
-
-#: templates/index.html:36
+#: templates/index.html:28
 msgid "Evitar Ingredientes (Premium)"
 msgstr ""
 
-#: templates/index.html:60
+#: templates/index.html:52
 msgid "Limitar Búsqueda"
 msgstr ""
 
-#: templates/index.html:69
+#: templates/index.html:61
 msgid "Buscar Receta"
-msgstr ""
-
-#: templates/index.html:173
-msgid "máx cantidad por ingrediente"
-msgstr ""
-
-#: templates/index.html:182
-msgid "máx probabilidad por efecto"
-msgstr ""
-
-#: templates/index.html:191
-msgid "profundidad de búsqueda"
 msgstr ""
 
 #: templates/layout.html:18

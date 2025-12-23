@@ -1,6 +1,6 @@
 import json
 
-from flask_babel import lazy_gettext
+from flask_babel import lazy_gettext as _l
 from flask_wtf import FlaskForm
 from wtforms import FieldList, HiddenField, IntegerField, PasswordField, StringField
 from wtforms.validators import (
@@ -23,24 +23,24 @@ def N_(s: str) -> str:
 
 class LoginForm(FlaskForm):
     username = StringField(
-        lazy_gettext(N_("Usuario")),
+        _l(N_("Usuario")),
         validators=[
-            DataRequired(message=lazy_gettext(N_("Debe introducir el nombre de usuario"))),
+            DataRequired(message=_l(N_("Debe introducir el nombre de usuario"))),
             Length(
                 min=1,
                 max=16,
-                message=lazy_gettext(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
+                message=_l(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
             ),
         ],
     )
     password = PasswordField(
-        lazy_gettext(N_("Contraseña")),
+        _l(N_("Contraseña")),
         validators=[
-            DataRequired(message=lazy_gettext(N_("Debe introducir una contraseña"))),
+            DataRequired(message=_l(N_("Debe introducir una contraseña"))),
             Length(
                 min=1,
                 max=32,
-                message=lazy_gettext(N_("La contraseña debe tener entre 1 y 32 caracteres")),
+                message=_l(N_("La contraseña debe tener entre 1 y 32 caracteres")),
             ),
         ],
     )
@@ -48,32 +48,32 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     username = StringField(
-        lazy_gettext(N_("Usuario")),
+        _l(N_("Usuario")),
         validators=[
-            DataRequired(message=lazy_gettext(N_("Debe introducir el nombre de usuario"))),
+            DataRequired(message=_l(N_("Debe introducir el nombre de usuario"))),
             Length(
                 min=1,
                 max=16,
-                message=lazy_gettext(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
+                message=_l(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
             ),
         ],
     )
     password = PasswordField(
-        lazy_gettext(N_("Contraseña")),
+        _l(N_("Contraseña")),
         validators=[
-            DataRequired(message=lazy_gettext(N_("Debe introducir una contraseña"))),
+            DataRequired(message=_l(N_("Debe introducir una contraseña"))),
             Length(
                 min=1,
                 max=32,
-                message=lazy_gettext(N_("La contraseña debe tener entre 1 y 32 caracteres")),
+                message=_l(N_("La contraseña debe tener entre 1 y 32 caracteres")),
             ),
         ],
     )
     confirmation = PasswordField(
-        lazy_gettext(N_("Confirmar contraseña")),
+        _l(N_("Confirmar contraseña")),
         validators=[
-            DataRequired(message=lazy_gettext(N_("Debe confirmar su contraseña"))),
-            EqualTo("password", message=lazy_gettext(N_("Las contraseñas no coinciden"))),
+            DataRequired(message=_l(N_("Debe confirmar su contraseña"))),
+            EqualTo("password", message=_l(N_("Las contraseñas no coinciden"))),
         ],
     )
 
@@ -84,22 +84,22 @@ class SearchForm(FlaskForm):
     """
 
     n_diploma = IntegerField(
-        lazy_gettext(N_("Diplomas & Efectos Deseados")),
+        _l(N_("Diplomas & Efectos Deseados")),
         validators=[DataRequired(), NumberRange(min=1, max=CauldronOptimizer.max_ndiplomas)],
         render_kw={"type": "number", "min": 1, "step": 1},
     )
     alpha_UB = IntegerField(
-        lazy_gettext(N_("máx cantidad por ingrediente")),
+        _l(N_("máx cantidad por ingrediente")),
         validators=[NumberRange(min=1, max=CauldronOptimizer.sum_ingredients)],
         render_kw={"type": "number", "min": 1, "max": CauldronOptimizer.sum_ingredients, "step": 1},
     )
     prob_UB = IntegerField(
-        lazy_gettext(N_("máx probabilidad por efecto")),
+        _l(N_("máx probabilidad por efecto")),
         validators=[DataRequired(), NumberRange(min=1, max=100)],
         render_kw={"type": "number", "min": 1, "max": 100, "step": 1},
     )
     n_starts = IntegerField(
-        lazy_gettext(N_("profundidad de búsqueda")),
+        _l(N_("profundidad de búsqueda")),
         validators=[NumberRange(min=1, max=MAX_STARTS)],
         render_kw={"type": "number", "min": 1, "max": MAX_STARTS, "step": 1},
     )
@@ -114,17 +114,15 @@ class SearchForm(FlaskForm):
         try:
             data = json.loads(raw)
         except Exception:
-            raise ValidationError(
-                lazy_gettext(N_("Los pesos de los efectos deben ser un JSON válido"))
-            )
+            raise ValidationError(_l(N_("Los pesos de los efectos deben ser un JSON válido")))
 
         if not isinstance(data, list):
-            raise ValidationError(lazy_gettext(N_("Los pesos de los efectos deben ser una lista")))
+            raise ValidationError(_l(N_("Los pesos de los efectos deben ser una lista")))
 
         n = self.n_diploma.data or 0
         if len(data) != n:
             raise ValidationError(
-                lazy_gettext(N_("El numero de effectos debe conicidir con el numero de diplomas"))
+                _l(N_("El numero de effectos debe conicidir con el numero de diplomas"))
             )
 
         # Validate all numbers are within [0,1] and at least one is >0
@@ -134,15 +132,15 @@ class SearchForm(FlaskForm):
                 v = float(x)
                 vals.append(v)
         except Exception:
-            raise ValidationError(lazy_gettext(N_("Los pesos de los efectos deben ser numeros")))
+            raise ValidationError(_l(N_("Los pesos de los efectos deben ser numeros")))
 
         if any(v < 0 or v > 1 for v in vals):
             raise ValidationError(
-                lazy_gettext(N_("Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"))
+                _l(N_("Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"))
             )
 
         if sum(vals) == 0.0:
-            raise ValidationError(lazy_gettext(N_("Al menos debes querer algun efecto")))
+            raise ValidationError(_l(N_("Al menos debes querer algun efecto")))
 
         # Stash parsed list for the route to consume
         self._parsed_effect_weights = vals
