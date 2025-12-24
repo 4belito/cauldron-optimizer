@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: cauldron-optimizer
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app
+    envVars:
+      - key: FLASK_APP
+        value: cauldron_optimizer

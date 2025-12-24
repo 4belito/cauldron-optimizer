@@ -1,4 +1,4 @@
-"""Entry point for running the Cauldron Optimizer Flask application."""
+"""Local entry point for development server."""
 
 from cauldron_optimizer import app
 
