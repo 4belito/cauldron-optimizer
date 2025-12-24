@@ -1,0 +1,117 @@
+/* =========================
+   Results Page
+   ========================= */
+.recipe-split {
+  display: grid;
+  grid-template-columns: 1fr 1px min(20rem, 38vw);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.recipe-divider {
+  background: #7a5a1c;
+  align-self: stretch;
+  margin-block: 0.875rem;
+  width: 3px;
+}
+
+.recipe-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recipe-header {
+  width: 100%;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0.875rem;
+  font-size: clamp(1.4rem, 3.2vw, 2rem);
+  font-weight: 800;
+  color: #51200d;
+}
+
+.recipe-right { 
+  justify-self: start; 
+}
+
+.recipe-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.recipe-row {
+  display: grid;
+  grid-template-columns: 80px 36px minmax(0, 1fr);
+  align-items: center;
+  justify-content: start;
+  justify-items: left;
+  column-gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(94, 55, 36, calc(var(--hl, 0) * 0.18));
+  box-shadow: inset 0 0 0 2px rgba(84, 45, 26, calc(var(--hl, 0) * 0.25));
+}
+
+.recipe-row:hover {
+  background: rgba(205, 170, 95, calc((var(--hl, 0) * 0.18) + 0.06));
+}
+
+.recipe-row-value {
+  text-align: right;
+  font-weight: 600;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.recipe-row-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.recipe-row > .recipe-row-name{
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+/* Score display */
+.result-score legend {
+  color: #51200d;
+}
+
+.result-score-value {
+  font-weight: 700;
+}
+
+/* Mobile layout */
+@media (max-width: 37.5rem){
+  .recipe-split{
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .recipe-divider{ 
+    display: none; 
+  }
+
+  .recipe-row{
+    grid-template-columns: 4.5rem 1.875rem minmax(0, 1fr);
+    padding: 0.625rem;
+    min-width: 0;
+  }
+
+  .recipe-row-icon{
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

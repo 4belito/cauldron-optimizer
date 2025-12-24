@@ -12,25 +12,22 @@
             class="form-control mx-auto w-auto",
             autocomplete="off",
             autofocus=True,
-            placeholder=form.username.label.text
         ) }}
     </div>
 
     <div class="mb-3">
         {{ form.password(
             class="form-control mx-auto w-auto",
-            placeholder=form.password.label.text
         ) }}
     </div>
 
     <div class="mb-3">
         {{ form.confirmation(
             class="form-control mx-auto w-auto",
-            placeholder=form.confirmation.label.text
         ) }}
     </div>
 
-    <button class="game-main-btn" type="submit">
+    <button class="game-btn game-btn-main" type="submit">
         <span>{{ _("Crear cuenta") }}</span>
     </button>
 </form>

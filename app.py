@@ -1,6 +1,7 @@
 # ---- stdlib ----
 import json
 import os
+from contextlib import contextmanager
 
 import numpy as np
 
@@ -15,13 +16,14 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from werkzeug.security import check_password_hash, generate_password_hash
 
-# ---- app / domain ----
-from cauldron_optimizer import CauldronOptimizer
 from constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
 from db_model import User, UserSettings
 from flask_session import Session
 from forms import LoginForm, RegisterForm, SearchForm
 from helpers import error, login_required
+
+# ---- app / domain ----
+from optimizer.cauldron_optimizer import CauldronOptimizer
 
 load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
 DATABASE_URL = os.environ["NEONDB_USER"]
@@ -38,6 +40,19 @@ app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 Session(app)
 csrf = CSRFProtect(app)
+
+
+@contextmanager
+def db_session():
+    db = SessionLocal()
+    try:
+        yield db
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
 
 
 def select_locale():
@@ -122,8 +137,7 @@ def after_request(response):
 def index():
     """Show recipe input form"""
     user_id = session["user_id"]
-    db_sa = SessionLocal()
-    try:
+    with db_session() as db_sa:
         settings = db_sa.get(UserSettings, user_id)
         if settings is None:
             return error(_("No se encontró la configuracion del ususario"), url=url_for("logout"))
@@ -146,8 +160,6 @@ def index():
             effect_names=EFFECT_NAMES,
             ingredient_names=INGREDIENT_NAMES,
         )
-    finally:
-        db_sa.close()
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -163,8 +175,7 @@ def login():
     # Login form handling
     form = LoginForm()
     if form.validate_on_submit():
-        db_sa = SessionLocal()
-        try:
+        with db_session() as db_sa:
             user = db_sa.execute(
                 select(User).where(User.username == form.username.data)
             ).scalar_one_or_none()
@@ -174,8 +185,6 @@ def login():
 
             session["user_id"] = user.id
             return redirect(url_for("index"))
-        finally:
-            db_sa.close()
     if form.errors:
         msg = next(iter(form.errors.values()))[0]
         return error(msg, url=url_for("login"))
@@ -198,24 +207,20 @@ def register():
 
     form = RegisterForm()
     if form.validate_on_submit():
-        db_sa = SessionLocal()
         try:
-            new_user = User(
-                username=form.username.data, hash=generate_password_hash(form.password.data)
-            )
-            db_sa.add(new_user)
-            db_sa.flush()  # makes new_user.id available without committing
-            db_sa.add(UserSettings(user=new_user))
-            db_sa.commit()
+            with db_session() as db_sa:
+                new_user = User(
+                    username=form.username.data, hash=generate_password_hash(form.password.data)
+                )
+                db_sa.add(new_user)
+                db_sa.flush()  # makes new_user.id available without committing
+                db_sa.add(UserSettings(user=new_user))
+                # commit handled by context manager
             return redirect(url_for("login"))
         except IntegrityError:
-            db_sa.rollback()
             return error(_("El nombre de usuario ya existe"), url=url_for("register"))
         except SQLAlchemyError:
-            db_sa.rollback()
             return error(_("Error de base de datos"), url=url_for("register"))
-        finally:
-            db_sa.close()
     if form.errors:
         return error(first_form_error(form), url=url_for("register"))
 
@@ -228,7 +233,9 @@ def optimize():
     form = SearchForm()
     if not form.validate_on_submit():
         return error(first_form_error(form), url=url_for("index"))
+
     try:
+        # Parse validated form inputs
         # effect weights are validated and parsed by the form validator
         effect_weights = np.array(getattr(form, "_parsed_effect_weights", []), dtype=np.float64)
         alpha_ub = int(form.alpha_UB.data)
@@ -240,23 +247,23 @@ def optimize():
 
     user_id = session["user_id"]
 
-    db_sa = SessionLocal()
     try:
-        settings = db_sa.get(UserSettings, user_id)
-        if settings is None:
-            return error(_("No se encontró la configuracion del ususario"), url=url_for("index"))
-        settings.effect_weights = effect_weights.tolist()
-        settings.max_ingredients = alpha_ub
-        settings.max_effects = prob_ub
-        settings.search_depth = n_starts
-        settings.updated_at = func.now()
-        db_sa.commit()
-    except SQLAlchemyError:
-        db_sa.rollback()
-        return error(_("Error de base de datos"), url=url_for("index"))
-    finally:
-        db_sa.close()
+        with db_session() as db_sa:
+            settings = db_sa.get(UserSettings, user_id)
+            if settings is None:
+                return error(
+                    _("No se encontró la configuracion del ususario"), url=url_for("index")
+                )
 
+            settings.effect_weights = effect_weights.tolist()
+            settings.max_ingredients = alpha_ub
+            settings.max_effects = prob_ub
+            settings.search_depth = n_starts
+            settings.updated_at = func.now()
+    except SQLAlchemyError:
+        return error(_("Error de base de datos"), url=url_for("index"))
+
+    # Run optimizer using the persisted settings
     opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
@@ -270,13 +277,24 @@ def optimize():
     out_effects = opt.effect_probabilities(alpha_best)
     order = np.argsort(out_effects)[::-1]
 
+    # Filter non-zero effects for cleaner template
+    filtered_effects = []
+    for i in order:
+        val = out_effects[i]
+        if val > 0:
+            filtered_effects.append(
+                {
+                    "value": val.round(2),
+                    "name": EFFECT_NAMES[i],
+                    "index": i,
+                    "weight": effect_weights[i],
+                }
+            )
+
     return render_template(
         "results.html",
         alpha_matrix=alpha_matrix,
-        out_effects=out_effects[order].round(2).tolist(),
-        effect_names=[EFFECT_NAMES[i] for i in order],
-        effect_indices=order.tolist(),
-        effect_weights=effect_weights[order].tolist(),
+        effects=filtered_effects,
         score=score,
     )
 

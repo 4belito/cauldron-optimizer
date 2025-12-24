@@ -57,173 +57,39 @@
   </fieldset>
 
   <div class="submit-row">
-    <button type="submit" class="game-main-btn">
+    <button type="submit" class="game-btn game-btn-main">
       <span>{{ _("Buscar Receta") }}</span>
     </button>
   </div>
 </form>
 
 <script>
-  // ----- Defaults coming from Flask -----
-  const DEFAULT_N_DIPLOMAS    = {{ form.n_diploma.data | tojson }};
-  const DEFAULT_WEIGHTS       = JSON.parse({{ form.effect_weights_json.data | tojson }});
-  const DEFAULT_MAX_INGR      = {{ form.alpha_UB.data | tojson }};
-  const DEFAULT_MAX_PROB      = {{ form.prob_UB.data | tojson }};
-  const DEFAULT_SEARCH_DEPTH  = {{ form.n_starts.data | tojson }};
-  const EFFECT_NAMES = [
-    {% for n in effect_names %}
-      {{ _(n) | tojson }}{% if not loop.last %},{% endif %}
-    {% endfor %}
-  ];
-
-  const nDiplomaEl = document.getElementById("{{ form.n_diploma.id }}");
-  const weightsContainer = document.getElementById("weightsContainer");
-  const boundsContainer = document.getElementById("boundsContainer");
-  const weightsHidden = document.getElementById("effect_weights_json");
-
-  function updateHiddenWeights(values){
-    if (weightsHidden) weightsHidden.value = JSON.stringify(values);
-  }
-
-  function makeRangeCard({
-    labelText,
-    name,
-    iconSrc,
-    min,
-    max,
-    step,
-    value,
-    format = (x) => x
-  }) {
-    const card = document.createElement("div");
-    card.className = "weight-card";
-
-    const topRow = document.createElement("div");
-    topRow.className = "weight-top-row";
-
-    if (iconSrc) {
-      const img = document.createElement("img");
-      img.src = iconSrc;
-      img.className = "effect-icon";
-      img.alt = labelText;
-      topRow.appendChild(img);
-    }
-
-    const valueText = document.createElement("span");
-    valueText.className = "weight-value";
-    valueText.textContent = format(value);
-
-    topRow.appendChild(valueText);
-    card.appendChild(topRow);
-
-    const slider = document.createElement("input");
-    slider.type = "range";
-    slider.name = name;
-    slider.min = String(min);
-    slider.max = String(max);
-    slider.step = String(step);
-    slider.value = String(value);
-
-    card.appendChild(slider);
-
-    const label = document.createElement("div");
-    label.className = "weight-label";
-    label.textContent = labelText;
-    label.title = labelText;
-
-    card.appendChild(label);
-
-    slider.addEventListener("input", () => {
-      valueText.textContent = format(slider.value);
-    });
-
-    return card;
-  }
-
-  function rebuildWeights() {
-    const n = Number(nDiplomaEl.value);
-    weightsContainer.innerHTML = "";
-    if (n < 1 || n > EFFECT_NAMES.length) return;
-
-    const current = [];
-    for (let i = 0; i < n; i++) {
-      const defaultW = (DEFAULT_WEIGHTS[i] ?? 0);
-
-      const card = makeRangeCard({
-        labelText: EFFECT_NAMES[i] ?? `Effect ${i + 1}`,
-        iconSrc: `/static/effects/effect${i + 1}.png`,
-        // no name; we submit weights via hidden JSON field
-        name: "",
-        min: 0,
-        max: 1,
-        step: 0.01,
-        value: defaultW,
-        format: (x) => Number(x).toFixed(2),
-      });
-
-      // Keep current values in sync
-      const slider = card.querySelector('input[type="range"]');
-      current[i] = defaultW;
-      slider.addEventListener("input", () => {
-        current[i] = Number(slider.value);
-        updateHiddenWeights(current);
-      });
-
-      weightsContainer.appendChild(card);
-    }
-
-    initRangeFills(weightsContainer);
-    updateHiddenWeights(current);
-  }
-
-  boundsContainer.append(
-    makeRangeCard({
-      labelText: "{{ _('máx cantidad por ingrediente') }}",
-      name: "{{ form.alpha_UB.name }}",
-      min: 1,
-      max: 25,
-      step: 1,
-      value: DEFAULT_MAX_INGR,
-      format: (x) => String(parseInt(x, 10)),
-    }),
-    makeRangeCard({
-      labelText: "{{ _('máx probabilidad por efecto') }}",
-      name: "{{ form.prob_UB.name }}",
-      min: 1,
-      max: 100,
-      step: 1,
-      value: DEFAULT_MAX_PROB,
-      format: (x) => String(parseInt(x, 10)),
-    }),
-    makeRangeCard({
-      labelText: "{{ _('profundidad de búsqueda') }}",
-      name: "{{ form.n_starts.name }}",
-      min: 1,
-      max: 100,
-      step: 1,
-      value: DEFAULT_SEARCH_DEPTH,
-      format: (x) => String(parseInt(x, 10)),
-    })
-  );
-
-  rebuildWeights();
-  nDiplomaEl.addEventListener("change", rebuildWeights);
-
-  function setRangeFill(el){
-    const min = Number(el.min ?? 0);
-    const max = Number(el.max ?? 100);
-    const val = Number(el.value ?? 0);
-    const p = ((val - min) / (max - min)) * 100;
-    el.style.setProperty("--p", p + "%");
-  }
-
-  function initRangeFills(root=document){
-    root.querySelectorAll('input[type="range"]').forEach(el => {
-      setRangeFill(el);
-      el.addEventListener("input", () => setRangeFill(el));
-    });
-  }
-
-  initRangeFills();
+  // Inject Flask data for optimizer.js
+  window.OPTIMIZER_CONFIG = {
+    defaultWeights: JSON.parse({{ form.effect_weights_json.data | tojson }}),
+    effectNames: [
+      {% for n in effect_names %}
+        {{ _(n) | tojson }}{{ "," if not loop.last }}
+      {% endfor %}
+    ],
+    dom: {
+      nDiploma: document.getElementById("{{ form.n_diploma.id }}"),
+      weightsContainer: document.getElementById("weightsContainer"),
+      boundsContainer: document.getElementById("boundsContainer"),
+      weightsHidden: document.getElementById("effect_weights_json"),
+    },
+    boundsFields: [
+      {% for field in [form.alpha_UB, form.prob_UB, form.n_starts] %}
+        {
+          labelText: "{{ field.label.text }}",
+          name: "{{ field.name }}",
+          min: "{{ field.validators[1].min }}",
+          max: "{{ field.validators[1].max }}",
+          value: {{ field.data | tojson }},
+        }{{ "," if not loop.last }}
+      {% endfor %}
+    ],
+  };
 </script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
 {% endblock %}

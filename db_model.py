@@ -21,10 +21,14 @@ class User(Base):
 class UserSettings(Base):
     __tablename__ = "user_settings"
     user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
-    effect_weights = Column(JSONB, nullable=False, server_default="[0,0,0,0,0]")
+    effect_weights = Column(JSONB, nullable=False, server_default="[0,0,0,0]")
     max_ingredients = Column(Integer, nullable=False, server_default="25")
     max_effects = Column(Integer, nullable=False, server_default="100")
     search_depth = Column(Integer, nullable=False, server_default="50")
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
 
     user = relationship("User", back_populates="settings")
+
+
+# Note:
+# Any update to the models requires a new Alembic migration to be created and applied or directly modify the database schema.

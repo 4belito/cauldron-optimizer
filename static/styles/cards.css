@@ -1,0 +1,35 @@
+/* =========================
+   Cards & Fieldsets
+   ========================= */
+.card {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  background: url("/static/error/popup_body.png") center / 101% 101% no-repeat;
+}
+
+fieldset.card{
+  display: block; 
+  border: 0;
+  padding: 0.375rem 1.5rem 1.5rem 1.5rem;
+  margin: 0.75rem 0.75rem;
+  margin-inline: auto;
+  min-inline-size: 0;
+}
+
+fieldset.card > legend.card-legend{
+  padding: 0 0.75rem;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  background: transparent;
+  display: table;
+  max-width: 100%;
+  color: #51200d;
+}
+
+fieldset.card > .card-body{ 
+  padding: 0.5rem; 
+}

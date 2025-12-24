@@ -1,0 +1,26 @@
+/* =========================
+   Page Backgrounds
+   ========================= */
+.cauldron-page,
+.book-page {
+  min-height: 100vh;
+  background: center / cover no-repeat;
+}
+
+.cauldron-page { 
+  background-image: url("/static/illustration_cauldron.png"); 
+}
+
+.book-page { 
+  background-image: url("/static/illustration_book.png"); 
+}
+
+.cauldron-page::before,
+.book-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  z-index: -1;
+}

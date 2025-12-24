@@ -1,0 +1,108 @@
+/* =========================
+   Optimizer Page
+   ========================= */
+.optimizer {
+  width: 100%;
+  max-width: 62.5rem;
+  margin: 0 auto;
+  padding: 0 0.75rem;
+}
+
+/* Diplomas */
+.n-diploma { 
+  width: 6.875rem; 
+}
+
+.diploma-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.diploma-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Effect weights grid */
+.weights-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(clamp(5.75rem, 16vw, 11rem), 1fr)
+  );
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  margin-top: 0.625rem;
+}
+
+.weight-card {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.weight-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weight-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.625rem;
+}
+
+.effect-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.weight-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weight-value {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+  width: 2.5em;
+  text-align: right;
+}
+
+/* Search bounds */
+.bounds-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.bound-item {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.bound-item input {
+  width: min(7.5rem, 40vw);
+}
+
+.submit-row {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}

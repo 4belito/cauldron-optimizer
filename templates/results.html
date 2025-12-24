@@ -14,18 +14,21 @@
       <div class="recipe-left">
         <div class="recipe-header"><strong>{{ _("Receta") }}</strong></div>
         <div class="ingredients-grid result-grid">
-          {% for i in range(alpha_matrix|length * alpha_matrix[0]|length) %}
-            {% set val = alpha_matrix[i // 4][i % 4] %}
-            <div class="ingredient-card {{ 'zero' if val == 0 else '' }}">
-              <img
-                class="ingredient-icon"
-                src="{{ url_for('static', filename='ingredients/ingr' ~ loop.index ~ '.png') }}"
-                alt=""
-              >
-              <div class="value-overlay">
-                <span class="value-text">{{ val }}</span>
+          {% set ns = namespace(idx=0) %}
+          {% for row in alpha_matrix %}
+            {% for val in row %}
+              {% set ns.idx = ns.idx + 1 %}
+              <div class="ingredient-card {{ 'zero' if val == 0 else '' }}">
+                <img
+                  class="ingredient-icon"
+                  src="{{ url_for('static', filename='ingredients/ingredient_crystal' ~ ns.idx ~ '.png') }}"
+                  alt=""
+                >
+                <div class="value-overlay">
+                  <span class="value-text">{{ val }}</span>
+                </div>
               </div>
-            </div>
+            {% endfor %}
           {% endfor %}
         </div>
       </div>
@@ -37,22 +40,18 @@
       <div class="recipe-right">
         <div class="recipe-header"><strong>{{ _("Efectos") }}</strong></div>
         <div class="recipe-list">
-          {% for i in range(out_effects|length) %}
-            {% set val = out_effects[i] %}
-            {% if val > 0 %}
-              {% set alpha = effect_weights[i] if effect_weights is defined else 0 %}
-                <div class="recipe-row" style="--hl: {{ alpha }};">
-                  <span class="recipe-row-value">{{ "%.2f"|format(val) }}%</span>
-                  <img
-                    class="recipe-row-icon"
-                    src="{{ url_for('static', filename='effects/effect' ~ (effect_indices[i] + 1) ~ '.png') }}"
-                    alt=""
-                  >
-                  <span class="recipe-row-name" title="{{ _(effect_names[i]) }}">
-                    {{ _(effect_names[i]) }}
-                  </span>
-                </div>
-            {% endif %}
+          {% for effect in effects %}
+            <div class="recipe-row" style="--hl: {{ effect.weight }};">
+              <span class="recipe-row-value">{{ "%.2f"|format(effect.value) }}%</span>
+              <img
+                class="recipe-row-icon"
+                src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
+                alt=""
+              >
+              <span class="recipe-row-name" title="{{ _(effect.name) }}">
+                {{ _(effect.name) }}
+              </span>
+            </div>
           {% endfor %}
         </div>
       </div>
@@ -68,5 +67,11 @@
       </span>
     </div>
   </fieldset>
+
+  <div class="submit-row">
+    <a href="{{ url_for('index') }}" class="game-btn game-btn-main">
+      <span>{{ _("Volver") }}</span>
+    </a>
+  </div>
 </div>
 {% endblock %}

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-23 10:19-0600\n"
+"POT-Creation-Date: 2025-12-23 19:37-0600\n"
 "PO-Revision-Date: 2025-12-21 23:51-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -232,39 +232,74 @@ msgstr ""
 msgid "Diplomas & Efectos Deseados"
 msgstr ""
 
-#: forms.py:92 templates/index.html:181
+#: forms.py:89
+msgid "Debe introducir el numero de diplomas"
+msgstr ""
+
+#: forms.py:94
+#, python-brace-format
+msgid "El numero de diplomas debe estar entre 1 y {}"
+msgstr ""
+
+#: forms.py:103 templates/index.html:181
 msgid "máx cantidad por ingrediente"
 msgstr ""
 
-#: forms.py:97 templates/index.html:190
+#: forms.py:105
+msgid "Debe introducir la cantidad máxima por ingrediente"
+msgstr ""
+
+#: forms.py:110
+#, python-brace-format
+msgid "La cantidad máxima por ingrediente debe estar entre 1 y {}"
+msgstr ""
+
+#: forms.py:119 templates/index.html:190
 msgid "máx probabilidad por efecto"
 msgstr ""
 
-#: forms.py:102 templates/index.html:199
-msgid "profundidad de búsqueda"
-msgstr ""
-
-#: forms.py:117
-msgid "Los pesos de los efectos deben ser un JSON válido"
-msgstr ""
-
-#: forms.py:120
-msgid "Los pesos de los efectos deben ser una lista"
+#: forms.py:121
+msgid "Debe introducir la probabilidad maxima por effecto"
 msgstr ""
 
 #: forms.py:125
+msgid "La probabilidad maxima por efecto debe estar entre 1 y 100"
+msgstr ""
+
+#: forms.py:131 templates/index.html:199
+msgid "profundidad de búsqueda"
+msgstr ""
+
+#: forms.py:133
+msgid "Debe introducir la profundidad de búsqueda"
+msgstr ""
+
+#: forms.py:138
+#, python-brace-format
+msgid "La profundidad de búsqueda debe estar entre 1 y {}"
+msgstr ""
+
+#: forms.py:155
+msgid "Los pesos de los efectos deben ser un JSON válido"
+msgstr ""
+
+#: forms.py:158
+msgid "Los pesos de los efectos deben ser una lista"
+msgstr ""
+
+#: forms.py:163
 msgid "El numero de effectos debe conicidir con el numero de diplomas"
 msgstr ""
 
-#: forms.py:135
+#: forms.py:173
 msgid "Los pesos de los efectos deben ser numeros"
 msgstr ""
 
-#: forms.py:139
+#: forms.py:177
 msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
 msgstr ""
 
-#: forms.py:143
+#: forms.py:181
 msgid "Al menos debes querer algun efecto"
 msgstr ""
 
@@ -525,5 +560,14 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Al menos debes querer algun efecto"
+#~ msgstr ""
+
+#~ msgid "El numero de diplomas debe estar entre 1 y %(max)s"
+#~ msgstr ""
+
+#~ msgid "La cantidad máxima por ingrediente debe estar entre 1 y %(max)s"
+#~ msgstr ""
+
+#~ msgid "La profundidad de búsqueda debe estar entre 1 y %(max)s"
 #~ msgstr ""
 

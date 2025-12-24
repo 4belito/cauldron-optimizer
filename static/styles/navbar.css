@@ -1,0 +1,112 @@
+/* =========================
+   Navbar
+   ========================= */
+nav .navbar-brand {
+  font-size: clamp(1.25rem, 2.2vw, 2rem);
+}
+
+nav .navbar-brand .elvenar-title {
+  color: #f0d27a;
+  margin-left: 0.7rem;
+}
+
+.main-navbar {
+  background: url("/static/main_header.png") center / 100% 100% no-repeat;
+  height: 4.875rem;
+  padding: 0;
+  border: none;
+}
+
+.main-navbar-inner,
+.main-navbar-collapse,
+.main-navbar .navbar-nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.main-navbar .navbar-brand,
+.main-navbar .nav-link {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #f5e6c8 !important;
+}
+
+.main-navbar .nav-link:hover {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+.main-navbar .navbar-toggler {
+  border: none;
+}
+
+.main-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(245,230,200,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Language switcher */
+.language-switch {
+  font-size: 0.9rem;
+}
+
+.language-switch .lang-link {
+  color: #eee;
+  text-decoration: none;
+  padding: 0 4px;
+  opacity: 0.6;
+}
+
+.language-switch .lang-link:hover {
+  opacity: 1;
+}
+
+.language-switch .lang-link.active {
+  font-weight: 700;
+  color: #ffd27d;
+  opacity: 1;
+}
+
+.language-switch .lang-sep {
+  color: #bbb;
+  padding: 0 2px;
+}
+
+/* Mobile navbar */
+@media (max-width: 47.999rem){
+  .main-navbar{
+    position: relative;
+  }
+
+  .main-navbar-collapse{
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 3000;
+    height: auto !important;
+    width: max-content;
+    max-width: 90vw;
+    padding: 0.75rem 1rem;
+    border-radius: 1rem;
+    background: rgba(45, 26, 16, 0.92);
+    display: none;
+  }
+
+  .main-navbar-collapse.show{
+    display: block;
+  }
+
+  .main-navbar .navbar-nav{
+    flex-direction: column !important;
+    align-items: flex-end;
+    gap: 0.75rem;
+  }
+
+  .main-navbar .nav-link{
+    display: block;
+    white-space: nowrap;
+  }
+}

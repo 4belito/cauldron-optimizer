@@ -53,3 +53,9 @@ EFFECT_NAMES = [
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
 MAX_STARTS = 100
+DEFAULTS = {
+    "effect_weights": "[0, 0, 0, 0]",
+    "max_ingredients": 25,
+    "max_effects": 100,
+    "search_depth": 50,
+}

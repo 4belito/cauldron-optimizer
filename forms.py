@@ -11,8 +11,8 @@ from wtforms.validators import (
     ValidationError,
 )
 
-from cauldron_optimizer import CauldronOptimizer
 from constants import MAX_STARTS
+from optimizer.cauldron_optimizer import CauldronOptimizer
 
 
 # Babel extraction marker: extracted, but does NOT translate at definition time.
@@ -23,7 +23,7 @@ def N_(s: str) -> str:
 
 class LoginForm(FlaskForm):
     username = StringField(
-        _l(N_("Usuario")),
+        label=_l(N_("Usuario")),
         validators=[
             DataRequired(message=_l(N_("Debe introducir el nombre de usuario"))),
             Length(
@@ -32,9 +32,12 @@ class LoginForm(FlaskForm):
                 message=_l(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
             ),
         ],
+        render_kw={
+            "placeholder": _l(N_("Usuario")),
+        },
     )
     password = PasswordField(
-        _l(N_("Contraseña")),
+        label=_l(N_("Contraseña")),
         validators=[
             DataRequired(message=_l(N_("Debe introducir una contraseña"))),
             Length(
@@ -43,12 +46,15 @@ class LoginForm(FlaskForm):
                 message=_l(N_("La contraseña debe tener entre 1 y 32 caracteres")),
             ),
         ],
+        render_kw={
+            "placeholder": _l(N_("Contraseña")),
+        },
     )
 
 
 class RegisterForm(FlaskForm):
     username = StringField(
-        _l(N_("Usuario")),
+        label=_l(N_("Usuario")),
         validators=[
             DataRequired(message=_l(N_("Debe introducir el nombre de usuario"))),
             Length(
@@ -57,9 +63,12 @@ class RegisterForm(FlaskForm):
                 message=_l(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
             ),
         ],
+        render_kw={
+            "placeholder": _l(N_("Usuario")),
+        },
     )
     password = PasswordField(
-        _l(N_("Contraseña")),
+        label=_l(N_("Contraseña")),
         validators=[
             DataRequired(message=_l(N_("Debe introducir una contraseña"))),
             Length(
@@ -68,13 +77,19 @@ class RegisterForm(FlaskForm):
                 message=_l(N_("La contraseña debe tener entre 1 y 32 caracteres")),
             ),
         ],
+        render_kw={
+            "placeholder": _l(N_("Contraseña")),
+        },
     )
     confirmation = PasswordField(
-        _l(N_("Confirmar contraseña")),
+        label=_l(N_("Confirmar contraseña")),
         validators=[
             DataRequired(message=_l(N_("Debe confirmar su contraseña"))),
             EqualTo("password", message=_l(N_("Las contraseñas no coinciden"))),
         ],
+        render_kw={
+            "placeholder": _l(N_("Confirmar contraseña")),
+        },
     )
 
 
@@ -84,29 +99,64 @@ class SearchForm(FlaskForm):
     """
 
     n_diploma = IntegerField(
-        _l(N_("Diplomas & Efectos Deseados")),
-        validators=[DataRequired(), NumberRange(min=1, max=CauldronOptimizer.max_ndiplomas)],
+        validators=[
+            DataRequired(message=_l(N_("Debe introducir el numero de diplomas"))),
+            NumberRange(
+                min=1,
+                max=CauldronOptimizer.max_ndiplomas,
+                message=_l(
+                    N_("El numero de diplomas debe estar entre 1 y {}").format(
+                        CauldronOptimizer.max_ndiplomas
+                    )
+                ),
+            ),
+        ],
         render_kw={"type": "number", "min": 1, "step": 1},
     )
     alpha_UB = IntegerField(
-        _l(N_("máx cantidad por ingrediente")),
-        validators=[NumberRange(min=1, max=CauldronOptimizer.sum_ingredients)],
+        label=_l(N_("máx cantidad por ingrediente")),
+        validators=[
+            DataRequired(message=_l(N_("Debe introducir la cantidad máxima por ingrediente"))),
+            NumberRange(
+                min=1,
+                max=CauldronOptimizer.sum_ingredients,
+                message=_l(
+                    N_("La cantidad máxima por ingrediente debe estar entre 1 y {}").format(
+                        CauldronOptimizer.sum_ingredients
+                    )
+                ),
+            ),
+        ],
         render_kw={"type": "number", "min": 1, "max": CauldronOptimizer.sum_ingredients, "step": 1},
     )
     prob_UB = IntegerField(
-        _l(N_("máx probabilidad por efecto")),
-        validators=[DataRequired(), NumberRange(min=1, max=100)],
+        label=_l(N_("máx probabilidad por efecto")),
+        validators=[
+            DataRequired(message=_l(N_("Debe introducir la probabilidad maxima por effecto"))),
+            NumberRange(
+                min=1,
+                max=100,
+                message=_l(N_("La probabilidad maxima por efecto debe estar entre 1 y 100")),
+            ),
+        ],
         render_kw={"type": "number", "min": 1, "max": 100, "step": 1},
     )
     n_starts = IntegerField(
-        _l(N_("profundidad de búsqueda")),
-        validators=[NumberRange(min=1, max=MAX_STARTS)],
+        label=_l(N_("profundidad de búsqueda")),
+        validators=[
+            DataRequired(message=_l(N_("Debe introducir la profundidad de búsqueda"))),
+            NumberRange(
+                min=1,
+                max=MAX_STARTS,
+                message=_l(
+                    N_("La profundidad de búsqueda debe estar entre 1 y {}").format(MAX_STARTS)
+                ),
+            ),
+        ],
         render_kw={"type": "number", "min": 1, "max": MAX_STARTS, "step": 1},
     )
-    # JSON string with default effect weights for client-side UI
     effect_weights_json = HiddenField()
-    # Selected premium ingredients (indexes); defaults to []
-    premium_ingr = FieldList(IntegerField(), min_entries=0)
+    premium_ingr = FieldList(unbound_field=IntegerField(), min_entries=0)
 
     # Custom validation for effect weights JSON aligned with n_diploma
     def validate_effect_weights_json(self, field):

@@ -1,0 +1,77 @@
+/* =========================
+   Contact Page
+   ========================= */
+.contact-card{
+  width: min(90vw, 60ch);
+  margin-inline: auto;
+  margin-block: 2rem;
+  padding: 1.5rem;
+  border-radius: 1.375rem;
+  overflow: hidden;
+}
+
+.contact-content{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2.25rem;
+  align-items: center;
+}
+
+.contact-image{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.125rem;
+  overflow: hidden;
+}
+
+.contact-image::after{
+  content: "";
+  position: absolute;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  right: -1.125rem;
+  width: 0.125rem;
+  background: rgba(120,90,40,0.35);
+}
+
+.contact-image img{
+  width: clamp(11.25rem, 22vw, 13.75rem);
+  height: auto;
+  display: block;
+  border-radius: 1.125rem;
+}
+
+.contact-text p{
+  text-align: justify;
+  text-justify: inter-word;
+  max-width: 32.5rem;
+  padding: 0 1%;
+  padding-top: 5%;
+}
+
+.contact-links{
+  margin-top: 0.875rem;
+  font-weight: 600;
+}
+
+.contact-links a{
+  color: #2b5ea5;
+  text-decoration: none;
+}
+
+.contact-links a:hover{ 
+  text-decoration: underline; 
+}
+
+/* Mobile */
+@media (max-width: 43.75rem){
+  .contact-content{
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .contact-image::after{ 
+    display: none; 
+  }
+}

@@ -1,0 +1,68 @@
+/* =========================
+   Buttons
+   ========================= */
+
+/* Game-styled action buttons */
+.game-btn {
+  background: url("/static/error/ok_nohover.png") center / contain no-repeat;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.game-btn:hover { 
+  background-image: url("/static/error/ok_hover.png");
+  text-decoration: none;
+}
+
+.game-btn span {
+  font-family: "Trebuchet MS", "Arial Black", sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0.125rem 0 rgba(0,0,0,0.7), 0 0 0.25rem rgba(0,0,0,0.4);
+  pointer-events: none;
+}
+
+/* Main action button (login, search) */
+.game-btn-main {
+  width: clamp(12.5rem, 40vw, 20rem);
+  aspect-ratio: 4 / 1;
+}
+
+.game-btn-main span {
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+}
+
+/* Modal/Error button */
+.game-btn-modal {
+  width: min(13.125rem, 40%);
+  aspect-ratio: 3.2 / 1;
+}
+
+.game-btn-modal span {
+  font-size: clamp(0.9rem, 3.2vw, 1.6rem);
+  font-weight: 900;
+}
+
+/* Login/Register link styling */
+.login-register-hint a{
+  color: #f5e6c8;
+  text-decoration: none;
+  font-weight: 700; 
+}
+
+.login-register-hint a:hover{
+  color: #fff;
+  text-decoration: underline;
+}
+
+.login-register-hint a:visited{
+  color: #f5e6c8;
+}

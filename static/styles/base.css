@@ -1,0 +1,37 @@
+/* =========================
+   Base & Variables
+   ========================= */
+:root {
+  --popup-w: min(41.375rem, 96vw);
+  --popup-ratio: 662 / 489;
+  --popup-header-h: 9%;
+}
+
+main.container {
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.center-col {
+  padding-left: 3.125rem !important;
+  padding-right: 3.125rem !important;
+}
+
+.hint { 
+  color: #666; 
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  margin-bottom: 0.625rem;
+}
+
+.row.center { 
+  justify-content: center; 
+}
+
+.row.space-between { 
+  justify-content: space-between; 
+}

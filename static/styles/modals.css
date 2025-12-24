@@ -1,0 +1,86 @@
+/* =========================
+   Error Modal/Popup
+   ========================= */
+.game-error-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: grid;
+  place-items: center;
+  z-index: 2000;
+}
+
+.game-error-box {
+  width: var(--popup-w);
+  aspect-ratio: var(--popup-ratio);
+  border-radius: 0.875rem;
+  overflow: hidden;
+  box-shadow: 0 1.125rem 3.75rem rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+.game-error-header {
+  flex: 0 0 var(--popup-header-h);
+  position: relative;
+  background: url("/static/error/popup_header.png") center / 100% 100% no-repeat;
+  display: grid;
+  place-items: center;
+}
+
+.game-error-title {
+  margin: 0;
+  color: #f0d27a;
+  font-size: clamp(0.95rem, 2.2vw, 1.25rem);
+  letter-spacing: 0.04em;
+  text-shadow: 0 0.0625rem 0 #dbc496, 0 0.125rem 0.125rem rgba(0, 0, 0, 0.6);
+}
+
+.game-error-close {
+  position: absolute;
+  top: 16%;
+  right: 1%;
+  width: min(2rem, 6vw);
+  aspect-ratio: 1 / 1;
+  display: block;
+  background: url("/static/error/close_nohover.png") center / contain no-repeat;
+  cursor: pointer;
+}
+
+.game-error-close:hover { 
+  background-image: url("/static/error/close_hover.png"); 
+}
+
+.game-error-body {
+  flex: 1;
+  background: url("/static/error/popup_body.png") center / cover no-repeat;
+  padding: 4% 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-error-text-wrap {
+  flex: 0 0 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.game-error-text {
+  margin: 0;
+  max-width: 70%;
+  color: #51200d;
+  text-shadow: 0 0.0625rem 0 rgba(255, 255, 255, 0.35);
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  line-height: 1.4;
+}
+
+.game-error-actions {
+  flex: 2;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
