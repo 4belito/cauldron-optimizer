@@ -87,9 +87,26 @@ See: CauldronOptimizer.greedy() and CauldronOptimizer.multistart().
 * Hosted deployment (Render)
 
 
+## Local setup
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Copy `.env.example` to `.env` and fill in your credentials:
+   ```bash
+   cp .env.example .env
+   ```
+4. Set up your PostgreSQL database and update `NEONDB_USER` in `.env`
+5. Run the Flask app:
+   ```bash
+   flask run
+   ```
+
 ## Notebook (explanation and examples)
 
-A Jupyter notebook (`solver.ipynb`) is included with a step-by-step explanation
+A Jupyter notebook (`optimizer/solver.ipynb`) is included with a step-by-step explanation
 of the scoring model and example local usage of the optimizer. The notebook is
 intended for documentation and experimentation; the production system runs as a
 deployed web application.

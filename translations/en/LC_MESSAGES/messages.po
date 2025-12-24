@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-23 19:37-0600\n"
+"POT-Creation-Date: 2025-12-24 00:26-0600\n"
 "PO-Revision-Date: 2025-12-22 02:20-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,35 +18,35 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:78
+#: app.py:93
 msgid ""
 "Sesión expirada o formulario inválido. Por favor recarga la página e "
 "inténtalo de nuevo."
 msgstr "Session expired or invalid form. Please reload the page and try again."
 
-#: app.py:84
+#: app.py:99
 msgid "Formulario inválido"
 msgstr "Invalid form"
 
-#: app.py:91
+#: app.py:106
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr "Session expired. Reload the page and try again."
 
 # ###################
 # Backend errors / labels
-#: app.py:129 app.py:247
+#: app.py:143 app.py:255
 msgid "No se encontró la configuracion del ususario"
 msgstr "User settings were not found"
 
-#: app.py:173
+#: app.py:184
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr "Incorrect username or password"
 
-#: app.py:213
+#: app.py:221
 msgid "El nombre de usuario ya existe"
 msgstr "That username already exists"
 
-#: app.py:216 app.py:256
+#: app.py:223 app.py:264
 msgid "Error de base de datos"
 msgstr "Database error"
 
@@ -194,114 +194,110 @@ msgstr "Community Work"
 msgid "Productos en Conserva"
 msgstr "Canned Goods"
 
-#: forms.py:26 forms.py:51
+#: forms.py:26 forms.py:36 forms.py:57 forms.py:67
 msgid "Usuario"
 msgstr "Username"
 
-#: forms.py:28 forms.py:53
+#: forms.py:28 forms.py:59
 msgid "Debe introducir el nombre de usuario"
 msgstr "You must enter a username"
 
-#: forms.py:32 forms.py:57
+#: forms.py:32 forms.py:63
 msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
 msgstr "Username must be between 1 and 16 characters"
 
-#: forms.py:37 forms.py:62
+#: forms.py:40 forms.py:50 forms.py:71 forms.py:81
 msgid "Contraseña"
 msgstr "Password"
 
-#: forms.py:39 forms.py:64
+#: forms.py:42 forms.py:73
 msgid "Debe introducir una contraseña"
 msgstr "You must enter a password"
 
-#: forms.py:43 forms.py:68
+#: forms.py:46 forms.py:77
 msgid "La contraseña debe tener entre 1 y 32 caracteres"
 msgstr "Password must be between 1 and 32 characters"
 
-#: forms.py:73
+#: forms.py:85 forms.py:91
 msgid "Confirmar contraseña"
 msgstr "Confirm password"
 
-#: forms.py:75
+#: forms.py:87
 msgid "Debe confirmar su contraseña"
 msgstr "You must confirm your password"
 
-#: forms.py:76
+#: forms.py:88
 msgid "Las contraseñas no coinciden"
 msgstr "Passwords do not match"
 
-#: forms.py:87 templates/index.html:12
-msgid "Diplomas & Efectos Deseados"
-msgstr "Diplomas & Desired Effects"
-
-#: forms.py:89
+#: forms.py:103
 msgid "Debe introducir el numero de diplomas"
 msgstr "You must enter the number of diplomas"
 
-#: forms.py:94
+#: forms.py:108
 #, python-brace-format
 msgid "El numero de diplomas debe estar entre 1 y {}"
 msgstr "The number of diplomas must be between 1 and {}"
 
-#: forms.py:103 templates/index.html:181
+#: forms.py:117
 msgid "máx cantidad por ingrediente"
 msgstr "Max quantity per ingredient"
 
-#: forms.py:105
+#: forms.py:119
 msgid "Debe introducir la cantidad máxima por ingrediente"
 msgstr "You must enter the maximum per ingredient"
 
-#: forms.py:110
+#: forms.py:124
 #, python-brace-format
 msgid "La cantidad máxima por ingrediente debe estar entre 1 y {}"
 msgstr "The maximum per ingredient must be between 1 and {}"
 
-#: forms.py:119 templates/index.html:190
+#: forms.py:133
 msgid "máx probabilidad por efecto"
 msgstr "Max probability per effect"
 
-#: forms.py:121
+#: forms.py:135
 msgid "Debe introducir la probabilidad maxima por effecto"
 msgstr "You must enter the maximum probability per effect"
 
-#: forms.py:125
+#: forms.py:139
 msgid "La probabilidad maxima por efecto debe estar entre 1 y 100"
 msgstr "The maximum probability per effect must be between 1 and 100"
 
-#: forms.py:131 templates/index.html:199
+#: forms.py:145
 msgid "profundidad de búsqueda"
 msgstr "Search depth"
 
-#: forms.py:133
+#: forms.py:147
 msgid "Debe introducir la profundidad de búsqueda"
 msgstr "You must enter the search depth"
 
-#: forms.py:138
+#: forms.py:152
 #, python-brace-format
 msgid "La profundidad de búsqueda debe estar entre 1 y {}"
 msgstr "The search depth must be between 1 and {}"
 
-#: forms.py:155
+#: forms.py:167
 msgid "Los pesos de los efectos deben ser un JSON válido"
 msgstr "Effect weights must be valid JSON"
 
-#: forms.py:158
+#: forms.py:170
 msgid "Los pesos de los efectos deben ser una lista"
 msgstr "Effect weights must be a list"
 
-#: forms.py:163
+#: forms.py:175
 msgid "El numero de effectos debe conicidir con el numero de diplomas"
 msgstr "The number of effects must match the number of diplomas"
 
-#: forms.py:173
+#: forms.py:185
 msgid "Los pesos de los efectos deben ser numeros"
 msgstr "Effect weights must be numbers"
 
-#: forms.py:177
+#: forms.py:189
 msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
 msgstr "Effect weights must be between 0 and 1 (inclusive)"
 
-#: forms.py:181
+#: forms.py:193
 msgid "Al menos debes querer algun efecto"
 msgstr "You must want at least one effect"
 
@@ -348,6 +344,10 @@ msgstr "Worlds"
 msgid "Receta"
 msgstr "Recipe"
 
+#: templates/index.html:12
+msgid "Diplomas & Efectos Deseados"
+msgstr "Diplomas & Desired Effects"
+
 #: templates/index.html:28
 msgid "Evitar Ingredientes (Premium)"
 msgstr "Avoid Ingredients (Premium)"
@@ -386,12 +386,12 @@ msgstr "Tutorial"
 msgid "Cerrar sesión"
 msgstr "Log out"
 
-#: templates/layout.html:73 templates/login.html:31 templates/register.html:4
-#: templates/register.html:34
+#: templates/layout.html:73 templates/login.html:29 templates/register.html:4
+#: templates/register.html:31
 msgid "Crear cuenta"
 msgstr "Register"
 
-#: templates/layout.html:76 templates/login.html:4 templates/login.html:27
+#: templates/layout.html:76 templates/login.html:4 templates/login.html:25
 msgid "Iniciar sesión"
 msgstr "Log in"
 
@@ -401,11 +401,15 @@ msgstr "Log in"
 msgid "Receta Óptima"
 msgstr "Optimal Recipe"
 
-#: templates/results.html:38
+#: templates/results.html:41
 msgid "Efectos"
 msgstr "Effects"
 
-#: templates/results.html:65
+#: templates/results.html:64
 msgid "Score"
 msgstr "Score"
+
+#: templates/results.html:73
+msgid "Volver"
+msgstr "Back"
 

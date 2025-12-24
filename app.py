@@ -113,6 +113,12 @@ def set_lang(lang):
     if lang not in LANGUAGES:
         lang = "es"
     session["lang"] = lang
+
+    # Use 'next' parameter if provided, otherwise fallback to referrer
+    next_page = request.args.get("next")
+    if next_page:
+        return redirect(next_page)
+
     referrer = request.referrer or ""
     # Avoid redirecting back to POST-only routes like /optimize after a form submit
     if "/optimize" in referrer:
@@ -230,6 +236,10 @@ def register():
 @app.route("/optimize", methods=["GET", "POST"])
 @login_required
 def optimize():
+    # Redirect GET requests to index (user should only POST here)
+    if request.method == "GET":
+        return redirect(url_for("index"))
+
     form = SearchForm()
     if not form.validate_on_submit():
         return error(first_form_error(form), url=url_for("index"))
@@ -291,11 +301,29 @@ def optimize():
                 }
             )
 
+    # Store results in session for language switching
+    session["last_results"] = {
+        "alpha_matrix": alpha_matrix,
+        "effects": filtered_effects,
+        "score": score,
+    }
+
+    return redirect(url_for("results"))
+
+
+@app.route("/results")
+@login_required
+def results():
+    """Display optimization results"""
+    last_results = session.get("last_results")
+    if not last_results:
+        return redirect(url_for("index"))
+
     return render_template(
         "results.html",
-        alpha_matrix=alpha_matrix,
-        effects=filtered_effects,
-        score=score,
+        alpha_matrix=last_results["alpha_matrix"],
+        effects=last_results["effects"],
+        score=last_results["score"],
     )
 
 

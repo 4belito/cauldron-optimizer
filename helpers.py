@@ -12,8 +12,6 @@ def error(text, url="/"):
 def login_required(f):
     """
     Decorate routes to require login.
-
-    https://flask.palletsprojects.com/en/latest/patterns/viewdecorators/
     """
 
     @wraps(f)

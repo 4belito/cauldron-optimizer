@@ -50,10 +50,10 @@
           {% set loc = get_locale()|string %}
           <li class="nav-item d-flex align-items-center ms-3 language-switch">
             <a class="lang-link {{ 'active' if loc.startswith('es') }}"
-              href="{{ url_for('set_lang', lang='es') }}">ES</a>
+              href="{{ url_for('set_lang', lang='es', next=request.path) }}">ES</a>
             <span class="lang-sep">|</span>
             <a class="lang-link {{ 'active' if loc.startswith('en') }}"
-              href="{{ url_for('set_lang', lang='en') }}">EN</a>
+              href="{{ url_for('set_lang', lang='en', next=request.path) }}">EN</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('contact') }}">{{ _("Contacto") }}</a>
