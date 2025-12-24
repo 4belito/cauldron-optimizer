@@ -1,0 +1,403 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-12-24 13:35-0600\n"
+"PO-Revision-Date: 2025-12-24 13:27-0600\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: es\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: cauldron_optimizer/__init__.py:80 cauldron_optimizer/helpers.py:31
+msgid ""
+"Sesión expirada o formulario inválido. Por favor recarga la página e "
+"inténtalo de nuevo."
+msgstr ""
+
+#: cauldron_optimizer/__init__.py:86 cauldron_optimizer/helpers.py:37
+msgid "Formulario inválido"
+msgstr ""
+
+#: cauldron_optimizer/__init__.py:93
+msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
+msgstr ""
+
+#: cauldron_optimizer/constants.py:13
+msgid "Espora Ígnea"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:14
+msgid "Escarabanuez"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:15
+msgid "Cáscaron de Maná"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:16
+msgid "Iris Volador"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:17
+msgid "Huevo de Medusa"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:18
+msgid "Lima de Oruga"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:19
+msgid "Flor de Hierba Mora"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:20
+msgid "Lenguas Burlonas"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:21
+msgid "Brote Ocular"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:22
+msgid "Hoja de Agricabello"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:23
+msgid "Capullo de Nube de Algodón"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:24
+msgid "Trufa Orejera"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:28
+msgid "Monedas"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:29
+msgid "Provisiones"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:30
+msgid "Cuartel Fuerza"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:31
+msgid "Ordinarios Básicos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:32
+msgid "Ordinarios Refinados"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:33
+msgid "Ordinarios Preciosos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:34
+msgid "Entrenamiento Fuerza"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:35
+msgid "Portal"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:36
+msgid "Orcos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:37
+msgid "Maná"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:38
+msgid "Mercenarios Fuerza"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:39
+msgid "Semillas"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:40
+msgid "Sensitivos Básicos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:41
+msgid "Sensitivos Refinados"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:42
+msgid "Sensitivos Preciosos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:43
+msgid "Entrenamiento Salud"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:44
+msgid "Mercenarios Salud"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:45
+msgid "Unurium"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:46
+msgid "Ascendidos Básicos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:47
+msgid "Ascendidos Refinados"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:48
+msgid "Ascendidos Preciosos"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:49
+msgid "Cuartel Salud"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:50
+msgid "Trabajo Comunitario"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:51
+msgid "Productos en Conserva"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:26 cauldron_optimizer/forms.py:36
+#: cauldron_optimizer/forms.py:57 cauldron_optimizer/forms.py:67
+msgid "Usuario"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:28 cauldron_optimizer/forms.py:59
+msgid "Debe introducir el nombre de usuario"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:32 cauldron_optimizer/forms.py:63
+msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:40 cauldron_optimizer/forms.py:50
+#: cauldron_optimizer/forms.py:71 cauldron_optimizer/forms.py:81
+msgid "Contraseña"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:42 cauldron_optimizer/forms.py:73
+msgid "Debe introducir una contraseña"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:46 cauldron_optimizer/forms.py:77
+msgid "La contraseña debe tener entre 1 y 32 caracteres"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:85 cauldron_optimizer/forms.py:91
+msgid "Confirmar contraseña"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:87
+msgid "Debe confirmar su contraseña"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:88
+msgid "Las contraseñas no coinciden"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:103
+msgid "Debe introducir el numero de diplomas"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:108
+#, python-brace-format
+msgid "El numero de diplomas debe estar entre 1 y {}"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:117
+msgid "máx cantidad por ingrediente"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:119
+msgid "Debe introducir la cantidad máxima por ingrediente"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:124
+#, python-brace-format
+msgid "La cantidad máxima por ingrediente debe estar entre 1 y {}"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:133
+msgid "máx probabilidad por efecto"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:135
+msgid "Debe introducir la probabilidad maxima por effecto"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:139
+msgid "La probabilidad maxima por efecto debe estar entre 1 y 100"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:145
+msgid "profundidad de búsqueda"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:147
+msgid "Debe introducir la profundidad de búsqueda"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:152
+#, python-brace-format
+msgid "La profundidad de búsqueda debe estar entre 1 y {}"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:167
+msgid "Los pesos de los efectos deben ser un JSON válido"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:170
+msgid "Los pesos de los efectos deben ser una lista"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:175
+msgid "El numero de effectos debe conicidir con el numero de diplomas"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:185
+msgid "Los pesos de los efectos deben ser numeros"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:189
+msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
+msgstr ""
+
+#: cauldron_optimizer/forms.py:193
+msgid "Al menos debes querer algun efecto"
+msgstr ""
+
+#: cauldron_optimizer/routes.py:56 cauldron_optimizer/routes.py:171
+msgid "No se encontró la configuracion del ususario"
+msgstr ""
+
+#: cauldron_optimizer/routes.py:97
+msgid "nombre de usuario o contraseña incorrectos"
+msgstr ""
+
+#: cauldron_optimizer/routes.py:135 cauldron_optimizer/routes.py:180
+msgid "Error de base de datos"
+msgstr ""
+
+#: cauldron_optimizer/templates/contact.html:4
+msgid "Contact"
+msgstr ""
+
+#: cauldron_optimizer/templates/contact.html:17
+#, python-format
+msgid ""
+"Esta página es un %(project)s y no tiene afiliación oficial con Elvenar "
+"ni con InnoGames."
+msgstr ""
+
+#: cauldron_optimizer/templates/contact.html:18
+msgid "proyecto creado por 4bel"
+msgstr ""
+
+#: cauldron_optimizer/templates/contact.html:23
+msgid ""
+"Si tienes dudas en cómo usar el optimizador, o sugerencias para "
+"mejorarlo, puedes contactarme directamente en el juego, por Discord o vía"
+" email."
+msgstr ""
+
+#: cauldron_optimizer/templates/contact.html:27
+msgid "En juego"
+msgstr ""
+
+#: cauldron_optimizer/templates/contact.html:28
+msgid "Mundos"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:3
+#: cauldron_optimizer/templates/results.html:15
+msgid "Receta"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:12
+msgid "Diplomas & Efectos Deseados"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:28
+msgid "Evitar Ingredientes (Premium)"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:52
+msgid "Limitar Búsqueda"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:61
+msgid "Buscar Receta"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:18
+msgid "Caldero"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:32
+msgid "Optimizador del Caldero"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:43
+msgid "Mostrar navegación"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:59
+msgid "Contacto"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:64
+msgid "Tutorial"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:69
+msgid "Cerrar sesión"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:73
+#: cauldron_optimizer/templates/login.html:29
+#: cauldron_optimizer/templates/register.html:4
+#: cauldron_optimizer/templates/register.html:31
+msgid "Crear cuenta"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html:76
+#: cauldron_optimizer/templates/login.html:4
+#: cauldron_optimizer/templates/login.html:25
+msgid "Iniciar sesión"
+msgstr ""
+
+#: cauldron_optimizer/templates/results.html:4
+msgid "Receta Óptima"
+msgstr ""
+
+#: cauldron_optimizer/templates/results.html:41
+msgid "Efectos"
+msgstr ""
+
+#: cauldron_optimizer/templates/results.html:64
+msgid "Score"
+msgstr ""
+
+#: cauldron_optimizer/templates/results.html:73
+msgid "Volver"
+msgstr ""
+

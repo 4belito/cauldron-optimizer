@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-12-24 00:26-0600\n"
+"POT-Creation-Date: 2025-12-24 13:35-0600\n"
 "PO-Revision-Date: 2025-12-22 02:20-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,296 +18,294 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: app.py:93
+#: cauldron_optimizer/__init__.py:80 cauldron_optimizer/helpers.py:31
 msgid ""
 "Sesión expirada o formulario inválido. Por favor recarga la página e "
 "inténtalo de nuevo."
 msgstr "Session expired or invalid form. Please reload the page and try again."
 
-#: app.py:99
+#: cauldron_optimizer/__init__.py:86 cauldron_optimizer/helpers.py:37
 msgid "Formulario inválido"
 msgstr "Invalid form"
 
-#: app.py:106
+#: cauldron_optimizer/__init__.py:93
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr "Session expired. Reload the page and try again."
 
-# ###################
-# Backend errors / labels
-#: app.py:143 app.py:255
-msgid "No se encontró la configuracion del ususario"
-msgstr "User settings were not found"
-
-#: app.py:184
-msgid "nombre de usuario o contraseña incorrectos"
-msgstr "Incorrect username or password"
-
-#: app.py:221
-msgid "El nombre de usuario ya existe"
-msgstr "That username already exists"
-
-#: app.py:223 app.py:264
-msgid "Error de base de datos"
-msgstr "Database error"
-
-#: constants.py:13
+#: cauldron_optimizer/constants.py:13
 msgid "Espora Ígnea"
 msgstr "Fiery Spore"
 
-#: constants.py:14
+#: cauldron_optimizer/constants.py:14
 msgid "Escarabanuez"
 msgstr "Scarab Nut"
 
-#: constants.py:15
+#: cauldron_optimizer/constants.py:15
 msgid "Cáscaron de Maná"
 msgstr "Mana Shell"
 
-#: constants.py:16
+#: cauldron_optimizer/constants.py:16
 msgid "Iris Volador"
 msgstr "Flying Iris"
 
-#: constants.py:17
+#: cauldron_optimizer/constants.py:17
 msgid "Huevo de Medusa"
 msgstr "Jellyfish Egg"
 
-#: constants.py:18
+#: cauldron_optimizer/constants.py:18
 msgid "Lima de Oruga"
 msgstr "Caterpillar Fruit"
 
-#: constants.py:19
+#: cauldron_optimizer/constants.py:19
 msgid "Flor de Hierba Mora"
 msgstr "Nightshade Flower"
 
-#: constants.py:20
+#: cauldron_optimizer/constants.py:20
 msgid "Lenguas Burlonas"
 msgstr "Mocking Tongues"
 
-#: constants.py:21
+#: cauldron_optimizer/constants.py:21
 msgid "Brote Ocular"
 msgstr "Ocular Bud"
 
-#: constants.py:22
+#: cauldron_optimizer/constants.py:22
 msgid "Hoja de Agricabello"
 msgstr "Agricabello Leaf"
 
-#: constants.py:23
+#: cauldron_optimizer/constants.py:23
 msgid "Capullo de Nube de Algodón"
 msgstr "Cotton Cloud Cocoon"
 
-#: constants.py:24
+#: cauldron_optimizer/constants.py:24
 msgid "Trufa Orejera"
 msgstr "Ear Truffle"
 
-#: constants.py:28
+#: cauldron_optimizer/constants.py:28
 msgid "Monedas"
 msgstr "Coins"
 
-#: constants.py:29
+#: cauldron_optimizer/constants.py:29
 msgid "Provisiones"
 msgstr "Supplies"
 
-#: constants.py:30
+#: cauldron_optimizer/constants.py:30
 msgid "Cuartel Fuerza"
 msgstr "Barracks Strength"
 
-#: constants.py:31
+#: cauldron_optimizer/constants.py:31
 msgid "Ordinarios Básicos"
 msgstr "Basic Goods"
 
-#: constants.py:32
+#: cauldron_optimizer/constants.py:32
 msgid "Ordinarios Refinados"
 msgstr "Refined Goods"
 
-#: constants.py:33
+#: cauldron_optimizer/constants.py:33
 msgid "Ordinarios Preciosos"
 msgstr "Precious Goods"
 
-#: constants.py:34
+#: cauldron_optimizer/constants.py:34
 msgid "Entrenamiento Fuerza"
 msgstr "Training Strength"
 
-#: constants.py:35
+#: cauldron_optimizer/constants.py:35
 msgid "Portal"
 msgstr "Portal"
 
-#: constants.py:36
+#: cauldron_optimizer/constants.py:36
 msgid "Orcos"
 msgstr "Orcs"
 
-#: constants.py:37
+#: cauldron_optimizer/constants.py:37
 msgid "Maná"
 msgstr "Mana"
 
-#: constants.py:38
+#: cauldron_optimizer/constants.py:38
 msgid "Mercenarios Fuerza"
 msgstr "Mercenary Strength"
 
-#: constants.py:39
+#: cauldron_optimizer/constants.py:39
 msgid "Semillas"
 msgstr "Seeds"
 
-#: constants.py:40
+#: cauldron_optimizer/constants.py:40
 msgid "Sensitivos Básicos"
 msgstr "Basic Sentient Goods"
 
-#: constants.py:41
+#: cauldron_optimizer/constants.py:41
 msgid "Sensitivos Refinados"
 msgstr "Refined Sentient Goods"
 
-#: constants.py:42
+#: cauldron_optimizer/constants.py:42
 msgid "Sensitivos Preciosos"
 msgstr "Precious Sentient Goods"
 
-#: constants.py:43
+#: cauldron_optimizer/constants.py:43
 msgid "Entrenamiento Salud"
 msgstr "Training Health"
 
-#: constants.py:44
+#: cauldron_optimizer/constants.py:44
 msgid "Mercenarios Salud"
 msgstr "Mercenary Health"
 
-#: constants.py:45
+#: cauldron_optimizer/constants.py:45
 msgid "Unurium"
 msgstr "Unurium"
 
-#: constants.py:46
+#: cauldron_optimizer/constants.py:46
 msgid "Ascendidos Básicos"
 msgstr "Basic Ascended Goods"
 
-#: constants.py:47
+#: cauldron_optimizer/constants.py:47
 msgid "Ascendidos Refinados"
 msgstr "Refined Ascended Goods"
 
-#: constants.py:48
+#: cauldron_optimizer/constants.py:48
 msgid "Ascendidos Preciosos"
 msgstr "Precious Ascended Goods"
 
-#: constants.py:49
+#: cauldron_optimizer/constants.py:49
 msgid "Cuartel Salud"
 msgstr "Barracks Health"
 
-#: constants.py:50
+#: cauldron_optimizer/constants.py:50
 msgid "Trabajo Comunitario"
 msgstr "Community Work"
 
-#: constants.py:51
+#: cauldron_optimizer/constants.py:51
 msgid "Productos en Conserva"
 msgstr "Canned Goods"
 
-#: forms.py:26 forms.py:36 forms.py:57 forms.py:67
+#: cauldron_optimizer/forms.py:26 cauldron_optimizer/forms.py:36
+#: cauldron_optimizer/forms.py:57 cauldron_optimizer/forms.py:67
 msgid "Usuario"
 msgstr "Username"
 
-#: forms.py:28 forms.py:59
+#: cauldron_optimizer/forms.py:28 cauldron_optimizer/forms.py:59
 msgid "Debe introducir el nombre de usuario"
 msgstr "You must enter a username"
 
-#: forms.py:32 forms.py:63
+#: cauldron_optimizer/forms.py:32 cauldron_optimizer/forms.py:63
 msgid "El nombre de usuario debe tener entre 1 y 16 caracteres"
 msgstr "Username must be between 1 and 16 characters"
 
-#: forms.py:40 forms.py:50 forms.py:71 forms.py:81
+#: cauldron_optimizer/forms.py:40 cauldron_optimizer/forms.py:50
+#: cauldron_optimizer/forms.py:71 cauldron_optimizer/forms.py:81
 msgid "Contraseña"
 msgstr "Password"
 
-#: forms.py:42 forms.py:73
+#: cauldron_optimizer/forms.py:42 cauldron_optimizer/forms.py:73
 msgid "Debe introducir una contraseña"
 msgstr "You must enter a password"
 
-#: forms.py:46 forms.py:77
+#: cauldron_optimizer/forms.py:46 cauldron_optimizer/forms.py:77
 msgid "La contraseña debe tener entre 1 y 32 caracteres"
 msgstr "Password must be between 1 and 32 characters"
 
-#: forms.py:85 forms.py:91
+#: cauldron_optimizer/forms.py:85 cauldron_optimizer/forms.py:91
 msgid "Confirmar contraseña"
 msgstr "Confirm password"
 
-#: forms.py:87
+#: cauldron_optimizer/forms.py:87
 msgid "Debe confirmar su contraseña"
 msgstr "You must confirm your password"
 
-#: forms.py:88
+#: cauldron_optimizer/forms.py:88
 msgid "Las contraseñas no coinciden"
 msgstr "Passwords do not match"
 
-#: forms.py:103
+#: cauldron_optimizer/forms.py:103
 msgid "Debe introducir el numero de diplomas"
 msgstr "You must enter the number of diplomas"
 
-#: forms.py:108
+#: cauldron_optimizer/forms.py:108
 #, python-brace-format
 msgid "El numero de diplomas debe estar entre 1 y {}"
 msgstr "The number of diplomas must be between 1 and {}"
 
-#: forms.py:117
+#: cauldron_optimizer/forms.py:117
 msgid "máx cantidad por ingrediente"
 msgstr "Max quantity per ingredient"
 
-#: forms.py:119
+#: cauldron_optimizer/forms.py:119
 msgid "Debe introducir la cantidad máxima por ingrediente"
 msgstr "You must enter the maximum per ingredient"
 
-#: forms.py:124
+#: cauldron_optimizer/forms.py:124
 #, python-brace-format
 msgid "La cantidad máxima por ingrediente debe estar entre 1 y {}"
 msgstr "The maximum per ingredient must be between 1 and {}"
 
-#: forms.py:133
+#: cauldron_optimizer/forms.py:133
 msgid "máx probabilidad por efecto"
 msgstr "Max probability per effect"
 
-#: forms.py:135
+#: cauldron_optimizer/forms.py:135
 msgid "Debe introducir la probabilidad maxima por effecto"
 msgstr "You must enter the maximum probability per effect"
 
-#: forms.py:139
+#: cauldron_optimizer/forms.py:139
 msgid "La probabilidad maxima por efecto debe estar entre 1 y 100"
 msgstr "The maximum probability per effect must be between 1 and 100"
 
-#: forms.py:145
+#: cauldron_optimizer/forms.py:145
 msgid "profundidad de búsqueda"
 msgstr "Search depth"
 
-#: forms.py:147
+#: cauldron_optimizer/forms.py:147
 msgid "Debe introducir la profundidad de búsqueda"
 msgstr "You must enter the search depth"
 
-#: forms.py:152
+#: cauldron_optimizer/forms.py:152
 #, python-brace-format
 msgid "La profundidad de búsqueda debe estar entre 1 y {}"
 msgstr "The search depth must be between 1 and {}"
 
-#: forms.py:167
+#: cauldron_optimizer/forms.py:167
 msgid "Los pesos de los efectos deben ser un JSON válido"
 msgstr "Effect weights must be valid JSON"
 
-#: forms.py:170
+#: cauldron_optimizer/forms.py:170
 msgid "Los pesos de los efectos deben ser una lista"
 msgstr "Effect weights must be a list"
 
-#: forms.py:175
+#: cauldron_optimizer/forms.py:175
 msgid "El numero de effectos debe conicidir con el numero de diplomas"
 msgstr "The number of effects must match the number of diplomas"
 
-#: forms.py:185
+#: cauldron_optimizer/forms.py:185
 msgid "Los pesos de los efectos deben ser numeros"
 msgstr "Effect weights must be numbers"
 
-#: forms.py:189
+#: cauldron_optimizer/forms.py:189
 msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
 msgstr "Effect weights must be between 0 and 1 (inclusive)"
 
-#: forms.py:193
+#: cauldron_optimizer/forms.py:193
 msgid "Al menos debes querer algun efecto"
 msgstr "You must want at least one effect"
 
 # ###################
+# Backend errors / labels
+#: cauldron_optimizer/routes.py:56 cauldron_optimizer/routes.py:171
+msgid "No se encontró la configuracion del ususario"
+msgstr "User settings were not found"
+
+#: cauldron_optimizer/routes.py:97
+msgid "nombre de usuario o contraseña incorrectos"
+msgstr "Incorrect username or password"
+
+#: cauldron_optimizer/routes.py:135 cauldron_optimizer/routes.py:180
+msgid "Error de base de datos"
+msgstr "Database error"
+
+# ###################
 # Contact page
-#: templates/contact.html:4
+#: cauldron_optimizer/templates/contact.html:4
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/contact.html:17
+#: cauldron_optimizer/templates/contact.html:17
 #, python-format
 msgid ""
 "Esta página es un %(project)s y no tiene afiliación oficial con Elvenar "
@@ -316,11 +314,11 @@ msgstr ""
 "This page is a %(project)s and has no official affiliation with Elvenar "
 "or InnoGames."
 
-#: templates/contact.html:18
+#: cauldron_optimizer/templates/contact.html:18
 msgid "proyecto creado por 4bel"
 msgstr "project created by 4bel"
 
-#: templates/contact.html:23
+#: cauldron_optimizer/templates/contact.html:23
 msgid ""
 "Si tienes dudas en cómo usar el optimizador, o sugerencias para "
 "mejorarlo, puedes contactarme directamente en el juego, por Discord o vía"
@@ -330,86 +328,94 @@ msgstr ""
 "improving it, you can contact me directly in the game, via Discord, or by"
 " email."
 
-#: templates/contact.html:27
+#: cauldron_optimizer/templates/contact.html:27
 msgid "En juego"
 msgstr "In game"
 
-#: templates/contact.html:28
+#: cauldron_optimizer/templates/contact.html:28
 msgid "Mundos"
 msgstr "Worlds"
 
 # ###################
 # Index / Optimizer
-#: templates/index.html:3 templates/results.html:15
+#: cauldron_optimizer/templates/index.html:3
+#: cauldron_optimizer/templates/results.html:15
 msgid "Receta"
 msgstr "Recipe"
 
-#: templates/index.html:12
+#: cauldron_optimizer/templates/index.html:12
 msgid "Diplomas & Efectos Deseados"
 msgstr "Diplomas & Desired Effects"
 
-#: templates/index.html:28
+#: cauldron_optimizer/templates/index.html:28
 msgid "Evitar Ingredientes (Premium)"
 msgstr "Avoid Ingredients (Premium)"
 
-#: templates/index.html:52
+#: cauldron_optimizer/templates/index.html:52
 msgid "Limitar Búsqueda"
 msgstr "Limit Search"
 
-#: templates/index.html:61
+#: cauldron_optimizer/templates/index.html:61
 msgid "Buscar Receta"
 msgstr "Find Recipe"
 
 # ###################
 # Layout / UI
-#: templates/layout.html:18
+#: cauldron_optimizer/templates/layout.html:18
 msgid "Caldero"
 msgstr "Cauldron"
 
-#: templates/layout.html:32
+#: cauldron_optimizer/templates/layout.html:32
 msgid "Optimizador del Caldero"
 msgstr "Cauldron Optimizer"
 
-#: templates/layout.html:43
+#: cauldron_optimizer/templates/layout.html:43
 msgid "Mostrar navegación"
 msgstr "Toggle navigation"
 
-#: templates/layout.html:59
+#: cauldron_optimizer/templates/layout.html:59
 msgid "Contacto"
 msgstr "Contact"
 
-#: templates/layout.html:64
+#: cauldron_optimizer/templates/layout.html:64
 msgid "Tutorial"
 msgstr "Tutorial"
 
-#: templates/layout.html:69
+#: cauldron_optimizer/templates/layout.html:69
 msgid "Cerrar sesión"
 msgstr "Log out"
 
-#: templates/layout.html:73 templates/login.html:29 templates/register.html:4
-#: templates/register.html:31
+#: cauldron_optimizer/templates/layout.html:73
+#: cauldron_optimizer/templates/login.html:29
+#: cauldron_optimizer/templates/register.html:4
+#: cauldron_optimizer/templates/register.html:31
 msgid "Crear cuenta"
 msgstr "Register"
 
-#: templates/layout.html:76 templates/login.html:4 templates/login.html:25
+#: cauldron_optimizer/templates/layout.html:76
+#: cauldron_optimizer/templates/login.html:4
+#: cauldron_optimizer/templates/login.html:25
 msgid "Iniciar sesión"
 msgstr "Log in"
 
 # ###################
 # Results
-#: templates/results.html:4
+#: cauldron_optimizer/templates/results.html:4
 msgid "Receta Óptima"
 msgstr "Optimal Recipe"
 
-#: templates/results.html:41
+#: cauldron_optimizer/templates/results.html:41
 msgid "Efectos"
 msgstr "Effects"
 
-#: templates/results.html:64
+#: cauldron_optimizer/templates/results.html:64
 msgid "Score"
 msgstr "Score"
 
-#: templates/results.html:73
+#: cauldron_optimizer/templates/results.html:73
 msgid "Volver"
 msgstr "Back"
+
+#~ msgid "El nombre de usuario ya existe"
+#~ msgstr "That username already exists"
 

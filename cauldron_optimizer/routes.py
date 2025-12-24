@@ -1,111 +1,19 @@
-# ---- stdlib ----
 import json
-import os
-from contextlib import contextmanager
 
 import numpy as np
-
-# ---- third-party ----
-from dotenv import load_dotenv
-from flask import Flask, redirect, render_template, request, session, url_for
-from flask_babel import Babel, get_locale
+from flask import redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
-from flask_wtf.csrf import CSRFError, CSRFProtect
-from sqlalchemy import create_engine, func, select
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import func, select
+from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
-from db_model import User, UserSettings
-from flask_session import Session
-from forms import LoginForm, RegisterForm, SearchForm
-from helpers import error, login_required
-
-# ---- app / domain ----
-from optimizer.cauldron_optimizer import CauldronOptimizer
-
-load_dotenv()  ## Load environment variables from .env file(it is used only vlocally)
-DATABASE_URL = os.environ["NEONDB_USER"]
-if DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg://", 1)
-
-engine = create_engine(DATABASE_URL, pool_pre_ping=True)
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-
-
-app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
-Session(app)
-csrf = CSRFProtect(app)
-
-
-@contextmanager
-def db_session():
-    db = SessionLocal()
-    try:
-        yield db
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise
-    finally:
-        db.close()
-
-
-def select_locale():
-    # 1) Override manual: /?lang=en o /?lang=es
-    lang = request.args.get("lang")
-    if lang in LANGUAGES:
-        session["lang"] = lang
-        return lang
-
-    # 2) Preferencia guardada en sesión
-    lang = session.get("lang")
-    if lang in LANGUAGES:
-        return lang
-
-    # 3) Detección automática por navegador
-    browser_lang = request.accept_languages.best_match(LANGUAGES)
-    if browser_lang:
-        return browser_lang
-
-    # 4) Fallback final: español
-    return "es"
-
-
-babel = Babel(app, locale_selector=select_locale)
-
-
-@app.context_processor
-def inject_i18n():
-    return {
-        "_": _,
-        "get_locale": get_locale,
-    }
-
-
-def first_form_error(form) -> str:
-    if "csrf_token" in form.errors:
-        return _(
-            "Sesión expirada o formulario inválido. Por favor recarga la página e inténtalo de nuevo."
-        )
-
-    for errors in form.errors.values():
-        return errors[0]
-
-    return _("Formulario inválido")
-
-
-@app.errorhandler(CSRFError)
-def handle_csrf_error(e):
-    # Common if user stays too long on page, opens in new tab, etc.
-    return (
-        error(_("Sesión expirada. Recarga la página e inténtalo de nuevo."), url=url_for("login")),
-        400,
-    )
+from cauldron_optimizer import app
+from cauldron_optimizer.constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
+from cauldron_optimizer.database import db_session
+from cauldron_optimizer.db_model import User, UserSettings
+from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
+from cauldron_optimizer.helpers import error, first_form_error, login_required
+from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
 
 @app.route("/lang/<lang>")
@@ -215,6 +123,7 @@ def register():
     if form.validate_on_submit():
         try:
             with db_session() as db_sa:
+                # Enforce unique username at the database layer
                 new_user = User(
                     username=form.username.data, hash=generate_password_hash(form.password.data)
                 )
@@ -223,8 +132,6 @@ def register():
                 db_sa.add(UserSettings(user=new_user))
                 # commit handled by context manager
             return redirect(url_for("login"))
-        except IntegrityError:
-            return error(_("El nombre de usuario ya existe"), url=url_for("register"))
         except SQLAlchemyError:
             return error(_("Error de base de datos"), url=url_for("register"))
     if form.errors:

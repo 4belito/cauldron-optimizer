@@ -11,8 +11,8 @@ from wtforms.validators import (
     ValidationError,
 )
 
-from constants import MAX_STARTS
-from optimizer.cauldron_optimizer import CauldronOptimizer
+from cauldron_optimizer.constants import MAX_STARTS
+from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
 
 # Babel extraction marker: extracted, but does NOT translate at definition time.
