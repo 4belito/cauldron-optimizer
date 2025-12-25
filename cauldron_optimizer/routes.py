@@ -4,7 +4,7 @@ import numpy as np
 from flask import redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from sqlalchemy import func, select
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from cauldron_optimizer import app
@@ -123,7 +123,6 @@ def register():
     if form.validate_on_submit():
         try:
             with db_session() as db_sa:
-                # Enforce unique username at the database layer
                 new_user = User(
                     username=form.username.data, hash=generate_password_hash(form.password.data)
                 )
@@ -131,9 +130,9 @@ def register():
                 db_sa.flush()  # makes new_user.id available without committing
                 db_sa.add(UserSettings(user=new_user))
                 # commit handled by context manager
-            return redirect(url_for("login"))
-        except SQLAlchemyError:
-            return error(_("Error de base de datos"), url=url_for("register"))
+        except IntegrityError:
+            return error(_("El nombre de usuario ya está en uso"), url=url_for("register"))
+        return redirect(url_for("login"))
     if form.errors:
         return error(first_form_error(form), url=url_for("register"))
 

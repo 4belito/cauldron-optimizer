@@ -36,6 +36,7 @@ class LoginForm(FlaskForm):
             "placeholder": _l(N_("Usuario")),
         },
     )
+
     password = PasswordField(
         label=_l(N_("Contraseña")),
         validators=[
@@ -67,6 +68,7 @@ class RegisterForm(FlaskForm):
             "placeholder": _l(N_("Usuario")),
         },
     )
+
     password = PasswordField(
         label=_l(N_("Contraseña")),
         validators=[
