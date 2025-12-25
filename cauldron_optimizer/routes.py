@@ -5,7 +5,6 @@ from flask import redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from werkzeug.security import check_password_hash
 
 from cauldron_optimizer import app
 from cauldron_optimizer.constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
@@ -94,10 +93,11 @@ def login():
                 select(User).where(User.username == form.username.data)
             ).scalar_one_or_none()
 
-            if user is None or not check_password_hash(user.password_hash, form.password.data):
+            if user is None or not user.check_password(form.password.data):
                 return error(_("nombre de usuario o contraseña incorrectos"), url=url_for("login"))
 
             session["user_id"] = user.id
+            session["username"] = user.username
             return redirect(url_for("index"))
     if form.errors:
         msg = next(iter(form.errors.values()))[0]

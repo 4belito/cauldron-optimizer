@@ -1,7 +1,7 @@
 from sqlalchemy import TIMESTAMP, BigInteger, Column, ForeignKey, Integer, Text, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import declarative_base, relationship
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 Base = declarative_base()
 
@@ -25,6 +25,9 @@ class User(Base):
     @password.setter
     def password(self, password_plaintext: str):
         self.password_hash = generate_password_hash(password_plaintext)
+
+    def check_password(self, attempted_password: str) -> bool:
+        return check_password_hash(self.password_hash, attempted_password)
 
 
 class UserSettings(Base):

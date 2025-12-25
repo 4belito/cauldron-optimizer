@@ -10,6 +10,7 @@ def error(text, url="/"):
     return render_template("error.html", text=text, url=url)
 
 
+# login_manager may replace this in the future
 def login_required(f):
     """
     Decorate routes to require login.
