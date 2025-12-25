@@ -1,6 +1,7 @@
 from sqlalchemy import TIMESTAMP, BigInteger, Column, ForeignKey, Integer, Text, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import declarative_base, relationship
+from werkzeug.security import generate_password_hash
 
 Base = declarative_base()
 
@@ -9,13 +10,21 @@ class User(Base):
     __tablename__ = "users"
     id = Column(BigInteger, primary_key=True)
     username = Column(Text, unique=True, nullable=False)
-    hash = Column(Text, nullable=False)
+    password_hash = Column(Text, nullable=False)
     settings = relationship(
         "UserSettings",
         back_populates="user",
         uselist=False,
         cascade="all, delete",
     )
+
+    @property
+    def password(self):
+        return self.password
+
+    @password.setter
+    def password(self, password_plaintext: str):
+        self.password_hash = generate_password_hash(password_plaintext)
 
 
 class UserSettings(Base):

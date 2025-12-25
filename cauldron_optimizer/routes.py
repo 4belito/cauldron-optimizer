@@ -5,7 +5,7 @@ from flask import redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 
 from cauldron_optimizer import app
 from cauldron_optimizer.constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
@@ -94,7 +94,7 @@ def login():
                 select(User).where(User.username == form.username.data)
             ).scalar_one_or_none()
 
-            if user is None or not check_password_hash(user.hash, form.password.data):
+            if user is None or not check_password_hash(user.password_hash, form.password.data):
                 return error(_("nombre de usuario o contraseña incorrectos"), url=url_for("login"))
 
             session["user_id"] = user.id
@@ -124,7 +124,8 @@ def register():
         try:
             with db_session() as db_sa:
                 new_user = User(
-                    username=form.username.data, hash=generate_password_hash(form.password.data)
+                    username=form.username.data,
+                    password=form.password.data,
                 )
                 db_sa.add(new_user)
                 db_sa.flush()  # makes new_user.id available without committing
