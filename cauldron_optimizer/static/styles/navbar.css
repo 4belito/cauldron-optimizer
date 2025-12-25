@@ -186,3 +186,15 @@ nav .navbar-brand .elvenar-title {
   border-radius: 50%;
   object-fit: cover;
 }
+
+/* Add dropdown caret to mobile user toggler */
+.user-toggler::after {
+  content: "";
+  color: #f5e6c8;
+  display: inline-block;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  border-top: 0.35em solid currentColor;
+  border-right: 0.35em solid transparent;
+  border-left: 0.35em solid transparent;
+}

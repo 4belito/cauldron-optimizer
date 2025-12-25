@@ -32,7 +32,7 @@
         <span class="elvenar-title">{{ _("Optimizador del Caldero") }}</span>
       </a>
 
-      <!-- Mobile toggle -->
+      <!-- Toggle (mobile only) -->
       {% if session.get("user_id") %}
         <!-- Mobile (logged in): avatar + username replaces hamburger -->
         <button
@@ -51,23 +51,10 @@
           >
           <span class="user-name">{{ session.get("username") }}</span>
         </button>
-
-        <!-- Desktop toggle remains Bootstrap default behavior (only if you still want it visible on desktop) -->
-        <button
-          class="navbar-toggler d-none d-md-flex"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbar"
-          aria-controls="navbar"
-          aria-expanded="false"
-          aria-label="{{ _('Mostrar navegación') }}"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
       {% else %}
         <!-- Mobile (logged out): normal hamburger -->
         <button
-          class="navbar-toggler"
+          class="navbar-toggler d-md-none"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbar"
