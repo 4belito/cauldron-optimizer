@@ -4,13 +4,14 @@ from flask import redirect, render_template, session
 from flask_babel import gettext as _
 
 
+# this may be enhenced later using bootstrap Modal dialogs
 def error(text, url="/"):
     """Render message as an apology to user."""
 
     return render_template("error.html", text=text, url=url)
 
 
-# login_manager may replace this in the future
+# flask_login library may replace this in the future
 def login_required(f):
     """
     Decorate routes to require login.

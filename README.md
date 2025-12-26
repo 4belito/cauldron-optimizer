@@ -1,7 +1,7 @@
 # Cauldron Optimizer
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Cauldron Optimizer web app screenshot" width="900">
+  <img src="docs/index_screenshot.png" alt="Cauldron Optimizer web app screenshot" width="900">
 </p>
 <p align="center">
   <em>
