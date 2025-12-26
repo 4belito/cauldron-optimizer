@@ -98,6 +98,7 @@ def login():
 
             session["user_id"] = user.id
             session["username"] = user.username
+            session["premium_ingredients"] = []
             return redirect(url_for("index"))
     if form.errors:
         msg = next(iter(form.errors.values()))[0]
@@ -214,6 +215,7 @@ def optimize():
         "effects": filtered_effects,
         "score": score,
     }
+    session["premium_ingredients"] = premium_ingr
 
     return redirect(url_for("results"))
 

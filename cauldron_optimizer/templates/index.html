@@ -29,9 +29,12 @@
     </legend>
     <div class="card-body">
       <div class="ingredients-grid">
+        {% set premiums = session.get('premium_ingredients', []) %}
         {% for name in ingredient_names %}
           <label class="ingredient-check">
-            <input type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}">
+            <input type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}"
+            {% if loop.index0 in premiums %}checked{% endif %}
+            >
 
             <img
               class="ingredient-check-icon"
