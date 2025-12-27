@@ -80,6 +80,7 @@
       weightsContainer: document.getElementById("weightsContainer"),
       boundsContainer: document.getElementById("boundsContainer"),
       weightsHidden: document.getElementById("effect_weights_json"),
+      form: document.getElementById("optimizerForm"),
     },
     boundsFields: [
       {% for field in [form.alpha_UB, form.prob_UB, form.n_starts] %}

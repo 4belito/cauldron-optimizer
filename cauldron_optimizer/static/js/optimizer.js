@@ -52,15 +52,33 @@ function makeRangeCard({ labelText, name, iconSrc, min, max, step, value, format
   return card;
 }
 
+// Store current weights globally to preserve them across rebuilds
+let globalWeights = [];
+
 function rebuildWeights() {
   const { defaultWeights, effectNames, dom } = window.OPTIMIZER_CONFIG;
   const n = Number(dom.nDiploma.value);
   dom.weightsContainer.innerHTML = "";
   if (n < 1 || n > effectNames.length) return;
 
-  const current = [];
+  // Initialize globalWeights if empty, preserving any existing values
+  if (globalWeights.length === 0) {
+    globalWeights = [...defaultWeights];
+  }
+
+  // Zero out all weights higher than the number of diplomas
+  for (let i = n; i < globalWeights.length; i++) {
+    globalWeights[i] = 0;
+  }
+
+  // Ensure globalWeights array is large enough
+  while (globalWeights.length < n) {
+    globalWeights.push(0);
+  }
+
   for (let i = 0; i < n; i++) {
-    const defaultW = defaultWeights[i] ?? 0;
+    // Use the current weight value, defaulting to 0 if not set
+    const currentW = globalWeights[i] ?? 0;
 
     const card = makeRangeCard({
       labelText: effectNames[i] ?? `Effect ${i + 1}`,
@@ -69,22 +87,21 @@ function rebuildWeights() {
       min: 0,
       max: 1,
       step: 0.01,
-      value: defaultW,
+      value: currentW,
       format: (x) => Number(x).toFixed(2),
     });
 
     const slider = card.querySelector('input[type="range"]');
-    current[i] = defaultW;
     slider.addEventListener("input", () => {
-      current[i] = Number(slider.value);
-      updateHiddenWeights(current);
+      globalWeights[i] = Number(slider.value);
+      updateHiddenWeights(globalWeights.slice(0, n));
     });
 
     dom.weightsContainer.appendChild(card);
   }
 
   initRangeFills(dom.weightsContainer);
-  updateHiddenWeights(current);
+  updateHiddenWeights(globalWeights.slice(0, n));
 }
 
 function setRangeFill(el) {
@@ -107,21 +124,27 @@ function initOptimizer() {
 
   // Render bounds (alpha_UB, prob_UB, n_starts)
   boundsFields.forEach((cfg) => {
-    dom.boundsContainer.append(
-      makeRangeCard({
-        labelText: cfg.labelText,
-        name: cfg.name,
-        min: cfg.min,
-        max: cfg.max,
-        step: 1,
-        value: cfg.value,
-        format: (x) => String(parseInt(x, 10)),
-      })
-    );
+    const card = makeRangeCard({
+      labelText: cfg.labelText,
+      name: cfg.name,
+      min: cfg.min,
+      max: cfg.max,
+      step: 1,
+      value: cfg.value,
+      format: (x) => String(parseInt(x, 10)),
+    });
+    
+    // Update bounds fields
+    const slider = card.querySelector('input[type="range"]');
+    
+    dom.boundsContainer.append(card);
   });
 
   rebuildWeights();
+  
+  // Rebuild weights when diploma count changes (no auto-submit)
   dom.nDiploma.addEventListener("change", rebuildWeights);
+  
   initRangeFills();
 }
 
