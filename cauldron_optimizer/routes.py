@@ -132,9 +132,13 @@ def register():
                 db_sa.flush()  # makes new_user.id available without committing
                 db_sa.add(UserSettings(user=new_user))
                 # commit handled by context manager
+                # Automatically log in the user after registration
+                session["user_id"] = new_user.id
+                session["username"] = new_user.username
+                session["premium_ingredients"] = []
         except IntegrityError:
             return error(_("El nombre de usuario ya está en uso"), url=url_for("register"))
-        return redirect(url_for("login"))
+        return redirect(url_for("index"))
     if form.errors:
         return error(first_form_error(form), url=url_for("register"))
 
