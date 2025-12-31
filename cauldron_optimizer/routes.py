@@ -100,9 +100,9 @@ def login():
             session["user_id"] = user.id
             session["username"] = user.username
             session["premium_ingredients"] = []
-            # Apply stored language preference when available
+            # Apply stored language preference from database
             settings = db_sa.get(UserSettings, user.id)
-            if settings and settings.language in LANGUAGES:
+            if settings and settings.language:
                 session["lang"] = settings.language
             return redirect(url_for("index"))
     if form.errors:
