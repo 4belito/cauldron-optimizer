@@ -6,6 +6,7 @@
 <form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}">
   {{ form.hidden_tag() }}
   {{ form.effect_weights_json(id="effect_weights_json") }}
+  {{ form.language() }}
   <!-- Diplomas + weights -->
   <fieldset class="card">
     <legend class="card-legend">

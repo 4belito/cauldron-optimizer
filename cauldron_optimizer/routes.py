@@ -66,6 +66,7 @@ def index():
         form.prob_UB.data = int(settings.max_effects)
         form.n_starts.data = int(settings.search_depth)
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
+        form.language.data = session.get("lang", "es")
 
         return render_template(
             "index.html",
@@ -99,6 +100,10 @@ def login():
             session["user_id"] = user.id
             session["username"] = user.username
             session["premium_ingredients"] = []
+            # Apply stored language preference when available
+            settings = db_sa.get(UserSettings, user.id)
+            if settings and settings.language in LANGUAGES:
+                session["lang"] = settings.language
             return redirect(url_for("index"))
     if form.errors:
         msg = next(iter(form.errors.values()))[0]
@@ -130,7 +135,12 @@ def register():
                 )
                 db_sa.add(new_user)
                 db_sa.flush()  # makes new_user.id available without committing
-                db_sa.add(UserSettings(user=new_user))
+                db_sa.add(
+                    UserSettings(
+                        user=new_user,
+                        language=session.get("lang", "es"),
+                    )
+                )
                 # commit handled by context manager
                 # Automatically log in the user after registration
                 session["user_id"] = new_user.id
@@ -164,6 +174,7 @@ def optimize():
         prob_ub = int(form.prob_UB.data)
         n_starts = int(form.n_starts.data)
         premium_ingr = request.form.getlist("premium_ingredients[]", type=int)
+        lang_choice = form.language.data
     except ValueError as e:
         return error(str(e), url=url_for("index"))
 
@@ -181,9 +192,13 @@ def optimize():
             settings.max_ingredients = alpha_ub
             settings.max_effects = prob_ub
             settings.search_depth = n_starts
+            settings.language = lang_choice
             settings.updated_at = func.now()
     except SQLAlchemyError:
         return error(_("Error de base de datos"), url=url_for("index"))
+
+    # Persist language choice in session for future requests
+    session["lang"] = lang_choice
 
     # Run optimizer using the persisted settings
     opt = CauldronOptimizer(

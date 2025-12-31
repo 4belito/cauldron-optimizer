@@ -11,7 +11,7 @@ from wtforms.validators import (
     ValidationError,
 )
 
-from cauldron_optimizer.constants import MAX_STARTS
+from cauldron_optimizer.constants import LANGUAGES, MAX_STARTS
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
 
@@ -159,6 +159,7 @@ class SearchForm(FlaskForm):
     )
     effect_weights_json = HiddenField()
     premium_ingr = FieldList(unbound_field=IntegerField(), min_entries=0)
+    language = HiddenField()
 
     # Custom validation for effect weights JSON aligned with n_diploma
     def validate_effect_weights_json(self, field):
@@ -196,3 +197,7 @@ class SearchForm(FlaskForm):
 
         # Stash parsed list for the route to consume
         self._parsed_effect_weights = vals
+
+    def validate_language(self, field):
+        if field.data not in LANGUAGES:
+            raise ValidationError(_l(N_("Idioma inválido")))

@@ -38,6 +38,7 @@ class UserSettings(Base):
     max_effects = Column(Integer, nullable=False, server_default="100")
     search_depth = Column(Integer, nullable=False, server_default="50")
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
+    language = Column(Text, nullable=True)
 
     user = relationship("User", back_populates="settings")
 
