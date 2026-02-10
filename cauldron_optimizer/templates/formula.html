@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  {{ _("Fórmula") }}
+{% endblock %}
+
+{% block main %}
+<form method="post" class="optimizer">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+]   <!-- ================= DIPLOMAS (TOP RECTANGLE) ================= -->
+    <fieldset class="card">
+    <div class="diploma-row-inline">
+        <span class="recipe-header">{{ _("Diplomas:") }}</span>
+        <input
+        type="number"
+        name="n_diplomas"
+        value="{{ n_diplomas }}"
+        min="1"
+        max="{{ max_diplomas }}"
+        >
+    </div>
+    </fieldset>
+  <!-- ================= INGREDIENTS + EFFECTS ================= -->
+  <fieldset class="card">
+    <div class="recipe-split">
+
+      <!-- LEFT: INGREDIENTS -->
+      <div class="recipe-left">
+        <div class="recipe-header">
+          <strong>{{ _("Ingredientes") }}</strong>
+        </div>
+
+        <div class="ingredients-grid result-grid">
+          {% set ns = namespace(idx=0) %}
+          {% for row in alpha_matrix %}
+            {% for val in row %}
+              {% set ns.idx = ns.idx + 1 %}
+              <div class="ingredient-card">
+                <img
+                  class="ingredient-icon"
+                  src="{{ url_for('static', filename='ingredients/ingredient_crystal' ~ ns.idx ~ '.png') }}"
+                  alt=""
+                >
+                <div class="value-overlay">
+                  <input
+                    type="number"
+                    name="alpha_{{ ns.idx - 1 }}"
+                    value="{{ val }}"
+                    min="0"
+                    max="25"
+                    class="value-input"
+                  >
+                </div>
+              </div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="recipe-divider"></div>
+
+      <!-- RIGHT: EFFECTS -->
+      <div class="recipe-right">
+        <div class="recipe-header">
+          <strong>{{ _("Efectos") }}</strong>
+        </div>
+
+        <div class="recipe-list">
+          {% for effect in effects %}
+            <div class="recipe-row" style="--hl: {{ effect.weight }};">
+              <span class="recipe-row-value">
+                {{ "%.2f"|format(effect.value) }}%
+              </span>
+              <img
+                class="recipe-row-icon"
+                src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
+                alt=""
+              >
+              <span class="recipe-row-name" title="{{ _(effect.name) }}">
+                {{ _(effect.name) }}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </fieldset>
+
+  <!-- ================= SUBMIT ================= -->
+  <div class="submit-row">
+    <button type="submit" class="game-btn game-btn-main">
+      <span>{{ _("Elaborar") }}</span>
+    </button>
+  </div>
+
+</form>
+{% endblock %}

@@ -258,3 +258,61 @@ def results():
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
+
+
+# Formula debugging route
+# Formula debugging route
+@app.route("/formula", methods=["GET", "POST"])
+@login_required
+def formula():
+    max_diplomas = len(EFFECT_NAMES)
+
+    # Default values
+    n_diplomas = min(5, max_diplomas)  # sane default
+    alpha_matrix = np.zeros((3, 4), dtype=int)
+    effects = []
+
+    if request.method == "POST":
+        try:
+            # Read diplomas (same semantics as index)
+            n_diplomas = int(request.form.get("n_diplomas", n_diplomas))
+            n_diplomas = max(1, min(n_diplomas, max_diplomas))
+
+            # Read ingredient grid (12 values)
+            values = [
+                int(request.form.get(f"alpha_{i}", 0))
+                for i in range(12)
+            ]
+            alpha_matrix = np.array(values, dtype=int).reshape(3, 4)
+
+            # Formula-only optimizer (NO optimization)
+            opt = CauldronOptimizer(
+                effect_weights=[1.0] * n_diplomas,
+                premium_ingr=[],
+            )
+
+            out_effects = opt.effect_probabilities(alpha_matrix.flatten())
+            order = np.argsort(out_effects)[::-1]
+
+            for i in order:
+                val = out_effects[i]
+                if val > 0:
+                    effects.append(
+                        {
+                            "value": round(float(val), 2),
+                            "name": EFFECT_NAMES[i],
+                            "index": i,
+                            "weight": 1.0,
+                        }
+                    )
+
+        except Exception as e:
+            return error(str(e), url=url_for("formula"))
+
+    return render_template(
+        "formula.html",
+        alpha_matrix=alpha_matrix.tolist(),
+        effects=effects,
+        n_diplomas=n_diplomas,
+        max_diplomas=max_diplomas,
+    )
