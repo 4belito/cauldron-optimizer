@@ -48,7 +48,7 @@ EFFECT_NAMES = [
     N_("Ascendidos Preciosos"),
     N_("Cuartel Salud"),
     N_("Trabajo Comunitario"),
-    N_("Productos en Conserva"),
+   # N_("Productos en Conserva"),
 ]
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
