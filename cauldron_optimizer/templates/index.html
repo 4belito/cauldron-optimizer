@@ -95,6 +95,29 @@
       {% endfor %}
     ],
   };
+
+  window.cauldronAutofill = function(data) {
+    const dom = window.OPTIMIZER_CONFIG.dom;
+
+    // Fill diplomas if provided
+    if (typeof data.n_diploma === "number") {
+      dom.nDiploma.value = data.n_diploma;
+    }
+
+    // Fill premium ingredients if provided
+    if (Array.isArray(data.premium_ingr)) {
+      document
+        .querySelectorAll("input[name='premium_ingredients[]']")
+        .forEach(cb => cb.checked = false);
+
+      data.premium_ingr.forEach(i => {
+        const checkbox = document.querySelector(
+          `input[name="premium_ingredients[]"][value="${i}"]`
+        );
+        if (checkbox) checkbox.checked = true;
+      });
+    }
+};
 </script>
 <script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
 {% endblock %}

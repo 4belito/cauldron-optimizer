@@ -1,7 +1,7 @@
 import json
 
 import numpy as np
-from flask import redirect, render_template, request, session, url_for
+from flask import redirect, render_template, request, session, url_for, jsonify
 from flask_babel import gettext as _
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -279,10 +279,7 @@ def formula():
             n_diplomas = max(1, min(n_diplomas, max_diplomas))
 
             # Read ingredient grid (12 values)
-            values = [
-                int(request.form.get(f"alpha_{i}", 0))
-                for i in range(12)
-            ]
+            values = [int(request.form.get(f"alpha_{i}", 0)) for i in range(12)]
             alpha_matrix = np.array(values, dtype=int).reshape(3, 4)
 
             # Formula-only optimizer (NO optimization)
@@ -316,3 +313,40 @@ def formula():
         n_diplomas=n_diplomas,
         max_diplomas=max_diplomas,
     )
+
+
+@app.route("/api/v1/cauldron/optimize", methods=["POST"])
+def api_cauldron_optimize():
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Missing JSON"}), 400
+
+    try:
+        effect_weights = data["effect_weights"]
+        alpha_ub = int(data.get("alpha_UB", 12))
+        prob_ub = int(data.get("prob_UB", 12))
+        n_starts = int(data.get("n_starts", 10))
+        premium_ingr = data.get("premium_ingr", [])
+
+        effect_weights = np.array(effect_weights, dtype=np.float64)
+
+        opt = CauldronOptimizer(
+            effect_weights=effect_weights,
+            premium_ingr=premium_ingr,
+            alpha_UB=alpha_ub,
+            prob_UB=prob_ub,
+        )
+
+        alpha_best, val_best = opt.multistart(n_starts)
+
+        return jsonify(
+            {
+                "alpha_matrix": alpha_best.reshape(3, 4).tolist(),
+                "score": float(val_best),
+                "effect_probabilities": opt.effect_probabilities(alpha_best).tolist(),
+            }
+        )
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
