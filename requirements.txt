@@ -1,13 +1,17 @@
-Babel
-Flask
-Flask-Babel
-Flask-Session
-Flask-WTF
-gunicorn
-numpy
-psycopg[binary]
-python-dotenv 
-requests
-SQLAlchemy
-Werkzeug
-WTForms
+# Web Framework
+Flask==3.0.0
+wsgi-intercept==1.13.1
+gunicorn==21.2.0
+
+# Database
+Flask-SQLAlchemy==3.1.1
+psycopg2-binary==2.9.9
+
+# Optimization Engine
+numpy==1.26.4
+
+# Utilities & Translations
+Flask-Babel==4.0.0
+python-dotenv==1.0.0
+Flask-WTF==1.2.1
+email-validator==2.1.0.post1
