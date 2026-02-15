@@ -84,11 +84,10 @@
 
 /* Search bounds */
 .bounds-row {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
   gap: 2rem;
-  align-items: flex-end;
-  flex-wrap: wrap;
+  align-items: end;
 }
 
 .bound-item {

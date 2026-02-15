@@ -212,7 +212,7 @@ def optimize():
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = float(val_best)
     out_effects = opt.effect_probabilities(alpha_best)
-    order = np.argsort(out_effects)[::-1]
+    order = sorted(range(len(out_effects)), key=lambda i: (-out_effects[i], i))
 
     # Filter non-zero effects for cleaner template
     filtered_effects = []
@@ -288,7 +288,7 @@ def formula():
             )
 
             out_effects = opt.effect_probabilities(alpha_matrix.flatten())
-            order = np.argsort(out_effects)[::-1]
+            order = sorted(range(len(out_effects)), key=lambda i: (-out_effects[i], i))
 
             for i in order:
                 val = out_effects[i]
