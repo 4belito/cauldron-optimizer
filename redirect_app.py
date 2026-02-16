@@ -16,7 +16,7 @@ def redirect_all(path):
     <head>
         <meta charset="utf-8">
         <title>Cauldron Optimizer moved</title>
-        <meta http-equiv="refresh" content="2; url={target_url}">
+        <meta http-equiv="refresh" content="4; url={target_url}">
         <style>
             body {{
                 font-family: Arial, sans-serif;
