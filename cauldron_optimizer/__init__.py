@@ -7,9 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from cauldron_optimizer.config import get_secret_key, select_locale
 from cauldron_optimizer.helpers import error
 
+from datetime import timedelta
+
 # Create Flask app
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=365)
 app.config["SECRET_KEY"] = get_secret_key()
 
 # Initialize extensions

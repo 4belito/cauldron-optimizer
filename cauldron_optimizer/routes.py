@@ -97,6 +97,8 @@ def login():
             if user is None or not user.check_password(form.password.data):
                 return error(_("nombre de usuario o contraseña incorrectos"), url=url_for("login"))
 
+            session.permanent = True
+
             session["user_id"] = user.id
             session["username"] = user.username
             session["premium_ingredients"] = []
@@ -143,6 +145,9 @@ def register():
                 )
                 # commit handled by context manager
                 # Automatically log in the user after registration
+
+                session.permanent = True
+
                 session["user_id"] = new_user.id
                 session["username"] = new_user.username
                 session["premium_ingredients"] = []
