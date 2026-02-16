@@ -24,6 +24,56 @@
       cauldron-page
     {% endif %}
   {% endblock %}">
+
+  <!-- Migration Banner -->
+  <div id="migration-banner"
+      class="text-center small py-2"
+      style="
+          background: #1f1f1f;
+          color: white;
+          position: sticky;
+          top: 0;
+          z-index: 1050;
+      ">
+
+    🚀 {{ _("Estamos probando una versión más rápida, sin tiempo de espera al iniciar.") }}
+    <a href="https://cauldron-optimizer.vercel.app"
+      class="fw-bold text-info ms-1">
+      {{ _("Pruébala aquí") }}
+    </a>
+
+    <button
+      type="button"
+      onclick="closeBanner()"
+      style="
+          background: transparent;
+          border: none;
+          color: white;
+          position: absolute;
+          right: 15px;
+          top: 5px;
+          font-size: 16px;
+          cursor: pointer;
+      ">
+      ✕
+    </button>
+  </div>
+
+ <script>
+  function closeBanner() {
+      sessionStorage.setItem("hideMigrationBanner", "1");
+      document.getElementById("migration-banner").style.display = "none";
+  }
+
+  window.addEventListener("DOMContentLoaded", function() {
+      if (sessionStorage.getItem("hideMigrationBanner") === "1") {
+          document.getElementById("migration-banner").style.display = "none";
+      }
+  });
+  </script>
+
+
+
   <nav class="navbar navbar-expand-md navbar-light main-navbar">
     <div class="container-fluid main-navbar-inner">
 
