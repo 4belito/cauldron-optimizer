@@ -11,10 +11,5 @@
       "src": "/(.*)",
       "dest": "wsgi.py"
     }
-  ],
-  "functions": {
-    "api/*.py": {
-      "runtime": "python@3.12"
-    }
-  }
+  ]
 }
