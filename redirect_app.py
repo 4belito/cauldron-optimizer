@@ -29,7 +29,7 @@ def redirect_all(path):
         </style>
     </head>
     <body>
-        <h2>🔮 Cauldron Optimizer has moved</h2>
+        <h2> Cauldron Optimizer has moved</h2>
         <p>We are testing a faster version of the app.</p>
         <p>You are being redirected automatically...</p>
         <p>If not, click below:</p>
