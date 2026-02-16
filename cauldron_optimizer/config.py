@@ -13,10 +13,7 @@ def get_secret_key() -> str:
 
 
 def get_database_url() -> str:
-    url = os.environ["NEONDB_USER"]
-    if url.startswith("postgresql://"):
-        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
-    return url
+    return os.environ["NEONDB_USER"]
 
 
 def select_locale():
