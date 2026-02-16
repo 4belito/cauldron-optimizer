@@ -1,4 +1,5 @@
 import json
+import os
 
 import numpy as np
 from flask import redirect, render_template, request, session, url_for
@@ -13,6 +14,15 @@ from cauldron_optimizer.db_model import User, UserSettings
 from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
 from cauldron_optimizer.helpers import error, first_form_error, login_required
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
+
+
+@app.before_request
+def temporary_redirect_to_vercel():
+    if os.environ.get("REDIRECT_TO_VERCEL") == "1":
+        return redirect(
+            "https://cauldron-optimizer.vercel.app" + request.full_path,
+            code=302,
+        )  # 301 for permanent redirect, 302 for temporary (useful during transition/testing)
 
 
 @app.route("/lang/<lang>")
