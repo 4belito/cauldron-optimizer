@@ -27,7 +27,6 @@ initialization to explore the solution space. The final recommendation is chosen
 by maximizing a weighted expected-effect objective.
 
 **Deployed:** Vercel (Flask backend) + Neon (PostgreSQL)
-
 Originally deployed on Render, migrated to Vercel to eliminate cold-start latency and improve responsiveness.
 
 **Used by:** active players (accounts stored in the database)  
