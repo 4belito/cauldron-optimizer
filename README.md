@@ -18,7 +18,7 @@ ingredient combinations for the Elvenar Cauldron to maximize the expected value
 of desired effects.
 
 The application is **deployed and actively used by players**.  
-**Live application:** https://cauldron-optimizer.onrender.com
+**Live application:** https://cauldron-optimizer.vercel.app
 
 The underlying cauldron mechanics produce probabilistic outcomes: for a fixed
 recipe, the realized effect is random. The optimization *objective and scoring
@@ -26,7 +26,9 @@ model* are deterministic, while the search procedure may use randomized
 initialization to explore the solution space. The final recommendation is chosen
 by maximizing a weighted expected-effect objective.
 
-**Deployed:** Render (web service) + Neon (PostgreSQL)  
+**Deployed:** Vercel (Flask backend) + Neon (PostgreSQL)
+Originally deployed on Render, migrated to Vercel to eliminate cold-start latency and improve responsiveness.
+
 **Used by:** active players (accounts stored in the database)  
 
 ## What the app does
