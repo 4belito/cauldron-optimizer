@@ -85,23 +85,32 @@
 /* Search bounds */
 .bounds-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
-  gap: 2rem;
-  align-items: end;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .bound-item {
   display: flex;
   flex-direction: column;
   text-align: left;
+  min-width: 0;
 }
 
 .bound-item input {
-  width: min(7.5rem, 40vw);
+  width: 100%;
+  max-width: 7.5rem;
 }
 
-.submit-row {
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
+@media (max-width: 37.5rem) {
+  .bounds-row {
+    grid-template-columns: 1fr;
+  }
+
+  .bound-item input {
+    max-width: 100%;
+  }
 }
