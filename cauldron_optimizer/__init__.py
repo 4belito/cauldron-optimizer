@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from flask import Flask, request, url_for
 from flask_babel import Babel, get_locale
 from flask_babel import gettext as _
@@ -6,8 +8,6 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from cauldron_optimizer.config import get_secret_key, select_locale
 from cauldron_optimizer.helpers import error
-
-from datetime import timedelta
 
 # Create Flask app
 app = Flask(__name__)
@@ -33,7 +33,10 @@ def inject_i18n():
 def handle_csrf_error(e):
     """Handle CSRF token errors gracefully."""
     return (
-        error(_("Sesión expirada. Recarga la página e inténtalo de nuevo."), url=url_for("login")),
+        error(
+            _("Sesión expirada. Recarga la página e inténtalo de nuevo."),
+            url=url_for("login"),
+        ),
         400,
     )
 

@@ -1,7 +1,8 @@
 import json
+from typing import TYPE_CHECKING
 
 import numpy as np
-from flask import redirect, render_template, request, session, url_for
+from flask import Response, redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -14,11 +15,14 @@ from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
 from cauldron_optimizer.helpers import error, first_form_error, login_required
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
+if TYPE_CHECKING:
+    from flask import Response
+
 
 @app.route("/lang/<lang>")
-def set_lang(lang):
+def set_lang(lang: str):
     if lang not in LANGUAGES:
-        lang = "es"
+        lang = "en"
     session["lang"] = lang
 
     # Use 'next' parameter if provided, otherwise fallback to referrer
@@ -34,12 +38,13 @@ def set_lang(lang):
 
 
 @app.after_request
-def after_request(response):
-    """Ensure responses aren't cached"""
-    if session.get("user_id"):
-        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        response.headers["Expires"] = 0
-        response.headers["Pragma"] = "no-cache"
+def after_request(response: Response) -> Response:
+    """Force browsers and CDNs to re-validate everything."""
+    response.headers["Cache-Control"] = (
+        "no-store, no-cache, must-revalidate, max-age=0, private"
+    )
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
     return response
 
 
@@ -53,7 +58,9 @@ def index():
     with db_session() as db_sa:
         settings = db_sa.get(UserSettings, user_id)
         if settings is None:
-            return error(_("No se encontró la configuracion del ususario"), url=url_for("logout"))
+            return error(
+                _("No se encontró la configuracion del ususario"), url=url_for("logout")
+            )
 
         form = SearchForm()
         form.n_diploma.data = len(settings.effect_weights)
@@ -95,7 +102,10 @@ def login():
             ).scalar_one_or_none()
 
             if user is None or not user.check_password(form.password.data):
-                return error(_("nombre de usuario o contraseña incorrectos"), url=url_for("login"))
+                return error(
+                    _("nombre de usuario o contraseña incorrectos"),
+                    url=url_for("login"),
+                )
 
             session.permanent = True
 
@@ -152,7 +162,9 @@ def register():
                 session["username"] = new_user.username
                 session["premium_ingredients"] = []
         except IntegrityError:
-            return error(_("El nombre de usuario ya está en uso"), url=url_for("register"))
+            return error(
+                _("El nombre de usuario ya está en uso"), url=url_for("register")
+            )
         return redirect(url_for("index"))
     if form.errors:
         return error(first_form_error(form), url=url_for("register"))
@@ -174,7 +186,9 @@ def optimize():
     try:
         # Parse validated form inputs
         # effect weights are validated and parsed by the form validator
-        effect_weights = np.array(getattr(form, "_parsed_effect_weights", []), dtype=np.float64)
+        effect_weights = np.array(
+            getattr(form, "_parsed_effect_weights", []), dtype=np.float64
+        )
         alpha_ub = int(form.alpha_UB.data)
         prob_ub = int(form.prob_UB.data)
         n_starts = int(form.n_starts.data)
@@ -190,7 +204,8 @@ def optimize():
             settings = db_sa.get(UserSettings, user_id)
             if settings is None:
                 return error(
-                    _("No se encontró la configuracion del ususario"), url=url_for("index")
+                    _("No se encontró la configuracion del ususario"),
+                    url=url_for("index"),
                 )
 
             settings.effect_weights = effect_weights.tolist()
