@@ -1,13 +1,1 @@
-Babel
-Flask
-Flask-Babel
-Flask-Session
-Flask-WTF
 gunicorn
-numpy
-psycopg[binary]
-python-dotenv 
-requests
-SQLAlchemy
-Werkzeug
-WTForms
