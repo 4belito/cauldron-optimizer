@@ -48,7 +48,7 @@ EFFECT_NAMES = [
     N_("Ascendidos Preciosos"),
     N_("Cuartel Salud"),
     N_("Trabajo Comunitario"),
-   # N_("Productos en Conserva"),
+    N_("Productos en Conserva"),
 ]
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
@@ -59,3 +59,9 @@ DEFAULTS = {
     "max_effects": 100,
     "search_depth": 50,
 }
+
+
+# for adding a new effect
+# 1- Add the hiddend B and V values to the corresponding CSV files in optimizer/
+# 2- ADD IT TO EFFECT_NAMES
+# 3- add the effect icon in /static/effects/effect{chapter_number}.png
