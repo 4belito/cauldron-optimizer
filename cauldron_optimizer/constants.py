@@ -49,6 +49,7 @@ EFFECT_NAMES = [
     N_("Cuartel Salud"),
     N_("Trabajo Comunitario"),
     N_("Productos en Conserva"),
+    N_("Nox"),
 ]
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)

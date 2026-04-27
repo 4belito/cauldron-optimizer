@@ -11,6 +11,7 @@ flask_session/
 # Env / build
 .env
 venv/
+.venv/
 .envrc
 .flaskenv
 
