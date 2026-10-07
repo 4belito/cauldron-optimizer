@@ -13,7 +13,7 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=13">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=14">
 
     <title>{{ _("Caldero") }}: {% block title %}{% endblock %}</title>
   </head>
@@ -24,6 +24,33 @@
       cauldron-page
     {% endif %}
   {% endblock %}">
+  {% if show_beta_banner and session.get('user_id') %}
+  <div class="beta-banner" id="betaBanner" role="note">
+    <span class="beta-badge">{{ _("Beta") }}</span>
+    <p>
+      {{ _("La selección de efectos (las casillas) es nueva y todavía está en pruebas.") }}
+      {{ _("Si notas algún problema, avísame desde") }}
+      <a href="{{ url_for('contact') }}">{{ _("Contacto") }}</a>.
+    </p>
+    <button type="button" class="beta-banner-close" aria-label="{{ _('Cerrar') }}">&times;</button>
+  </div>
+  <script>
+    // Hide the banner once the user closes it (remembered in this browser)
+    (function () {
+      const key = "betaBannerClosed:effect-selection";
+      const banner = document.getElementById("betaBanner");
+      try {
+        if (localStorage.getItem(key)) banner.remove();
+      } catch (e) {}
+      banner.querySelector(".beta-banner-close").addEventListener("click", () => {
+        banner.remove();
+        try {
+          localStorage.setItem(key, "1");
+        } catch (e) {}
+      });
+    })();
+  </script>
+  {% endif %}
   <nav class="navbar navbar-expand-md navbar-light main-navbar">
     <div class="container-fluid main-navbar-inner">
 

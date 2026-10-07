@@ -8,7 +8,11 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from cauldron_optimizer import app
-from cauldron_optimizer.constants import EFFECT_NAMES, INGREDIENT_NAMES, LANGUAGES
+from cauldron_optimizer.constants import (
+    EFFECT_NAMES,
+    INGREDIENT_NAMES,
+    LANGUAGES,
+)
 from cauldron_optimizer.database import db_session
 from cauldron_optimizer.db_model import User, UserSettings
 from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
@@ -73,6 +77,7 @@ def index():
         form.prob_UB.data = int(settings.max_effects)
         form.n_starts.data = int(settings.search_depth)
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
+        form.excluded_effects_json.data = json.dumps(settings.excluded_effects or [])
         form.language.data = session.get("lang", "es")
 
         return render_template(
@@ -193,6 +198,7 @@ def optimize():
         prob_ub = int(form.prob_UB.data)
         n_starts = int(form.n_starts.data)
         premium_ingr = request.form.getlist("premium_ingredients[]", type=int)
+        excluded_effects = getattr(form, "_parsed_excluded_effects", [])
         lang_choice = form.language.data
     except ValueError as e:
         return error(str(e), url=url_for("index"))
@@ -209,6 +215,7 @@ def optimize():
                 )
 
             settings.effect_weights = effect_weights.tolist()
+            settings.excluded_effects = excluded_effects
             settings.max_ingredients = alpha_ub
             settings.max_effects = prob_ub
             settings.search_depth = n_starts
@@ -224,6 +231,7 @@ def optimize():
     opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
+        excluded_effects=excluded_effects,
         alpha_UB=alpha_ub,
         prob_UB=prob_ub,
     )

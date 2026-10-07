@@ -52,8 +52,56 @@ function makeRangeCard({ labelText, name, iconSrc, min, max, step, value, format
   return card;
 }
 
+function makeEffectCheckbox(checked, labelText) {
+  const label = document.createElement("label");
+  label.className = "effect-check";
+  label.title = labelText;
+
+  const input = document.createElement("input");
+  input.type = "checkbox";
+  input.checked = checked;
+
+  const box = document.createElement("img");
+  box.src = "/static/checkbox.png";
+  box.className = "effect-check-box";
+  box.alt = "";
+
+  const mark = document.createElement("img");
+  mark.src = "/static/check_small.png";
+  mark.className = "effect-check-mark";
+  mark.alt = "";
+
+  label.append(input, box, mark);
+  return label;
+}
+
+// With this many or fewer effects checked, checked boxes lock (like in the game)
+const MIN_CHECKED_EFFECTS = 10;
+
+function updateEffectLocks(root) {
+  const inputs = [...root.querySelectorAll(".effect-check input")];
+  const locked = inputs.filter((el) => el.checked).length <= MIN_CHECKED_EFFECTS;
+  inputs.forEach((el) => {
+    const isLocked = locked && el.checked;
+    el.disabled = isLocked;
+    el.parentElement.classList.toggle("locked", isLocked);
+  });
+}
+
+function updateHiddenExcluded(n) {
+  const { excludedHidden } = window.OPTIMIZER_CONFIG.dom;
+  if (!excludedHidden) return;
+  const excluded = [];
+  for (let i = 0; i < n; i++) {
+    if (globalChecked[i] === false) excluded.push(i);
+  }
+  excludedHidden.value = JSON.stringify(excluded);
+}
+
 // Store current weights globally to preserve them across rebuilds
 let globalWeights = [];
+// Store effect checkbox states (all checked by default)
+let globalChecked = [];
 
 function rebuildWeights() {
   const { defaultWeights, effectNames, dom } = window.OPTIMIZER_CONFIG;
@@ -64,6 +112,10 @@ function rebuildWeights() {
   // Initialize globalWeights if empty, preserving any existing values
   if (globalWeights.length === 0) {
     globalWeights = [...defaultWeights];
+    // Restore saved unchecked effects
+    (window.OPTIMIZER_CONFIG.defaultExcluded || []).forEach((i) => {
+      globalChecked[i] = false;
+    });
   }
 
   // Zero out all weights higher than the number of diplomas
@@ -74,6 +126,15 @@ function rebuildWeights() {
   // Ensure globalWeights array is large enough
   while (globalWeights.length < n) {
     globalWeights.push(0);
+  }
+
+  // If fewer diplomas leave too few effects checked, re-check all
+  let checkedCount = 0;
+  for (let i = 0; i < n; i++) {
+    if (globalChecked[i] !== false) checkedCount++;
+  }
+  if (checkedCount < Math.min(n, MIN_CHECKED_EFFECTS)) {
+    globalChecked = [];
   }
 
   for (let i = 0; i < n; i++) {
@@ -97,11 +158,27 @@ function rebuildWeights() {
       updateHiddenWeights(globalWeights.slice(0, n));
     });
 
+    // Checkbox to the left of the slider
+    const sliderRow = document.createElement("div");
+    sliderRow.className = "weight-slider-row";
+    const check = makeEffectCheckbox(globalChecked[i] ?? true, effectNames[i] ?? "");
+    card.classList.toggle("excluded", !(globalChecked[i] ?? true));
+    check.querySelector("input").addEventListener("change", (e) => {
+      globalChecked[i] = e.target.checked;
+      card.classList.toggle("excluded", !e.target.checked);
+      updateEffectLocks(dom.weightsContainer);
+      updateHiddenExcluded(n);
+    });
+    slider.replaceWith(sliderRow);
+    sliderRow.append(check, slider);
+
     dom.weightsContainer.appendChild(card);
   }
 
+  updateEffectLocks(dom.weightsContainer);
   initRangeFills(dom.weightsContainer);
   updateHiddenWeights(globalWeights.slice(0, n));
+  updateHiddenExcluded(n);
 }
 
 function setRangeFill(el) {

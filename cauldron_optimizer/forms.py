@@ -11,7 +11,7 @@ from wtforms.validators import (
     ValidationError,
 )
 
-from cauldron_optimizer.constants import LANGUAGES, MAX_STARTS
+from cauldron_optimizer.constants import LANGUAGES, MAX_STARTS, MIN_CHECKED_EFFECTS
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
 
@@ -158,6 +158,7 @@ class SearchForm(FlaskForm):
         render_kw={"type": "number", "min": 1, "max": MAX_STARTS, "step": 1},
     )
     effect_weights_json = HiddenField()
+    excluded_effects_json = HiddenField(default="[]")
     premium_ingr = FieldList(unbound_field=IntegerField(), min_entries=0)
     language = HiddenField()
 
@@ -197,6 +198,31 @@ class SearchForm(FlaskForm):
 
         # Stash parsed list for the route to consume
         self._parsed_effect_weights = vals
+
+    # Unchecked effects: indices within n_diploma, keeping enough effects checked
+    def validate_excluded_effects_json(self, field):
+        try:
+            data = json.loads(field.data or "[]")
+            excluded = sorted({int(i) for i in data})
+        except Exception:
+            raise ValidationError(_l(N_("Los efectos desmarcados no son válidos")))
+
+        n = self.n_diploma.data or 0
+        if any(i < 0 or i >= n for i in excluded):
+            raise ValidationError(_l(N_("Los efectos desmarcados no son válidos")))
+
+        if n - len(excluded) < min(n, MIN_CHECKED_EFFECTS):
+            raise ValidationError(
+                _l(N_("Debes mantener al menos {} efectos marcados")).format(
+                    MIN_CHECKED_EFFECTS
+                )
+            )
+
+        weights = getattr(self, "_parsed_effect_weights", [])
+        if weights and all(weights[i] == 0 for i in range(n) if i not in excluded):
+            raise ValidationError(_l(N_("Al menos debes querer algun efecto")))
+
+        self._parsed_excluded_effects = excluded
 
     def validate_language(self, field):
         if field.data not in LANGUAGES:

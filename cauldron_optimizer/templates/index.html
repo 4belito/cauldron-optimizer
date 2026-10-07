@@ -6,6 +6,7 @@
 <form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}">
   {{ form.hidden_tag() }}
   {{ form.effect_weights_json(id="effect_weights_json") }}
+  {{ form.excluded_effects_json(id="excluded_effects_json") }}
   {{ form.language() }}
   <!-- Diplomas + weights -->
   <fieldset class="card">
@@ -71,6 +72,7 @@
   // Inject Flask data for optimizer.js
   window.OPTIMIZER_CONFIG = {
     defaultWeights: JSON.parse({{ form.effect_weights_json.data | tojson }}),
+    defaultExcluded: JSON.parse({{ form.excluded_effects_json.data | tojson }}),
     effectNames: [
       {% for n in effect_names %}
         {{ _(n) | tojson }}{{ "," if not loop.last }}
@@ -81,6 +83,7 @@
       weightsContainer: document.getElementById("weightsContainer"),
       boundsContainer: document.getElementById("boundsContainer"),
       weightsHidden: document.getElementById("effect_weights_json"),
+      excludedHidden: document.getElementById("excluded_effects_json"),
       form: document.getElementById("optimizerForm"),
     },
     boundsFields: [

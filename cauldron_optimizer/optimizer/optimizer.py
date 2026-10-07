@@ -17,6 +17,7 @@ class CauldronOptimizer:
         self,
         effect_weights: np.ndarray,
         premium_ingr: list[int] = [],
+        excluded_effects: list[int] = [],
         alpha_UB: int | None = None,
         prob_UB: int = 100,
         cache_max_size: int = 1_000_000,
@@ -35,7 +36,13 @@ class CauldronOptimizer:
 
         # truncate matrices to the diplomas we care about, and reduce columns
         self.B = self.B_full[: self.n_dipl, self.free_idx]
-        self.V = self.V_full[: self.n_dipl, self.free_idx]
+        self.V = self.V_full[: self.n_dipl, self.free_idx].copy()
+
+        # excluded effects: zero V rows so E_i = 0, same as effects beyond n_dipl
+        excluded = [i for i in excluded_effects if 0 <= i < self.n_dipl]
+        self.V[excluded, :] = 0.0
+        effect_weights = effect_weights.copy()
+        effect_weights[excluded] = 0.0
 
         # normalized weights (guard divide by 0)
         s = effect_weights.sum()

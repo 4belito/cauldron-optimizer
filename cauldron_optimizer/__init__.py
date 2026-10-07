@@ -7,6 +7,7 @@ from flask_wtf.csrf import CSRFError, CSRFProtect
 from sqlalchemy.exc import SQLAlchemyError
 
 from cauldron_optimizer.config import get_secret_key, select_locale
+from cauldron_optimizer.constants import SHOW_EFFECT_SELECTION_BETA_BANNER
 from cauldron_optimizer.helpers import error
 
 # Create Flask app
@@ -26,6 +27,7 @@ def inject_i18n():
     return {
         "_": _,
         "get_locale": get_locale,
+        "show_beta_banner": SHOW_EFFECT_SELECTION_BETA_BANNER,
     }
 
 

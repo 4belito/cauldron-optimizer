@@ -29,3 +29,6 @@ messages.pot
 
 witch_points.ipynb
 .vercel
+
+# Local SQLite database (dev only)
+local.db

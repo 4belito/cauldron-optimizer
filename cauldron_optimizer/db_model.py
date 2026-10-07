@@ -51,5 +51,8 @@ class UserSettings(Base):
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
     language: Mapped[str] = mapped_column(Text, nullable=True)
+    excluded_effects: Mapped[list[int]] = mapped_column(
+        JSONB, nullable=False, server_default="[]"
+    )
 
     user = relationship("User", back_populates="settings")

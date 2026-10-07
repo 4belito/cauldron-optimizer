@@ -449,3 +449,21 @@ msgstr "Back"
 #~ msgid "El nombre de usuario ya existe"
 #~ msgstr "That username already exists"
 
+
+msgid "Beta"
+msgstr "Beta"
+
+msgid "La selección de efectos (las casillas) es nueva y todavía está en pruebas."
+msgstr "Effect selection (the checkboxes) is new and still being tested."
+
+msgid "Si notas algún problema, avísame desde"
+msgstr "If you notice any problem, please let me know via"
+
+msgid "Los efectos desmarcados no son válidos"
+msgstr "The unchecked effects are not valid"
+
+msgid "Debes mantener al menos {} efectos marcados"
+msgstr "You must keep at least {} effects checked"
+
+msgid "Cerrar"
+msgstr "Close"
