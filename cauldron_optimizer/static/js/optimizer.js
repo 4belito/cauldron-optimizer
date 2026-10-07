@@ -98,6 +98,19 @@ function updateHiddenExcluded(n) {
   excludedHidden.value = JSON.stringify(excluded);
 }
 
+// At most this many premium ingredients can be avoided; the rest lock
+const MAX_PREMIUM_INGREDIENTS = 4;
+
+function updatePremiumLocks() {
+  const inputs = [...document.querySelectorAll("input[name='premium_ingredients[]']")];
+  const full = inputs.filter((el) => el.checked).length >= MAX_PREMIUM_INGREDIENTS;
+  inputs.forEach((el) => {
+    const isLocked = full && !el.checked;
+    el.disabled = isLocked;
+    el.closest(".ingredient-check").classList.toggle("locked", isLocked);
+  });
+}
+
 // Store current weights globally to preserve them across rebuilds
 let globalWeights = [];
 // Store effect checkbox states (all checked by default)
@@ -218,6 +231,12 @@ function initOptimizer() {
   });
 
   rebuildWeights();
+
+  // Premium ingredients: lock unchecked ones once the maximum is reached
+  document
+    .querySelectorAll("input[name='premium_ingredients[]']")
+    .forEach((el) => el.addEventListener("change", updatePremiumLocks));
+  updatePremiumLocks();
   
   // Rebuild weights when diploma count changes (no auto-submit)
   dom.nDiploma.addEventListener("change", rebuildWeights);

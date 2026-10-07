@@ -22,8 +22,24 @@
   min-width: 0;
 }
 
-.ingredient-check input[type="checkbox"]{ 
-  flex: 0 0 auto; 
+.ingredient-check .effect-check{
+  flex: 0 0 auto;
+}
+
+/* Locked (maximum reached): unchecked ingredients look disabled */
+.ingredient-check.locked{
+  cursor: not-allowed;
+}
+
+.ingredient-check.locked .effect-check,
+.ingredient-check.locked .ingredient-check-icon,
+.ingredient-check.locked .ingredient-name{
+  opacity: 0.45;
+  filter: grayscale(0.8);
+}
+
+.ingredient-check.locked .effect-check input{
+  cursor: not-allowed;
 }
 
 .ingredient-check-icon{

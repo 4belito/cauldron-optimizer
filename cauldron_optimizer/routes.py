@@ -12,6 +12,7 @@ from cauldron_optimizer.constants import (
     EFFECT_NAMES,
     INGREDIENT_NAMES,
     LANGUAGES,
+    MAX_PREMIUM_INGREDIENTS,
 )
 from cauldron_optimizer.database import db_session
 from cauldron_optimizer.db_model import User, UserSettings
@@ -202,6 +203,15 @@ def optimize():
         lang_choice = form.language.data
     except ValueError as e:
         return error(str(e), url=url_for("index"))
+
+    premium_ingr = sorted(set(premium_ingr))
+    if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
+        return error(_("Ingredientes premium no válidos"), url=url_for("index"))
+    if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
+        return error(
+            _("Puedes evitar como máximo %(n)s ingredientes", n=MAX_PREMIUM_INGREDIENTS),
+            url=url_for("index"),
+        )
 
     user_id = session["user_id"]
 

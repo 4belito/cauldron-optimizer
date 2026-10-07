@@ -467,3 +467,9 @@ msgstr "You must keep at least {} effects checked"
 
 msgid "Cerrar"
 msgstr "Close"
+
+msgid "Ingredientes premium no válidos"
+msgstr "Invalid premium ingredients"
+
+msgid "Puedes evitar como máximo %(n)s ingredientes"
+msgstr "You can avoid at most %(n)s ingredients"

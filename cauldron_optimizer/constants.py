@@ -56,6 +56,8 @@ N_INGREDIENTS = len(INGREDIENT_NAMES)
 MAX_STARTS = 100
 # With this many or fewer effects checked, they cannot be unchecked (as in the game)
 MIN_CHECKED_EFFECTS = 10
+# Maximum number of premium ingredients that can be avoided
+MAX_PREMIUM_INGREDIENTS = 4
 # Show the "under test" banner for the effect selection checkboxes (set False to hide)
 SHOW_EFFECT_SELECTION_BETA_BANNER = True
 DEFAULTS = {
