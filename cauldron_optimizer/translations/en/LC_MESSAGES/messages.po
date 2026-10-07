@@ -485,3 +485,6 @@ msgstr "The number of servers must be between 1 and %(n)s"
 
 msgid "Servidor no válido"
 msgstr "Invalid server"
+
+msgid "Guardar configuración del servidor %(n)s"
+msgstr "Save settings for server %(n)s"

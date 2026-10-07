@@ -3,6 +3,7 @@
 {% block title %}{{ _("Receta") }}{% endblock %}
 
 {% block main %}
+<div class="optimizer-page">
 <!-- Servers: how many the user plays on, and which one is selected -->
 <section class="server-bar">
   <form method="post" action="{{ url_for('set_server_count') }}" class="server-count-form">
@@ -26,6 +27,23 @@
     </select>
     <noscript><button type="submit" class="server-btn">OK</button></noscript>
   </form>
+
+  <!-- Saves the search settings below to the selected server -->
+  <button
+    type="button" id="saveSettingsBtn" class="save-btn"
+    title="{{ _('Guardar configuración del servidor %(n)s', n=active_server) }}" aria-label="{{ _('Guardar configuración del servidor %(n)s', n=active_server) }}"
+    data-url="{{ url_for('save_settings') }}"
+  >
+    <svg class="save-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
+      <rect x="7" y="3" width="8" height="6" rx="0.5" class="save-icon-shutter"/>
+      <rect x="6.5" y="13" width="11" height="6" rx="1" class="save-icon-label"/>
+    </svg>
+    <svg class="save-check" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 12.5l4.5 4.5L19 7.5"/>
+    </svg>
+  </button>
+  <span id="saveStatus" class="save-status" role="status" aria-live="polite"></span>
 </section>
 
 <form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}">
@@ -34,7 +52,7 @@
   {{ form.excluded_effects_json(id="excluded_effects_json") }}
   {{ form.language() }}
   <!-- Diplomas + weights -->
-  <fieldset class="card">
+  <fieldset class="card" data-saved>
     <legend class="card-legend">
       <strong>{{ _("Diplomas & Efectos Deseados") }}</strong>
     </legend>
@@ -80,7 +98,7 @@
   </fieldset>
 
   <!-- Bounds -->
-  <fieldset class="card">
+  <fieldset class="card" data-saved>
     <legend class="card-legend">
       <strong>{{ _("Limitar Búsqueda") }}</strong>
     </legend>
@@ -95,6 +113,7 @@
     </button>
   </div>
 </form>
+</div>
 
 <script>
   // Inject Flask data for optimizer.js

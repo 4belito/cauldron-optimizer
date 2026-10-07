@@ -209,6 +209,44 @@ function initRangeFills(root = document) {
   });
 }
 
+// Restart a CSS animation class even if it is already applied
+function replayClass(el, cls) {
+  el.classList.remove(cls);
+  void el.offsetWidth;
+  el.classList.add(cls);
+}
+
+async function saveSettings() {
+  const { form } = window.OPTIMIZER_CONFIG.dom;
+  const btn = document.getElementById("saveSettingsBtn");
+  const status = document.getElementById("saveStatus");
+
+  btn.disabled = true;
+  btn.classList.remove("saved", "save-failed");
+  status.textContent = "";
+  status.classList.remove("error");
+
+  try {
+    const resp = await fetch(btn.dataset.url, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" },
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
+
+    replayClass(btn, "saved");
+    form.querySelectorAll(".card[data-saved]").forEach((card) => replayClass(card, "just-saved"));
+    setTimeout(() => btn.classList.remove("saved"), 1500);
+  } catch (err) {
+    replayClass(btn, "save-failed");
+    status.textContent = err.message;
+    status.classList.add("error");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 function initOptimizer() {
   const { dom, boundsFields } = window.OPTIMIZER_CONFIG;
 
@@ -240,7 +278,9 @@ function initOptimizer() {
   
   // Rebuild weights when diploma count changes (no auto-submit)
   dom.nDiploma.addEventListener("change", rebuildWeights);
-  
+
+  document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
+
   initRangeFills();
 }
 

@@ -252,6 +252,66 @@ def register():
     return render_template("register.html", form=form)
 
 
+def parse_search_form() -> dict:
+    """Validate the optimizer form and return its settings.
+
+    Raises ValueError with a user-facing message if anything is invalid.
+    """
+    form = SearchForm()
+    if not form.validate_on_submit():
+        raise ValueError(first_form_error(form))
+
+    # effect weights are validated and parsed by the form validator
+    premium_ingr = sorted(
+        set(request.form.getlist("premium_ingredients[]", type=int))
+    )
+    if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
+        raise ValueError(_("Ingredientes premium no válidos"))
+    if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
+        raise ValueError(
+            _("Puedes evitar como máximo %(n)s ingredientes", n=MAX_PREMIUM_INGREDIENTS)
+        )
+
+    return {
+        "effect_weights": [
+            float(w) for w in getattr(form, "_parsed_effect_weights", [])
+        ],
+        "excluded_effects": getattr(form, "_parsed_excluded_effects", []),
+        "premium_ingr": premium_ingr,
+        "alpha_ub": int(form.alpha_UB.data),
+        "prob_ub": int(form.prob_UB.data),
+        "n_starts": int(form.n_starts.data),
+        "language": form.language.data,
+    }
+
+
+@app.route("/settings/save", methods=["POST"])
+@login_required
+def save_settings():
+    """Save the optimizer settings for the active server (called via fetch)"""
+    try:
+        s = parse_search_form()
+    except ValueError as e:
+        return {"ok": False, "error": str(e)}, 400
+
+    try:
+        with db_session() as db_sa:
+            # Search settings are saved per server; language per account
+            account, server = get_active_server(db_sa, session["user_id"])
+            account.language = s["language"]
+            server.effect_weights = s["effect_weights"]
+            server.excluded_effects = s["excluded_effects"]
+            server.max_ingredients = s["alpha_ub"]
+            server.max_effects = s["prob_ub"]
+            server.search_depth = s["n_starts"]
+            server.updated_at = func.now()
+    except SQLAlchemyError:
+        return {"ok": False, "error": _("Error de base de datos")}, 500
+
+    session["lang"] = s["language"]
+    return {"ok": True}
+
+
 @app.route("/optimize", methods=["GET", "POST"])
 @login_required
 def optimize():
@@ -259,61 +319,21 @@ def optimize():
     if request.method == "GET":
         return redirect(url_for("index"))
 
-    form = SearchForm()
-    if not form.validate_on_submit():
-        return error(first_form_error(form), url=url_for("index"))
-
     try:
-        # Parse validated form inputs
-        # effect weights are validated and parsed by the form validator
-        effect_weights = np.array(
-            getattr(form, "_parsed_effect_weights", []), dtype=np.float64
-        )
-        alpha_ub = int(form.alpha_UB.data)
-        prob_ub = int(form.prob_UB.data)
-        n_starts = int(form.n_starts.data)
-        premium_ingr = request.form.getlist("premium_ingredients[]", type=int)
-        excluded_effects = getattr(form, "_parsed_excluded_effects", [])
-        lang_choice = form.language.data
+        s = parse_search_form()
     except ValueError as e:
         return error(str(e), url=url_for("index"))
 
-    premium_ingr = sorted(set(premium_ingr))
-    if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
-        return error(_("Ingredientes premium no válidos"), url=url_for("index"))
-    if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
-        return error(
-            _("Puedes evitar como máximo %(n)s ingredientes", n=MAX_PREMIUM_INGREDIENTS),
-            url=url_for("index"),
-        )
+    effect_weights = np.array(s["effect_weights"], dtype=np.float64)
+    premium_ingr = s["premium_ingr"]
+    n_starts = s["n_starts"]
 
-    user_id = session["user_id"]
-
-    try:
-        with db_session() as db_sa:
-            # Search settings are saved per server; language per account
-            account, server = get_active_server(db_sa, user_id)
-            account.language = lang_choice
-            server.effect_weights = effect_weights.tolist()
-            server.excluded_effects = excluded_effects
-            server.premium_ingredients = premium_ingr
-            server.max_ingredients = alpha_ub
-            server.max_effects = prob_ub
-            server.search_depth = n_starts
-            server.updated_at = func.now()
-    except SQLAlchemyError:
-        return error(_("Error de base de datos"), url=url_for("index"))
-
-    # Persist language choice in session for future requests
-    session["lang"] = lang_choice
-
-    # Run optimizer using the persisted settings
     opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
-        excluded_effects=excluded_effects,
-        alpha_UB=alpha_ub,
-        prob_UB=prob_ub,
+        excluded_effects=s["excluded_effects"],
+        alpha_UB=s["alpha_ub"],
+        prob_UB=s["prob_ub"],
     )
 
     alpha_best, val_best = opt.multistart(n_starts)

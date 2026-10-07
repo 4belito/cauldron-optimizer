@@ -1,3 +1,11 @@
+/* Page wrapper: server bar and cards share the same width so their edges line up */
+.optimizer-page {
+  width: 100%;
+  max-width: 62.5rem;
+  margin: 0 auto;
+  padding: 0 0.75rem;
+}
+
 /* Servers: count + radio selector */
 .server-bar {
   display: flex;
@@ -5,8 +13,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem 1.5rem;
-  max-width: 100%;
-  margin: 0 auto 1rem;
+  margin: 0 0 1rem;
   padding: 0.5rem 1rem;
   border-radius: 0.75rem;
   background: rgba(243, 226, 179, 0.92);
@@ -64,9 +71,139 @@
    ========================= */
 .optimizer {
   width: 100%;
-  max-width: 62.5rem;
-  margin: 0 auto;
-  padding: 0 0.75rem;
+}
+
+/* Search + save buttons */
+.submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.save-btn {
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 2px solid #7a5a3a;
+  border-radius: 0.4rem;
+  background: linear-gradient(#f6e7c3, #ddbf86);
+  color: #51200d;
+  cursor: pointer;
+  box-shadow: 0 0.125rem 0 rgba(0, 0, 0, 0.45);
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.save-btn:hover {
+  filter: brightness(1.08);
+}
+
+.save-btn:active {
+  transform: translateY(0.125rem);
+  box-shadow: none;
+}
+
+.save-btn:focus-visible {
+  outline: 2px solid #582d1a;
+  outline-offset: 2px;
+}
+
+.save-btn:disabled {
+  cursor: progress;
+}
+
+.save-btn svg {
+  position: absolute;
+  inset: 0.3rem;
+  width: calc(100% - 0.6rem);
+  height: calc(100% - 0.6rem);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.save-icon path {
+  fill: currentColor;
+}
+
+.save-icon-shutter,
+.save-icon-label {
+  fill: #f3e2b3;
+}
+
+.save-check {
+  opacity: 0;
+  transform: scale(0.4);
+  fill: none;
+  stroke: #3f7d12;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Saved: icon swaps to a green check, button pops */
+.save-btn.saved {
+  animation: save-pop 0.45s ease-out;
+  border-color: #3f7d12;
+}
+
+.save-btn.saved .save-icon {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.save-btn.saved .save-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.save-btn.save-failed {
+  animation: save-shake 0.4s;
+  border-color: #a3261b;
+}
+
+/* The saved panels glow briefly */
+.card.just-saved {
+  animation: card-saved-glow 1.1s ease-out;
+}
+
+.save-status {
+  flex-basis: 100%;
+  font-weight: 700;
+}
+
+.save-status:empty {
+  display: none;
+}
+
+.save-status.error {
+  color: #a3261b;
+}
+
+@keyframes save-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+@keyframes save-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-0.25rem); }
+  75% { transform: translateX(0.25rem); }
+}
+
+@keyframes card-saved-glow {
+  0% { box-shadow: 0 0 0 0 rgba(255, 214, 102, 0); }
+  30% { box-shadow: 0 0 0 0.25rem rgba(255, 214, 102, 0.9), 0 0 1.5rem rgba(255, 214, 102, 0.7); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 214, 102, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .save-btn.saved,
+  .save-btn.save-failed,
+  .card.just-saved {
+    animation: none;
+  }
 }
 
 /* Diplomas */

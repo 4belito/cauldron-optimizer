@@ -404,3 +404,5 @@ msgstr ""
 #: cauldron_optimizer/templates/results.html:73
 msgid "Volver"
 msgstr ""
+msgid "Guardar configuración del servidor %(n)s"
+msgstr ""
