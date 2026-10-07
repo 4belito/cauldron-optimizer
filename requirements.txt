@@ -5,6 +5,8 @@ gunicorn==21.2.0
 
 # Database
 Flask-SQLAlchemy==3.1.1
+# Pinned: SQLAlchemy 2.1 defaults postgresql:// to psycopg 3, which is not installed
+SQLAlchemy==2.0.45
 psycopg2-binary==2.9.9
 
 # Optimization Engine
