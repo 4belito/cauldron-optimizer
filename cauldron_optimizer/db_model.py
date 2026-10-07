@@ -1,4 +1,11 @@
-from sqlalchemy import TIMESTAMP, BigInteger, ForeignKey, Integer, Text, func
+from sqlalchemy import (
+    TIMESTAMP,
+    BigInteger,
+    ForeignKey,
+    Integer,
+    Text,
+    func,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -16,6 +23,12 @@ class User(Base):
         back_populates="user",
         uselist=False,
         cascade="all, delete",
+    )
+    servers = relationship(
+        "Server",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        order_by="Server.server_number",
     )
 
     @property
@@ -54,5 +67,49 @@ class UserSettings(Base):
     excluded_effects: Mapped[list[int]] = mapped_column(
         JSONB, nullable=False, server_default="[]"
     )
+    # Number of servers the user plays on, and the one currently selected
+    n_servers: Mapped[int] = mapped_column(Integer, nullable=False, server_default="1")
+    active_server: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="1"
+    )
 
     user = relationship("User", back_populates="settings")
+
+
+class Server(Base):
+    """One of a user's game servers, each with its own search settings.
+
+    Keyed by (username, server_number): server 2 of "4bel" is row ("4bel", 2).
+    """
+
+    __tablename__ = "servers"
+
+    username: Mapped[str] = mapped_column(
+        Text,
+        ForeignKey("users.username", ondelete="CASCADE", onupdate="CASCADE"),
+        primary_key=True,
+    )
+    server_number: Mapped[int] = mapped_column(Integer, primary_key=True)
+    effect_weights: Mapped[list[float]] = mapped_column(
+        JSONB, nullable=False, server_default="[0,0,0,0]"
+    )
+    excluded_effects: Mapped[list[int]] = mapped_column(
+        JSONB, nullable=False, server_default="[]"
+    )
+    premium_ingredients: Mapped[list[int]] = mapped_column(
+        JSONB, nullable=False, server_default="[]"
+    )
+    max_ingredients: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="25"
+    )
+    max_effects: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="100"
+    )
+    search_depth: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="50"
+    )
+    updated_at: Mapped[str] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    user = relationship("User", back_populates="servers")

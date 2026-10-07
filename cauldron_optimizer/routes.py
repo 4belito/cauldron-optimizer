@@ -13,9 +13,10 @@ from cauldron_optimizer.constants import (
     INGREDIENT_NAMES,
     LANGUAGES,
     MAX_PREMIUM_INGREDIENTS,
+    MAX_SERVERS_PER_USER,
 )
 from cauldron_optimizer.database import db_session
-from cauldron_optimizer.db_model import User, UserSettings
+from cauldron_optimizer.db_model import Server, User, UserSettings
 from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
 from cauldron_optimizer.helpers import error, first_form_error, login_required
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
@@ -61,11 +62,7 @@ def index():
     """Show recipe input form"""
     user_id = session["user_id"]
     with db_session() as db_sa:
-        settings = db_sa.get(UserSettings, user_id)
-        if settings is None:
-            return error(
-                _("No se encontró la configuracion del ususario"), url=url_for("logout")
-            )
+        account, settings = get_active_server(db_sa, user_id)
 
         form = SearchForm()
         form.n_diploma.data = len(settings.effect_weights)
@@ -86,7 +83,83 @@ def index():
             form=form,
             effect_names=EFFECT_NAMES,
             ingredient_names=INGREDIENT_NAMES,
+            premiums=list(settings.premium_ingredients or []),
+            n_servers=account.n_servers,
+            active_server=settings.server_number,
+            max_servers=MAX_SERVERS_PER_USER,
         )
+
+
+def get_active_server(db_sa, user_id: int) -> tuple[UserSettings, Server]:
+    """Return the user's account settings and their selected server.
+
+    Creates whatever is missing: the account settings row and the server row
+    (a new server starts as a copy of server 1).
+    """
+    account = db_sa.get(UserSettings, user_id)
+    if account is None:
+        account = UserSettings(user_id=user_id, language=session.get("lang", "es"))
+        db_sa.add(account)
+        db_sa.flush()
+
+    username = db_sa.get(User, user_id).username
+    n = min(max(account.n_servers or 1, 1), MAX_SERVERS_PER_USER)
+    number = min(max(account.active_server or 1, 1), n)
+    account.n_servers, account.active_server = n, number
+
+    server = db_sa.get(Server, (username, number))
+    if server is None:
+        server = Server(username=username, server_number=number)
+        first = db_sa.get(Server, (username, 1)) if number != 1 else None
+        if first is not None:
+            server.effect_weights = list(first.effect_weights)
+            server.excluded_effects = list(first.excluded_effects or [])
+            server.premium_ingredients = list(first.premium_ingredients or [])
+            server.max_ingredients = first.max_ingredients
+            server.max_effects = first.max_effects
+            server.search_depth = first.search_depth
+        db_sa.add(server)
+        db_sa.flush()
+    return account, server
+
+
+@app.route("/servers/count", methods=["POST"])
+@login_required
+def set_server_count():
+    """Set how many servers the user plays on (extra servers keep their settings)"""
+    n = request.form.get("n_servers", type=int)
+    if n is None or not 1 <= n <= MAX_SERVERS_PER_USER:
+        return error(
+            _(
+                "El número de servidores debe estar entre 1 y %(n)s",
+                n=MAX_SERVERS_PER_USER,
+            ),
+            url=url_for("index"),
+        )
+    try:
+        with db_session() as db_sa:
+            account, _server = get_active_server(db_sa, session["user_id"])
+            account.n_servers = n
+            account.active_server = min(account.active_server, n)
+    except SQLAlchemyError:
+        return error(_("Error de base de datos"), url=url_for("index"))
+    return redirect(url_for("index"))
+
+
+@app.route("/servers/select", methods=["POST"])
+@login_required
+def select_server():
+    """Select which server's settings to use"""
+    number = request.form.get("server_number", type=int)
+    try:
+        with db_session() as db_sa:
+            account, _server = get_active_server(db_sa, session["user_id"])
+            if number is None or not 1 <= number <= account.n_servers:
+                return error(_("Servidor no válido"), url=url_for("index"))
+            account.active_server = number
+    except SQLAlchemyError:
+        return error(_("Error de base de datos"), url=url_for("index"))
+    return redirect(url_for("index"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -159,6 +232,7 @@ def register():
                         language=session.get("lang", "es"),
                     )
                 )
+                db_sa.add(Server(user=new_user, server_number=1))
                 # commit handled by context manager
                 # Automatically log in the user after registration
 
@@ -217,20 +291,16 @@ def optimize():
 
     try:
         with db_session() as db_sa:
-            settings = db_sa.get(UserSettings, user_id)
-            if settings is None:
-                return error(
-                    _("No se encontró la configuracion del ususario"),
-                    url=url_for("index"),
-                )
-
-            settings.effect_weights = effect_weights.tolist()
-            settings.excluded_effects = excluded_effects
-            settings.max_ingredients = alpha_ub
-            settings.max_effects = prob_ub
-            settings.search_depth = n_starts
-            settings.language = lang_choice
-            settings.updated_at = func.now()
+            # Search settings are saved per server; language per account
+            account, server = get_active_server(db_sa, user_id)
+            account.language = lang_choice
+            server.effect_weights = effect_weights.tolist()
+            server.excluded_effects = excluded_effects
+            server.premium_ingredients = premium_ingr
+            server.max_ingredients = alpha_ub
+            server.max_effects = prob_ub
+            server.search_depth = n_starts
+            server.updated_at = func.now()
     except SQLAlchemyError:
         return error(_("Error de base de datos"), url=url_for("index"))
 

@@ -3,6 +3,31 @@
 {% block title %}{{ _("Receta") }}{% endblock %}
 
 {% block main %}
+<!-- Servers: how many the user plays on, and which one is selected -->
+<section class="server-bar">
+  <form method="post" action="{{ url_for('set_server_count') }}" class="server-count-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="nServers" class="server-label">{{ _("Número de servidores:") }}</label>
+    <input
+      id="nServers" name="n_servers" type="number" class="server-count"
+      min="1" max="{{ max_servers }}" step="1" value="{{ n_servers }}"
+      onchange="if (this.checkValidity()) this.form.submit()"
+    >
+    <noscript><button type="submit" class="server-btn">OK</button></noscript>
+  </form>
+
+  <form method="post" action="{{ url_for('select_server') }}" class="server-select-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="serverSelect" class="server-label">{{ _("Servidor") }}:</label>
+    <select id="serverSelect" name="server_number" class="server-select" onchange="this.form.submit()">
+      {% for k in range(1, n_servers + 1) %}
+        <option value="{{ k }}" {% if k == active_server %}selected{% endif %}>{{ _("Servidor") }} {{ k }}</option>
+      {% endfor %}
+    </select>
+    <noscript><button type="submit" class="server-btn">OK</button></noscript>
+  </form>
+</section>
+
 <form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}">
   {{ form.hidden_tag() }}
   {{ form.effect_weights_json(id="effect_weights_json") }}
@@ -31,7 +56,6 @@
     </legend>
     <div class="card-body">
       <div class="ingredients-grid">
-        {% set premiums = session.get('premium_ingredients', []) %}
         {% for name in ingredient_names %}
           <label class="ingredient-check">
             <span class="effect-check">

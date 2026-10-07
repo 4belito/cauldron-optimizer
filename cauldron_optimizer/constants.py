@@ -58,6 +58,8 @@ MAX_STARTS = 100
 MIN_CHECKED_EFFECTS = 10
 # Maximum number of premium ingredients that can be avoided
 MAX_PREMIUM_INGREDIENTS = 4
+# Maximum number of servers (game worlds) per user
+MAX_SERVERS_PER_USER = 10
 # Show the "under test" banner for the effect selection checkboxes (set False to hide)
 SHOW_EFFECT_SELECTION_BETA_BANNER = True
 DEFAULTS = {
