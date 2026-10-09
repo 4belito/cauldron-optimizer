@@ -216,6 +216,21 @@ function replayClass(el, cls) {
   el.classList.add(cls);
 }
 
+// Restore button: enabled while there are unsaved changes on the page
+function setUnsaved(unsaved) {
+  document.getElementById("restoreSettingsBtn").disabled = !unsaved;
+}
+
+function initRestoreButton() {
+  const { form } = window.OPTIMIZER_CONFIG.dom;
+  form.addEventListener("input", () => setUnsaved(true));
+  form.addEventListener("change", () => setUnsaved(true));
+  // Reloading the page shows the selected server's saved settings
+  document.getElementById("restoreSettingsBtn").addEventListener("click", () => {
+    window.location.assign(window.location.pathname);
+  });
+}
+
 async function saveSettings() {
   const { form } = window.OPTIMIZER_CONFIG.dom;
   const btn = document.getElementById("saveSettingsBtn");
@@ -236,6 +251,7 @@ async function saveSettings() {
     if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
 
     replayClass(btn, "saved");
+    setUnsaved(false);
     form.querySelectorAll(".card[data-saved]").forEach((card) => replayClass(card, "just-saved"));
     setTimeout(() => btn.classList.remove("saved"), 1500);
   } catch (err) {
@@ -269,7 +285,7 @@ function initDiplomaSteppers() {
       const next = Math.min(max(), Math.max(min(), current + Number(btn.dataset.step)));
       if (next === current) return;
       input.value = next;
-      input.dispatchEvent(new Event("change"));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
     });
   });
   input.addEventListener("change", updateDisabled);
@@ -311,6 +327,7 @@ function initOptimizer() {
   initDiplomaSteppers();
 
   document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
+  initRestoreButton();
 
   initRangeFills();
 }

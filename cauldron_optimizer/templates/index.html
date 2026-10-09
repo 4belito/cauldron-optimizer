@@ -11,7 +11,7 @@
     <!-- Avatar of the selected server: click to change its name and avatar -->
     <button
       type="button" id="avatarBtn" class="server-avatar{{ ' is-default' if not avatar }}"
-      title="{{ _('Cambiar nombre y avatar') }}" aria-label="{{ _('Cambiar nombre y avatar de %(name)s', name=server_name) }}"
+      data-tip="{{ _('Cambia el nombre y el avatar de este mundo') }}" aria-label="{{ _('Cambiar nombre y avatar de %(name)s', name=server_name) }}"
       data-aria-template="{{ _('Cambiar nombre y avatar de %(name)s', name='{name}') }}"
       aria-haspopup="dialog" aria-controls="avatarModal"
     >
@@ -21,7 +21,8 @@
       </span>
     </button>
     <label for="serverSelect" class="server-label">{{ _("Mundo") }}:</label>
-    <select id="serverSelect" name="server_number" class="server-select" data-active="{{ active_server }}">
+    <select id="serverSelect" name="server_number" class="server-select" data-active="{{ active_server }}"
+            data-tip="{{ _('Elige el mundo: cada uno guarda su propia configuración. Al final de la lista puedes añadir otro') }}">
       {% for number, name in servers %}
         <option value="{{ number }}" {% if number == active_server %}selected{% endif %}>{{ name }}</option>
       {% endfor %}
@@ -37,7 +38,7 @@
   <!-- Saves the search settings below to the selected server -->
   <button
     type="button" id="saveSettingsBtn" class="save-btn"
-    title="{{ _('Guardar configuración de %(name)s', name=server_name) }}" aria-label="{{ _('Guardar configuración de %(name)s', name=server_name) }}"
+    data-tip="{{ _('Guarda la configuración actual en este mundo') }}" aria-label="{{ _('Guardar configuración de %(name)s', name=server_name) }}"
     data-label-template="{{ _('Guardar configuración de %(name)s', name='{name}') }}"
     data-url="{{ url_for('save_settings') }}"
   >
@@ -50,14 +51,25 @@
       <path d="M5 12.5l4.5 4.5L19 7.5"/>
     </svg>
   </button>
+  <!-- Discards unsaved changes: reloads the selected server's saved settings.
+       Enabled once something changes (see optimizer.js) -->
+  <button
+    type="button" id="restoreSettingsBtn" class="save-btn restore-btn" disabled
+    data-tip="{{ _('Descarta los cambios y vuelve a la configuración guardada') }}"
+    aria-label="{{ _('Descartar cambios y cargar la configuración guardada') }}"
+  >
+    <svg class="restore-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5a7 7 0 1 1-6.93 8h2.02A5 5 0 1 0 12 7v3L7.5 6 12 2v3z"/>
+    </svg>
+  </button>
   <!-- Deletes the selected server, after a confirmation window -->
   <button
     type="button" id="deleteServerBtn" class="save-btn delete-btn"
     {% if servers | length > 1 %}
-      title="{{ _('Eliminar %(name)s', name=server_name) }}" aria-label="{{ _('Eliminar %(name)s', name=server_name) }}"
+      data-tip="{{ _('Elimina este mundo y toda su configuración') }}" aria-label="{{ _('Eliminar %(name)s', name=server_name) }}"
       data-label-template="{{ _('Eliminar %(name)s', name='{name}') }}"
     {% else %}
-      disabled title="{{ _('No puedes eliminar tu único mundo') }}" aria-label="{{ _('No puedes eliminar tu único mundo') }}"
+      disabled data-tip="{{ _('No puedes eliminar tu único mundo') }}" aria-label="{{ _('No puedes eliminar tu único mundo') }}"
     {% endif %}
     aria-haspopup="dialog" aria-controls="deleteModal"
   >
@@ -76,7 +88,7 @@
   {{ form.excluded_effects_json(id="excluded_effects_json") }}
   {{ form.language() }}
   <!-- Diplomas + weights -->
-  <fieldset class="card" data-saved>
+  <fieldset class="card effects-card" data-saved>
     <legend class="card-legend">
       <strong>{{ _("Diplomas & Efectos Deseados") }}</strong>
     </legend>
@@ -86,16 +98,16 @@
         <div class="diploma-input">
           <!-- Game's green -/+ buttons: one diploma less / more (see optimizer.js) -->
           <button type="button" class="step-btn step-down" data-step="-1"
-                  aria-label="{{ _('Un diploma menos') }}" title="{{ _('Un diploma menos') }}"></button>
+                  aria-label="{{ _('Un diploma menos') }}" data-tip="{{ _('Un diploma menos') }}"></button>
           <!-- Counter with the diploma scroll inside on the right, like the
                game's resource counters -->
-          <span class="diploma-counter">
+          <span class="diploma-counter" data-tip="{{ _('Número de diplomas: cuántos efectos tienes desbloqueados en el juego') }}">
             {{ form.n_diploma(class="n-diploma", **{"aria-label": _("Diplomas")}) }}
             <img src="{{ url_for('static', filename='ui/diploma_scroll.png') }}" alt=""
-                 class="diploma-scroll" title="{{ _('Diplomas') }}">
+                 class="diploma-scroll">
           </span>
           <button type="button" class="step-btn step-up" data-step="1"
-                  aria-label="{{ _('Un diploma más') }}" title="{{ _('Un diploma más') }}"></button>
+                  aria-label="{{ _('Un diploma más') }}" data-tip="{{ _('Un diploma más') }}"></button>
         </div>
       </div>
       <div id="weightsContainer" class="weights-grid"></div>
@@ -103,7 +115,7 @@
   </fieldset>
 
   <!-- Premium ingredients -->
-  <fieldset class="card">
+  <fieldset class="card premium-card">
     <legend class="card-legend">
       <strong>{{ _("Evitar Ingredientes (Premium)") }}</strong>
     </legend>
@@ -133,7 +145,7 @@
   </fieldset>
 
   <!-- Bounds -->
-  <fieldset class="card" data-saved>
+  <fieldset class="card bounds-card" data-saved>
     <legend class="card-legend">
       <strong>{{ _("Limitar Búsqueda") }}</strong>
     </legend>
@@ -143,7 +155,7 @@
   </fieldset>
 
   <div class="submit-row">
-    <button type="submit" class="game-btn game-btn-main">
+    <button type="submit" class="game-btn game-btn-main" data-tip="{{ _('Calcula la mejor receta para esta configuración') }}">
       <span>{{ _("Buscar Receta") }}</span>
     </button>
   </div>
@@ -184,6 +196,8 @@
 <script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script src="{{ url_for('static', filename='js/autofill.js') }}"></script>
+<!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
+<script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 
 <!-- Name and avatar picker for the selected server (and for "+ Add server") -->
 {% with new_server_name=next_server_name %}

@@ -572,3 +572,27 @@ msgstr "One diploma more"
 
 msgid "Diplomas"
 msgstr "Diplomas"
+
+msgid "Descartar cambios y cargar la configuración guardada"
+msgstr "Discard changes and load the saved settings"
+
+msgid "Cambia el nombre y el avatar de este mundo"
+msgstr "Change this world's name and avatar"
+
+msgid "Elige el mundo: cada uno guarda su propia configuración. Al final de la lista puedes añadir otro"
+msgstr "Choose the world: each one keeps its own settings. At the end of the list you can add another"
+
+msgid "Guarda la configuración actual en este mundo"
+msgstr "Save the current settings to this world"
+
+msgid "Descarta los cambios y vuelve a la configuración guardada"
+msgstr "Discard changes and go back to the saved settings"
+
+msgid "Elimina este mundo y toda su configuración"
+msgstr "Delete this world and all its settings"
+
+msgid "Número de diplomas: cuántos efectos tienes desbloqueados en el juego"
+msgstr "Number of diplomas: how many effects you have unlocked in the game"
+
+msgid "Calcula la mejor receta para esta configuración"
+msgstr "Calculate the best recipe for these settings"

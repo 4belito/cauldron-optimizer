@@ -23,9 +23,7 @@ function showServerName(name) {
   const deleteName = document.getElementById("deleteName");
   if (deleteName) deleteName.textContent = name;
   document.querySelectorAll("[data-label-template]").forEach((el) => {
-    const label = el.dataset.labelTemplate.replace("{name}", name);
-    el.title = label;
-    el.setAttribute("aria-label", label);
+    el.setAttribute("aria-label", el.dataset.labelTemplate.replace("{name}", name));
   });
   document.querySelectorAll("[data-aria-template]").forEach((el) => {
     el.setAttribute("aria-label", el.dataset.ariaTemplate.replace("{name}", name));
