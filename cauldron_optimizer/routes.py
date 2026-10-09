@@ -83,7 +83,8 @@ def index():
             form=form,
             effect_names=EFFECT_NAMES,
             ingredient_names=INGREDIENT_NAMES,
-            premiums=list(settings.premium_ingredients or []),
+            # Premium choices live only in the session, never in the database
+            premiums=session.get("premium_ingredients", []),
             n_servers=account.n_servers,
             active_server=settings.server_number,
             max_servers=MAX_SERVERS_PER_USER,
@@ -114,7 +115,6 @@ def get_active_server(db_sa, user_id: int) -> tuple[UserSettings, Server]:
         if first is not None:
             server.effect_weights = list(first.effect_weights)
             server.excluded_effects = list(first.excluded_effects or [])
-            server.premium_ingredients = list(first.premium_ingredients or [])
             server.max_ingredients = first.max_ingredients
             server.max_effects = first.max_effects
             server.search_depth = first.search_depth

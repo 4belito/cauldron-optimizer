@@ -96,9 +96,6 @@ class Server(Base):
     excluded_effects: Mapped[list[int]] = mapped_column(
         JSONB, nullable=False, server_default="[]"
     )
-    premium_ingredients: Mapped[list[int]] = mapped_column(
-        JSONB, nullable=False, server_default="[]"
-    )
     max_ingredients: Mapped[int] = mapped_column(
         Integer, nullable=False, server_default="25"
     )
