@@ -2,11 +2,13 @@ from collections.abc import Callable
 from functools import wraps
 from typing import Any, cast
 
-from flask import abort, redirect, render_template, session
+from flask import abort, redirect, render_template, session, url_for
 from flask_babel import gettext as _
 from flask_wtf import FlaskForm
 
-from cauldron_optimizer.constants import ADMIN_USERNAMES
+from cauldron_optimizer.constants import ADMIN_USERNAMES, AVATARS
+
+_AVATAR_SET = frozenset(AVATARS)
 
 
 # this may be enhenced later using bootstrap Modal dialogs
@@ -29,6 +31,17 @@ def login_required(f: Callable[..., Any]) -> Callable[..., Any]:
         return f(*args, **kwargs)
 
     return decorated_function
+
+
+def is_avatar(name: str | None) -> bool:
+    return name in _AVATAR_SET
+
+
+def avatar_url(name: str | None) -> str:
+    """URL of an avatar portrait, or of the default avatar."""
+    if is_avatar(name):
+        return url_for("static", filename=f"portraits/{name}")
+    return url_for("static", filename="potrait.png")
 
 
 def is_admin() -> bool:

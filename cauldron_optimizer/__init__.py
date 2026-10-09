@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from flask import Flask, request, url_for
+from flask import Flask, request, session, url_for
 from flask_babel import Babel, get_locale
 from flask_babel import gettext as _
 from flask_wtf.csrf import CSRFError, CSRFProtect
@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from cauldron_optimizer.config import get_secret_key, select_locale
 from cauldron_optimizer.constants import SHOW_EFFECT_SELECTION_BETA_BANNER
-from cauldron_optimizer.helpers import error, is_admin
+from cauldron_optimizer.helpers import avatar_url, error, is_admin
 
 # Create Flask app
 app = Flask(__name__)
@@ -29,6 +29,8 @@ def inject_i18n():
         "get_locale": get_locale,
         "show_beta_banner": SHOW_EFFECT_SELECTION_BETA_BANNER,
         "is_admin": is_admin,
+        "avatar_url": avatar_url,
+        "user_avatar_url": lambda: avatar_url(session.get("avatar")),
     }
 
 

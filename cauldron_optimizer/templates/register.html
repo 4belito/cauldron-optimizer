@@ -7,6 +7,21 @@
 {% block main %}
 <form action="{{ url_for('register') }}" method="post">
      {{ form.hidden_tag() }}
+    <!-- Avatar of server 1: opens the avatar picker -->
+    <div class="register-avatar">
+        <button
+            type="button" id="avatarBtn" class="server-avatar server-avatar-lg is-default"
+            title="{{ _('Elige tu avatar') }}" aria-label="{{ _('Elige tu avatar') }}"
+            aria-haspopup="dialog" aria-controls="avatarModal"
+        >
+            <img src="{{ avatar_url(form.avatar.data) }}" alt="" class="server-avatar-img">
+            <span class="server-avatar-edit" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 17.5V20h2.5L17.1 9.4l-2.5-2.5L4 17.5zM19.7 6.8a1 1 0 0 0 0-1.4l-1.1-1.1a1 1 0 0 0-1.4 0l-1.3 1.3 2.5 2.5 1.3-1.3z"/></svg>
+            </span>
+        </button>
+        <span class="register-avatar-hint">{{ _("Elige tu avatar") }}</span>
+    </div>
+
     <div class="mb-3">
         {{ form.username(
             class="form-control mx-auto w-auto",
@@ -31,4 +46,8 @@
         <span>{{ _("Crear cuenta") }}</span>
     </button>
 </form>
+
+{% with avatar=form.avatar.data, server_label=_("Servidor") ~ " 1", picker_input="avatar" %}
+    {% include "_avatar_picker.html" %}
+{% endwith %}
 {% endblock %}

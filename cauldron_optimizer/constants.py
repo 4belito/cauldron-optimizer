@@ -1,5 +1,8 @@
 """Constants for the Cauldron optimizer."""
 
+import json
+from pathlib import Path
+
 LANGUAGES = ["es", "en"]
 
 
@@ -77,3 +80,17 @@ DEFAULTS = {
 # 1- Add the hiddend B and V values to the corresponding CSV files in optimizer/
 # 2- ADD IT TO EFFECT_NAMES
 # 3- add the effect icon in /static/effects/effect{chapter_number}.png
+
+# Avatars: the game's player portraits (see scripts/download_portraits.py),
+# without the system icons that are not real avatars
+PORTRAITS_DIR = Path(__file__).resolve().parent / "static" / "portraits"
+_NOT_AVATARS = {
+    "portrait_id_ignored.png",
+    "portrait_id_questionmark.png",
+    "portrait_id_support.png",
+}
+AVATARS = [
+    p["file"]
+    for p in json.loads((PORTRAITS_DIR / "portraits.json").read_text())
+    if p["file"] not in _NOT_AVATARS
+]

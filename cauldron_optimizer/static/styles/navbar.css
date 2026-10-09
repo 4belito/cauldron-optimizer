@@ -150,13 +150,6 @@ nav .navbar-brand .elvenar-title {
   padding: 0;
 }
 
-.user-toggler .user-avatar {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .user-toggler .user-name {
   color: #f5e6c8;
   font-weight: 700;
@@ -179,12 +172,22 @@ nav .navbar-brand .elvenar-title {
   font-size: 0.95rem;
 }
 
-/* keep avatar small + circular */
+/* Avatar of the selected server, in a gold ring like the game's */
 .user-avatar {
-  width: 22px;
-  height: 22px;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center top;
+  background: #2b1c3f;
+  border: 2px solid #e2b85a;
+  box-shadow: 0 0 0 1px #5a3a12, 0 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.user-toggler .user-avatar {
+  width: 2rem;
+  height: 2rem;
 }
 
 /* Add dropdown caret to mobile user toggler */

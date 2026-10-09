@@ -113,6 +113,8 @@ class Server(Base):
     updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
+    # Portrait file in static/portraits, or None for the default avatar
+    avatar: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 

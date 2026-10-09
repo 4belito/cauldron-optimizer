@@ -4,26 +4,30 @@
 
 {% block main %}
 <div class="optimizer-page">
-<!-- Servers: how many the user plays on, and which one is selected -->
+<!-- Servers: the selected one, its avatar, and adding a new one -->
 <section class="server-bar">
-  <form method="post" action="{{ url_for('set_server_count') }}" class="server-count-form">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <label for="nServers" class="server-label">{{ _("Número de servidores:") }}</label>
-    <input
-      id="nServers" name="n_servers" type="number" class="server-count"
-      min="1" max="{{ max_servers }}" step="1" value="{{ n_servers }}"
-      onchange="if (this.checkValidity()) this.form.submit()"
-    >
-    <noscript><button type="submit" class="server-btn">OK</button></noscript>
-  </form>
-
   <form method="post" action="{{ url_for('select_server') }}" class="server-select-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <!-- Avatar of the selected server: click to change it -->
+    <button
+      type="button" id="avatarBtn" class="server-avatar{{ ' is-default' if not avatar }}"
+      title="{{ _('Cambiar avatar') }}" aria-label="{{ _('Cambiar avatar del servidor %(n)s', n=active_server) }}"
+      aria-haspopup="dialog" aria-controls="avatarModal"
+    >
+      <img src="{{ user_avatar_url() }}" alt="" class="server-avatar-img">
+      <span class="server-avatar-edit" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M4 17.5V20h2.5L17.1 9.4l-2.5-2.5L4 17.5zM19.7 6.8a1 1 0 0 0 0-1.4l-1.1-1.1a1 1 0 0 0-1.4 0l-1.3 1.3 2.5 2.5 1.3-1.3z"/></svg>
+      </span>
+    </button>
     <label for="serverSelect" class="server-label">{{ _("Servidor") }}:</label>
-    <select id="serverSelect" name="server_number" class="server-select" onchange="this.form.submit()">
+    <select id="serverSelect" name="server_number" class="server-select" data-active="{{ active_server }}">
       {% for k in range(1, n_servers + 1) %}
         <option value="{{ k }}" {% if k == active_server %}selected{% endif %}>{{ _("Servidor") }} {{ k }}</option>
       {% endfor %}
+      {% if can_add_server %}
+        <!-- Opens the avatar picker to create the server (see avatar.js) -->
+        <option value="add">+ {{ _("Añadir servidor") }}</option>
+      {% endif %}
     </select>
     <noscript><button type="submit" class="server-btn">OK</button></noscript>
   </form>
@@ -171,4 +175,12 @@
 };
 </script>
 <script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
+
+<!-- Avatar picker for the selected server (and for "+ Add server") -->
+{% with
+  server_label=_("Servidor") ~ " " ~ active_server,
+  new_server_label=_("Nuevo servidor") ~ ": " ~ _("Servidor") ~ " " ~ (n_servers + 1)
+%}
+  {% include "_avatar_picker.html" %}
+{% endwith %}
 {% endblock %}

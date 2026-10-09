@@ -488,3 +488,36 @@ msgstr "Invalid server"
 
 msgid "Guardar configuración del servidor %(n)s"
 msgstr "Save settings for server %(n)s"
+
+msgid "Cambiar avatar"
+msgstr "Change avatar"
+
+msgid "Cambiar avatar del servidor %(n)s"
+msgstr "Change avatar for server %(n)s"
+
+msgid "Perfil"
+msgstr "Profile"
+
+msgid "Imagen"
+msgstr "Image"
+
+msgid "Cancelar"
+msgstr "Cancel"
+
+msgid "Guardar"
+msgstr "Save"
+
+msgid "Avatar no válido"
+msgstr "Invalid avatar"
+
+msgid "Añadir servidor"
+msgstr "Add server"
+
+msgid "Nuevo servidor"
+msgstr "New server"
+
+msgid "Puedes tener como máximo %(n)s servidores"
+msgstr "You can have at most %(n)s servers"
+
+msgid "Elige tu avatar"
+msgstr "Choose your avatar"

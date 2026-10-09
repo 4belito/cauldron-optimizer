@@ -13,7 +13,7 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=14">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=18">
 
     <title>{{ _("Caldero") }}: {% block title %}{% endblock %}</title>
   </head>
@@ -72,7 +72,7 @@
           aria-label="{{ _('Mostrar menú') }}"
         >
           <img
-            src="{{ url_for('static', filename='potrait.png') }}"
+            src="{{ user_avatar_url() }}"
             alt="User avatar"
             class="user-avatar"
           >
@@ -124,7 +124,7 @@
                 aria-expanded="false"
               >
                 <img
-                  src="{{ url_for('static', filename='potrait.png') }}"
+                  src="{{ user_avatar_url() }}"
                   alt="User avatar"
                   class="user-avatar"
                 >

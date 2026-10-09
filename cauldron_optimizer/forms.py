@@ -20,6 +20,7 @@ from wtforms.validators import (
 )
 
 from cauldron_optimizer.constants import LANGUAGES, MAX_STARTS, MIN_CHECKED_EFFECTS
+from cauldron_optimizer.helpers import is_avatar
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
 
@@ -110,6 +111,12 @@ class RegisterForm(FlaskForm):
             "placeholder": _l(N_("Confirmar contraseña")),
         },
     )
+    # Avatar of server 1, chosen in the avatar picker (optional)
+    avatar = HiddenField()
+
+    def validate_avatar(self, field: Field) -> None:
+        if field.data and not is_avatar(field.data):
+            raise ValidationError(_l(N_("Avatar no válido")))
 
 
 class SearchForm(FlaskForm):

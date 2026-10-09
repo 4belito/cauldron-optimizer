@@ -1,0 +1,392 @@
+/* =========================
+   Avatar (per server)
+   ========================= */
+
+/* Avatar button in the server bar */
+.server-avatar {
+  position: relative;
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+
+.server-avatar-img {
+  position: absolute;
+  inset: 0.2rem;
+  width: calc(100% - 0.4rem);
+  height: calc(100% - 0.4rem);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  background: #2b1c3f;
+}
+
+/* Golden ring from the game around the picture */
+.server-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/static/profile/portrait_border.png") center / contain no-repeat;
+  pointer-events: none;
+}
+
+.server-avatar:hover,
+.server-avatar:focus-visible {
+  transform: scale(1.06);
+  filter: brightness(1.08) drop-shadow(0 0 0.35rem rgba(240, 210, 122, 0.9));
+  outline: none;
+}
+
+/* Pencil badge: says "this can be changed" */
+.server-avatar-edit {
+  position: absolute;
+  right: -0.2rem;
+  bottom: -0.2rem;
+  z-index: 1;
+  width: 1.3rem;
+  height: 1.3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(#7a4a24, #51200d);
+  border: 2px solid #f0d27a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.server-avatar-edit svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: #f5e6c8;
+}
+
+/* No avatar chosen yet: a soft golden pulse invites a click */
+.server-avatar.is-default {
+  animation: avatar-invite 2s ease-in-out 3;
+}
+
+@keyframes avatar-invite {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(240, 210, 122, 0); }
+  50% { box-shadow: 0 0 0 0.4rem rgba(240, 210, 122, 0.55); }
+}
+
+/* Picker window, like the game's profile window */
+body.avatar-open {
+  overflow: hidden;
+}
+
+.avatar-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.avatar-window {
+  width: min(40rem, 100%);
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  box-shadow: 0 1.125rem 3.75rem rgba(0, 0, 0, 0.5);
+}
+
+.avatar-header {
+  flex: 0 0 auto;
+  position: relative;
+  aspect-ratio: 662 / 45;  /* the header image, which includes the X */
+  display: grid;
+  place-items: center;
+  background: url("/static/error/popup_header.png") center / 100% 100% no-repeat;
+}
+
+.avatar-title {
+  margin: 0;
+  color: #f0d27a;
+  font-size: clamp(1rem, 3.5vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0.125rem 0.125rem rgba(0, 0, 0, 0.6);
+}
+
+/* Sits over the X drawn in the header image */
+.avatar-close {
+  position: absolute;
+  top: 12%;
+  right: 0.8%;
+  height: 76%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  border: 0;
+  background: url("/static/error/close_nohover.png") center / contain no-repeat;
+  cursor: pointer;
+}
+
+.avatar-close:hover,
+.avatar-close:focus-visible {
+  background-image: url("/static/error/close_hover.png");
+  outline: none;
+}
+
+.avatar-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1.25rem 1.1rem;
+  background: url("/static/error/popup_body.png") center / cover no-repeat;
+  color: #51200d;
+}
+
+/* Scenic banner with the chosen portrait and the player name */
+.avatar-banner {
+  flex: 0 0 auto;
+  position: relative;
+  height: 11rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: url("/static/profile/profile_bg_elves.png") center top / cover no-repeat;
+}
+
+.avatar-preview {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  filter: drop-shadow(0 0.25rem 0.4rem rgba(0, 0, 0, 0.45));
+}
+
+.avatar-preview img {
+  position: absolute;
+  inset: 0.45rem;
+  width: calc(100% - 0.9rem);
+  height: calc(100% - 0.9rem);
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  background: #2b1c3f;
+}
+
+.avatar-preview::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/static/profile/portrait_border.png") center / contain no-repeat;
+}
+
+.avatar-nameplate {
+  margin-top: -0.6rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 8rem;
+  padding: 0.2rem 1rem 0.3rem;
+  border-radius: 0.4rem;
+  border: 2px solid #7a5a3a;
+  background: rgba(58, 45, 30, 0.92);
+  line-height: 1.15;
+}
+
+.avatar-username {
+  color: #f5e6c8;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.avatar-server {
+  color: #d9c08a;
+  font-size: 0.8rem;
+}
+
+.avatar-label {
+  margin: 0;
+  font-weight: 700;
+  text-align: left;
+}
+
+/* Portrait grid: scrolls inside the window */
+.avatar-grid {
+  flex: 1 1 auto;
+  min-height: 6rem;
+  max-height: 17rem;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  background: rgba(196, 170, 120, 0.45);
+  box-shadow: inset 0 1px 3px rgba(81, 32, 13, 0.35);
+  scrollbar-color: #7a5a3a transparent;
+}
+
+.avatar-option {
+  position: relative;
+  padding: 0;
+  border: 2px solid rgba(81, 32, 13, 0.35);
+  border-radius: 0.25rem;
+  background: #2b1c3f;
+  aspect-ratio: 104 / 88;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.avatar-option img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-option:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.avatar-option:focus-visible {
+  outline: 2px solid #51200d;
+  outline-offset: 2px;
+}
+
+/* Selected portrait: the game's green highlight */
+.avatar-option[aria-selected="true"] {
+  border-color: #9be22d;
+  box-shadow: 0 0 0 2px #4d8a12, 0 0 0.6rem rgba(155, 226, 45, 0.8);
+}
+
+.avatar-status {
+  margin: 0;
+  min-height: 1.2em;
+  color: #a12a12;
+  font-weight: 700;
+}
+
+.avatar-status:empty {
+  display: none;
+}
+
+/* Cancel (red) and Save (green) game buttons */
+.avatar-actions {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: clamp(1rem, 8vw, 5rem);
+}
+
+.avatar-btn {
+  width: 10rem;
+  height: 2.65rem;
+  padding: 0;
+  border: 0;
+  background: center / 100% 100% no-repeat;
+  cursor: pointer;
+}
+
+.avatar-btn span {
+  font-family: "Trebuchet MS", "Arial Black", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0.125rem 0 rgba(0, 0, 0, 0.7), 0 0 0.25rem rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.avatar-btn-cancel {
+  background-image: url("/static/profile/cancel_btn_normal.png");
+}
+
+.avatar-btn-cancel:hover,
+.avatar-btn-cancel:focus-visible {
+  background-image: url("/static/profile/cancel_btn_hover.png");
+}
+
+.avatar-btn-save {
+  background-image: url("/static/profile/normal_btn_normal.png");
+}
+
+.avatar-btn-save:hover:not(:disabled),
+.avatar-btn-save:focus-visible {
+  background-image: url("/static/profile/normal_btn_hover.png");
+}
+
+.avatar-btn:focus-visible {
+  outline: 2px solid #51200d;
+  outline-offset: 2px;
+}
+
+.avatar-btn:disabled {
+  filter: grayscale(0.7) brightness(0.85);
+  cursor: default;
+}
+
+@media (max-width: 30rem) {
+  .avatar-body {
+    padding: 0.6rem 0.75rem 0.9rem;
+  }
+
+  .avatar-banner {
+    height: 9.5rem;
+  }
+
+  .avatar-preview {
+    width: 5.75rem;
+    height: 5.75rem;
+  }
+
+  .avatar-btn {
+    width: 8rem;
+    height: 2.2rem;
+  }
+}
+
+/* Register page: larger avatar above the form */
+.register-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.server-avatar-lg {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.server-avatar-lg .server-avatar-img {
+  inset: 0.35rem;
+  width: calc(100% - 0.7rem);
+  height: calc(100% - 0.7rem);
+}
+
+.server-avatar-lg .server-avatar-edit {
+  right: 0.1rem;
+  bottom: 0.1rem;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.server-avatar-lg .server-avatar-edit svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.register-avatar-hint {
+  color: #f5e6c8;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}

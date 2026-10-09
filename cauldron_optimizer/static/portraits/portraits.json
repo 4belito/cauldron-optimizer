@@ -1,0 +1,2720 @@
+[
+ {
+  "file": "portait_id_paladin.png",
+  "source": "portait_id_paladin-6186527403ad7971166a0e06e9caa795.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_aw1_f.png",
+  "source": "portrait_aw1_f-26b3f01cad90adefc7ba7e376c05017c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw2_m.png",
+  "source": "portrait_aw2_m-ac94797799ff55ac8ab4a81b9cdd972c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw3_m.png",
+  "source": "portrait_aw3_m-33c2112c245ec51190c09f7b70e9537e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw4_f.png",
+  "source": "portrait_aw4_f-baa23b4801e1a47eff8d1aebcd3ff3c9.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw5_f.png",
+  "source": "portrait_aw5_f-e1a1a0da3d035d9c11239db2a9170833.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw6_m.png",
+  "source": "portrait_aw6_m-5890de0d8aacbf6c8000c7ae972786f0.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch171.png",
+  "source": "portrait_aw_ch171-ff627f29020a6b72451d49fb2ca36a8c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch172.png",
+  "source": "portrait_aw_ch172-ab94c90063de39a0c581093b83a4edc3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch181.png",
+  "source": "portrait_aw_ch181-fa41c8a2f67e2c6cebc1fd164169de56.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch182.png",
+  "source": "portrait_aw_ch182-7bc569103e71230aad50d104d1563e96.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch191.png",
+  "source": "portrait_aw_ch191-afb55878ad87744142c89f6318d8f78e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch192.png",
+  "source": "portrait_aw_ch192-3c60453370328d20425bb995e722c043.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch201.png",
+  "source": "portrait_aw_ch201-428ba276de8e68150676f33e86c5b904.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch202.png",
+  "source": "portrait_aw_ch202-01ea888106ea28b42b2d92ae0f97e322.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch211.png",
+  "source": "portrait_aw_ch211-e67240763e1c314fdb93099dca1d980e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch212.png",
+  "source": "portrait_aw_ch212-87ff9674e553d0aca167efcc6b762136.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch221.png",
+  "source": "portrait_aw_ch221-4b5f30a3a35cb3cb8a671f67a76cfa98.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch222.png",
+  "source": "portrait_aw_ch222-05299ebc13664bf397510f1dedad10a7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch231.png",
+  "source": "portrait_aw_ch231-60fb98f8141bca35889d713e4ce17e40.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch232.png",
+  "source": "portrait_aw_ch232-98bcc5a7c7c7a0715d160a8c6c1ef148.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch241.png",
+  "source": "portrait_aw_ch241-bfa32c2c47188c465c4171cce26afdb2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch242.png",
+  "source": "portrait_aw_ch242-dbcf108c13039bd699fba6621b36d42c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch251.png",
+  "source": "portrait_aw_ch251-1449a9b5ba313aea978c6c2c03adef61.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch252.png",
+  "source": "portrait_aw_ch252-fc86eb574e8f5f1492b98596cd5b6d02.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch261.png",
+  "source": "portrait_aw_ch261-f86dde8c03d92575d5d65a20270b42e5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_ch262.png",
+  "source": "portrait_aw_ch262-73ead72bd88edea51ed063d7e321e429.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr101.png",
+  "source": "portrait_aw_gr101-4656eaa114244309658a7e6447f1c697.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr102.png",
+  "source": "portrait_aw_gr102-5eba80baa942ab04cfc54b567be42fe5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr111.png",
+  "source": "portrait_aw_gr111-269490b3fd1bf013f8330162f38eb086.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr112.png",
+  "source": "portrait_aw_gr112-a990d5046d18d4eaa0b9d6549adee750.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr41.png",
+  "source": "portrait_aw_gr41-72a45424115d18d884ff2261e4db39b8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr42.png",
+  "source": "portrait_aw_gr42-b1fa10000f144da80419e0771d759000.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr51.png",
+  "source": "portrait_aw_gr51-8b8d1d4a859c9c34e4ef3e072cf8c152.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr52.png",
+  "source": "portrait_aw_gr52-0b0adaffc25ae10e53174c40c43f9979.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr61.png",
+  "source": "portrait_aw_gr61-ad1cd94ad3c0409ff00ce7f4c0bdad22.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr62.png",
+  "source": "portrait_aw_gr62-8777259c30be4d512001f33bbb102ab2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr71.png",
+  "source": "portrait_aw_gr71-82604bfdaec38f6175e78a11e035907d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr72.png",
+  "source": "portrait_aw_gr72-f6aa59ea213795c4b5e2311fa4b1770d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr81.png",
+  "source": "portrait_aw_gr81-e6dab5a639b209d0b1b6ef2a10d32dc2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr82.png",
+  "source": "portrait_aw_gr82-109d311d47ca5dfb9a7945413dd22c53.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr91.png",
+  "source": "portrait_aw_gr91-30d2ddf5c011deccd3bd01f86da832dc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_gr92.png",
+  "source": "portrait_aw_gr92-3380af522281b58df91fea61ff4945ec.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_orcs1.png",
+  "source": "portrait_aw_orcs1-1b15a000c0c43be50270d2ad4914f75e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_aw_orcs2.png",
+  "source": "portrait_aw_orcs2-c96b3cc379fe88c4d33c8d6ecfcc9207.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_august_xxii_f1.png",
+  "source": "portrait_evt_august_xxii_f1-822dd110ce53367e30f3b7e572a437d8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_december_xxi_m1.png",
+  "source": "portrait_evt_december_xxi_m1-ebc31475cda7f4e1a864a64bcdd11e74.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_december_xxii_m1.png",
+  "source": "portrait_evt_december_xxii_m1-60943f4f26afacc6b5dc6bb38894ea69.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_easter_xxii_f1.png",
+  "source": "portrait_evt_easter_xxii_f1-7d55275f86e5d82d25c04dc6607479a3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_easter_xxii_f2.png",
+  "source": "portrait_evt_easter_xxii_f2-6c3d7e818abe1fe7baaa9c506db3e3b3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_easter_xxiii_f1.png",
+  "source": "portrait_evt_easter_xxiii_f1-a2ed981e61e92a7f939f85946dde2596.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_easter_xxiii_m1.png",
+  "source": "portrait_evt_easter_xxiii_m1-90d9d4e62db08648974f2f90f609268b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_february_xxii_m1.png",
+  "source": "portrait_evt_february_xxii_m1-dfe31e0a5d606a78937ca697ece04fec.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_february_xxiii_f1.png",
+  "source": "portrait_evt_february_xxiii_f1-4494d40904434044a054f35da004f277.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_january_xxii_f1.png",
+  "source": "portrait_evt_january_xxii_f1-ccecf1cb2bfce47278eab894eb34fe7d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_january_xxii_m1.png",
+  "source": "portrait_evt_january_xxii_m1-0b4b98e2730ca173a1d1785ff8cd199d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_january_xxiii_f1.png",
+  "source": "portrait_evt_january_xxiii_f1-7e58271b2bf04d96eac02eb21aea2173.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_july_xxi_f1.png",
+  "source": "portrait_evt_july_xxi_f1-5389338369a546c6e41e5855bdf91cc3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_july_xxii_m1.png",
+  "source": "portrait_evt_july_xxii_m1-1b87beeb4950bf78dd23db2ad772c35a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_june_xxi_m1.png",
+  "source": "portrait_evt_june_xxi_m1-18ca63e1f0e4a996ae8b481fa2fa2d59.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_march_xxi_m1.png",
+  "source": "portrait_evt_march_xxi_m1-072e871c966607ff5de618fa30206e4d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_may_xxi_m1.png",
+  "source": "portrait_evt_may_xxi_m1-8f8cdfbeea2b893278027f47c34d7c8c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_may_xxii_m1.png",
+  "source": "portrait_evt_may_xxii_m1-c6dce2192c28bec8a3c9f7f519d42a1f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_may_xxiii_f1.png",
+  "source": "portrait_evt_may_xxiii_f1-6dd99c509f3e34bea4794ce4d22dc4f8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_may_xxiii_m1.png",
+  "source": "portrait_evt_may_xxiii_m1-41860eac737a746f1abfad9e53cb5ac0.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxiii_f1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxiii_f1-7b6596b7d7429001a663b93d72bdc1a6.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxiii_m1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxiii_m1-5024016cb54f3f86fd1852aeba610101.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxiii_m2.png",
+  "source": "portrait_evt_merge_dwarvengame_xxiii_m2-3983c743fdeecb037b61a557339e54c3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxiv_f1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxiv_f1-134aafc1740b87b2dad588139ef73c2c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxiv_m1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxiv_m1-a4fe90e645939909aaa99f813d2c60ee.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxv_c1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxv_c1-e5d9f2aa99c1b9789d017aaa0d988213.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxv_m1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxv_m1-c6d08f7fffc30a0eeee1af852953fe2c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxvi_c1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxvi_c1-d750647d6532bce746848dcad4be99bf.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_dwarvengame_xxvi_f1.png",
+  "source": "portrait_evt_merge_dwarvengame_xxvi_f1-3916cd64fb0e66dfc4af990ec8bf2685.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_kitchen_xxv_f1.png",
+  "source": "portrait_evt_merge_kitchen_xxv_f1-db1cff1e89acb6b1753615b7003e4474.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_kitchen_xxv_m1.png",
+  "source": "portrait_evt_merge_kitchen_xxv_m1-820cc1e7e1cd1bf80f6afe7ca9c8cd5f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_kitchen_xxvi_f1.png",
+  "source": "portrait_evt_merge_kitchen_xxvi_f1-594d2b531444c09f7168b174a4a5bbf3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_merge_kitchen_xxvi_m1.png",
+  "source": "portrait_evt_merge_kitchen_xxvi_m1-b13a50db76db8cb53e568d35ce2bba55.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_october_xxi_f1.png",
+  "source": "portrait_evt_october_xxi_f1-e552086572c5a39b77ef7eee5235b50d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_october_xxi_m1.png",
+  "source": "portrait_evt_october_xxi_m1-c20593b87f00d2bada42a4cac96a51f9.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_october_xxii_f1.png",
+  "source": "portrait_evt_october_xxii_f1-5eb987eeaf4148cb5646806ed3a22886.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxiii_f1.png",
+  "source": "portrait_evt_scroll_aquatic_xxiii_f1-def70ed46f0d72d8be5d879680a76a5a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxiii_m1.png",
+  "source": "portrait_evt_scroll_aquatic_xxiii_m1-c14b98edf9e417317fd4d62a128b6601.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxiv_f1.png",
+  "source": "portrait_evt_scroll_aquatic_xxiv_f1-b28569c76b278efc2b7a49ccadbf8302.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxiv_m1.png",
+  "source": "portrait_evt_scroll_aquatic_xxiv_m1-29974fde980f87aa36273ba1ea2041b1.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxv_f1.png",
+  "source": "portrait_evt_scroll_aquatic_xxv_f1-67ad8a0dd6fe201d39c6a41312becee5.png",
+  "width": 104,
+  "height": 98,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxv_m1.png",
+  "source": "portrait_evt_scroll_aquatic_xxv_m1-fbc0d2ffad2e8bd7fab15c18fac984a7.png",
+  "width": 104,
+  "height": 93,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxvi_c1.png",
+  "source": "portrait_evt_scroll_aquatic_xxvi_c1-5d3f9de52786819a598acf2ddd7881fb.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_aquatic_xxvi_m1.png",
+  "source": "portrait_evt_scroll_aquatic_xxvi_m1-9b7273045b0230fd0e74cb7ba6c8729c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_sorcerers_xxiv_f1.png",
+  "source": "portrait_evt_scroll_sorcerers_xxiv_f1-a716bb089adc53f6fdd4d3d4bd8e1c96.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_sorcerers_xxiv_m1.png",
+  "source": "portrait_evt_scroll_sorcerers_xxiv_m1-6c6b5d9927534c5aa9fbf7b00fc081d8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_sorcerers_xxv_f1.png",
+  "source": "portrait_evt_scroll_sorcerers_xxv_f1-373a87e73473d04555aca2c26d1b3bc7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_sorcerers_xxv_m1.png",
+  "source": "portrait_evt_scroll_sorcerers_xxv_m1-ff75a3b6ff425805c530c386d3c80922.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_sorcerers_xxvi_f1.png",
+  "source": "portrait_evt_scroll_sorcerers_xxvi_f1-05970c8acbb8d4245bd74ff95397e8f6.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_scroll_sorcerers_xxvi_m1.png",
+  "source": "portrait_evt_scroll_sorcerers_xxvi_m1-516619932c3991f3cc218c534c3e8edb.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_september_xxi_m1.png",
+  "source": "portrait_evt_september_xxi_m1-3647317267b882d7fe34c63767cf47bf.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_september_xxii_m1.png",
+  "source": "portrait_evt_september_xxii_m1-3c169254a0e2e5c849f06f0d658b6702.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxiii_f1.png",
+  "source": "portrait_evt_shuffle_garden_xxiii_f1-fbb44850ebb2feaed7d30659d0b65f95.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxiii_f2.png",
+  "source": "portrait_evt_shuffle_garden_xxiii_f2-d60c0e33fbca9116af40b0cc618c2e94.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxiv_f1.png",
+  "source": "portrait_evt_shuffle_garden_xxiv_f1-9a720d9dbbbf446d87ede9d26d10372d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxiv_m1.png",
+  "source": "portrait_evt_shuffle_garden_xxiv_m1-04603e8a63257da2a7c486ea8cd6c9a6.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxv_f1.png",
+  "source": "portrait_evt_shuffle_garden_xxv_f1-05aa9c40a0a4b206d74a4a216d4ce7ce.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxv_m1.png",
+  "source": "portrait_evt_shuffle_garden_xxv_m1-e3824b4be26a2562adfbb4c48e9cdc5e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxvi_f1.png",
+  "source": "portrait_evt_shuffle_garden_xxvi_f1-529ed4a16c228929301cb9d5b5282ada.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_garden_xxvi_m1.png",
+  "source": "portrait_evt_shuffle_garden_xxvi_m1-5a341659dd8158dd16dc6578fb4e9857.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxiii_f1.png",
+  "source": "portrait_evt_shuffle_postal_xxiii_f1-c3ca4b71c32343bac715133c8bea67aa.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxiii_f2.png",
+  "source": "portrait_evt_shuffle_postal_xxiii_f2-e214859f06554eaf5dbf7242efdaca83.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxiii_m1.png",
+  "source": "portrait_evt_shuffle_postal_xxiii_m1-659e628b8445536ffd00c1c0fd97d893.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxiv_f1.png",
+  "source": "portrait_evt_shuffle_postal_xxiv_f1-3b749121556994d18e0ac6e45a01d9b9.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxiv_m1.png",
+  "source": "portrait_evt_shuffle_postal_xxiv_m1-0f0b4531858cb0db7ac2fb67cfc4f34e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxv_f1.png",
+  "source": "portrait_evt_shuffle_postal_xxv_f1-7a45ec2e78305ef3c7fa63b232e8bee5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_shuffle_postal_xxv_m1.png",
+  "source": "portrait_evt_shuffle_postal_xxv_m1-8c48b67ef956294a87d47d2d4ee64916.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxiv_f1.png",
+  "source": "portrait_evt_theater_easter_xxiv_f1-7a71ce57fc4557cddc4a4d4c5fe729a0.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxiv_f2.png",
+  "source": "portrait_evt_theater_easter_xxiv_f2-714f42a741608cd0ff31ec937446c376.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxiv_m1.png",
+  "source": "portrait_evt_theater_easter_xxiv_m1-4a0b40ef2b0264ef3378c58212a9466e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxv_c1.png",
+  "source": "portrait_evt_theater_easter_xxv_c1-b63ea97af60d4a89a1d753f9d300443d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxv_f1.png",
+  "source": "portrait_evt_theater_easter_xxv_f1-c162f9c4cb90800abedb52ebd447caa1.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxvi_c1.png",
+  "source": "portrait_evt_theater_easter_xxvi_c1-9d2bf44239ed680455982cd54b8fdf3d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_easter_xxvi_f1.png",
+  "source": "portrait_evt_theater_easter_xxvi_f1-f405421550a68ee21c602263fbe0e942.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_yulecat_xxv_f1.png",
+  "source": "portrait_evt_theater_yulecat_xxv_f1-f07708b507807873a729f676f51cc1d5.png",
+  "width": 104,
+  "height": 93,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_yulecat_xxv_m1.png",
+  "source": "portrait_evt_theater_yulecat_xxv_m1-6598252be285a0679aff79dc4a5dc464.png",
+  "width": 104,
+  "height": 92,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_yulecat_xxvi_c1.png",
+  "source": "portrait_evt_theater_yulecat_xxvi_c1-3883c610fbedec88d4122073e0041946.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_yulecat_xxvi_f1.png",
+  "source": "portrait_evt_theater_yulecat_xxvi_f1-2f51eabb4671aae65f35221393c4d918.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxiii_f1.png",
+  "source": "portrait_evt_theater_zodiac_xxiii_f1-441d9eb536b9c96563395fe2a670b796.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxiii_m1.png",
+  "source": "portrait_evt_theater_zodiac_xxiii_m1-ee35b924b01d9f93b20931bb6ebaeb59.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxiii_m2.png",
+  "source": "portrait_evt_theater_zodiac_xxiii_m2-976019896f1683441df4ae9d4676f8ab.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxiv_f1.png",
+  "source": "portrait_evt_theater_zodiac_xxiv_f1-e098ae5018b2319483f25931e40d9859.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxiv_f2.png",
+  "source": "portrait_evt_theater_zodiac_xxiv_f2-d41fb4488184ba8c0f2249dbb3807cbf.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxiv_m1.png",
+  "source": "portrait_evt_theater_zodiac_xxiv_m1-4b9da05bc7eb353816886dc0c6d336fc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxv_c1.png",
+  "source": "portrait_evt_theater_zodiac_xxv_c1-991fb01159363a6eecff4f180d77c924.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxv_m1.png",
+  "source": "portrait_evt_theater_zodiac_xxv_m1-a30b1ce1b478e78e281a6f28fc0a1e7f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxvi_f1.png",
+  "source": "portrait_evt_theater_zodiac_xxvi_f1-e9e81f4f1f5167324c045c709e9f5584.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_theater_zodiac_xxvi_m1.png",
+  "source": "portrait_evt_theater_zodiac_xxvi_m1-842fa2bb3a977d7ee4f2b2b6d1c074aa.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_amuni_xxiv_f1.png",
+  "source": "portrait_evt_tile_amuni_xxiv_f1-b18dfc29f40851d341ba0a38ffde6661.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_amuni_xxiv_m1.png",
+  "source": "portrait_evt_tile_amuni_xxiv_m1-902ed20f0b7222e35df5b54fd9286627.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_amuni_xxv_f1.png",
+  "source": "portrait_evt_tile_amuni_xxv_f1-f43cc2ac28f66cedfe1777205f36a815.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_amuni_xxv_m1.png",
+  "source": "portrait_evt_tile_amuni_xxv_m1-a4e699ee1718615699aaa58a94924c41.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_amuni_xxvi_c1.png",
+  "source": "portrait_evt_tile_amuni_xxvi_c1-cddc3d7404e415153640e018019b11de.png",
+  "width": 104,
+  "height": 94,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_amuni_xxvi_m1.png",
+  "source": "portrait_evt_tile_amuni_xxvi_m1-a19112eff3b23d95be4127cc2b941a49.png",
+  "width": 104,
+  "height": 93,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_mistyforest_xxiii_f1.png",
+  "source": "portrait_evt_tile_mistyforest_xxiii_f1-fe99e3ebab6d325c549b3d02aa5fa1b2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_mistyforest_xxiii_m1.png",
+  "source": "portrait_evt_tile_mistyforest_xxiii_m1-68756e22f50fca33866ddefb21131c29.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_mistyforest_xxiii_m2.png",
+  "source": "portrait_evt_tile_mistyforest_xxiii_m2-99f4a686f1909bd66a00c41f269f00b2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_mistyforest_xxiv_f1.png",
+  "source": "portrait_evt_tile_mistyforest_xxiv_f1-b7936a7c3772dc304ff18c781ff8985e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_evt_tile_mistyforest_xxiv_m1.png",
+  "source": "portrait_evt_tile_mistyforest_xxiv_m1-475547b668beba960a5ccaf6536446f9.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_bandit.png",
+  "source": "portrait_id_bandit-d74a9bb046037262054152632347bb63.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_barbarian.png",
+  "source": "portrait_id_barbarian-4cd87a64d626064609a7afe938ab8065.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_beardman.png",
+  "source": "portrait_id_beardman-40bd104c93319b814a615e1280f4dd3b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_blackguy.png",
+  "source": "portrait_id_blackguy-9662e373124a6ba95f9c43e0b20f22b5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_blondeman.png",
+  "source": "portrait_id_blondeman-f814cb4044c62f61ca8008831d95dfa1.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_ch03_f1.png",
+  "source": "portrait_id_ch03_f1-4886114968e24ca55733dc4d380839a0.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_ch03_f2.png",
+  "source": "portrait_id_ch03_f2-a7071466448b97fb106911bab25eeca5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_ch03_m1.png",
+  "source": "portrait_id_ch03_m1-a3dca98cdf2770cf64243d6843d9ac5e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_ch03_m2.png",
+  "source": "portrait_id_ch03_m2-6728637215fd069e1b9fdc6a3dca9f87.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_ch05_f2.png",
+  "source": "portrait_id_ch05_f2-1e25ab214d2e2ff588ce39d9ba269eb7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_ch05_m1.png",
+  "source": "portrait_id_ch05_m1-7118db6b7f9e6386fff7755b7be67380.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_ch17_f1.png",
+  "source": "portrait_id_ch17_f1-d7d4d212893141a9a3ef3629c6c39189.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch17_f2.png",
+  "source": "portrait_id_ch17_f2-f7d863bb2bc112ef149416ef1bb58794.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch17_m1.png",
+  "source": "portrait_id_ch17_m1-d0044e1531be36ebff60df4c41333450.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch17_m2.png",
+  "source": "portrait_id_ch17_m2-066104a1e067cc3d56b631e80a4cfb92.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch18_f1.png",
+  "source": "portrait_id_ch18_f1-390982dd4b83903c3d0ed365c22eb643.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch18_f2.png",
+  "source": "portrait_id_ch18_f2-8c74edf338f1493216469f166b113c24.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch18_m1.png",
+  "source": "portrait_id_ch18_m1-5f55fc1d1d0aa507f7a6e1092bacd0ef.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch18_m2.png",
+  "source": "portrait_id_ch18_m2-95c5ef39ae024f14134017f4cfc8d334.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch19_f1.png",
+  "source": "portrait_id_ch19_f1-9399f5a26a3c20b106a083e8128ac00d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch19_f2.png",
+  "source": "portrait_id_ch19_f2-d529b712cd1527cac678301ce7c3ffa7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch19_m1.png",
+  "source": "portrait_id_ch19_m1-e9ee77ba75ae780942a9ed2cfea047df.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch19_m2.png",
+  "source": "portrait_id_ch19_m2-2b0da9b7d5d17e49473b305e8dd5d5fd.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch20_f1.png",
+  "source": "portrait_id_ch20_f1-8237c8dfff21f21fdcb3537ebb42e9a0.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch20_f2.png",
+  "source": "portrait_id_ch20_f2-858813dff5b9d59b21da056beaab264a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch20_m1.png",
+  "source": "portrait_id_ch20_m1-cfb40d513b00db865af8e80cdb7422e5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch20_m2.png",
+  "source": "portrait_id_ch20_m2-33aa69639186a8ae0e4bc6de184f092f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch21_f1.png",
+  "source": "portrait_id_ch21_f1-2cc33b191f0db7ec69a39334bb9f9de4.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch21_f2.png",
+  "source": "portrait_id_ch21_f2-25787ef7974572fae7ad7f29b2706be1.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch21_m1.png",
+  "source": "portrait_id_ch21_m1-0f25126397f7b858dad8e8c6223e17dc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch21_m2.png",
+  "source": "portrait_id_ch21_m2-b78780510322a5b7c638b0d8d2eead9e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch22_f1.png",
+  "source": "portrait_id_ch22_f1-50a00a1a5732d51effb80c49ba178676.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch22_f2.png",
+  "source": "portrait_id_ch22_f2-284ea2e1dbf213fec98009c2912e49b6.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch22_m1.png",
+  "source": "portrait_id_ch22_m1-741ed2820002705f98f1b3e5613229d1.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch22_m2.png",
+  "source": "portrait_id_ch22_m2-e001f60f779d9163ea3cc8e316c8c686.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch23_f1.png",
+  "source": "portrait_id_ch23_f1-99bad74f0f3aa353a74d57d0167c4d74.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch23_f2.png",
+  "source": "portrait_id_ch23_f2-a94802512fb4e13a4b465709b6a8b427.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch23_m1.png",
+  "source": "portrait_id_ch23_m1-bbd8e94c12bc1fe80e5f78aa40ddea35.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch23_m2.png",
+  "source": "portrait_id_ch23_m2-352d980a4153093fe12d22708045a1df.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch24_f1.png",
+  "source": "portrait_id_ch24_f1-a6b4b71bcb26f2e407d4256deb9ab79f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch24_f2.png",
+  "source": "portrait_id_ch24_f2-fff67155fbb0028402197029536dd489.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch24_m1.png",
+  "source": "portrait_id_ch24_m1-99709fc8cdd41319aa375faf2a5ae0f4.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch24_m2.png",
+  "source": "portrait_id_ch24_m2-98bead2dcba28538377976eb4dc365b7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch25_f1.png",
+  "source": "portrait_id_ch25_f1-3842366d464b5a9b18aa761ba498489a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch25_f2.png",
+  "source": "portrait_id_ch25_f2-f4dd1e209295dded04059ff7c0e07c01.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch25_m1.png",
+  "source": "portrait_id_ch25_m1-2f2dbf9a6a5d5f179abeaf7f3c73441b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch25_m2.png",
+  "source": "portrait_id_ch25_m2-30bc80255dd876acf63078db9a03ecff.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch26_f1.png",
+  "source": "portrait_id_ch26_f1-cac31e8e0e6b5ae1d270bf87d7b4c764.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch26_f2.png",
+  "source": "portrait_id_ch26_f2-b26e47d50ebeba35fb458dec40c4db4e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch26_m1.png",
+  "source": "portrait_id_ch26_m1-b211329f7facbbde7f7a3d95bde2056d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_ch26_m2.png",
+  "source": "portrait_id_ch26_m2-894a1e7392d03f107afdc1a57bcaab54.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_cheeks.png",
+  "source": "portrait_id_cheeks-4996031ab34f0452351615b0b847ff34.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_chubbygirl.png",
+  "source": "portrait_id_chubbygirl-616bcb03445a09c84a8edaef9ac9c051.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_creepyguy.png",
+  "source": "portrait_id_creepyguy-603da0b85515adc1229f1e9786b1e037.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_crowngirl.png",
+  "source": "portrait_id_crowngirl-8b1286a4e51b8fe5f6f33965c60c2295.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_dancer.png",
+  "source": "portrait_id_dancer-e7efc9f5761472d7567d296666a6be9e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_daniel.png",
+  "source": "portrait_id_daniel-37a4d994a476cb220d88a30dc4861aeb.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_earring.png",
+  "source": "portrait_id_earring-154ce304f2864a4f86a2bda6628fee6d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_elven_angelo.png",
+  "source": "portrait_id_elven_angelo-9e183a99a016fa6c76325a70028fae01.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_elven_luisa.png",
+  "source": "portrait_id_elven_luisa-1d48464d6c4bbf7d24be2cecb65a7ec5.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_evilgenius.png",
+  "source": "portrait_id_evilgenius-fa3d4f983e86cd40e65d32d3d9b7df3b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_eyebrow.png",
+  "source": "portrait_id_eyebrow-e0eb538514ed203f9605e8c1744d3f3a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_facetattoo.png",
+  "source": "portrait_id_facetattoo-968ffb257fe372ce316026720aeb95a7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_flowergirl.png",
+  "source": "portrait_id_flowergirl-f323d7c640904764727683d2ba5d09fb.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_flowerhair.png",
+  "source": "portrait_id_flowerhair-77f566f3cbaa0116ddb896582b599f1b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_gigolo.png",
+  "source": "portrait_id_gigolo-8c7219c64bdea92a8fbe7b36bafee2dc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_girl.png",
+  "source": "portrait_id_girl-472ebc69f1c414e80c91ea417898c89d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_glowingeyes.png",
+  "source": "portrait_id_glowingeyes-7ff739f7aa14f6cbba7772be6f395b53.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_gr10_f1.png",
+  "source": "portrait_id_gr10_f1-175646b69a27c0bc5f88b0bed9d753c8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr10_f2.png",
+  "source": "portrait_id_gr10_f2-4f3426445cbc24964a4e09f195787d3d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr10_m1.png",
+  "source": "portrait_id_gr10_m1-3a2ceb3a8bef9f7fddaa2326705a8f92.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr10_m2.png",
+  "source": "portrait_id_gr10_m2-3f5b0db3826f8c8350c282ab10a928fb.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr11_f1.png",
+  "source": "portrait_id_gr11_f1-ee5b143ee722953853b59cde0297c610.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr11_f2.png",
+  "source": "portrait_id_gr11_f2-b0e9b671c27a6a1c13df32a864299c08.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr11_m1.png",
+  "source": "portrait_id_gr11_m1-0d9fd5eeda8722e9b8f57a85a0c1376e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr11_m2.png",
+  "source": "portrait_id_gr11_m2-46884eaf2f7c06b474cb89e6f7be12af.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr4_f1.png",
+  "source": "portrait_id_gr4_f1-6d5619edcae9abf549b6ebf4d2003ab3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr4_f2.png",
+  "source": "portrait_id_gr4_f2-bd46bf27617f9ed92817ab22bee9481f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr4_m1.png",
+  "source": "portrait_id_gr4_m1-742883cf14b32cdb7cd8265f1c4ecd8f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr4_m2.png",
+  "source": "portrait_id_gr4_m2-209bb7279d91651179ded9040f056ed7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr5_f1.png",
+  "source": "portrait_id_gr5_f1-827d929ee43f11ed089565299d653514.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr5_f2.png",
+  "source": "portrait_id_gr5_f2-34b6ee5b6a7b5b393a0c723b7f456b13.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr5_m1.png",
+  "source": "portrait_id_gr5_m1-348cfd21f05c23616011a52a03937052.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr5_m2.png",
+  "source": "portrait_id_gr5_m2-62864672b8972cd24fc16c6bd2a6e123.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr6_f1.png",
+  "source": "portrait_id_gr6_f1-0a733f821d91e920a63742b03747f7f8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr6_f2.png",
+  "source": "portrait_id_gr6_f2-e3a0b5a79ef166b99ef0dcb2cec4b902.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr6_m1.png",
+  "source": "portrait_id_gr6_m1-4084fc64e7e4727ee0b15662c4dd4845.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr6_m2.png",
+  "source": "portrait_id_gr6_m2-e4ce47383d32e0d97b73895f29f3bd83.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr7_f1.png",
+  "source": "portrait_id_gr7_f1-c43b3fb63596c980a0c6b070286ac113.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr7_f2.png",
+  "source": "portrait_id_gr7_f2-7921d453c9f21530cf7c6e615bb9ed5f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr7_m1.png",
+  "source": "portrait_id_gr7_m1-d91565cde3f2f586893bda7f07f45a83.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr7_m2.png",
+  "source": "portrait_id_gr7_m2-3779a8f2481a07bb56dae82eeac5d3fe.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr8_f1.png",
+  "source": "portrait_id_gr8_f1-b394d249c0756688b982865e9aa62bdf.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr8_f2.png",
+  "source": "portrait_id_gr8_f2-ea1ae476e256f91db9e7fed09c550ff8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr8_m1.png",
+  "source": "portrait_id_gr8_m1-436edd3a79ed2fc1ddd09b87d6033a2b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr8_m2.png",
+  "source": "portrait_id_gr8_m2-79921b6b2f4885b1d24491c6a2e9c946.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr9_f1.png",
+  "source": "portrait_id_gr9_f1-2685c0f5b98071a16af8379337e5fc38.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr9_f2.png",
+  "source": "portrait_id_gr9_f2-3dd3d96e1b973e664b3f74e14967bf1e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr9_m1.png",
+  "source": "portrait_id_gr9_m1-6cfcdd7136bda4382395d879b2d2b119.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_gr9_m2.png",
+  "source": "portrait_id_gr9_m2-8b89ebadd7a2854179b821ba55804c38.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_greenclothes.png",
+  "source": "portrait_id_greenclothes-ad2fde8e617603fd62e8db44534c4356.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_greenfairy.png",
+  "source": "portrait_id_greenfairy-501e90a0d8e4aaf90bf70ccdb4884f3a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "fairies"
+  ]
+ },
+ {
+  "file": "portrait_id_hairman.png",
+  "source": "portrait_id_hairman-4354fd57e3505bbf87345a43da5d0a1d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_halloweenwinner.png",
+  "source": "portrait_id_halloweenwinner-3bc7f6352aba771f712acb485213bb42.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_headband.png",
+  "source": "portrait_id_headband-c1bec7a097ae0ce4364238f6d877c05d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_helmet.png",
+  "source": "portrait_id_helmet-d8173afaed10b17ff77901a32284204b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_hoodedone.png",
+  "source": "portrait_id_hoodedone-28287d90c0e3bbdf5a7f7c4d20bf2d65.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_human_angelo.png",
+  "source": "portrait_id_human_angelo-497d56dab43231bb15af396be0f85437.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_human_luisa.png",
+  "source": "portrait_id_human_luisa-77d30b368e794231e1ac7da54324ee76.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_ignored.png",
+  "source": "portrait_id_ignored-a52c443940d0a217eeefb0fdebff5be2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "portraitIdIgnored"
+  ]
+ },
+ {
+  "file": "portrait_id_jewelerdwarf.png",
+  "source": "portrait_id_jewelerdwarf-aedde7d19fb2191609fb9205cef51f6e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "dwarfs"
+  ]
+ },
+ {
+  "file": "portrait_id_kathleen.png",
+  "source": "portrait_id_kathleen-ada772305cf6975e573e1e23030ef436.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_knight.png",
+  "source": "portrait_id_knight-cd9238eef5163770700e90cedd58d5e7.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_latina.png",
+  "source": "portrait_id_latina-639536797fbe076a62da91dc71732dbc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_metalface.png",
+  "source": "portrait_id_metalface-d634426f7a493243e72e257ac83a32ad.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_midageman.png",
+  "source": "portrait_id_midageman-b05fcc1f9b0fcc7b7394231919044903.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_monokel.png",
+  "source": "portrait_id_monokel-8558c4f88cae2aa3ce62c02d3d0c2882.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_mustache.png",
+  "source": "portrait_id_mustache-0a5ade6c40de1a99e8dd94f18ea58713.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_nobledwarf.png",
+  "source": "portrait_id_nobledwarf-6dcd9d9f8c68fa96691a8a37cd44a54c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "dwarfs"
+  ]
+ },
+ {
+  "file": "portrait_id_noblegirl.png",
+  "source": "portrait_id_noblegirl-e5d8f05b57c94c9f6d3b44bc0b7e851d.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_oldman.png",
+  "source": "portrait_id_oldman-b7a414f0d06f8ee50d4d14f025ef4160.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_orangefairy.png",
+  "source": "portrait_id_orangefairy-38cda5896f57b3ef78eef30c5e65320b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "fairies"
+  ]
+ },
+ {
+  "file": "portrait_id_orcs_f1.png",
+  "source": "portrait_id_orcs_f1-0d5b2cde22075778a7592fd8f9fa5751.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "orcs"
+  ]
+ },
+ {
+  "file": "portrait_id_orcs_f2.png",
+  "source": "portrait_id_orcs_f2-c06f1d4cf35d5b913ba0c75f3d78fe9c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "orcs"
+  ]
+ },
+ {
+  "file": "portrait_id_orcs_m1.png",
+  "source": "portrait_id_orcs_m1-98f61068e4fb97f6e45e964c9827d457.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "orcs"
+  ]
+ },
+ {
+  "file": "portrait_id_orcs_m2.png",
+  "source": "portrait_id_orcs_m2-637dece1c3294e34c07398c0269644dc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "orcs"
+  ]
+ },
+ {
+  "file": "portrait_id_paladin.png",
+  "source": "portrait_id_paladin-360c1843305bf948bb906641b015cce8.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_pinkhair.png",
+  "source": "portrait_id_pinkhair-6f4641b180aa41119bfec453d544ffe2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_priestess.png",
+  "source": "portrait_id_priestess-85cc595740c3cfc98ec9a7d4cfd6bf1b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_princess.png",
+  "source": "portrait_id_princess-3832542c876458401e35960e876a944f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_princevaliant.png",
+  "source": "portrait_id_princevaliant-a0fbaa7be1c7336851ce1e839c67ed35.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_purpledress.png",
+  "source": "portrait_id_purpledress-8790a711f81bae30fbaa3e45f1cbafdf.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_questionmark.png",
+  "source": "portrait_id_questionmark-053654c91226ad33b330dbaa44099456.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "portraitIdQuestionmark"
+  ]
+ },
+ {
+  "file": "portrait_id_redhead.png",
+  "source": "portrait_id_redhead-569bc26dfa0dbbd8402080c33d62886b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_redman.png",
+  "source": "portrait_id_redman-05e22eb78d72476bb155d2e5a7d81627.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_rough.png",
+  "source": "portrait_id_rough-df021ff88cce9ccf2901c127a28e859b.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_sorceress.png",
+  "source": "portrait_id_sorceress-d04a89c4178c29d0284063f0e86dca99.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_support.png",
+  "source": "portrait_id_support-cea3678bcea2cc98dfc7bd45be961799.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "portraitIdSupport"
+  ]
+ },
+ {
+  "file": "portrait_id_truckerbeard.png",
+  "source": "portrait_id_truckerbeard-573801f38e66247db9c55056f7927d7e.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_turquisefairy.png",
+  "source": "portrait_id_turquisefairy-7561c9a74994fc6bedeed91946d77066.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "fairies"
+  ]
+ },
+ {
+  "file": "portrait_id_vagabond.png",
+  "source": "portrait_id_vagabond-5b14e2451877339f236da98b371cb7d3.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "humans"
+  ]
+ },
+ {
+  "file": "portrait_id_vava.png",
+  "source": "portrait_id_vava-a21c6303f7c3f3f26d8d77b3dcf13126.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_id_violetfairy.png",
+  "source": "portrait_id_violetfairy-4c8245a31fceddfd5b6c8a9556bdc32a.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "fairies"
+  ]
+ },
+ {
+  "file": "portrait_id_warrior.png",
+  "source": "portrait_id_warrior-47dff43e02ad65dcb8341ef58bd9f418.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_id_warriordwarf.png",
+  "source": "portrait_id_warriordwarf-a59284a466d8427b3fedad1100f79ff0.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "dwarfs"
+  ]
+ },
+ {
+  "file": "portrait_id_warriorqueendwarf.png",
+  "source": "portrait_id_warriorqueendwarf-ee02de7e92e84df7a1463e76202f3c80.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "dwarfs"
+  ]
+ },
+ {
+  "file": "portrait_id_younggirl.png",
+  "source": "portrait_id_younggirl-55f46ae3d0df7758e417bab553a8e0bc.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "elves"
+  ]
+ },
+ {
+  "file": "portrait_season_dreams_xxv_f1.png",
+  "source": "portrait_season_dreams_xxv_f1-ccc14165377bb1277293f7cafab0194f.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_dreams_xxvi_f2.png",
+  "source": "portrait_season_dreams_xxvi_f2-0ef1b9b02d8917421ec47d979c41c8c5.png",
+  "width": 104,
+  "height": 90,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_dreams_xxvii_c1.png",
+  "source": "portrait_season_dreams_xxvii_c1-0d825fe1ddf0656ff49121f518bbac2d.png",
+  "width": 104,
+  "height": 90,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_joy_xxiv_f1.png",
+  "source": "portrait_season_joy_xxiv_f1-82bb84fdbca7f2a7d106e921c8c13e3c.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_joy_xxv_f1.png",
+  "source": "portrait_season_joy_xxv_f1-cbbbfc490067001b4274c8b82a56ba80.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_joy_xxvi_c1.png",
+  "source": "portrait_season_joy_xxvi_c1-5557b60b7fa10c6afe86a0a250b367f0.png",
+  "width": 104,
+  "height": 90,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_secrets_xxiv_f1.png",
+  "source": "portrait_season_secrets_xxiv_f1-0a42bc9cb544345efa20715e9a96bada.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_secrets_xxv_f1.png",
+  "source": "portrait_season_secrets_xxv_f1-a8eb680c2308c9dee75617852f4c70d2.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_secrets_xxvi_c1.png",
+  "source": "portrait_season_secrets_xxvi_c1-9282604b82b87419c78e2d780b13c76b.png",
+  "width": 104,
+  "height": 90,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_triumph_xxv_f1.png",
+  "source": "portrait_season_triumph_xxv_f1-7792d51cb90494092b5971a722fcd827.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ },
+ {
+  "file": "portrait_season_triumph_xxvi_f1.png",
+  "source": "portrait_season_triumph_xxvi_f1-7e7506eef956eca03531c614aa2aaaff.png",
+  "width": 104,
+  "height": 88,
+  "groups": [
+   "all"
+  ]
+ }
+]

@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 from cauldron_optimizer import app
 from cauldron_optimizer.analytics import log_optimization_run
 from cauldron_optimizer.constants import (
+    AVATARS,
     EFFECT_NAMES,
     INGREDIENT_NAMES,
     LANGUAGES,
@@ -22,7 +23,13 @@ from cauldron_optimizer.constants import (
 from cauldron_optimizer.database import db_session
 from cauldron_optimizer.db_model import Server, User, UserSettings
 from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
-from cauldron_optimizer.helpers import error, first_form_error, login_required
+from cauldron_optimizer.helpers import (
+    avatar_url,
+    error,
+    first_form_error,
+    is_avatar,
+    login_required,
+)
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
 if TYPE_CHECKING:
@@ -92,7 +99,9 @@ def index():
             premiums=session.get("premium_ingredients", []),
             n_servers=account.n_servers,
             active_server=settings.server_number,
-            max_servers=MAX_SERVERS_PER_USER,
+            can_add_server=account.n_servers < MAX_SERVERS_PER_USER,
+            avatars=AVATARS,
+            avatar=settings.avatar,
         )
 
 
@@ -130,30 +139,55 @@ def get_active_server(db_sa: Session, user_id: int) -> tuple[UserSettings, Serve
             server.search_depth = first.search_depth
         db_sa.add(server)
         db_sa.flush()
+    # The navbar shows the active server's avatar on every page
+    session["avatar"] = server.avatar
     return account, server
 
 
-@app.route("/servers/count", methods=["POST"])
+@app.route("/servers/add", methods=["POST"])
 @login_required
-def set_server_count():
-    """Set how many servers the user plays on (extra servers keep their settings)"""
-    n = request.form.get("n_servers", type=int)
-    if n is None or not 1 <= n <= MAX_SERVERS_PER_USER:
-        return error(
-            _(
-                "El número de servidores debe estar entre 1 y %(n)s",
-                n=MAX_SERVERS_PER_USER,
-            ),
-            url=url_for("index"),
-        )
+def add_server():
+    """Add a server with the chosen avatar and select it (called via fetch)"""
+    avatar = request.form.get("avatar")
+    if not is_avatar(avatar):
+        return {"ok": False, "error": _("Avatar no válido")}, 400
     try:
         with db_session() as db_sa:
             account, _server = get_active_server(db_sa, session["user_id"])
-            account.n_servers = n
-            account.active_server = min(account.active_server, n)
+            if account.n_servers >= MAX_SERVERS_PER_USER:
+                return {
+                    "ok": False,
+                    "error": _(
+                        "Puedes tener como máximo %(n)s servidores",
+                        n=MAX_SERVERS_PER_USER,
+                    ),
+                }, 400
+            account.n_servers += 1
+            account.active_server = account.n_servers
+            # Creates the new server (a copy of server 1's settings)
+            _account, server = get_active_server(db_sa, session["user_id"])
+            server.avatar = avatar
     except SQLAlchemyError:
-        return error(_("Error de base de datos"), url=url_for("index"))
-    return redirect(url_for("index"))
+        return {"ok": False, "error": _("Error de base de datos")}, 500
+    session["avatar"] = avatar
+    return {"ok": True}
+
+
+@app.route("/servers/avatar", methods=["POST"])
+@login_required
+def set_avatar():
+    """Set the avatar of the active server (called via fetch)"""
+    avatar = request.form.get("avatar")
+    if not is_avatar(avatar):
+        return {"ok": False, "error": _("Avatar no válido")}, 400
+    try:
+        with db_session() as db_sa:
+            _account, server = get_active_server(db_sa, session["user_id"])
+            server.avatar = avatar
+    except SQLAlchemyError:
+        return {"ok": False, "error": _("Error de base de datos")}, 500
+    session["avatar"] = avatar
+    return {"ok": True, "url": avatar_url(avatar)}
 
 
 @app.route("/servers/select", methods=["POST"])
@@ -243,7 +277,8 @@ def register():
                         language=session.get("lang", "es"),
                     )
                 )
-                db_sa.add(Server(user=new_user, server_number=1))
+                avatar = form.avatar.data or None
+                db_sa.add(Server(user=new_user, server_number=1, avatar=avatar))
                 # commit handled by context manager
                 # Automatically log in the user after registration
 
@@ -252,6 +287,7 @@ def register():
                 session["user_id"] = new_user.id
                 session["username"] = new_user.username
                 session["premium_ingredients"] = []
+                session["avatar"] = avatar
         except IntegrityError:
             return error(
                 _("El nombre de usuario ya está en uso"), url=url_for("register")
@@ -260,7 +296,7 @@ def register():
     if form.errors:
         return error(first_form_error(form), url=url_for("register"))
 
-    return render_template("register.html", form=form)
+    return render_template("register.html", form=form, avatars=AVATARS)
 
 
 def parse_search_form() -> dict[str, Any]:

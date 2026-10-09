@@ -1,0 +1,64 @@
+{#
+  Avatar picker, styled like the game's profile window.
+  Opened by the #avatarBtn button of the page. Variables:
+    avatars        portrait files to offer
+    avatar         the current avatar (or None)
+    server_label   shown under the player name
+    picker_input   id of a form input to fill instead of saving right away
+                   (register page); otherwise the choice is saved via fetch
+    new_server_label  (optional) label when adding a server
+#}
+<div
+  id="avatarModal" class="avatar-overlay" hidden
+  {% if picker_input %}
+    data-input="{{ picker_input }}"
+  {% else %}
+    data-url="{{ url_for('set_avatar') }}" data-add-url="{{ url_for('add_server') }}"
+  {% endif %}
+  data-current="{{ avatar or '' }}"
+  data-default-url="{{ url_for('static', filename='potrait.png') }}"
+  data-server-label="{{ server_label }}"
+  data-new-server-label="{{ new_server_label or '' }}"
+>
+  <div class="avatar-window" role="dialog" aria-modal="true" aria-labelledby="avatarTitle">
+    <div class="avatar-header">
+      <h2 id="avatarTitle" class="avatar-title">{{ _("Perfil") }}</h2>
+      <button type="button" class="avatar-close" data-avatar-cancel aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+
+    <div class="avatar-body">
+      <div class="avatar-banner">
+        <div class="avatar-preview">
+          <img id="avatarPreview" src="{{ avatar_url(avatar) }}" alt="">
+        </div>
+        <div class="avatar-nameplate">
+          <span class="avatar-username" id="avatarUsername">{{ session.get("username", "") }}</span>
+          <span class="avatar-server" id="avatarServer">{{ server_label }}</span>
+        </div>
+      </div>
+
+      <p class="avatar-label" id="avatarGridLabel">{{ _("Imagen") }}:</p>
+      <div class="avatar-grid" role="listbox" aria-labelledby="avatarGridLabel">
+        {% for file in avatars %}
+          <button
+            type="button" class="avatar-option" role="option"
+            data-avatar="{{ file }}" aria-selected="{{ 'true' if file == avatar else 'false' }}"
+          >
+            <img src="{{ url_for('static', filename='portraits/' ~ file) }}" alt="" loading="lazy" width="104" height="88">
+          </button>
+        {% endfor %}
+      </div>
+      <p id="avatarStatus" class="avatar-status" role="status" aria-live="polite"></p>
+
+      <div class="avatar-actions">
+        <button type="button" class="avatar-btn avatar-btn-cancel" data-avatar-cancel>
+          <span>{{ _("Cancelar") }}</span>
+        </button>
+        <button type="button" id="avatarSave" class="avatar-btn avatar-btn-save">
+          <span>{{ _("Guardar") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/avatar.js') }}"></script>
