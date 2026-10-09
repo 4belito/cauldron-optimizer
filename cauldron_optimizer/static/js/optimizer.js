@@ -247,6 +247,36 @@ async function saveSettings() {
   }
 }
 
+// Arrow buttons beside the diploma count: one less / one more, as if the
+// user typed the new number (so the weights are rebuilt)
+function initDiplomaSteppers() {
+  const input = window.OPTIMIZER_CONFIG.dom.nDiploma;
+  const buttons = document.querySelectorAll(".step-btn");
+  const min = () => Number(input.min || 1);
+  const max = () => Number(input.max || window.OPTIMIZER_CONFIG.effectNames.length);
+
+  function updateDisabled() {
+    const n = Number(input.value);
+    buttons.forEach((btn) => {
+      const step = Number(btn.dataset.step);
+      btn.disabled = step < 0 ? n <= min() : n >= max();
+    });
+  }
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const current = Number(input.value) || min();
+      const next = Math.min(max(), Math.max(min(), current + Number(btn.dataset.step)));
+      if (next === current) return;
+      input.value = next;
+      input.dispatchEvent(new Event("change"));
+    });
+  });
+  input.addEventListener("change", updateDisabled);
+  input.addEventListener("input", updateDisabled);
+  updateDisabled();
+}
+
 function initOptimizer() {
   const { dom, boundsFields } = window.OPTIMIZER_CONFIG;
 
@@ -278,6 +308,7 @@ function initOptimizer() {
   
   // Rebuild weights when diploma count changes (no auto-submit)
   dom.nDiploma.addEventListener("change", rebuildWeights);
+  initDiplomaSteppers();
 
   document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
 

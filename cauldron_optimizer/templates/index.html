@@ -84,7 +84,18 @@
 
       <div class="diploma-row">
         <div class="diploma-input">
-              {{ form.n_diploma(class="n-diploma") }}
+          <!-- Game's green -/+ buttons: one diploma less / more (see optimizer.js) -->
+          <button type="button" class="step-btn step-down" data-step="-1"
+                  aria-label="{{ _('Un diploma menos') }}" title="{{ _('Un diploma menos') }}"></button>
+          <!-- Counter with the diploma scroll inside on the right, like the
+               game's resource counters -->
+          <span class="diploma-counter">
+            {{ form.n_diploma(class="n-diploma", **{"aria-label": _("Diplomas")}) }}
+            <img src="{{ url_for('static', filename='ui/diploma_scroll.png') }}" alt=""
+                 class="diploma-scroll" title="{{ _('Diplomas') }}">
+          </span>
+          <button type="button" class="step-btn step-up" data-step="1"
+                  aria-label="{{ _('Un diploma más') }}" title="{{ _('Un diploma más') }}"></button>
         </div>
       </div>
       <div id="weightsContainer" class="weights-grid"></div>

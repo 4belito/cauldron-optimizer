@@ -563,3 +563,12 @@ msgstr "Change name and avatar"
 
 msgid "Cambiar nombre y avatar de %(name)s"
 msgstr "Change the name and avatar of %(name)s"
+
+msgid "Un diploma menos"
+msgstr "One diploma less"
+
+msgid "Un diploma más"
+msgstr "One diploma more"
+
+msgid "Diplomas"
+msgstr "Diplomas"

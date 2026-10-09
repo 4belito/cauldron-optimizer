@@ -1,0 +1,385 @@
+/* =========================
+   Game look: details taken from Elvenar's own interface
+   (images in /static/ui, from the game's assets). Loaded last, so it
+   only restyles elements defined in the other stylesheets.
+   ========================= */
+
+/* ---- Top banner: the game's wooden bar, corners kept at their size ---- */
+@font-face {
+  font-family: "Cinzel";
+  font-weight: 700;
+  font-display: swap;
+  src: url("/static/fonts/cinzel-700-latin.woff2") format("woff2");
+}
+
+.main-navbar {
+  /* Only the middle of the image stretches; the gold ends stay crisp */
+  background: none;
+  border-style: solid;
+  border-width: 0 1.9rem;
+  border-image: url("/static/main_header.png") 0 34 fill / 0 1.9rem stretch;
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+
+/* Thin gold edge along the bottom, like the game's window frames */
+.main-navbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #c9a44f 8%, #f0d27a 50%, #c9a44f 92%, transparent);
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.main-navbar .navbar-brand {
+  gap: 0.6rem;
+}
+
+.brand-icon {
+  height: 3.1rem;
+  width: auto;
+  filter: drop-shadow(0 0.15rem 0.2rem rgba(0, 0, 0, 0.6));
+}
+
+/* App name: gold letters with a dark outline */
+nav .navbar-brand .elvenar-title {
+  margin-left: 0;
+  font-family: "Cinzel", "Trajan Pro", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.1vw, 1.75rem);
+  letter-spacing: 0.04em;
+  color: #f0d27a;
+  background: linear-gradient(#fff3c4 0%, #f0d27a 45%, #c48a2c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0.1rem 0 #3a1a08) drop-shadow(0 0.15rem 0.2rem rgba(0, 0, 0, 0.6));
+}
+
+@media (max-width: 30rem) {
+  .brand-icon {
+    height: 2.2rem;
+  }
+}
+
+/* ---- Cards: parchment that keeps its curled edge, framed by the game's
+   elf branches on the top corners and its leafy ornament on top ---- */
+fieldset.card {
+  position: relative;
+  overflow: visible;
+  /* 9-slice: corners and the curled bottom keep their size, only the
+     plain middle stretches (the image is 388x410, the curl ~46px) */
+  background: none;
+  border: 0 solid transparent;
+  border-image: url("/static/error/popup_body.png") 8 24 46 24 fill / 0.5rem 1.5rem 2.9rem stretch;
+  border-radius: 0;
+  padding-bottom: 2.4rem;
+  margin-top: 2.3rem;
+}
+
+fieldset.card::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  /* Overhangs the top edge and corners, like the game's elf windows */
+  /* The branch stems sit on the side edges and the top branch on the top
+     edge; the ornament rests on the top edge, above the title */
+  top: -1.75rem;
+  left: -1.3rem;
+  right: -1.3rem;
+  height: 7rem;
+  background:
+    url("/static/ui/leaf_ornament.png") center -0.35rem / 10.5rem auto no-repeat,
+    url("/static/ui/elf_corner_left.png") left top / 5.75rem auto no-repeat,
+    url("/static/ui/elf_corner_right.png") right top / 5.75rem auto no-repeat;
+  pointer-events: none;
+}
+
+/* Narrow screens: less overhang, so the page never scrolls sideways */
+@media (max-width: 36rem) {
+  fieldset.card::before {
+    left: -0.7rem;
+    right: -0.7rem;
+  }
+}
+
+/* ---- Section titles: brown text on the parchment ---- */
+fieldset.card > legend.card-legend > strong,
+.recipe-header > strong,
+.result-score legend > strong {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0.9rem 0.5rem 0;
+  color: #51200d;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.25;
+  text-shadow: 0 1px 0 rgba(255, 245, 220, 0.8);
+}
+
+fieldset.card > legend.card-legend {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 0.4rem;
+}
+
+.recipe-header {
+  font-size: inherit;
+}
+
+.result-score legend {
+  float: none;
+  width: auto;
+  margin: 0 auto 0.5rem;
+}
+
+.result-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-score-value {
+  font-size: 1.35rem;
+}
+
+/* ---- Light parchment inputs ---- */
+.n-diploma,
+.server-select {
+  border: 2px solid #7a5a3a;
+  border-radius: 0.4rem;
+  background: linear-gradient(#f8ebcb, #ead3a3);
+  box-shadow:
+    inset 0 1px 2px rgba(81, 32, 13, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.5);
+  color: #3b2a16;
+  font-weight: 700;
+}
+
+.n-diploma:focus,
+.server-select:focus {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 1px;
+}
+
+/* Game dropdown: green arrow button on the right */
+.server-select {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2.1rem;
+  padding: 0 2.4rem 0 0.65rem;
+  background:
+    url("/static/ui/dropdown_normal.png") right 0.2rem center / 1.55rem 1.55rem no-repeat,
+    linear-gradient(#f8ebcb, #ead3a3);
+}
+
+.server-select:hover {
+  background:
+    url("/static/ui/dropdown_hover.png") right 0.2rem center / 1.55rem 1.55rem no-repeat,
+    linear-gradient(#f8ebcb, #ead3a3);
+}
+
+.server-select option {
+  background: #f6e7c3;
+  color: #3b2a16;
+}
+
+/* ---- Save / delete: square green game buttons with white icons ---- */
+.save-btn {
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: url("/static/ui/square_btn_normal.png") center / 100% 100% no-repeat;
+  box-shadow: 0 0.125rem 0.2rem rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-image: url("/static/ui/square_btn_hover.png");
+  filter: none;
+}
+
+.save-btn:active:not(:disabled) {
+  background-image: url("/static/ui/square_btn_pressed.png");
+}
+
+.save-btn:disabled {
+  background-image: url("/static/ui/square_btn_disabled.png");
+}
+
+.save-btn svg {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+}
+
+/* The floppy's shutter and label take the button's green */
+.save-icon-shutter,
+.save-icon-label {
+  fill: #3f6f10;
+}
+
+.save-check {
+  stroke: #fff;
+}
+
+/* Delete keeps its white icon on the green button, turning red on hover */
+.delete-btn:hover:not(:disabled) {
+  color: #ffd2c8;
+}
+
+.delete-btn:disabled {
+  opacity: 0.6;
+}
+
+.save-btn:focus-visible {
+  outline: 2px solid #e2b85a;
+  outline-offset: 2px;
+}
+
+/* ---- Inner panels: recessed parchment, like the game's inlay boxes ---- */
+.weight-card {
+  border: 1px solid #b89a63;
+  border-radius: 0.45rem;
+  background: linear-gradient(rgba(255, 250, 235, 0.55), rgba(236, 214, 168, 0.55));
+  box-shadow:
+    inset 0 1px 2px rgba(81, 32, 13, 0.25),
+    0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.weight-card.excluded {
+  background: rgba(120, 90, 55, 0.18);
+  border-color: rgba(122, 90, 58, 0.45);
+}
+
+.recipe-row {
+  border: 1px solid rgba(184, 154, 99, 0.7);
+  box-shadow: inset 0 1px 2px rgba(81, 32, 13, 0.18);
+}
+
+/* ---- Sliders: recessed groove and a brown knob with a gold ring ---- */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.45rem;
+  border-radius: 0.3rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(
+    to right,
+    #6b4518 0%,
+    #a0702a var(--p),
+    #e2d3b0 var(--p),
+    #e2d3b0 100%
+  );
+}
+
+input[type="range"]::-moz-range-track {
+  height: 0.45rem;
+  border-radius: 0.3rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+  background: #e2d3b0;
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 0.45rem;
+  border-radius: 0.3rem;
+  background: linear-gradient(to right, #6b4518, #a0702a);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: -0.3rem;
+  border: 2px solid #e2b85a;
+  background: radial-gradient(circle at 35% 35%, #9a6a35, #4a2410);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid #e2b85a;
+  background: radial-gradient(circle at 35% 35%, #9a6a35, #4a2410);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+}
+
+/* ---- Diploma count: the game's green arrow buttons on both sides ---- */
+.diploma-input {
+  gap: 0.5rem;
+}
+
+.n-diploma {
+  width: 4.5rem;
+  -moz-appearance: textfield;
+}
+
+/* The arrows replace the browser's own spin buttons */
+.n-diploma::-webkit-inner-spin-button,
+.n-diploma::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.step-btn {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  background: center / 100% 100% no-repeat;
+  cursor: pointer;
+}
+
+/* The game's small green "-" and "+" buttons, with their hover and
+   disabled images */
+.step-down { background-image: url("/static/ui/minus_normal.png"); }
+.step-up { background-image: url("/static/ui/plus_normal.png"); }
+.step-down:hover:not(:disabled) { background-image: url("/static/ui/minus_hover.png"); }
+.step-up:hover:not(:disabled) { background-image: url("/static/ui/plus_hover.png"); }
+.step-down:disabled { background-image: url("/static/ui/minus_disabled.png"); }
+.step-up:disabled { background-image: url("/static/ui/plus_disabled.png"); }
+
+.step-btn:active:not(:disabled) {
+  filter: brightness(0.85);
+}
+
+.step-btn:focus-visible {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+}
+
+.step-btn:disabled {
+  cursor: default;
+}
+
+/* Diploma counter: number on the left, the scroll inside the box on the
+   right, like the game's resource counters */
+.diploma-counter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.diploma-counter .diploma-scroll {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.diploma-counter .n-diploma {
+  box-sizing: border-box;
+  /* Just room for two digits and the scroll */
+  width: 4.6rem;
+  padding: 0 2.2rem 0 0.6rem;
+  text-align: left;
+}
+
+/* Nothing in the row may shrink, so the buttons never overlap the box */
+.diploma-input > * {
+  flex-shrink: 0;
+}
+
