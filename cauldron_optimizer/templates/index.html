@@ -169,32 +169,10 @@
       {% endfor %}
     ],
   };
-
-  window.cauldronAutofill = function(data) {
-    const dom = window.OPTIMIZER_CONFIG.dom;
-
-    // Fill diplomas if provided
-    if (typeof data.n_diploma === "number") {
-      dom.nDiploma.value = data.n_diploma;
-    }
-
-    // Fill premium ingredients if provided
-    if (Array.isArray(data.premium_ingr)) {
-      document
-        .querySelectorAll("input[name='premium_ingredients[]']")
-        .forEach(cb => cb.checked = false);
-
-      data.premium_ingr.forEach(i => {
-        const checkbox = document.querySelector(
-          `input[name="premium_ingredients[]"][value="${i}"]`
-        );
-        if (checkbox) checkbox.checked = true;
-      });
-      updatePremiumLocks();
-    }
-};
 </script>
 <script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
+<!-- Autofill API for browser extensions (see autofill.js) -->
+<script src="{{ url_for('static', filename='js/autofill.js') }}"></script>
 
 <!-- Name and avatar picker for the selected server (and for "+ Add server") -->
 {% with new_server_name=next_server_name %}
