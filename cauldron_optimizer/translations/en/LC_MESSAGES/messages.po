@@ -557,3 +557,9 @@ msgstr "Delete"
 
 msgid "Nombre del servidor"
 msgstr "Server name"
+
+msgid "Cambiar nombre y avatar"
+msgstr "Change name and avatar"
+
+msgid "Cambiar nombre y avatar de %(name)s"
+msgstr "Change the name and avatar of %(name)s"

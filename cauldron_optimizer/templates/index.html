@@ -8,11 +8,11 @@
 <section class="server-bar">
   <form method="post" action="{{ url_for('select_server') }}" class="server-select-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <!-- Avatar of the selected server: click to change it -->
+    <!-- Avatar of the selected server: click to change its name and avatar -->
     <button
       type="button" id="avatarBtn" class="server-avatar{{ ' is-default' if not avatar }}"
-      title="{{ _('Cambiar avatar') }}" aria-label="{{ _('Cambiar avatar del servidor %(name)s', name=server_name) }}"
-      data-aria-template="{{ _('Cambiar avatar del servidor %(name)s', name='{name}') }}"
+      title="{{ _('Cambiar nombre y avatar') }}" aria-label="{{ _('Cambiar nombre y avatar de %(name)s', name=server_name) }}"
+      data-aria-template="{{ _('Cambiar nombre y avatar de %(name)s', name='{name}') }}"
       aria-haspopup="dialog" aria-controls="avatarModal"
     >
       <img src="{{ user_avatar_url() }}" alt="" class="server-avatar-img">
