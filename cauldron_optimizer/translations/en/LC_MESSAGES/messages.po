@@ -474,26 +474,26 @@ msgstr "Invalid premium ingredients"
 msgid "Puedes evitar como máximo %(n)s ingredientes"
 msgstr "You can avoid at most %(n)s ingredients"
 
-msgid "Servidor"
-msgstr "Server"
+msgid "Mundo"
+msgstr "World"
 
-msgid "Número de servidores:"
-msgstr "Number of servers:"
+msgid "Número de mundos:"
+msgstr "Number of worlds:"
 
-msgid "El número de servidores debe estar entre 1 y %(n)s"
-msgstr "The number of servers must be between 1 and %(n)s"
+msgid "El número de mundos debe estar entre 1 y %(n)s"
+msgstr "The number of worlds must be between 1 and %(n)s"
 
-msgid "Servidor no válido"
-msgstr "Invalid server"
+msgid "Mundo no válido"
+msgstr "Invalid world"
 
-msgid "Guardar configuración del servidor %(n)s"
-msgstr "Save settings for server %(n)s"
+msgid "Guardar configuración del mundo %(n)s"
+msgstr "Save settings for world %(n)s"
 
 msgid "Cambiar avatar"
 msgstr "Change avatar"
 
-msgid "Cambiar avatar del servidor %(n)s"
-msgstr "Change avatar for server %(n)s"
+msgid "Cambiar avatar del mundo %(n)s"
+msgstr "Change avatar for world %(n)s"
 
 msgid "Perfil"
 msgstr "Profile"
@@ -510,34 +510,34 @@ msgstr "Save"
 msgid "Avatar no válido"
 msgstr "Invalid avatar"
 
-msgid "Añadir servidor"
-msgstr "Add server"
+msgid "Añadir mundo"
+msgstr "Add world"
 
-msgid "Nuevo servidor"
-msgstr "New server"
+msgid "Nuevo mundo"
+msgstr "New world"
 
-msgid "Puedes tener como máximo %(n)s servidores"
-msgstr "You can have at most %(n)s servers"
+msgid "Puedes tener como máximo %(n)s mundos"
+msgstr "You can have at most %(n)s worlds"
 
 msgid "Elige tu avatar"
 msgstr "Choose your avatar"
 
-msgid "Servidor %(n)s"
-msgstr "Server %(n)s"
+msgid "Mundo %(n)s"
+msgstr "World %(n)s"
 
-msgid "El nombre del servidor debe tener entre 1 y %(n)s caracteres"
-msgstr "The server name must be between 1 and %(n)s characters"
+msgid "El nombre del mundo debe tener entre 1 y %(n)s caracteres"
+msgstr "The world name must be between 1 and %(n)s characters"
 
-msgid "El nombre del servidor debe tener entre 1 y {} caracteres"
-msgstr "The server name must be between 1 and {} characters"
+msgid "El nombre del mundo debe tener entre 1 y {} caracteres"
+msgstr "The world name must be between 1 and {} characters"
 
-msgid "Ya tienes un servidor con ese nombre"
-msgstr "You already have a server with that name"
+msgid "Ya tienes un mundo con ese nombre"
+msgstr "You already have a world with that name"
 
-msgid "No puedes eliminar tu único servidor"
-msgstr "You can't delete your only server"
+msgid "No puedes eliminar tu único mundo"
+msgstr "You can't delete your only world"
 
-msgid "Cambiar avatar del servidor %(name)s"
+msgid "Cambiar avatar del mundo %(name)s"
 msgstr "Change the avatar of %(name)s"
 
 msgid "Guardar configuración de %(name)s"
@@ -546,17 +546,17 @@ msgstr "Save the settings of %(name)s"
 msgid "Eliminar %(name)s"
 msgstr "Delete %(name)s"
 
-msgid "Eliminar servidor"
-msgstr "Delete server"
+msgid "Eliminar mundo"
+msgstr "Delete world"
 
-msgid "Se eliminará este servidor con toda su configuración: efectos, pesos, límites y avatar. Esta acción no se puede deshacer."
-msgstr "This server will be deleted with all its settings: effects, weights, limits and avatar. This can't be undone."
+msgid "Se eliminará este mundo con toda su configuración: efectos, pesos, límites y avatar. Esta acción no se puede deshacer."
+msgstr "This world will be deleted with all its settings: effects, weights, limits and avatar. This can't be undone."
 
 msgid "Eliminar"
 msgstr "Delete"
 
-msgid "Nombre del servidor"
-msgstr "Server name"
+msgid "Nombre del mundo"
+msgstr "World name"
 
 msgid "Cambiar nombre y avatar"
 msgstr "Change name and avatar"

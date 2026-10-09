@@ -143,7 +143,7 @@ def get_active_server(db_sa: Session, user_id: int) -> tuple[UserSettings, Serve
 
 def server_label(server: Server) -> str:
     """Name shown for a server (servers made before names existed have none)"""
-    return server.name or _("Servidor %(n)s", n=server.server_number)
+    return server.name or _("Mundo %(n)s", n=server.server_number)
 
 
 def clean_server_name(
@@ -154,13 +154,13 @@ def clean_server_name(
     if not 1 <= len(name) <= MAX_SERVER_NAME_LENGTH:
         raise ValueError(
             _(
-                "El nombre del servidor debe tener entre 1 y %(n)s caracteres",
+                "El nombre del mundo debe tener entre 1 y %(n)s caracteres",
                 n=MAX_SERVER_NAME_LENGTH,
             )
         )
     taken = {server_label(s).casefold() for s in servers if s is not current}
     if name.casefold() in taken:
-        raise ValueError(_("Ya tienes un servidor con ese nombre"))
+        raise ValueError(_("Ya tienes un mundo con ese nombre"))
     return name
 
 
@@ -168,9 +168,9 @@ def suggest_server_name(servers: list[Server]) -> str:
     """A free "Server N" name to prefill when adding a server"""
     taken = {server_label(s).casefold() for s in servers}
     n = len(servers) + 1
-    while _("Servidor %(n)s", n=n).casefold() in taken:
+    while _("Mundo %(n)s", n=n).casefold() in taken:
         n += 1
-    return _("Servidor %(n)s", n=n)
+    return _("Mundo %(n)s", n=n)
 
 
 @app.route("/servers/add", methods=["POST"])
@@ -188,7 +188,7 @@ def add_server():
                 return {
                     "ok": False,
                     "error": _(
-                        "Puedes tener como máximo %(n)s servidores",
+                        "Puedes tener como máximo %(n)s mundos",
                         n=MAX_SERVERS_PER_USER,
                     ),
                 }, 400
@@ -255,12 +255,12 @@ def delete_server():
             account, server = get_active_server(db_sa, session["user_id"])
             # Guards against a stale page showing another server
             if number != server.server_number:
-                return {"ok": False, "error": _("Servidor no válido")}, 400
+                return {"ok": False, "error": _("Mundo no válido")}, 400
             servers = server.user.servers
             if len(servers) <= 1:
                 return {
                     "ok": False,
-                    "error": _("No puedes eliminar tu único servidor"),
+                    "error": _("No puedes eliminar tu único mundo"),
                 }, 400
             servers.remove(server)  # delete-orphan: deletes the row
             account.active_server = servers[0].server_number
@@ -280,7 +280,7 @@ def select_server():
         with db_session() as db_sa:
             account, server = get_active_server(db_sa, session["user_id"])
             if number not in {s.server_number for s in server.user.servers}:
-                return error(_("Servidor no válido"), url=url_for("index"))
+                return error(_("Mundo no válido"), url=url_for("index"))
             account.active_server = number
     except SQLAlchemyError:
         return error(_("Error de base de datos"), url=url_for("index"))

@@ -128,9 +128,9 @@ class RegisterForm(FlaskForm):
         field.data = " ".join((field.data or "").split())
         if len(field.data) > MAX_SERVER_NAME_LENGTH:
             raise ValidationError(
-                _l(
-                    N_("El nombre del servidor debe tener entre 1 y {} caracteres")
-                ).format(MAX_SERVER_NAME_LENGTH)
+                _l(N_("El nombre del mundo debe tener entre 1 y {} caracteres")).format(
+                    MAX_SERVER_NAME_LENGTH
+                )
             )
 
 

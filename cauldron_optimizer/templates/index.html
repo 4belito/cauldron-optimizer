@@ -20,14 +20,14 @@
         <svg viewBox="0 0 24 24"><path d="M4 17.5V20h2.5L17.1 9.4l-2.5-2.5L4 17.5zM19.7 6.8a1 1 0 0 0 0-1.4l-1.1-1.1a1 1 0 0 0-1.4 0l-1.3 1.3 2.5 2.5 1.3-1.3z"/></svg>
       </span>
     </button>
-    <label for="serverSelect" class="server-label">{{ _("Servidor") }}:</label>
+    <label for="serverSelect" class="server-label">{{ _("Mundo") }}:</label>
     <select id="serverSelect" name="server_number" class="server-select" data-active="{{ active_server }}">
       {% for number, name in servers %}
         <option value="{{ number }}" {% if number == active_server %}selected{% endif %}>{{ name }}</option>
       {% endfor %}
       {% if can_add_server %}
         <!-- Opens the avatar picker to create the server (see avatar.js) -->
-        <option value="add">+ {{ _("Añadir servidor") }}</option>
+        <option value="add">+ {{ _("Añadir mundo") }}</option>
       {% endif %}
     </select>
     <noscript><button type="submit" class="server-btn">OK</button></noscript>
@@ -57,7 +57,7 @@
       title="{{ _('Eliminar %(name)s', name=server_name) }}" aria-label="{{ _('Eliminar %(name)s', name=server_name) }}"
       data-label-template="{{ _('Eliminar %(name)s', name='{name}') }}"
     {% else %}
-      disabled title="{{ _('No puedes eliminar tu único servidor') }}" aria-label="{{ _('No puedes eliminar tu único servidor') }}"
+      disabled title="{{ _('No puedes eliminar tu único mundo') }}" aria-label="{{ _('No puedes eliminar tu único mundo') }}"
     {% endif %}
     aria-haspopup="dialog" aria-controls="deleteModal"
   >
@@ -187,7 +187,7 @@
   <div class="avatar-window delete-window" role="alertdialog" aria-modal="true"
        aria-labelledby="deleteTitle" aria-describedby="deleteText">
     <div class="avatar-header">
-      <h2 id="deleteTitle" class="avatar-title">{{ _("Eliminar servidor") }}</h2>
+      <h2 id="deleteTitle" class="avatar-title">{{ _("Eliminar mundo") }}</h2>
       <button type="button" class="avatar-close" data-delete-cancel aria-label="{{ _('Cerrar') }}"></button>
     </div>
     <div class="avatar-body delete-body">
@@ -196,7 +196,7 @@
         <strong id="deleteName">{{ server_name }}</strong>
       </div>
       <p id="deleteText" class="delete-text">
-        {{ _("Se eliminará este servidor con toda su configuración: efectos, pesos, límites y avatar. Esta acción no se puede deshacer.") }}
+        {{ _("Se eliminará este mundo con toda su configuración: efectos, pesos, límites y avatar. Esta acción no se puede deshacer.") }}
       </p>
       <p id="deleteStatus" class="avatar-status" role="status" aria-live="polite"></p>
       <div class="avatar-actions">
