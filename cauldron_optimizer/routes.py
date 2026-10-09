@@ -1,13 +1,17 @@
 import json
-from typing import TYPE_CHECKING
+import time
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
-from flask import Response, redirect, render_template, request, session, url_for
+from flask import Response, abort, redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.orm import Session
 
 from cauldron_optimizer import app
+from cauldron_optimizer.analytics import log_optimization_run
 from cauldron_optimizer.constants import (
     EFFECT_NAMES,
     INGREDIENT_NAMES,
@@ -66,7 +70,8 @@ def index():
 
         form = SearchForm()
         form.n_diploma.data = len(settings.effect_weights)
-        # Set dynamic max bound for diplomas based on available effects (preserve type/min/step)
+        # Set dynamic max bound for diplomas based on available effects
+        # (preserve type/min/step)
         form.n_diploma.render_kw = {
             **(form.n_diploma.render_kw or {}),
             "max": len(EFFECT_NAMES),
@@ -91,19 +96,24 @@ def index():
         )
 
 
-def get_active_server(db_sa, user_id: int) -> tuple[UserSettings, Server]:
+def get_active_server(db_sa: Session, user_id: int) -> tuple[UserSettings, Server]:
     """Return the user's account settings and their selected server.
 
     Creates whatever is missing: the account settings row and the server row
     (a new server starts as a copy of server 1).
     """
+    user = db_sa.get(User, user_id)
+    if user is None:
+        # The session points to an account that no longer exists: log out
+        abort(redirect(url_for("logout")))
+
     account = db_sa.get(UserSettings, user_id)
     if account is None:
         account = UserSettings(user_id=user_id, language=session.get("lang", "es"))
         db_sa.add(account)
         db_sa.flush()
 
-    username = db_sa.get(User, user_id).username
+    username = user.username
     n = min(max(account.n_servers or 1, 1), MAX_SERVERS_PER_USER)
     number = min(max(account.active_server or 1, 1), n)
     account.n_servers, account.active_server = n, number
@@ -162,15 +172,19 @@ def select_server():
     return redirect(url_for("index"))
 
 
+def keep_across_logout():
+    """Clear the session except the language and the analytics visitor id."""
+    kept = {k: session[k] for k in ("lang", "vid") if k in session}
+    session.clear()
+    session.update(kept)
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
 
-    ## Preserve language selection across logout
-    lang = session.get("lang")
-    session.clear()
-    if lang:
-        session["lang"] = lang
+    # Preserve language selection and visitor id across logout
+    keep_across_logout()
 
     # Login form handling
     form = LoginForm()
@@ -180,7 +194,7 @@ def login():
                 select(User).where(User.username == form.username.data)
             ).scalar_one_or_none()
 
-            if user is None or not user.check_password(form.password.data):
+            if user is None or not user.check_password(form.password.data or ""):
                 return error(
                     _("nombre de usuario o contraseña incorrectos"),
                     url=url_for("login"),
@@ -197,7 +211,7 @@ def login():
                 session["lang"] = settings.language
             return redirect(url_for("index"))
     if form.errors:
-        msg = next(iter(form.errors.values()))[0]
+        msg = cast(list[str], next(iter(form.errors.values())))[0]
         return error(msg, url=url_for("login"))
 
     return render_template("login.html", form=form)
@@ -205,10 +219,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    lang = session.get("lang")
-    session.clear()
-    if lang:
-        session["lang"] = lang
+    keep_across_logout()
     return redirect(url_for("login"))
 
 
@@ -252,7 +263,7 @@ def register():
     return render_template("register.html", form=form)
 
 
-def parse_search_form() -> dict:
+def parse_search_form() -> dict[str, Any]:
     """Validate the optimizer form and return its settings.
 
     Raises ValueError with a user-facing message if anything is invalid.
@@ -262,9 +273,7 @@ def parse_search_form() -> dict:
         raise ValueError(first_form_error(form))
 
     # effect weights are validated and parsed by the form validator
-    premium_ingr = sorted(
-        set(request.form.getlist("premium_ingredients[]", type=int))
-    )
+    premium_ingr = sorted(set(request.form.getlist("premium_ingredients[]", type=int)))
     if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
         raise ValueError(_("Ingredientes premium no válidos"))
     if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
@@ -278,9 +287,10 @@ def parse_search_form() -> dict:
         ],
         "excluded_effects": getattr(form, "_parsed_excluded_effects", []),
         "premium_ingr": premium_ingr,
-        "alpha_ub": int(form.alpha_UB.data),
-        "prob_ub": int(form.prob_UB.data),
-        "n_starts": int(form.n_starts.data),
+        # Never None here: the fields are DataRequired
+        "alpha_ub": int(form.alpha_UB.data or 0),
+        "prob_ub": int(form.prob_UB.data or 0),
+        "n_starts": int(form.n_starts.data or 0),
         "language": form.language.data,
     }
 
@@ -304,7 +314,7 @@ def save_settings():
             server.max_ingredients = s["alpha_ub"]
             server.max_effects = s["prob_ub"]
             server.search_depth = s["n_starts"]
-            server.updated_at = func.now()
+            server.updated_at = datetime.now(timezone.utc)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
 
@@ -336,9 +346,12 @@ def optimize():
         prob_UB=s["prob_ub"],
     )
 
+    start = time.perf_counter()
     alpha_best, val_best = opt.multistart(n_starts)
+    duration_ms = round((time.perf_counter() - start) * 1000)
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = float(val_best)
+    log_optimization_run(s, alpha_matrix, score, duration_ms)
     out_effects = opt.effect_probabilities(alpha_best)
     order = sorted(range(len(out_effects)), key=lambda i: (-out_effects[i], i))
 

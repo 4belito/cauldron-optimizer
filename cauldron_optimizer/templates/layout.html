@@ -132,6 +132,11 @@
               </a>
 
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                {% if is_admin() %}
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('stats') }}">Stats</a>
+                </li>
+                {% endif %}
                 <li>
                   <a class="dropdown-item" href="{{ url_for('logout') }}">
                     {{ _("Cerrar sesión") }}
@@ -142,6 +147,11 @@
 
             {# --- Mobile (below md): NO dropdown, just items in your existing menu --- #}
 
+            {% if is_admin() %}
+            <li class="nav-item d-md-none">
+              <a class="nav-link" href="{{ url_for('stats') }}">Stats</a>
+            </li>
+            {% endif %}
             <li class="nav-item d-md-none">
               <a class="nav-link" href="{{ url_for('logout') }}">{{ _("Cerrar sesión") }}</a>
             </li>

@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    <meta name="robots" content="noindex">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Caldero stats</title>
+    <style>
+      /* Self-contained: this page loads no external CSS */
+      :root {
+        --bg: #f4f2ee;
+        --card: #ffffff;
+        --text: #1f1d1a;
+        --muted: #6f6a62;
+        --line: #e7e3dc;
+        --accent: #6a3fb5;
+        --accent-2: #1e9a94;
+        --warn: #c8473f;
+        --track: #efebe4;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 48px; }
+      a { color: var(--accent); }
+
+      header {
+        display: flex; flex-wrap: wrap; align-items: center;
+        justify-content: space-between; gap: 12px; margin-bottom: 20px;
+      }
+      header h1 { margin: 0; font-size: 1.5rem; }
+      header .back { font-size: .85rem; color: var(--muted); text-decoration: none; }
+      .periods { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
+      .periods a { padding: 6px 12px; text-decoration: none; color: var(--text); font-size: .85rem; }
+      .periods a + a { border-left: 1px solid var(--line); }
+      .periods a.active { background: var(--text); color: #fff; }
+
+      h2.section { font-size: 1.05rem; margin: 32px 0 4px; }
+      p.section-note { margin: 0 0 12px; color: var(--muted); font-size: .85rem; }
+
+      .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+      .grid.kpis { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .span-2 { grid-column: span 2; }
+      .span-all { grid-column: 1 / -1; }
+      @media (max-width: 600px) { .span-2 { grid-column: auto; } }
+
+      .card {
+        background: var(--card); border: 1px solid var(--line);
+        border-radius: 10px; padding: 14px 16px; min-width: 0;
+      }
+      .card h3 { margin: 0 0 10px; font-size: .9rem; font-weight: 600; }
+      .kpi-value { font-size: 1.6rem; font-weight: 650; line-height: 1.1; font-variant-numeric: tabular-nums; }
+      .kpi-label { margin-top: 4px; font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; font-size: .84rem; font-variant-numeric: tabular-nums; }
+      th { text-align: left; font-weight: 600; color: var(--muted); font-size: .75rem; }
+      th, td { padding: 5px 6px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+      tr:last-child td { border-bottom: 0; }
+      .num { text-align: right; white-space: nowrap; }
+      .empty { color: var(--muted); font-size: .85rem; margin: 0; }
+      .note { color: var(--muted); font-size: .78rem; margin: 8px 0 0; }
+
+      .bar-cell { width: 42%; }
+      .track { height: 8px; background: var(--track); border-radius: 4px; overflow: hidden; }
+      .bar { height: 100%; background: var(--accent); border-radius: 4px; }
+      .alt .bar { background: var(--accent-2); }
+      .warn .bar { background: var(--warn); }
+
+      .daily { display: flex; align-items: flex-end; gap: 2px; height: 120px; border-bottom: 1px solid var(--line); }
+      .daily div { flex: 1; max-width: 40px; background: var(--accent); border-radius: 3px 3px 0 0; min-height: 2px; }
+      .daily.alt div { background: var(--accent-2); }
+      .axis { display: flex; justify-content: space-between; color: var(--muted); font-size: .75rem; margin-top: 4px; }
+
+      .chip {
+        display: inline-block; background: var(--track); border-radius: 4px;
+        padding: 1px 6px; margin: 2px 2px 2px 0; font-size: .78rem; white-space: nowrap;
+      }
+      .recipe-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+      table.recipe { width: auto; }
+      table.recipe td { border: 1px solid var(--line); width: 2.1rem; text-align: center; }
+    </style>
+  </head>
+  <body>
+  {% macro bars(rows, label="", cls="") %}
+    {% if rows %}
+    <div class="table-wrap {{ cls }}">
+    <table>
+      {% if label %}<tr><th>{{ label }}</th><th class="num">n</th><th class="num">%</th><th></th></tr>{% endif %}
+      {% for value, n, pct in rows %}
+      <tr>
+        <td>{{ value }}</td>
+        <td class="num">{{ n }}</td>
+        <td class="num">{{ "%.0f" | format(pct) }}%</td>
+        <td class="bar-cell"><div class="track"><div class="bar" style="width: {{ pct }}%"></div></div></td>
+      </tr>
+      {% endfor %}
+    </table>
+    </div>
+    {% else %}
+    <p class="empty">No data yet.</p>
+    {% endif %}
+  {% endmacro %}
+
+  {% macro daily_chart(rows, top, cls="") %}
+    {% if rows %}
+    <div class="daily {{ cls }}">
+      {% for row in rows %}
+      <div style="height: {{ 100 * row[1] / top }}%" title="{{ row[0] }}: {{ row[1] }}"></div>
+      {% endfor %}
+    </div>
+    <div class="axis"><span>{{ rows[0][0] }}</span><span>max {{ top }} / day</span><span>{{ rows[-1][0] }}</span></div>
+    {% else %}
+    <p class="empty">No data yet.</p>
+    {% endif %}
+  {% endmacro %}
+
+  <main>
+    <header>
+      <div>
+        <a class="back" href="{{ url_for('index') }}">← Back to the optimizer</a>
+        <h1>Caldero stats</h1>
+      </div>
+      <nav class="periods">
+        {% for p in periods %}
+        <a class="{{ 'active' if p == days }}" href="{{ url_for('stats', days=p) }}">{{ '24h' if p == 1 else p ~ 'd' }}</a>
+        {% endfor %}
+      </nav>
+    </header>
+
+    <div class="grid kpis">
+      {% for label, value in [
+        ("Page views", traffic.views),
+        ("Visitors", traffic.visitors),
+        ("Logged-in users", traffic.users),
+        ("Optimizer runs", usage.runs),
+        ("Users who ran", usage.users),
+        ("Runs / user", "%.1f" | format(usage.runs_per_user)),
+        ("Registered users", accounts.users),
+        ("Bot hits / 5xx", traffic.bots ~ " / " ~ traffic.errors),
+      ] %}
+      <div class="card"><div class="kpi-value">{{ value }}</div><div class="kpi-label">{{ label }}</div></div>
+      {% endfor %}
+    </div>
+
+    <h2 class="section">Traffic</h2>
+    <p class="section-note">Bots are excluded. Times are UTC.</p>
+    <div class="grid">
+      <div class="card span-2"><h3>Page views per day</h3>{{ daily_chart(traffic.daily, traffic.daily_max) }}</div>
+      <div class="card span-2"><h3>Optimizer runs per day</h3>{{ daily_chart(usage.daily, usage.daily_max, "alt") }}</div>
+
+      <div class="card span-2">
+        <h3>Pages</h3>
+        {% if traffic.pages %}
+        <div class="table-wrap"><table>
+          <tr><th>Page</th><th>Method</th><th class="num">Views</th><th class="num">Visitors</th><th class="num">Avg ms</th></tr>
+          {% for endpoint, method, n, visitors, avg_ms in traffic.pages %}
+          <tr><td>{{ endpoint }}</td><td>{{ method }}</td><td class="num">{{ n }}</td>
+            <td class="num">{{ visitors }}</td><td class="num">{{ "%.0f" | format(avg_ms or 0) }}</td></tr>
+          {% endfor %}
+        </table></div>
+        {% else %}<p class="empty">No data yet.</p>{% endif %}
+      </div>
+      <div class="card"><h3>Countries</h3>{{ bars(traffic.countries) }}</div>
+      <div class="card">
+        <h3>Referrers</h3>{{ bars(traffic.referrers) }}
+        <p class="note">"—" is direct traffic or internal navigation.</p>
+      </div>
+      <div class="card"><h3>Page language</h3>{{ bars(traffic.languages) }}</div>
+      <div class="card"><h3>Devices</h3>{{ bars(traffic.devices) }}</div>
+      <div class="card"><h3>Status codes</h3>{{ bars(traffic.statuses) }}</div>
+      <div class="card">
+        <h3>Optimizer time</h3>
+        <div class="kpi-value">{{ "%.1f" | format(usage.duration_avg / 1000) }} s</div><div class="kpi-label">average</div>
+        <div class="kpi-value" style="margin-top: 12px">{{ "%.1f" | format(usage.duration_p95 / 1000) }} s</div><div class="kpi-label">95th percentile</div>
+      </div>
+    </div>
+
+    <h2 class="section">How the optimizer is used</h2>
+    <p class="section-note">Settings sent with each optimizer run in the selected period.</p>
+    <div class="grid">
+      <div class="card"><h3>Max ingredients</h3>{{ bars(usage.max_ingredients, cls="alt") }}</div>
+      <div class="card"><h3>Max effect probability</h3>{{ bars(usage.max_effects, cls="alt") }}</div>
+      <div class="card"><h3>Search depth</h3>{{ bars(usage.search_depth, cls="alt") }}</div>
+      <div class="card"><h3>Diplomas (unlocked effects)</h3>{{ bars(usage.n_diplomas, cls="alt") }}</div>
+      <div class="card"><h3>Run language</h3>{{ bars(usage.languages, cls="alt") }}</div>
+      <div class="card"><h3>Wanted effects per run</h3>{{ bars(usage.n_wanted, cls="alt") }}</div>
+      <div class="card"><h3>Unchecked effects per run</h3>{{ bars(usage.n_excluded, cls="alt") }}</div>
+      <div class="card"><h3>Avoided ingredients per run</h3>{{ bars(usage.n_premiums, cls="alt") }}</div>
+
+      <div class="card span-2">
+        <h3>Effects</h3>
+        {% if usage.runs %}
+        <div class="table-wrap"><table>
+          <tr><th>Effect</th><th class="num">Unlocked in</th><th class="num">Mean weight</th>
+            <th class="bar-cell">Wanted (weight &gt; 0)</th><th class="num">Unchecked</th></tr>
+          {% for e in usage.effects %}
+          <tr>
+            <td>{{ _(e.name) }}</td>
+            <td class="num">{{ e.available }}</td>
+            <td class="num">{{ "%.2f" | format(e.mean_weight) }}</td>
+            <td class="bar-cell"><div class="track"><div class="bar" style="width: {{ e.wanted_pct }}%" title="{{ '%.0f' | format(e.wanted_pct) }}%"></div></div></td>
+            <td class="num">{{ "%.0f" | format(e.excluded_pct) }}%</td>
+          </tr>
+          {% endfor %}
+        </table></div>
+        <p class="note">Percentages are over the runs where the effect was unlocked.</p>
+        {% else %}<p class="empty">No data yet.</p>{% endif %}
+      </div>
+      <div class="card"><h3>Avoided (premium) ingredients</h3>{{ bars(usage.premiums, cls="warn") }}</div>
+      <div class="card">
+        <h3>Most active users</h3>
+        {% if usage.top_users %}
+        <table>
+          {% for user_id, n in usage.top_users %}
+          <tr><td>{{ accounts.usernames.get(user_id, user_id) }}</td><td class="num">{{ n }} runs</td></tr>
+          {% endfor %}
+        </table>
+        {% else %}<p class="empty">No data yet.</p>{% endif %}
+      </div>
+
+      <div class="card span-2">
+        <h3>Most common strategies (wanted effects and weights)</h3>
+        {% if usage.profiles %}
+        <div class="table-wrap"><table>
+          {% for profile, n, pct in usage.profiles %}
+          <tr>
+            <td>{% for name, w in profile %}<span class="chip">{{ _(name) }} {{ w }}</span>{% endfor %}</td>
+            <td class="num">{{ n }}</td>
+            <td class="num">{{ "%.0f" | format(pct) }}%</td>
+          </tr>
+          {% endfor %}
+        </table></div>
+        {% else %}<p class="empty">No data yet.</p>{% endif %}
+      </div>
+      <div class="card span-2">
+        <h3>Most common recipes</h3>
+        {% for recipe, n, pct in usage.recipes %}
+        <div class="recipe-row">
+          <table class="recipe">
+            {% for row in recipe %}<tr>{% for v in row %}<td>{{ v }}</td>{% endfor %}</tr>{% endfor %}
+          </table>
+          <span>{{ n }} runs ({{ "%.0f" | format(pct) }}%)</span>
+        </div>
+        {% else %}
+        <p class="empty">No data yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h2 class="section">Saved settings (all accounts, now)</h2>
+    <p class="section-note">
+      Current state of every account, not limited to the selected period.
+      {{ accounts.saved_servers }} servers saved across {{ accounts.users }} accounts.
+    </p>
+    <div class="grid">
+      <div class="card"><h3>Servers per account</h3>{{ bars(accounts.n_servers) }}</div>
+      <div class="card"><h3>Account language</h3>{{ bars(accounts.account_languages) }}</div>
+      <div class="card"><h3>Max ingredients</h3>{{ bars(accounts.saved_max_ingredients) }}</div>
+      <div class="card"><h3>Max effect probability</h3>{{ bars(accounts.saved_max_effects) }}</div>
+      <div class="card"><h3>Search depth</h3>{{ bars(accounts.saved_search_depth) }}</div>
+    </div>
+  </main>
+  </body>
+</html>

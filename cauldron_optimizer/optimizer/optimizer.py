@@ -1,6 +1,8 @@
+from collections.abc import Sequence
 from pathlib import Path
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 BASE_DIR = Path(__file__).resolve().parent
 B = np.loadtxt(BASE_DIR / "B_values.csv", delimiter=",", skiprows=1)
@@ -15,9 +17,9 @@ class CauldronOptimizer:
 
     def __init__(
         self,
-        effect_weights: np.ndarray,
-        premium_ingr: list[int] = [],
-        excluded_effects: list[int] = [],
+        effect_weights: ArrayLike,
+        premium_ingr: Sequence[int] = (),
+        excluded_effects: Sequence[int] = (),
         alpha_UB: int | None = None,
         prob_UB: int = 100,
         cache_max_size: int = 1_000_000,
@@ -59,7 +61,9 @@ class CauldronOptimizer:
         self._cache_max_size = int(cache_max_size)
 
     # ------------- greedy local search -------------
-    def greedy(self, start_alpha: np.ndarray | None = None, allow_mass_moves: bool = True):
+    def greedy(
+        self, start_alpha: np.ndarray | None = None, allow_mass_moves: bool = True
+    ) -> tuple[np.ndarray, float]:
         n_ingr = self.n_freeingr
 
         # ---- initialize alpha (reduced) ----
@@ -88,8 +92,8 @@ class CauldronOptimizer:
             improved = False
 
             best_val = current_val
-            best_add_j = None  # for +1 move
-            best_swap_kj = None  # for swap move (k -> j)
+            best_add_j: int | None = None  # for +1 move
+            best_swap_kj: tuple[int, int] | None = None  # for swap move (k -> j)
 
             # ---------- 1) +1 moves ----------
             if total < self.sum_ingredients:
@@ -140,7 +144,7 @@ class CauldronOptimizer:
                     Sb = Sb + self.B[:, j]
                     total += 1
 
-                else:
+                elif best_swap_kj is not None:
                     k, j = best_swap_kj
                     alpha[k] -= 1
                     alpha[j] += 1
@@ -158,8 +162,10 @@ class CauldronOptimizer:
 
     # ------------- multi-start wrapper -------------
 
-    def multistart(self, n_starts: int = 20, allow_mass_moves: bool = True):
-        best_alpha = None
+    def multistart(
+        self, n_starts: int = 20, allow_mass_moves: bool = True
+    ) -> tuple[np.ndarray, float]:
+        best_alpha = np.zeros(self.n_ingredients, dtype=int)
         best_val = -1e18
         n_ingr = self.n_freeingr
 
@@ -179,7 +185,9 @@ class CauldronOptimizer:
                 if alpha0[j] >= self.alpha_UB[j]:
                     free = free[free != j]  # remove full ingredien
 
-            alpha, val = self.greedy(start_alpha=alpha0, allow_mass_moves=allow_mass_moves)
+            alpha, val = self.greedy(
+                start_alpha=alpha0, allow_mass_moves=allow_mass_moves
+            )
             if val > best_val:
                 best_val = val
                 best_alpha = alpha
@@ -237,12 +245,12 @@ class CauldronOptimizer:
 
         probs = 20.0 * E / E_sum * np.sqrt(total)
         probs = np.minimum(probs, self.prob_UB)
-        return probs @ self.w
+        return float(probs @ self.w)
 
     def _objective_fast(self, alpha: np.ndarray) -> float:
         probs = self.effect_probabilities(alpha)
         probs = np.minimum(probs, self.prob_UB)
-        return probs @ self.w
+        return float(probs @ self.w)
 
     def _objective(self, alpha: np.ndarray) -> float:
         key = self._key(alpha)
@@ -252,7 +260,11 @@ class CauldronOptimizer:
 
         s = alpha.sum()
         # feasibility checks
-        if (alpha < 0).any() or (alpha > self.alpha_UB + 1e-9).any() or s > self.sum_ingredients:
+        if (
+            (alpha < 0).any()
+            or (alpha > self.alpha_UB + 1e-9).any()
+            or s > self.sum_ingredients
+        ):
             val = -1e12
             self._cache_put(key, val)
             return val

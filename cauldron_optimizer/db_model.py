@@ -1,30 +1,35 @@
+from datetime import datetime
+
 from sqlalchemy import (
     TIMESTAMP,
     BigInteger,
+    Float,
     ForeignKey,
     Integer,
     Text,
     func,
 )
 from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, declarative_base, mapped_column, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from werkzeug.security import check_password_hash, generate_password_hash
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class User(Base):
     __tablename__ = "users"
-    id: Mapped[BigInteger] = mapped_column(BigInteger, primary_key=True)
-    username: Mapped[Text] = mapped_column(Text, unique=True, nullable=False)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    username: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(Text, nullable=False)
-    settings = relationship(
+    settings: Mapped["UserSettings | None"] = relationship(
         "UserSettings",
         back_populates="user",
         uselist=False,
         cascade="all, delete",
     )
-    servers = relationship(
+    servers: Mapped[list["Server"]] = relationship(
         "Server",
         back_populates="user",
         cascade="all, delete-orphan",
@@ -60,10 +65,10 @@ class UserSettings(Base):
     search_depth: Mapped[int] = mapped_column(
         Integer, nullable=False, server_default="50"
     )
-    updated_at: Mapped[str] = mapped_column(
+    updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
-    language: Mapped[str] = mapped_column(Text, nullable=True)
+    language: Mapped[str | None] = mapped_column(Text, nullable=True)
     excluded_effects: Mapped[list[int]] = mapped_column(
         JSONB, nullable=False, server_default="[]"
     )
@@ -73,7 +78,7 @@ class UserSettings(Base):
         Integer, nullable=False, server_default="1"
     )
 
-    user = relationship("User", back_populates="settings")
+    user: Mapped["User"] = relationship("User", back_populates="settings")
 
 
 class Server(Base):
@@ -105,8 +110,57 @@ class Server(Base):
     search_depth: Mapped[int] = mapped_column(
         Integer, nullable=False, server_default="50"
     )
-    updated_at: Mapped[str] = mapped_column(
+    updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
     )
 
-    user = relationship("User", back_populates="servers")
+    user: Mapped["User"] = relationship("User", back_populates="servers")
+
+
+class PageView(Base):
+    """One request to a page of the app (static files are not logged).
+
+    No IP address is stored: visitors are told apart by a random id kept in
+    their session cookie.
+    """
+
+    __tablename__ = "page_views"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    visitor_id: Mapped[str | None] = mapped_column(Text, nullable=True)
+    user_id: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+    endpoint: Mapped[str] = mapped_column(Text, nullable=False)
+    method: Mapped[str] = mapped_column(Text, nullable=False)
+    status_code: Mapped[int] = mapped_column(Integer, nullable=False)
+    duration_ms: Mapped[int] = mapped_column(Integer, nullable=False)
+    language: Mapped[str | None] = mapped_column(Text, nullable=True)
+    device: Mapped[str | None] = mapped_column(Text, nullable=True)
+    country: Mapped[str | None] = mapped_column(Text, nullable=True)
+    referrer_host: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class OptimizationRun(Base):
+    """The settings and result of one optimizer run."""
+
+    __tablename__ = "optimization_runs"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    user_id: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+    server_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    language: Mapped[str | None] = mapped_column(Text, nullable=True)
+    n_diplomas: Mapped[int] = mapped_column(Integer, nullable=False)
+    effect_weights: Mapped[list[float]] = mapped_column(JSONB, nullable=False)
+    excluded_effects: Mapped[list[int]] = mapped_column(JSONB, nullable=False)
+    premium_ingredients: Mapped[list[int]] = mapped_column(JSONB, nullable=False)
+    max_ingredients: Mapped[int] = mapped_column(Integer, nullable=False)
+    max_effects: Mapped[int] = mapped_column(Integer, nullable=False)
+    search_depth: Mapped[int] = mapped_column(Integer, nullable=False)
+    recipe: Mapped[list[list[int]]] = mapped_column(JSONB, nullable=False)
+    score: Mapped[float] = mapped_column(Float, nullable=False)
+    duration_ms: Mapped[int] = mapped_column(Integer, nullable=False)

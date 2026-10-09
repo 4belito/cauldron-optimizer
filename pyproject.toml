@@ -1,0 +1,15 @@
+# Linting and type-checking settings, shared by the editor and the command line
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "C4"]
+
+[tool.mypy]
+python_version = "3.13"
+
+# These libraries ship no type information
+[[tool.mypy.overrides]]
+module = ["flask_babel", "flask_wtf", "flask_wtf.*", "wtforms", "wtforms.*"]
+ignore_missing_imports = true

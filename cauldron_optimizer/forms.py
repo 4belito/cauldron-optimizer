@@ -1,8 +1,16 @@
 import json
+from typing import cast
 
-from flask_babel import lazy_gettext as _l
+from flask_babel import lazy_gettext
 from flask_wtf import FlaskForm
-from wtforms import FieldList, HiddenField, IntegerField, PasswordField, StringField
+from wtforms import (
+    Field,
+    FieldList,
+    HiddenField,
+    IntegerField,
+    PasswordField,
+    StringField,
+)
 from wtforms.validators import (
     DataRequired,
     EqualTo,
@@ -21,6 +29,11 @@ def N_(s: str) -> str:
     return s
 
 
+def _l(s: str) -> str:
+    """Translate lazily, when rendered. A LazyString behaves like a str."""
+    return cast(str, lazy_gettext(s))
+
+
 class LoginForm(FlaskForm):
     username = StringField(
         label=_l(N_("Usuario")),
@@ -29,7 +42,9 @@ class LoginForm(FlaskForm):
             Length(
                 min=1,
                 max=16,
-                message=_l(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
+                message=_l(
+                    N_("El nombre de usuario debe tener entre 1 y 16 caracteres")
+                ),
             ),
         ],
         render_kw={
@@ -61,7 +76,9 @@ class RegisterForm(FlaskForm):
             Length(
                 min=1,
                 max=16,
-                message=_l(N_("El nombre de usuario debe tener entre 1 y 16 caracteres")),
+                message=_l(
+                    N_("El nombre de usuario debe tener entre 1 y 16 caracteres")
+                ),
             ),
         ],
         render_kw={
@@ -118,27 +135,38 @@ class SearchForm(FlaskForm):
     alpha_UB = IntegerField(
         label=_l(N_("máx cantidad por ingrediente")),
         validators=[
-            DataRequired(message=_l(N_("Debe introducir la cantidad máxima por ingrediente"))),
+            DataRequired(
+                message=_l(N_("Debe introducir la cantidad máxima por ingrediente"))
+            ),
             NumberRange(
                 min=1,
                 max=CauldronOptimizer.sum_ingredients,
                 message=_l(
-                    N_("La cantidad máxima por ingrediente debe estar entre 1 y {}").format(
-                        CauldronOptimizer.sum_ingredients
-                    )
+                    N_(
+                        "La cantidad máxima por ingrediente debe estar entre 1 y {}"
+                    ).format(CauldronOptimizer.sum_ingredients)
                 ),
             ),
         ],
-        render_kw={"type": "number", "min": 1, "max": CauldronOptimizer.sum_ingredients, "step": 1},
+        render_kw={
+            "type": "number",
+            "min": 1,
+            "max": CauldronOptimizer.sum_ingredients,
+            "step": 1,
+        },
     )
     prob_UB = IntegerField(
         label=_l(N_("máx probabilidad por efecto")),
         validators=[
-            DataRequired(message=_l(N_("Debe introducir la probabilidad maxima por effecto"))),
+            DataRequired(
+                message=_l(N_("Debe introducir la probabilidad maxima por effecto"))
+            ),
             NumberRange(
                 min=1,
                 max=100,
-                message=_l(N_("La probabilidad maxima por efecto debe estar entre 1 y 100")),
+                message=_l(
+                    N_("La probabilidad maxima por efecto debe estar entre 1 y 100")
+                ),
             ),
         ],
         render_kw={"type": "number", "min": 1, "max": 100, "step": 1},
@@ -151,7 +179,9 @@ class SearchForm(FlaskForm):
                 min=1,
                 max=MAX_STARTS,
                 message=_l(
-                    N_("La profundidad de búsqueda debe estar entre 1 y {}").format(MAX_STARTS)
+                    N_("La profundidad de búsqueda debe estar entre 1 y {}").format(
+                        MAX_STARTS
+                    )
                 ),
             ),
         ],
@@ -163,15 +193,19 @@ class SearchForm(FlaskForm):
     language = HiddenField()
 
     # Custom validation for effect weights JSON aligned with n_diploma
-    def validate_effect_weights_json(self, field):
+    def validate_effect_weights_json(self, field: Field) -> None:
         raw = field.data or "[]"
         try:
             data = json.loads(raw)
         except Exception:
-            raise ValidationError(_l(N_("Los pesos de los efectos deben ser un JSON válido")))
+            raise ValidationError(
+                _l(N_("Los pesos de los efectos deben ser un JSON válido"))
+            ) from None
 
         if not isinstance(data, list):
-            raise ValidationError(_l(N_("Los pesos de los efectos deben ser una lista")))
+            raise ValidationError(
+                _l(N_("Los pesos de los efectos deben ser una lista"))
+            )
 
         n = self.n_diploma.data or 0
         if len(data) != n:
@@ -186,11 +220,17 @@ class SearchForm(FlaskForm):
                 v = float(x)
                 vals.append(v)
         except Exception:
-            raise ValidationError(_l(N_("Los pesos de los efectos deben ser numeros")))
+            raise ValidationError(
+                _l(N_("Los pesos de los efectos deben ser numeros"))
+            ) from None
 
         if any(v < 0 or v > 1 for v in vals):
             raise ValidationError(
-                _l(N_("Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"))
+                _l(
+                    N_(
+                        "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"  # noqa: E501
+                    )
+                )
             )
 
         if sum(vals) == 0.0:
@@ -200,12 +240,14 @@ class SearchForm(FlaskForm):
         self._parsed_effect_weights = vals
 
     # Unchecked effects: indices within n_diploma, keeping enough effects checked
-    def validate_excluded_effects_json(self, field):
+    def validate_excluded_effects_json(self, field: Field) -> None:
         try:
             data = json.loads(field.data or "[]")
             excluded = sorted({int(i) for i in data})
         except Exception:
-            raise ValidationError(_l(N_("Los efectos desmarcados no son válidos")))
+            raise ValidationError(
+                _l(N_("Los efectos desmarcados no son válidos"))
+            ) from None
 
         n = self.n_diploma.data or 0
         if any(i < 0 or i >= n for i in excluded):
@@ -224,6 +266,6 @@ class SearchForm(FlaskForm):
 
         self._parsed_excluded_effects = excluded
 
-    def validate_language(self, field):
+    def validate_language(self, field: Field) -> None:
         if field.data not in LANGUAGES:
             raise ValidationError(_l(N_("Idioma inválido")))

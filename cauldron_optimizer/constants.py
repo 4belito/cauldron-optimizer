@@ -62,6 +62,9 @@ MAX_PREMIUM_INGREDIENTS = 4
 MAX_SERVERS_PER_USER = 10
 # Show the "under test" banner for the effect selection checkboxes (set False to hide)
 SHOW_EFFECT_SELECTION_BETA_BANNER = True
+
+# Usernames allowed to see the admin pages (/stats)
+ADMIN_USERNAMES = {"4bel"}
 DEFAULTS = {
     "effect_weights": "[0, 0, 0, 0]",
     "max_ingredients": 25,

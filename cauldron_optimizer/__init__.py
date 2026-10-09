@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from cauldron_optimizer.config import get_secret_key, select_locale
 from cauldron_optimizer.constants import SHOW_EFFECT_SELECTION_BETA_BANNER
-from cauldron_optimizer.helpers import error
+from cauldron_optimizer.helpers import error, is_admin
 
 # Create Flask app
 app = Flask(__name__)
@@ -28,11 +28,12 @@ def inject_i18n():
         "_": _,
         "get_locale": get_locale,
         "show_beta_banner": SHOW_EFFECT_SELECTION_BETA_BANNER,
+        "is_admin": is_admin,
     }
 
 
 @app.errorhandler(CSRFError)
-def handle_csrf_error(e):
+def handle_csrf_error(e: CSRFError):
     """Handle CSRF token errors gracefully."""
     return (
         error(
@@ -44,7 +45,7 @@ def handle_csrf_error(e):
 
 
 @app.errorhandler(SQLAlchemyError)
-def handle_sqlalchemy_error(e):
+def handle_sqlalchemy_error(e: SQLAlchemyError):
     """Centralized handler for SQLAlchemy errors.
     Rolls back in `db_session` and shows a friendly message here.
     """
@@ -53,4 +54,5 @@ def handle_sqlalchemy_error(e):
 
 
 # Import routes after app and extensions are initialized
-from cauldron_optimizer import routes  # noqa: E402, F401
+from cauldron_optimizer import analytics as analytics  # noqa: E402
+from cauldron_optimizer import routes as routes  # noqa: E402
