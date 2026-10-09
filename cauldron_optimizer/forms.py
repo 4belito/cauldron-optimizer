@@ -19,7 +19,12 @@ from wtforms.validators import (
     ValidationError,
 )
 
-from cauldron_optimizer.constants import LANGUAGES, MAX_STARTS, MIN_CHECKED_EFFECTS
+from cauldron_optimizer.constants import (
+    LANGUAGES,
+    MAX_SERVER_NAME_LENGTH,
+    MAX_STARTS,
+    MIN_CHECKED_EFFECTS,
+)
 from cauldron_optimizer.helpers import is_avatar
 from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
 
@@ -111,12 +116,22 @@ class RegisterForm(FlaskForm):
             "placeholder": _l(N_("Confirmar contraseña")),
         },
     )
-    # Avatar of server 1, chosen in the avatar picker (optional)
+    # Avatar and name of server 1, chosen in the avatar picker (optional)
     avatar = HiddenField()
+    server_name = HiddenField()
 
     def validate_avatar(self, field: Field) -> None:
         if field.data and not is_avatar(field.data):
             raise ValidationError(_l(N_("Avatar no válido")))
+
+    def validate_server_name(self, field: Field) -> None:
+        field.data = " ".join((field.data or "").split())
+        if len(field.data) > MAX_SERVER_NAME_LENGTH:
+            raise ValidationError(
+                _l(
+                    N_("El nombre del servidor debe tener entre 1 y {} caracteres")
+                ).format(MAX_SERVER_NAME_LENGTH)
+            )
 
 
 class SearchForm(FlaskForm):

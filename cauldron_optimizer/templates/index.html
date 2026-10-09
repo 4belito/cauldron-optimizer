@@ -4,14 +4,15 @@
 
 {% block main %}
 <div class="optimizer-page">
-<!-- Servers: the selected one, its avatar, and adding a new one -->
+<!-- Servers: the selected one, its avatar, adding and deleting servers -->
 <section class="server-bar">
   <form method="post" action="{{ url_for('select_server') }}" class="server-select-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <!-- Avatar of the selected server: click to change it -->
     <button
       type="button" id="avatarBtn" class="server-avatar{{ ' is-default' if not avatar }}"
-      title="{{ _('Cambiar avatar') }}" aria-label="{{ _('Cambiar avatar del servidor %(n)s', n=active_server) }}"
+      title="{{ _('Cambiar avatar') }}" aria-label="{{ _('Cambiar avatar del servidor %(name)s', name=server_name) }}"
+      data-aria-template="{{ _('Cambiar avatar del servidor %(name)s', name='{name}') }}"
       aria-haspopup="dialog" aria-controls="avatarModal"
     >
       <img src="{{ user_avatar_url() }}" alt="" class="server-avatar-img">
@@ -21,8 +22,8 @@
     </button>
     <label for="serverSelect" class="server-label">{{ _("Servidor") }}:</label>
     <select id="serverSelect" name="server_number" class="server-select" data-active="{{ active_server }}">
-      {% for k in range(1, n_servers + 1) %}
-        <option value="{{ k }}" {% if k == active_server %}selected{% endif %}>{{ _("Servidor") }} {{ k }}</option>
+      {% for number, name in servers %}
+        <option value="{{ number }}" {% if number == active_server %}selected{% endif %}>{{ name }}</option>
       {% endfor %}
       {% if can_add_server %}
         <!-- Opens the avatar picker to create the server (see avatar.js) -->
@@ -32,10 +33,12 @@
     <noscript><button type="submit" class="server-btn">OK</button></noscript>
   </form>
 
+  <div class="server-actions">
   <!-- Saves the search settings below to the selected server -->
   <button
     type="button" id="saveSettingsBtn" class="save-btn"
-    title="{{ _('Guardar configuración del servidor %(n)s', n=active_server) }}" aria-label="{{ _('Guardar configuración del servidor %(n)s', n=active_server) }}"
+    title="{{ _('Guardar configuración de %(name)s', name=server_name) }}" aria-label="{{ _('Guardar configuración de %(name)s', name=server_name) }}"
+    data-label-template="{{ _('Guardar configuración de %(name)s', name='{name}') }}"
     data-url="{{ url_for('save_settings') }}"
   >
     <svg class="save-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -47,6 +50,23 @@
       <path d="M5 12.5l4.5 4.5L19 7.5"/>
     </svg>
   </button>
+  <!-- Deletes the selected server, after a confirmation window -->
+  <button
+    type="button" id="deleteServerBtn" class="save-btn delete-btn"
+    {% if servers | length > 1 %}
+      title="{{ _('Eliminar %(name)s', name=server_name) }}" aria-label="{{ _('Eliminar %(name)s', name=server_name) }}"
+      data-label-template="{{ _('Eliminar %(name)s', name='{name}') }}"
+    {% else %}
+      disabled title="{{ _('No puedes eliminar tu único servidor') }}" aria-label="{{ _('No puedes eliminar tu único servidor') }}"
+    {% endif %}
+    aria-haspopup="dialog" aria-controls="deleteModal"
+  >
+    <svg class="delete-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 3h6l1 2h4v2H4V5h4l1-2z"/>
+      <path d="M6 8h12l-1 12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8zm4 3v8h1.5v-8H10zm3.5 0v8H15v-8h-1.5z"/>
+    </svg>
+  </button>
+  </div>
   <span id="saveStatus" class="save-status" role="status" aria-live="polite"></span>
 </section>
 
@@ -176,11 +196,40 @@
 </script>
 <script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
 
-<!-- Avatar picker for the selected server (and for "+ Add server") -->
-{% with
-  server_label=_("Servidor") ~ " " ~ active_server,
-  new_server_label=_("Nuevo servidor") ~ ": " ~ _("Servidor") ~ " " ~ (n_servers + 1)
-%}
+<!-- Name and avatar picker for the selected server (and for "+ Add server") -->
+{% with new_server_name=next_server_name %}
   {% include "_avatar_picker.html" %}
 {% endwith %}
+
+<!-- Delete confirmation, styled like the game's windows -->
+<div
+  id="deleteModal" class="avatar-overlay" hidden
+  data-url="{{ url_for('delete_server') }}" data-server="{{ active_server }}"
+>
+  <div class="avatar-window delete-window" role="alertdialog" aria-modal="true"
+       aria-labelledby="deleteTitle" aria-describedby="deleteText">
+    <div class="avatar-header">
+      <h2 id="deleteTitle" class="avatar-title">{{ _("Eliminar servidor") }}</h2>
+      <button type="button" class="avatar-close" data-delete-cancel aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+    <div class="avatar-body delete-body">
+      <div class="delete-server">
+        <img src="{{ user_avatar_url() }}" alt="" class="delete-avatar">
+        <strong id="deleteName">{{ server_name }}</strong>
+      </div>
+      <p id="deleteText" class="delete-text">
+        {{ _("Se eliminará este servidor con toda su configuración: efectos, pesos, límites y avatar. Esta acción no se puede deshacer.") }}
+      </p>
+      <p id="deleteStatus" class="avatar-status" role="status" aria-live="polite"></p>
+      <div class="avatar-actions">
+        <button type="button" class="avatar-btn avatar-btn-save" data-delete-cancel>
+          <span>{{ _("Cancelar") }}</span>
+        </button>
+        <button type="button" id="deleteConfirm" class="avatar-btn avatar-btn-cancel">
+          <span>{{ _("Eliminar") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

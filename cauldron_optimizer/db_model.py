@@ -72,7 +72,8 @@ class UserSettings(Base):
     excluded_effects: Mapped[list[int]] = mapped_column(
         JSONB, nullable=False, server_default="[]"
     )
-    # Number of servers the user plays on, and the one currently selected
+    # Number of servers the user has (kept in sync with their server rows, for
+    # the stats page), and the server_number of the selected one
     n_servers: Mapped[int] = mapped_column(Integer, nullable=False, server_default="1")
     active_server: Mapped[int] = mapped_column(
         Integer, nullable=False, server_default="1"
@@ -85,6 +86,9 @@ class Server(Base):
     """One of a user's game servers, each with its own search settings.
 
     Keyed by (username, server_number): server 2 of "4bel" is row ("4bel", 2).
+    server_number is an id, not a position: deleting a server leaves a gap
+    (servers 1 and 3), and other servers keep their number. Users see the
+    server's name instead.
     """
 
     __tablename__ = "servers"
@@ -115,6 +119,8 @@ class Server(Base):
     )
     # Portrait file in static/portraits, or None for the default avatar
     avatar: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Chosen by the user; None for servers made before names existed
+    name: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 

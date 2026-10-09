@@ -63,6 +63,7 @@ MIN_CHECKED_EFFECTS = 10
 MAX_PREMIUM_INGREDIENTS = 4
 # Maximum number of servers (game worlds) per user
 MAX_SERVERS_PER_USER = 10
+MAX_SERVER_NAME_LENGTH = 24
 # Show the "under test" banner for the effect selection checkboxes (set False to hide)
 SHOW_EFFECT_SELECTION_BETA_BANNER = True
 

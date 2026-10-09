@@ -521,3 +521,39 @@ msgstr "You can have at most %(n)s servers"
 
 msgid "Elige tu avatar"
 msgstr "Choose your avatar"
+
+msgid "Servidor %(n)s"
+msgstr "Server %(n)s"
+
+msgid "El nombre del servidor debe tener entre 1 y %(n)s caracteres"
+msgstr "The server name must be between 1 and %(n)s characters"
+
+msgid "El nombre del servidor debe tener entre 1 y {} caracteres"
+msgstr "The server name must be between 1 and {} characters"
+
+msgid "Ya tienes un servidor con ese nombre"
+msgstr "You already have a server with that name"
+
+msgid "No puedes eliminar tu único servidor"
+msgstr "You can't delete your only server"
+
+msgid "Cambiar avatar del servidor %(name)s"
+msgstr "Change the avatar of %(name)s"
+
+msgid "Guardar configuración de %(name)s"
+msgstr "Save the settings of %(name)s"
+
+msgid "Eliminar %(name)s"
+msgstr "Delete %(name)s"
+
+msgid "Eliminar servidor"
+msgstr "Delete server"
+
+msgid "Se eliminará este servidor con toda su configuración: efectos, pesos, límites y avatar. Esta acción no se puede deshacer."
+msgstr "This server will be deleted with all its settings: effects, weights, limits and avatar. This can't be undone."
+
+msgid "Eliminar"
+msgstr "Delete"
+
+msgid "Nombre del servidor"
+msgstr "Server name"

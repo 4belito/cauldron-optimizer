@@ -1,24 +1,26 @@
 {#
-  Avatar picker, styled like the game's profile window.
+  Server name and avatar picker, styled like the game's profile window.
   Opened by the #avatarBtn button of the page. Variables:
-    avatars        portrait files to offer
-    avatar         the current avatar (or None)
-    server_label   shown under the player name
-    picker_input   id of a form input to fill instead of saving right away
-                   (register page); otherwise the choice is saved via fetch
-    new_server_label  (optional) label when adding a server
+    avatars          portrait files to offer
+    avatar           the current avatar (or None)
+    server_name      the current server name
+    picker_input     id of a form input to fill with the avatar instead of
+                     saving right away (register page); otherwise the choice
+                     is saved via fetch
+    name_input       (with picker_input) id of the form input for the name
+    new_server_name  (optional) suggested name when adding a server
 #}
 <div
   id="avatarModal" class="avatar-overlay" hidden
   {% if picker_input %}
-    data-input="{{ picker_input }}"
+    data-input="{{ picker_input }}" data-name-input="{{ name_input }}"
   {% else %}
-    data-url="{{ url_for('set_avatar') }}" data-add-url="{{ url_for('add_server') }}"
+    data-url="{{ url_for('update_server') }}" data-add-url="{{ url_for('add_server') }}"
   {% endif %}
   data-current="{{ avatar or '' }}"
   data-default-url="{{ url_for('static', filename='potrait.png') }}"
-  data-server-label="{{ server_label }}"
-  data-new-server-label="{{ new_server_label or '' }}"
+  data-server-name="{{ server_name }}"
+  data-new-server-name="{{ new_server_name or '' }}"
 >
   <div class="avatar-window" role="dialog" aria-modal="true" aria-labelledby="avatarTitle">
     <div class="avatar-header">
@@ -33,12 +35,20 @@
         </div>
         <div class="avatar-nameplate">
           <span class="avatar-username" id="avatarUsername">{{ session.get("username", "") }}</span>
-          <span class="avatar-server" id="avatarServer">{{ server_label }}</span>
+          <span class="avatar-server" id="avatarServer">{{ server_name }}</span>
         </div>
       </div>
 
-      <p class="avatar-label" id="avatarGridLabel">{{ _("Imagen") }}:</p>
-      <div class="avatar-grid" role="listbox" aria-labelledby="avatarGridLabel">
+      <!-- Like the game's "City name" row -->
+      <div class="avatar-field">
+        <label for="avatarName" class="avatar-label">{{ _("Nombre del servidor") }}:</label>
+        <input
+          id="avatarName" class="avatar-name" type="text" autocomplete="off"
+          maxlength="{{ max_server_name }}" value="{{ server_name }}" required
+        >
+      </div>
+
+      <div class="avatar-grid" role="listbox" aria-label="{{ _('Imagen') }}">
         {% for file in avatars %}
           <button
             type="button" class="avatar-option" role="option"

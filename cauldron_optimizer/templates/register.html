@@ -47,7 +47,12 @@
     </button>
 </form>
 
-{% with avatar=form.avatar.data, server_label=_("Servidor") ~ " 1", picker_input="avatar" %}
+{% with
+    avatar=form.avatar.data,
+    server_name=form.server_name.data or _("Servidor %(n)s", n=1),
+    picker_input="avatar",
+    name_input="server_name"
+%}
     {% include "_avatar_picker.html" %}
 {% endwith %}
 {% endblock %}

@@ -18,6 +18,7 @@ from cauldron_optimizer.constants import (
     INGREDIENT_NAMES,
     LANGUAGES,
     MAX_PREMIUM_INGREDIENTS,
+    MAX_SERVER_NAME_LENGTH,
     MAX_SERVERS_PER_USER,
 )
 from cauldron_optimizer.database import db_session
@@ -97,8 +98,10 @@ def index():
             ingredient_names=INGREDIENT_NAMES,
             # Premium choices live only in the session, never in the database
             premiums=session.get("premium_ingredients", []),
-            n_servers=account.n_servers,
+            servers=[(s.server_number, server_label(s)) for s in settings.user.servers],
             active_server=settings.server_number,
+            server_name=server_label(settings),
+            next_server_name=suggest_server_name(settings.user.servers),
             can_add_server=account.n_servers < MAX_SERVERS_PER_USER,
             avatars=AVATARS,
             avatar=settings.avatar,
@@ -108,8 +111,9 @@ def index():
 def get_active_server(db_sa: Session, user_id: int) -> tuple[UserSettings, Server]:
     """Return the user's account settings and their selected server.
 
-    Creates whatever is missing: the account settings row and the server row
-    (a new server starts as a copy of server 1).
+    Creates whatever is missing: the account settings row, and a first server
+    if the user has none. Falls back to the first server if the selected one
+    no longer exists.
     """
     user = db_sa.get(User, user_id)
     if user is None:
@@ -122,39 +126,65 @@ def get_active_server(db_sa: Session, user_id: int) -> tuple[UserSettings, Serve
         db_sa.add(account)
         db_sa.flush()
 
-    username = user.username
-    n = min(max(account.n_servers or 1, 1), MAX_SERVERS_PER_USER)
-    number = min(max(account.active_server or 1, 1), n)
-    account.n_servers, account.active_server = n, number
-
-    server = db_sa.get(Server, (username, number))
-    if server is None:
-        server = Server(username=username, server_number=number)
-        first = db_sa.get(Server, (username, 1)) if number != 1 else None
-        if first is not None:
-            server.effect_weights = list(first.effect_weights)
-            server.excluded_effects = list(first.excluded_effects or [])
-            server.max_ingredients = first.max_ingredients
-            server.max_effects = first.max_effects
-            server.search_depth = first.search_depth
-        db_sa.add(server)
+    if not user.servers:
+        user.servers.append(Server(server_number=1))
         db_sa.flush()
+
+    server = next(
+        (s for s in user.servers if s.server_number == account.active_server),
+        user.servers[0],
+    )
+    account.active_server = server.server_number
+    account.n_servers = len(user.servers)
     # The navbar shows the active server's avatar on every page
     session["avatar"] = server.avatar
     return account, server
 
 
+def server_label(server: Server) -> str:
+    """Name shown for a server (servers made before names existed have none)"""
+    return server.name or _("Servidor %(n)s", n=server.server_number)
+
+
+def clean_server_name(
+    raw: str | None, servers: list[Server], current: Server | None
+) -> str:
+    """Validate a server name; raises ValueError with a user-facing message."""
+    name = " ".join((raw or "").split())
+    if not 1 <= len(name) <= MAX_SERVER_NAME_LENGTH:
+        raise ValueError(
+            _(
+                "El nombre del servidor debe tener entre 1 y %(n)s caracteres",
+                n=MAX_SERVER_NAME_LENGTH,
+            )
+        )
+    taken = {server_label(s).casefold() for s in servers if s is not current}
+    if name.casefold() in taken:
+        raise ValueError(_("Ya tienes un servidor con ese nombre"))
+    return name
+
+
+def suggest_server_name(servers: list[Server]) -> str:
+    """A free "Server N" name to prefill when adding a server"""
+    taken = {server_label(s).casefold() for s in servers}
+    n = len(servers) + 1
+    while _("Servidor %(n)s", n=n).casefold() in taken:
+        n += 1
+    return _("Servidor %(n)s", n=n)
+
+
 @app.route("/servers/add", methods=["POST"])
 @login_required
 def add_server():
-    """Add a server with the chosen avatar and select it (called via fetch)"""
+    """Add a server with the chosen name and avatar, and select it (via fetch)"""
     avatar = request.form.get("avatar")
     if not is_avatar(avatar):
         return {"ok": False, "error": _("Avatar no válido")}, 400
     try:
         with db_session() as db_sa:
-            account, _server = get_active_server(db_sa, session["user_id"])
-            if account.n_servers >= MAX_SERVERS_PER_USER:
+            account, current = get_active_server(db_sa, session["user_id"])
+            servers = current.user.servers
+            if len(servers) >= MAX_SERVERS_PER_USER:
                 return {
                     "ok": False,
                     "error": _(
@@ -162,32 +192,83 @@ def add_server():
                         n=MAX_SERVERS_PER_USER,
                     ),
                 }, 400
-            account.n_servers += 1
-            account.active_server = account.n_servers
-            # Creates the new server (a copy of server 1's settings)
-            _account, server = get_active_server(db_sa, session["user_id"])
-            server.avatar = avatar
+            try:
+                name = clean_server_name(request.form.get("name"), servers, None)
+            except ValueError as e:
+                return {"ok": False, "error": str(e)}, 400
+
+            # Next free id after the highest one (deleted servers leave gaps);
+            # the new server starts as a copy of the selected server's settings
+            server = Server(
+                server_number=max(s.server_number for s in servers) + 1,
+                name=name,
+                avatar=avatar,
+                effect_weights=list(current.effect_weights),
+                excluded_effects=list(current.excluded_effects or []),
+                max_ingredients=current.max_ingredients,
+                max_effects=current.max_effects,
+                search_depth=current.search_depth,
+            )
+            servers.append(server)
+            account.active_server = server.server_number
+            account.n_servers = len(servers)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
     session["avatar"] = avatar
     return {"ok": True}
 
 
-@app.route("/servers/avatar", methods=["POST"])
+@app.route("/servers/profile", methods=["POST"])
 @login_required
-def set_avatar():
-    """Set the avatar of the active server (called via fetch)"""
-    avatar = request.form.get("avatar")
-    if not is_avatar(avatar):
+def update_server():
+    """Set the name and avatar of the active server (called via fetch)"""
+    # No avatar sent: keep the current one (e.g. only renaming)
+    avatar = request.form.get("avatar") or None
+    if avatar is not None and not is_avatar(avatar):
         return {"ok": False, "error": _("Avatar no válido")}, 400
     try:
         with db_session() as db_sa:
             _account, server = get_active_server(db_sa, session["user_id"])
-            server.avatar = avatar
+            try:
+                name = clean_server_name(
+                    request.form.get("name"), server.user.servers, server
+                )
+            except ValueError as e:
+                return {"ok": False, "error": str(e)}, 400
+            server.name = name
+            if avatar is not None:
+                server.avatar = avatar
+            avatar = server.avatar
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
     session["avatar"] = avatar
-    return {"ok": True, "url": avatar_url(avatar)}
+    return {"ok": True, "url": avatar_url(avatar), "name": name}
+
+
+@app.route("/servers/delete", methods=["POST"])
+@login_required
+def delete_server():
+    """Delete the active server and its settings (called via fetch)"""
+    number = request.form.get("server_number", type=int)
+    try:
+        with db_session() as db_sa:
+            account, server = get_active_server(db_sa, session["user_id"])
+            # Guards against a stale page showing another server
+            if number != server.server_number:
+                return {"ok": False, "error": _("Servidor no válido")}, 400
+            servers = server.user.servers
+            if len(servers) <= 1:
+                return {
+                    "ok": False,
+                    "error": _("No puedes eliminar tu único servidor"),
+                }, 400
+            servers.remove(server)  # delete-orphan: deletes the row
+            account.active_server = servers[0].server_number
+            account.n_servers = len(servers)
+            session["avatar"] = servers[0].avatar
+    except SQLAlchemyError:
+        return {"ok": False, "error": _("Error de base de datos")}, 500
+    return {"ok": True}
 
 
 @app.route("/servers/select", methods=["POST"])
@@ -197,8 +278,8 @@ def select_server():
     number = request.form.get("server_number", type=int)
     try:
         with db_session() as db_sa:
-            account, _server = get_active_server(db_sa, session["user_id"])
-            if number is None or not 1 <= number <= account.n_servers:
+            account, server = get_active_server(db_sa, session["user_id"])
+            if number not in {s.server_number for s in server.user.servers}:
                 return error(_("Servidor no válido"), url=url_for("index"))
             account.active_server = number
     except SQLAlchemyError:
@@ -278,7 +359,14 @@ def register():
                     )
                 )
                 avatar = form.avatar.data or None
-                db_sa.add(Server(user=new_user, server_number=1, avatar=avatar))
+                db_sa.add(
+                    Server(
+                        user=new_user,
+                        server_number=1,
+                        avatar=avatar,
+                        name=form.server_name.data or None,
+                    )
+                )
                 # commit handled by context manager
                 # Automatically log in the user after registration
 

@@ -93,6 +93,8 @@ body.avatar-open {
 .avatar-window {
   width: min(40rem, 100%);
   max-height: calc(100vh - 2rem);
+  /* Visible height on phones, without the browser bars */
+  max-height: calc(100dvh - 2rem);
   display: flex;
   flex-direction: column;
   border-radius: 0.875rem;
@@ -220,11 +222,14 @@ body.avatar-open {
 /* Portrait grid: scrolls inside the window */
 .avatar-grid {
   flex: 1 1 auto;
-  min-height: 6rem;
+  min-height: 9rem;
   max-height: 17rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(4.75rem, 1fr));
+  grid-auto-rows: max-content;
+  align-content: start;
   gap: 0.5rem;
   padding: 0.6rem;
   border-radius: 0.4rem;
@@ -235,17 +240,28 @@ body.avatar-open {
 
 .avatar-option {
   position: relative;
+  display: block;
+  width: 100%;
   padding: 0;
   border: 2px solid rgba(81, 32, 13, 0.35);
   border-radius: 0.25rem;
   background: #2b1c3f;
-  aspect-ratio: 104 / 88;
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.1s, filter 0.15s;
 }
 
+/* Height from the width (portraits are 104x88). A padding box instead of
+   aspect-ratio, which iOS Safari ignores on buttons in a scrolling grid */
+.avatar-option::before {
+  content: "";
+  display: block;
+  padding-top: 84.6%;
+}
+
 .avatar-option img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -351,6 +367,24 @@ body.avatar-open {
     width: 8rem;
     height: 2.2rem;
   }
+
+  .avatar-grid {
+    grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+    gap: 0.4rem;
+    padding: 0.45rem;
+  }
+}
+
+/* Short screens (phones in landscape, small phones): smaller banner */
+@media (max-height: 40rem) {
+  .avatar-banner {
+    height: 7.5rem;
+  }
+
+  .avatar-preview {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
 }
 
 /* Register page: larger avatar above the form */
@@ -389,4 +423,83 @@ body.avatar-open {
   color: #f5e6c8;
   font-weight: 700;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Server name row, like the game's "City name" field */
+.avatar-field {
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+}
+
+.avatar-name {
+  flex: 1 1 12rem;
+  min-width: 0;
+  height: 2.2rem;
+  padding: 0 0.6rem;
+  border: 1px solid #b89a63;
+  border-radius: 0.2rem;
+  background: #e2cfa3;
+  box-shadow: inset 0 1px 3px rgba(81, 32, 13, 0.3);
+  color: #3b2a16;
+  font-size: 1.05rem;
+}
+
+.avatar-name:focus {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 1px;
+}
+
+/* Delete (trash) button next to the save button */
+.delete-btn .delete-icon {
+  fill: currentColor;
+}
+
+.delete-btn:hover:not(:disabled) {
+  color: #a3261b;
+}
+
+.delete-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+}
+
+/* Delete confirmation window */
+.delete-window {
+  width: min(30rem, 100%);
+}
+
+.delete-body {
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+  padding-top: 1.25rem;
+}
+
+.delete-server {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 1.15rem;
+}
+
+.delete-avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  background: #2b1c3f;
+  border: 3px solid #e2b85a;
+  box-shadow: 0 0 0 1px #5a3a12;
+}
+
+.delete-text {
+  margin: 0;
+  max-width: 24rem;
+  line-height: 1.4;
 }

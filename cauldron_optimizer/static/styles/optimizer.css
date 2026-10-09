@@ -70,9 +70,15 @@
   gap: 1rem;
 }
 
+/* Save and delete buttons, on the right of the server bar */
+.server-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
 .save-btn {
   position: relative;
-  margin-left: auto;
   width: 2.25rem;
   height: 2.25rem;
   flex-shrink: 0;

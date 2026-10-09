@@ -7,7 +7,10 @@ from flask_wtf.csrf import CSRFError, CSRFProtect
 from sqlalchemy.exc import SQLAlchemyError
 
 from cauldron_optimizer.config import get_secret_key, select_locale
-from cauldron_optimizer.constants import SHOW_EFFECT_SELECTION_BETA_BANNER
+from cauldron_optimizer.constants import (
+    MAX_SERVER_NAME_LENGTH,
+    SHOW_EFFECT_SELECTION_BETA_BANNER,
+)
 from cauldron_optimizer.helpers import avatar_url, error, is_admin
 
 # Create Flask app
@@ -30,6 +33,7 @@ def inject_i18n():
         "show_beta_banner": SHOW_EFFECT_SELECTION_BETA_BANNER,
         "is_admin": is_admin,
         "avatar_url": avatar_url,
+        "max_server_name": MAX_SERVER_NAME_LENGTH,
         "user_avatar_url": lambda: avatar_url(session.get("avatar")),
     }
 
