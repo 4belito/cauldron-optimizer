@@ -138,7 +138,9 @@ function initComplement() {
     });
     // Back to the normal search: the 4-ingredient counter and its button
     if (!on && typeof updatePremiumLocks === "function") updatePremiumLocks();
-    saveSettingsBtn.disabled = on;
+    // Off again: Save follows the effects counter (optimizer.js)
+    if (on) saveSettingsBtn.disabled = true;
+    else updateSaveButton();
     // The normal search does not apply in this mode: its own buttons do.
     searchBtn.hidden = on;
     buttons.hidden = !on;

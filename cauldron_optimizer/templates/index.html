@@ -34,13 +34,6 @@
     <noscript><button type="submit" class="server-btn">OK</button></noscript>
   </form>
 
-  <!-- "Complete effects" mode (see complement.js) -->
-  <label class="complement-switch server-switch"
-         data-tip="{{ _('Busca los efectos que mejor completan tus efectos con peso hasta 10, probando todas las combinaciones de 4 ingredientes evitados. Los ajustes se cambian con el modo apagado') }}">
-    <input type="checkbox" id="complementToggle">
-    <span class="complement-switch-track" aria-hidden="true"></span>
-    <span class="server-switch-text">{{ _("Complete effects") }}</span>
-  </label>
   <div class="server-actions">
   <!-- Saves the search settings below to the selected server -->
   <button
@@ -121,6 +114,30 @@
           <button type="button" class="step-btn step-up" data-step="1"
                   aria-label="{{ _('Un diploma más') }}" data-tip="{{ _('Un diploma más') }}"></button>
         </div>
+        <!-- "Complete effects" mode (see complement.js): beside the diplomas,
+             in the panel of the effects it completes -->
+        <label class="complement-switch effects-mode-switch"
+               data-tip="{{ _('Busca los efectos que mejor completan tus efectos con peso hasta 10, probando todas las combinaciones de 4 ingredientes evitados. Los ajustes se cambian con el modo apagado') }}">
+          <input type="checkbox" id="complementToggle">
+          <span class="complement-switch-track" aria-hidden="true"></span>
+          <span class="effects-mode-text">{{ _("Complete effects") }}</span>
+        </label>
+      </div>
+      <!-- One slot per diploma: fills with the checked effects. At least 10
+           (or all, with fewer diplomas) must be checked to search -->
+      <div class="premium-counter effects-counter" id="effectsCounter"
+           data-text-min="{{ _('Marca al menos {min} efectos') }}"
+           data-text-all="{{ _('Marca los {n} efectos') }}"
+           data-text-weight="{{ _('Dale peso al menos a un efecto marcado') }}">
+        <!-- Select all: checked = all, empty = none, dash = some (set in the panel) -->
+        <label class="effect-check effects-all" data-tip="{{ _('Marcar o desmarcar todos los efectos') }}">
+          <input type="checkbox" id="effectsAll" aria-label="{{ _('Marcar o desmarcar todos los efectos') }}">
+          <img class="effect-check-box" src="{{ url_for('static', filename='checkbox.png') }}" alt="">
+          <img class="effect-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+          <span class="effects-all-dash" aria-hidden="true"></span>
+        </label>
+        <div class="premium-slots effects-slots" id="effectsSlots" aria-hidden="true"></div>
+        <span class="premium-counter-text" id="effectsCounterText"></span>
       </div>
       <div id="weightsContainer" class="weights-grid"></div>
     </div>
@@ -138,6 +155,14 @@
           {{ _("Se usan tus efectos con peso (menos de 10); los demás se desmarcan. La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan. Para cambiar los ajustes, apaga el modo.") }}
         </p>
         <p class="complement-hint" id="complementHint" role="status" aria-live="polite"></p>
+      </div>
+      <!-- The four chosen ingredients, at the top of the panel -->
+      <div class="premium-counter" id="premiumCounter"
+           data-text-button="{{ _('Elige 4 ingredientes para evitar') }}">
+        <div class="premium-slots" aria-hidden="true">
+          {% for i in range(4) %}<span class="premium-slot"></span>{% endfor %}
+        </div>
+        <span class="premium-counter-text">{{ _("Elige los 4 ingredientes premium") }}</span>
       </div>
       <div class="ingredients-grid">
         {% for name in ingredient_names %}
@@ -159,14 +184,6 @@
             <span class="ingredient-name" title="{{ _(name) }}">{{ _(name) }}</span>
           </label>
         {% endfor %}
-      </div>
-      <!-- The four chosen ingredients remain visible at the panel's bottom. -->
-      <div class="premium-counter" id="premiumCounter"
-           data-text-button="{{ _('Elige 4 ingredientes para evitar') }}">
-        <div class="premium-slots" aria-hidden="true">
-          {% for i in range(4) %}<span class="premium-slot"></span>{% endfor %}
-        </div>
-        <span class="premium-counter-text">{{ _("Elige los 4 ingredientes premium") }}</span>
       </div>
     </div>
   </fieldset>
@@ -237,7 +254,7 @@
     ],
   };
 </script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=76"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=85"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -293,7 +310,7 @@
 <script src="{{ url_for('static', filename='js/solver.js') }}"></script>
 <!-- "Buscar receta" searches in the browser (falls back to the server) -->
 <script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/complement.js') }}?v=4"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}?v=5"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script>
   window.CAULDRON_INTEGRATION = {

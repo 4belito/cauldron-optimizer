@@ -75,7 +75,8 @@ function makeEffectCheckbox(checked, labelText) {
   return label;
 }
 
-// With this many or fewer effects checked, checked boxes lock (like in the game)
+// The game brews with 10 effects: at least this many must be checked (all of
+// them with fewer diplomas). Boxes never lock; "Buscar receta" waits instead
 const MIN_CHECKED_EFFECTS = 10;
 
 // "Complete effects" mode (complement.js): the user picks fewer than 10 effects
@@ -87,14 +88,90 @@ let checkedBeforeComplement = null;
 function updateEffectLocks(root) {
   const inputs = [...root.querySelectorAll(".effect-check input")];
   const nChecked = inputs.filter((el) => el.checked).length;
-  const locked = nChecked <= MIN_CHECKED_EFFECTS;
+  // Only "Completar efectos" limits the boxes (fewer than 10 chosen)
   inputs.forEach((el) => {
-    const isLocked = complementMode
-      ? !el.checked && nChecked >= MAX_COMPLEMENT_CHOSEN
-      : locked && el.checked;
+    const isLocked = complementMode && !el.checked && nChecked >= MAX_COMPLEMENT_CHOSEN;
     el.disabled = isLocked;
     el.parentElement.classList.toggle("locked", isLocked);
   });
+  updateEffectsCounter();
+}
+
+// One slot per diploma, filled with the checked effects' icons: the first
+// slots up to the minimum are required (dashed), the rest optional (dotted).
+// Room is kept for every possible diploma (unused slots are invisible), so
+// the counter and its text never move when the diplomas change
+let effectsProblem = null; // why the effects do not allow a search, or null
+
+function updateEffectsCounter() {
+  const counter = document.getElementById("effectsCounter");
+  if (!counter) return;
+  const n = Number(window.OPTIMIZER_CONFIG.dom.nDiploma.value) || 0;
+  const required = Math.min(n, MIN_CHECKED_EFFECTS);
+  const checked = [];
+  let weighted = false;
+  for (let i = 0; i < n; i++) {
+    if (globalChecked[i] === false) continue;
+    checked.push(i);
+    if ((globalWeights[i] ?? 0) > 0) weighted = true;
+  }
+
+  const slots = document.getElementById("effectsSlots");
+  const maxSlots = window.OPTIMIZER_CONFIG.effectNames.length;
+  slots.replaceChildren(
+    ...Array.from({ length: maxSlots }, (_, k) => {
+      const slot = document.createElement("span");
+      slot.className = "premium-slot effect-slot";
+      if (k >= n) {
+        slot.classList.add("unused");
+      } else if (k < checked.length) {
+        slot.classList.add("filled");
+        // Checked only to reach the minimum (no weight): grey ring
+        if (!((globalWeights[checked[k]] ?? 0) > 0)) slot.classList.add("filler");
+        slot.style.backgroundImage = `url("/static/effects/effect${checked[k] + 1}.png")`;
+      } else if (k >= required) {
+        slot.classList.add("optional");
+      }
+      return slot;
+    })
+  );
+
+  // Checked effects without a weight get a grey mark (they only fill up to
+  // the minimum); the wanted ones keep the green
+  window.OPTIMIZER_CONFIG.dom.weightsContainer
+    .querySelectorAll(".weight-card")
+    .forEach((card, i) => {
+      const check = card.querySelector(".effect-check");
+      if (check) check.classList.toggle("filler", globalChecked[i] !== false && !((globalWeights[i] ?? 0) > 0));
+    });
+
+  // Select-all box: all / none / some (indeterminate)
+  const all = document.getElementById("effectsAll");
+  if (all) {
+    all.checked = n > 0 && checked.length === n;
+    all.indeterminate = checked.length > 0 && checked.length < n;
+  }
+
+  const d = counter.dataset;
+  const rule = n > MIN_CHECKED_EFFECTS
+    ? d.textMin.replace("{min}", MIN_CHECKED_EFFECTS)
+    : d.textAll.replace("{n}", n);
+  const enough = checked.length >= required;
+  effectsProblem = !enough ? rule : !weighted ? d.textWeight : null;
+  document.getElementById("effectsCounterText").textContent = enough && !weighted ? d.textWeight : rule;
+  counter.classList.toggle("is-complete", !effectsProblem);
+  updateSearchButton();
+  updateSaveButton();
+}
+
+// Save waits for valid effects too (the ingredients are not saved, so they do
+// not count). "Completar efectos" keeps it disabled (complement.js)
+function updateSaveButton() {
+  const btn = document.getElementById("saveSettingsBtn");
+  if (!btn) return;
+  btn.dataset.tipDefault ??= btn.dataset.tip || "";
+  btn.disabled = complementMode || !!effectsProblem;
+  btn.dataset.tip = effectsProblem && !complementMode ? effectsProblem : btn.dataset.tipDefault;
 }
 
 function updateHiddenExcluded(n) {
@@ -135,17 +212,40 @@ function updatePremiumCounter(chosen) {
     slot.style.backgroundImage = icon ? `url("${icon.src}")` : "";
     slot.classList.toggle("filled", !!el);
   });
-  const n = chosen.length;
-  const missing = MAX_PREMIUM_INGREDIENTS - n;
+  const missing = MAX_PREMIUM_INGREDIENTS - chosen.length;
   counter.classList.toggle("is-complete", missing <= 0);
+  premiumProblem = missing !== 0 ? counter.dataset.textButton : null;
+  updateSearchButton();
+}
 
+let premiumProblem = null; // why the ingredients do not allow a search, or null
+
+// "Buscar receta" is enabled only when both counters are complete; its help
+// text says what is missing (effects first, as on the page)
+function updateSearchButton() {
   const searchBtn = document.getElementById("searchBtn");
-  if (searchBtn) {
-    // Remember the button's own help text, shown again once 4 are chosen
-    searchBtn.dataset.tipDefault ??= searchBtn.dataset.tip || "";
-    searchBtn.disabled = missing !== 0;
-    searchBtn.dataset.tip = missing !== 0 ? counter.dataset.textButton : searchBtn.dataset.tipDefault;
-  }
+  if (!searchBtn) return;
+  searchBtn.dataset.tipDefault ??= searchBtn.dataset.tip || "";
+  const problem = effectsProblem || premiumProblem;
+  searchBtn.disabled = !!problem;
+  searchBtn.dataset.tip = problem || searchBtn.dataset.tipDefault;
+}
+
+// Select all: checks every effect, or unchecks them all when all are checked
+// (the intermediate choices are made in the panel)
+function initEffectsAll() {
+  const all = document.getElementById("effectsAll");
+  if (!all) return;
+  all.addEventListener("change", (e) => {
+    e.stopPropagation(); // not a setting by itself: the rebuild below is
+    const n = Number(window.OPTIMIZER_CONFIG.dom.nDiploma.value) || 0;
+    // A missing entry means checked (the default)
+    let allChecked = true;
+    for (let i = 0; i < n; i++) if (globalChecked[i] === false) allChecked = false;
+    for (let i = 0; i < n; i++) globalChecked[i] = !allChecked;
+    rebuildWeights();
+    setUnsaved(true);
+  });
 }
 
 // "Óptima" checks every recipe: the limit of the search depth. Its checkmark
@@ -199,19 +299,15 @@ function rebuildWeights() {
   for (let i = n; i < globalWeights.length; i++) {
     globalWeights[i] = 0;
   }
+  // An unchecked effect is left out of the search: no weight either (also
+  // fixes settings saved before unchecking reset the weight)
+  for (let i = 0; i < n; i++) {
+    if (globalChecked[i] === false) globalWeights[i] = 0;
+  }
 
   // Ensure globalWeights array is large enough
   while (globalWeights.length < n) {
     globalWeights.push(0);
-  }
-
-  // If fewer diplomas leave too few effects checked, re-check all
-  let checkedCount = 0;
-  for (let i = 0; i < n; i++) {
-    if (globalChecked[i] !== false) checkedCount++;
-  }
-  if (!complementMode && checkedCount < Math.min(n, MIN_CHECKED_EFFECTS)) {
-    globalChecked = [];
   }
 
   for (let i = 0; i < n; i++) {
@@ -230,18 +326,32 @@ function rebuildWeights() {
     });
 
     const slider = card.querySelector('input[type="range"]');
-    slider.addEventListener("input", () => {
-      globalWeights[i] = Number(slider.value);
-      updateHiddenWeights(globalWeights.slice(0, n));
-    });
-
     // Checkbox to the left of the slider
     const sliderRow = document.createElement("div");
     sliderRow.className = "weight-slider-row";
     const check = makeEffectCheckbox(globalChecked[i] ?? true, effectNames[i] ?? "");
+    const checkInput = check.querySelector("input");
+
+    slider.addEventListener("input", () => {
+      globalWeights[i] = Number(slider.value);
+      updateHiddenWeights(globalWeights.slice(0, n));
+      // A weight means the effect is wanted: check it if it was unchecked
+      // (an unchecked effect is left out of the search)
+      if (globalWeights[i] > 0 && !checkInput.checked && !checkInput.disabled) {
+        checkInput.checked = true;
+        checkInput.dispatchEvent(new Event("change", { bubbles: true }));
+        return; // the change handler updates the counter
+      }
+      updateEffectsCounter();
+    });
     card.classList.toggle("excluded", !(globalChecked[i] ?? true));
     check.querySelector("input").addEventListener("change", (e) => {
       globalChecked[i] = e.target.checked;
+      // Unchecked: left out of the search, so its weight goes back to 0
+      if (!e.target.checked && Number(slider.value) > 0) {
+        slider.value = 0;
+        slider.dispatchEvent(new Event("input", { bubbles: true }));
+      }
       card.classList.toggle("excluded", !e.target.checked);
       updateEffectLocks(dom.weightsContainer);
       updateHiddenExcluded(n);
@@ -286,6 +396,9 @@ window.cauldronForm = {
       }
     }
     complementMode = on;
+    // Its own rules apply: the counter is only shown, greyed (game.css)
+    const counter = document.getElementById("effectsCounter");
+    if (counter) counter.inert = on;
     rebuildWeights();
     if (!on && result) {
       dom.nDiploma.dispatchEvent(new Event("input"));
@@ -436,7 +549,7 @@ async function saveSettings() {
     status.classList.add("error");
     return { ok: false, error: message };
   } finally {
-    btn.disabled = false;
+    updateSaveButton();
   }
 }
 
@@ -498,6 +611,7 @@ function initOptimizer() {
     dom.boundsContainer.append(card);
   });
   initExactSearch();
+  initEffectsAll();
 
   rebuildWeights();
 

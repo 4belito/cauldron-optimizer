@@ -502,6 +502,8 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
     Raises ValueError with a user-facing message if anything is invalid.
     """
     form = SearchForm()
+    # Saving (no ingredients) accepts fewer checked effects than a search
+    form.require_min_effects = include_premium
     if not form.validate_on_submit():
         raise ValueError(first_form_error(form))
 

@@ -140,6 +140,10 @@ class SearchForm(FlaskForm):
     Includes all dynamic inputs except constant names lists.
     """
 
+    # False to save settings that could not search yet (fewer effects
+    # checked, or none of the checked ones with a weight)
+    require_min_effects = True
+
     n_diploma = IntegerField(
         validators=[
             DataRequired(message=_l(N_("Debe introducir el numero de diplomas"))),
@@ -279,7 +283,8 @@ class SearchForm(FlaskForm):
         if any(i < 0 or i >= n for i in excluded):
             raise ValidationError(_l(N_("Los efectos desmarcados no son válidos")))
 
-        if n - len(excluded) < min(n, MIN_CHECKED_EFFECTS):
+        # Needed to search; saving settings may keep fewer checked
+        if self.require_min_effects and n - len(excluded) < min(n, MIN_CHECKED_EFFECTS):
             raise ValidationError(
                 _l(N_("Debes mantener al menos {} efectos marcados")).format(
                     MIN_CHECKED_EFFECTS
@@ -287,7 +292,8 @@ class SearchForm(FlaskForm):
             )
 
         weights = getattr(self, "_parsed_effect_weights", [])
-        if weights and all(weights[i] == 0 for i in range(n) if i not in excluded):
+        checked_weights = [weights[i] for i in range(n) if i not in excluded]
+        if self.require_min_effects and weights and not any(checked_weights):
             raise ValidationError(_l(N_("Al menos debes querer algun efecto")))
 
         self._parsed_excluded_effects = excluded

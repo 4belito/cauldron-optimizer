@@ -243,6 +243,17 @@ fieldset.card > legend.card-legend {
   fill: #3f6f10;
 }
 
+/* Disabled (grey button): the cut-outs take the grey instead */
+.save-btn:disabled .save-icon-shutter,
+.save-btn:disabled .save-icon-label {
+  fill: #4a4a4a;
+}
+
+/* Disabled because something is missing (not busy saving) */
+.save-btn:disabled {
+  cursor: not-allowed;
+}
+
 .save-check {
   stroke: #fff;
 }
@@ -1176,17 +1187,48 @@ button:disabled[data-tip] {
   width: 10rem;
 }
 
-.server-switch {
+/* "Complete effects" switch in the diploma row: the stepper stays centred
+   (middle column), the switch on the right. Phones: on its own line */
+.effects-card .diploma-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  column-gap: 0.75rem;
+}
+
+.effects-card .diploma-input {
+  grid-column: 2;
+}
+
+.effects-mode-switch {
+  grid-column: 3;
+  justify-self: end;
   margin: 0;
 }
 
-.server-switch-text {
+.effects-mode-text {
   display: inline-block;
-  font-size: 0.78rem;
-  line-height: 0.95;
-  width: 4.6rem;
-  white-space: normal;
+  max-width: 6rem;
+  font-size: 0.85rem;
+  line-height: 1.05;
   text-align: left;
+}
+
+@media (max-width: 37.5rem) {
+  .effects-card .diploma-row {
+    grid-template-columns: 1fr;
+    row-gap: 0.6rem;
+  }
+
+  .effects-card .diploma-input,
+  .effects-mode-switch {
+    grid-column: 1;
+    justify-self: center;
+  }
+
+  .effects-mode-text {
+    max-width: none;
+  }
 }
 
 /* The mode's panel (in the ingredients panel's place) */
@@ -1205,16 +1247,19 @@ button:disabled[data-tip] {
   justify-content: center;
   width: max-content;
   max-width: 100%;
-  margin: 0.65rem auto 0;
+  margin: 0 auto 0.75rem;
   padding: 0.35rem 0.75rem;
+  /* Incomplete: an alert, red edges on both sides; complete: green */
   border: 1px solid #b89a63;
-  border-left: 4px solid #c9a44f;
+  border-left: 4px solid #b3261e;
+  border-right: 4px solid #b3261e;
   border-radius: 0.35rem;
   background: rgba(246, 234, 208, 0.75);
 }
 
 .premium-counter.is-complete {
   border-left-color: var(--game-green-main);
+  border-right-color: var(--game-green-main);
 }
 
 .premium-counter {
@@ -1233,7 +1278,7 @@ button:disabled[data-tip] {
 .premium-counter-text {
   font-weight: 700;
   font-size: 0.95rem;
-  color: #51200d;
+  color: #9b1c14;
 }
 
 .premium-counter.is-complete .premium-counter-text {
@@ -1428,4 +1473,104 @@ button:disabled[data-tip] {
   outline: 2px solid #7a5a3a;
   outline-offset: 2px;
   border-radius: 50%;
+}
+
+/* ---- Effects counter under the diplomas: one slot per diploma ----
+   A fixed grid with room for every diploma (2 rows of 13), and the text in
+   a fixed-width column: nothing moves when the diplomas change */
+.effects-counter {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+}
+
+.effects-slots {
+  display: grid;
+  grid-template-columns: repeat(13, 1.55rem);
+  gap: 0.25rem;
+  flex: 0 0 auto;
+}
+
+.effect-slot {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+/* Beyond the minimum: may stay empty */
+.effect-slot.optional {
+  border-style: dotted;
+  border-color: rgba(184, 154, 99, 0.6);
+  background-color: transparent;
+}
+
+/* Select-all box at the left; a dash when only some effects are checked */
+.effects-all {
+  align-self: center;
+}
+
+.effects-all-dash {
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  top: 50%;
+  height: 0.22rem;
+  margin-top: -0.11rem;
+  border-radius: 0.1rem;
+  background: var(--game-green-main);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.effects-all input:indeterminate ~ .effects-all-dash {
+  visibility: visible;
+}
+
+/* More diplomas than the player has: kept only for the space */
+.effect-slot.unused {
+  visibility: hidden;
+}
+
+.effects-counter .premium-counter-text {
+  width: 11rem;
+  text-align: center;
+}
+
+@media (max-width: 37.5rem) {
+  .effects-slots {
+    grid-template-columns: repeat(13, 1.2rem);
+    gap: 0.2rem;
+  }
+
+  .effect-slot {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
+/* "Completar efectos" has its own rules: the counter keeps its place (the
+   panel does not change size) and its circles in colour (they show how far
+   the chosen effects are from 10), but not its text, rule colours or the
+   select-all box */
+body.complement-on .effects-counter {
+  border-left-color: #b89a63;
+  border-right-color: #b89a63;
+}
+
+body.complement-on .effects-all {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+body.complement-on .effects-counter .premium-counter-text {
+  visibility: hidden;
+}
+
+/* Checked without a weight: only fills up to the minimum. Grey mark in the
+   panel and grey ring in the counter; the wanted effects keep the green */
+.effect-check.filler .effect-check-mark {
+  filter: grayscale(1) brightness(1.15) contrast(1.1);
+}
+
+.effect-slot.filled.filler {
+  border-color: #9a948a;
 }

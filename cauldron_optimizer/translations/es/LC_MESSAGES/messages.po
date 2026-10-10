@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-10 11:40-0500\n"
+"POT-Creation-Date: 2026-10-10 15:06-0500\n"
 "PO-Revision-Date: 2025-12-24 13:27-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -22,10 +22,11 @@ msgstr ""
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr ""
 
-#: cauldron_optimizer/__init__.py:63 cauldron_optimizer/routes.py:225
-#: cauldron_optimizer/routes.py:252 cauldron_optimizer/routes.py:279
-#: cauldron_optimizer/routes.py:295 cauldron_optimizer/routes.py:461
-#: cauldron_optimizer/routes.py:567 cauldron_optimizer/routes.py:582
+#: cauldron_optimizer/__init__.py:63 cauldron_optimizer/routes.py:240
+#: cauldron_optimizer/routes.py:267 cauldron_optimizer/routes.py:294
+#: cauldron_optimizer/routes.py:311 cauldron_optimizer/routes.py:385
+#: cauldron_optimizer/routes.py:563 cauldron_optimizer/routes.py:671
+#: cauldron_optimizer/routes.py:686
 msgid "Error de base de datos"
 msgstr ""
 
@@ -215,8 +216,8 @@ msgstr ""
 msgid "Las contraseñas no coinciden"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:126 cauldron_optimizer/routes.py:190
-#: cauldron_optimizer/routes.py:237
+#: cauldron_optimizer/forms.py:126 cauldron_optimizer/routes.py:205
+#: cauldron_optimizer/routes.py:252
 msgid "Avatar no válido"
 msgstr ""
 
@@ -225,87 +226,87 @@ msgstr ""
 msgid "El nombre del mundo debe tener entre 1 y {} caracteres"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:145
+#: cauldron_optimizer/forms.py:149
 msgid "Debe introducir el numero de diplomas"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:150
+#: cauldron_optimizer/forms.py:154
 #, python-brace-format
 msgid "El numero de diplomas debe estar entre 1 y {}"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:159
+#: cauldron_optimizer/forms.py:163
 msgid "máx cantidad por ingrediente"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:162
+#: cauldron_optimizer/forms.py:166
 msgid "Debe introducir la cantidad máxima por ingrediente"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:169
+#: cauldron_optimizer/forms.py:173
 #, python-brace-format
 msgid "La cantidad máxima por ingrediente debe estar entre 1 y {}"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:182
+#: cauldron_optimizer/forms.py:186
 msgid "máx probabilidad por efecto"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:185
+#: cauldron_optimizer/forms.py:189
 msgid "Debe introducir la probabilidad maxima por effecto"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:191
+#: cauldron_optimizer/forms.py:195
 msgid "La probabilidad maxima por efecto debe estar entre 1 y 100"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:198
+#: cauldron_optimizer/forms.py:202
 msgid "profundidad de búsqueda"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:200
+#: cauldron_optimizer/forms.py:204
 msgid "Debe introducir la profundidad de búsqueda"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:205
+#: cauldron_optimizer/forms.py:209
 #, python-brace-format
 msgid "La profundidad de búsqueda debe estar entre 1 y {}"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:228
+#: cauldron_optimizer/forms.py:232
 msgid "Los pesos de los efectos deben ser un JSON válido"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:233
+#: cauldron_optimizer/forms.py:237
 msgid "Los pesos de los efectos deben ser una lista"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:239
+#: cauldron_optimizer/forms.py:243
 msgid "El numero de effectos debe conicidir con el numero de diplomas"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:250
+#: cauldron_optimizer/forms.py:254
 msgid "Los pesos de los efectos deben ser numeros"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:257
+#: cauldron_optimizer/forms.py:261
 msgid "Los pesos de los efectos deben estar en entre 0 y 1 (incluidos)"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:263 cauldron_optimizer/forms.py:291
+#: cauldron_optimizer/forms.py:267 cauldron_optimizer/forms.py:297
 msgid "Al menos debes querer algun efecto"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:275 cauldron_optimizer/forms.py:280
+#: cauldron_optimizer/forms.py:279 cauldron_optimizer/forms.py:284
 msgid "Los efectos desmarcados no son válidos"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:284
+#: cauldron_optimizer/forms.py:289
 #, python-brace-format
 msgid "Debes mantener al menos {} efectos marcados"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:297
+#: cauldron_optimizer/forms.py:303
 msgid "Idioma inválido"
 msgstr ""
 
@@ -319,53 +320,54 @@ msgstr ""
 msgid "Formulario inválido"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:154 cauldron_optimizer/routes.py:179
-#: cauldron_optimizer/routes.py:181
+#: cauldron_optimizer/routes.py:169 cauldron_optimizer/routes.py:194
+#: cauldron_optimizer/routes.py:196
 #: cauldron_optimizer/templates/register.html:52
 #, python-format
 msgid "Mundo %(n)s"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:165
+#: cauldron_optimizer/routes.py:180
 #, python-format
 msgid "El nombre del mundo debe tener entre 1 y %(n)s caracteres"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:171
+#: cauldron_optimizer/routes.py:186
 msgid "Ya tienes un mundo con ese nombre"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:199
+#: cauldron_optimizer/routes.py:214 cauldron_optimizer/routes.py:350
 #, python-format
 msgid "Puedes tener como máximo %(n)s mundos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:267 cauldron_optimizer/routes.py:292
+#: cauldron_optimizer/routes.py:282 cauldron_optimizer/routes.py:307
+#: cauldron_optimizer/routes.py:343
 msgid "Mundo no válido"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:272 cauldron_optimizer/templates/index.html:80
+#: cauldron_optimizer/routes.py:287 cauldron_optimizer/templates/index.html:80
 msgid "No puedes eliminar tu único mundo"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:323
+#: cauldron_optimizer/routes.py:423
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:390
+#: cauldron_optimizer/routes.py:490
 msgid "El nombre de usuario ya está en uso"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:414
+#: cauldron_optimizer/routes.py:516
 msgid "Ingredientes premium no válidos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:419
+#: cauldron_optimizer/routes.py:521
 #, python-format
 msgid "Elige exactamente %(n)s ingredientes para evitar"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:536 cauldron_optimizer/routes.py:551
+#: cauldron_optimizer/routes.py:640 cauldron_optimizer/routes.py:655
 msgid "Datos no válidos"
 msgstr ""
 
@@ -374,12 +376,12 @@ msgid "Perfil"
 msgstr ""
 
 #: cauldron_optimizer/templates/_avatar_picker.html:28
-#: cauldron_optimizer/templates/index.html:271
-#: cauldron_optimizer/templates/index.html:315
-#: cauldron_optimizer/templates/index.html:343
-#: cauldron_optimizer/templates/index.html:411
-#: cauldron_optimizer/templates/index.html:438
-#: cauldron_optimizer/templates/index.html:446
+#: cauldron_optimizer/templates/index.html:288
+#: cauldron_optimizer/templates/index.html:337
+#: cauldron_optimizer/templates/index.html:365
+#: cauldron_optimizer/templates/index.html:433
+#: cauldron_optimizer/templates/index.html:460
+#: cauldron_optimizer/templates/index.html:468
 #: cauldron_optimizer/templates/layout.html:35
 msgid "Cerrar"
 msgstr ""
@@ -393,7 +395,7 @@ msgid "Imagen"
 msgstr ""
 
 #: cauldron_optimizer/templates/_avatar_picker.html:65
-#: cauldron_optimizer/templates/index.html:328
+#: cauldron_optimizer/templates/index.html:350
 msgid "Cancelar"
 msgstr ""
 
@@ -539,15 +541,34 @@ msgstr ""
 msgid "Un diploma más"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:132
-msgid "Evitar Ingredientes (Premium)"
+#: cauldron_optimizer/templates/index.html:128
+#, python-brace-format
+msgid "Marca al menos {min} efectos"
 msgstr ""
 
+#: cauldron_optimizer/templates/index.html:129
+#, python-brace-format
+msgid "Marca los {n} efectos"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:130
+msgid "Dale peso al menos a un efecto marcado"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:132
 #: cauldron_optimizer/templates/index.html:133
+msgid "Marcar o desmarcar todos los efectos"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:148
+msgid "Evitar ingredientes premium"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:149
 msgid "Completar efectos"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:138
+#: cauldron_optimizer/templates/index.html:154
 msgid ""
 "Se usan tus efectos con peso (menos de 10); los demás se desmarcan. La "
 "búsqueda prueba los efectos que faltan hasta 10, con todas las "
@@ -555,106 +576,110 @@ msgid ""
 "completan. Para cambiar los ajustes, apaga el modo."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:165
+#: cauldron_optimizer/templates/index.html:160
 msgid "Elige 4 ingredientes para evitar"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:176
+#: cauldron_optimizer/templates/index.html:164
+msgid "Elige los 4 ingredientes premium"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:193
 msgid "Limitar Búsqueda"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:183
+#: cauldron_optimizer/templates/index.html:200
 msgid ""
 "Comprueba todas las recetas posibles: garantiza la mejor (tarda 1-2 "
 "segundos). Es el límite de la profundidad de búsqueda; mover la barra lo "
 "desactiva."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:189
+#: cauldron_optimizer/templates/index.html:206
 msgid "Óptima"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:195
-#: cauldron_optimizer/templates/index.html:248
+#: cauldron_optimizer/templates/index.html:212
+#: cauldron_optimizer/templates/index.html:265
 msgid "Calcula la mejor receta para esta configuración"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:196
-#: cauldron_optimizer/templates/index.html:247
+#: cauldron_optimizer/templates/index.html:213
+#: cauldron_optimizer/templates/index.html:264
 msgid "Buscar Receta"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:257
+#: cauldron_optimizer/templates/index.html:274
 #, python-brace-format
 msgid "Progreso: {pct}%."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:258
+#: cauldron_optimizer/templates/index.html:275
 msgid "Completar"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:259
+#: cauldron_optimizer/templates/index.html:276
 msgid "Ver resultados"
 msgstr "Ver resultados"
 
-#: cauldron_optimizer/templates/index.html:260
+#: cauldron_optimizer/templates/index.html:277
 msgid "Busca los efectos que mejor completan los elegidos"
 msgstr "Busca los efectos que mejor completan los elegidos"
 
-#: cauldron_optimizer/templates/index.html:261
+#: cauldron_optimizer/templates/index.html:278
 msgid "Busca los efectos que completan los elegidos (o continúa la búsqueda)"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:262
+#: cauldron_optimizer/templates/index.html:279
 msgid ""
 "Necesitas entre 1 y 9 efectos con peso. Apaga el modo para cambiar los "
 "pesos."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:263
+#: cauldron_optimizer/templates/index.html:280
 msgid "Necesitas al menos 10 diplomas. Apaga el modo para cambiarlos."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:264
+#: cauldron_optimizer/templates/index.html:281
 msgid "Se usan tus efectos con peso. Pulsa Completar."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:265
+#: cauldron_optimizer/templates/index.html:282
 msgid "Buscando…"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:266
+#: cauldron_optimizer/templates/index.html:283
 msgid "En pausa"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:267
+#: cauldron_optimizer/templates/index.html:284
 msgid "Búsqueda terminada"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:268
+#: cauldron_optimizer/templates/index.html:285
 msgid "Progreso guardado: pulsa Completar para continuar cuando quieras."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:269
-#: cauldron_optimizer/templates/index.html:385
+#: cauldron_optimizer/templates/index.html:286
+#: cauldron_optimizer/templates/index.html:407
 msgid "Detener"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:270
-#: cauldron_optimizer/templates/index.html:384
+#: cauldron_optimizer/templates/index.html:287
+#: cauldron_optimizer/templates/index.html:406
 msgid "Detiene la búsqueda y guarda el progreso para continuarla después"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:272
-#: cauldron_optimizer/templates/index.html:423
+#: cauldron_optimizer/templates/index.html:289
+#: cauldron_optimizer/templates/index.html:445
 msgid "Continuar"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:273
+#: cauldron_optimizer/templates/index.html:290
 msgid "Continúa la búsqueda desde donde se detuvo"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:274
+#: cauldron_optimizer/templates/index.html:291
 #, python-brace-format
 msgid ""
 "Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para "
@@ -663,154 +688,154 @@ msgstr ""
 "Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para "
 "seguir."
 
-#: cauldron_optimizer/templates/index.html:275
+#: cauldron_optimizer/templates/index.html:292
 msgid "Búsqueda terminada con estos valores: pulsa Ver resultados."
 msgstr "Búsqueda terminada con estos valores: pulsa Ver resultados."
 
-#: cauldron_optimizer/templates/index.html:276
+#: cauldron_optimizer/templates/index.html:293
 #, python-brace-format
 msgid "{done} de {total} búsquedas ({pct}%)"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:277
+#: cauldron_optimizer/templates/index.html:294
 #, python-brace-format
 msgid "Esta búsqueda necesita {total} búsquedas."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:278
+#: cauldron_optimizer/templates/index.html:295
 #, python-brace-format
 msgid "Quedan unos {eta}."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:279
+#: cauldron_optimizer/templates/index.html:296
 msgid "media"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:280
+#: cauldron_optimizer/templates/index.html:297
 msgid "peor · media ± desviación · mejor"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:281
-#: cauldron_optimizer/templates/index.html:366
+#: cauldron_optimizer/templates/index.html:298
+#: cauldron_optimizer/templates/index.html:388
 msgid "Mínimo"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:282
-#: cauldron_optimizer/templates/index.html:372
+#: cauldron_optimizer/templates/index.html:299
+#: cauldron_optimizer/templates/index.html:394
 msgid "Máximo"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:283
-#: cauldron_optimizer/templates/index.html:369
-#: cauldron_optimizer/templates/index.html:370
+#: cauldron_optimizer/templates/index.html:300
+#: cauldron_optimizer/templates/index.html:391
+#: cauldron_optimizer/templates/index.html:392
 msgid "Media"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:284
+#: cauldron_optimizer/templates/index.html:301
 msgid "Desviación"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:285
+#: cauldron_optimizer/templates/index.html:302
 msgid "mejor"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:286
+#: cauldron_optimizer/templates/index.html:303
 #, python-brace-format
 msgid "Puntuación media {avg} · mejor {best}"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:287
+#: cauldron_optimizer/templates/index.html:304
 msgid "Ver la mejor receta con estos efectos"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:288
+#: cauldron_optimizer/templates/index.html:305
 msgid "Aún no hay resultados: cada combinación de efectos necesita 495 búsquedas."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:314
+#: cauldron_optimizer/templates/index.html:336
 msgid "Eliminar mundo"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:323
+#: cauldron_optimizer/templates/index.html:345
 msgid ""
 "Se eliminará este mundo con toda su configuración: efectos, pesos, "
 "límites y avatar. Esta acción no se puede deshacer."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:331
+#: cauldron_optimizer/templates/index.html:353
 msgid "Eliminar"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:342
+#: cauldron_optimizer/templates/index.html:364
 msgid "Efectos complementarios"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:357
+#: cauldron_optimizer/templates/index.html:379
 msgid "Testing"
 msgstr "Probando"
 
-#: cauldron_optimizer/templates/index.html:363
-#: cauldron_optimizer/templates/index.html:364
+#: cauldron_optimizer/templates/index.html:385
+#: cauldron_optimizer/templates/index.html:386
 msgid "Ordenar por"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:367
+#: cauldron_optimizer/templates/index.html:389
 msgid "Mejor peor caso: la más segura sean cuales sean los ingredientes"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:367
+#: cauldron_optimizer/templates/index.html:389
 msgid "Min"
 msgstr "Mín"
 
-#: cauldron_optimizer/templates/index.html:370
+#: cauldron_optimizer/templates/index.html:392
 msgid ""
 "Mejor puntuación media: buena en la mayoría de combinaciones de "
 "ingredientes"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:373
+#: cauldron_optimizer/templates/index.html:395
 msgid "Mejor caso: la puntuación más alta posible con algunos ingredientes"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:373
+#: cauldron_optimizer/templates/index.html:395
 msgid "Max"
 msgstr "Máx"
 
-#: cauldron_optimizer/templates/index.html:379
+#: cauldron_optimizer/templates/index.html:401
 msgid "Marca en el panel los 10 efectos de la combinación seleccionada"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:380
+#: cauldron_optimizer/templates/index.html:402
 msgid "Aplicar"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:396
+#: cauldron_optimizer/templates/index.html:418
 msgid "Solución óptima"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:399
+#: cauldron_optimizer/templates/index.html:421
 msgid "Comprobando todas las recetas posibles…"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:410
+#: cauldron_optimizer/templates/index.html:432
 msgid "Búsqueda guardada"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:415
+#: cauldron_optimizer/templates/index.html:437
 msgid "Este mundo tiene una búsqueda guardada con otros efectos, pesos o límites."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:419
+#: cauldron_optimizer/templates/index.html:441
 msgid ""
 "Puedes continuarla (sus ajustes se mostrarán en los paneles) o empezar "
 "una nueva con los ajustes actuales, que borra la guardada."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:426
+#: cauldron_optimizer/templates/index.html:448
 msgid "Nueva búsqueda"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:437
+#: cauldron_optimizer/templates/index.html:459
 msgid "Mejor receta"
 msgstr ""
 
@@ -912,4 +937,7 @@ msgstr ""
 #~ "mundo con su progreso y resultados. "
 #~ "Después podrás elegir otros efectos, "
 #~ "pesos y límites."
+
+#~ msgid "Evitar Ingredientes (Premium)"
+#~ msgstr ""
 
