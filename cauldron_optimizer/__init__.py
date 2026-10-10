@@ -18,6 +18,9 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=365)
 app.config["SECRET_KEY"] = get_secret_key()
+# CSRF tokens last as long as the login session instead of 1 hour, so a page
+# left open (e.g. during a long "complete effects" search) can still save
+app.config["WTF_CSRF_TIME_LIMIT"] = None
 
 # Initialize extensions
 csrf = CSRFProtect(app)
@@ -41,11 +44,12 @@ def inject_i18n():
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e: CSRFError):
     """Handle CSRF token errors gracefully."""
+    message = _("Sesión expirada. Recarga la página e inténtalo de nuevo.")
+    # Requests made with fetch (saving) expect JSON, not an error page
+    if request.accept_mimetypes.best == "application/json":
+        return {"ok": False, "error": message}, 400
     return (
-        error(
-            _("Sesión expirada. Recarga la página e inténtalo de nuevo."),
-            url=url_for("login"),
-        ),
+        error(message, url=url_for("login")),
         400,
     )
 
