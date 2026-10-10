@@ -55,7 +55,7 @@
        Enabled once something changes (see optimizer.js) -->
   <button
     type="button" id="restoreSettingsBtn" class="save-btn restore-btn" disabled
-    data-tip="{{ _('Descarta los cambios y vuelve a la configuración guardada') }}"
+    data-tip="{{ _('Descarta los cambios, vuelve a la configuración guardada y desmarca los ingredientes') }}"
     aria-label="{{ _('Descartar cambios y cargar la configuración guardada') }}"
     data-url="{{ url_for('reset_settings') }}"
   >
@@ -94,6 +94,15 @@
       <strong>{{ _("Diplomas & Efectos Deseados") }}</strong>
     </legend>
     <div class="card-body">
+      <!-- "Complete effects" mode (see complement.js) -->
+      <label class="complement-switch"
+             data-tip="{{ _('Marca menos de 10 efectos y busca los efectos que mejor los completan, probando todas las combinaciones de 4 ingredientes evitados') }}">
+        <input type="checkbox" id="complementToggle">
+        <span class="complement-switch-track" aria-hidden="true"></span>
+        <span>{{ _("Completar efectos") }}</span>
+      </label>
+      <!-- "Complete effects" mode: what is missing, or what Completar will do -->
+      <p class="complement-hint" id="complementHint" role="status" aria-live="polite" hidden></p>
 
       <div class="diploma-row">
         <div class="diploma-input">
@@ -156,10 +165,11 @@
   </fieldset>
 
   <div class="submit-row">
-    <button type="submit" class="game-btn game-btn-main" data-tip="{{ _('Calcula la mejor receta para esta configuración') }}">
+    <button type="submit" id="searchBtn" class="game-btn game-btn-main" data-tip="{{ _('Calcula la mejor receta para esta configuración') }}">
       <span>{{ _("Buscar Receta") }}</span>
     </button>
   </div>
+
 </form>
 </div>
 
@@ -195,6 +205,57 @@
   };
 </script>
 <script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
+<!-- "Complete effects" search: solver + page logic, texts in both languages -->
+<script>
+  window.COMPLEMENT = {
+    matrices: {{ solver_matrices | tojson }},
+    effectNames: [
+      {% for n in effect_names %}{{ _(n) | tojson }}{{ "," if not loop.last }}{% endfor %}
+    ],
+    searchLabel: {{ _("Buscar Receta") | tojson }},
+    searchTip: {{ _("Calcula la mejor receta para esta configuración") | tojson }},
+    urls: {
+      worker: "{{ url_for('static', filename='js/complement-worker.js') }}",
+      state: "{{ url_for('complement_state') }}",
+      save: "{{ url_for('complement_save') }}",
+      clear: "{{ url_for('complement_clear') }}",
+    },
+    text: {
+      button: {{ _("Completar") | tojson }},
+      buttonTip: {{ _("Busca los efectos que completan los elegidos (o continúa la búsqueda)") | tojson }},
+      needEffects: {{ _("Marca entre 1 y 9 efectos, al menos uno con peso. La búsqueda completa el resto hasta 10.") | tojson }},
+      needDiplomas: {{ _("Necesitas al menos 10 diplomas.") | tojson }},
+      ready: {{ _("Marca los efectos que quieres y pulsa Completar.") | tojson }},
+      running: {{ _("Buscando…") | tojson }},
+      paused: {{ _("En pausa") | tojson }},
+      done: {{ _("Búsqueda terminada") | tojson }},
+      saved: {{ _("Progreso guardado: pulsa Completar para continuar cuando quieras.") | tojson }},
+      stop: {{ _("Detener") | tojson }},
+      stopTip: {{ _("Detiene la búsqueda y guarda el progreso para continuarla después") | tojson }},
+      close: {{ _("Cerrar") | tojson }},
+      resume: {{ _("Continuar") | tojson }},
+      resumeTip: {{ _("Continúa la búsqueda desde donde se detuvo") | tojson }},
+      resumeHint: {{ _("Búsqueda guardada al {pct}%: pulsa Completar para continuar.") | tojson }},
+      otherSaved: {{ _("Tienes otra búsqueda guardada ({pct}%). Completar te deja restaurarla o empezar esta ({total} búsquedas).") | tojson }},
+      doneHint: {{ _("Búsqueda terminada: pulsa Completar para ver los resultados.") | tojson }},
+      runs: {{ _("{done} de {total} búsquedas ({pct}%)") | tojson }},
+      estimate: {{ _("Esta búsqueda necesita {total} búsquedas.") | tojson }},
+      eta: {{ _("Quedan unos {eta}.") | tojson }},
+      avg: {{ _("media") | tojson }},
+      legend: {{ _("peor · media ± desviación · mejor") | tojson }},
+      statMin: {{ _("Mínimo") | tojson }},
+      statMax: {{ _("Máximo") | tojson }},
+      statMean: {{ _("Media") | tojson }},
+      statStd: {{ _("Desviación") | tojson }},
+      best: {{ _("mejor") | tojson }},
+      scores: {{ _("Puntuación media {avg} · mejor {best}") | tojson }},
+      showRecipe: {{ _("Ver la mejor receta con estos efectos") | tojson }},
+      noResults: {{ _("Aún no hay resultados: cada combinación de efectos necesita 495 búsquedas.") | tojson }},
+    },
+  };
+</script>
+<script src="{{ url_for('static', filename='js/solver.js') }}"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script src="{{ url_for('static', filename='js/autofill.js') }}"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
@@ -231,6 +292,108 @@
         </button>
         <button type="button" id="deleteConfirm" class="avatar-btn avatar-btn-cancel">
           <span>{{ _("Eliminar") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress and results of the "complete effects" search -->
+<div id="complementWindow" class="avatar-overlay" hidden>
+  <div class="avatar-window complement-window" role="dialog" aria-modal="true" aria-labelledby="complementWindowTitle">
+    <div class="avatar-header">
+      <h2 id="complementWindowTitle" class="avatar-title">{{ _("Efectos complementarios") }}</h2>
+      <button type="button" class="avatar-close" data-complement-close aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+    <div class="avatar-body complement-body">
+      <p class="complement-status"><span id="complementStatus"></span></p>
+      <div class="complement-bar" id="complementBar" role="progressbar"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="complement-bar-fill" id="complementBarFill"></div>
+      </div>
+      <p class="complement-counts">
+        <span id="complementCounts"></span> <span id="complementEta"></span>
+      </p>
+      <p class="complement-message" id="complementMessage" role="status" aria-live="polite"></p>
+      <!-- Complementary set being tested and its progress over 495 ingredient sets -->
+      <div class="complement-current" id="complementCurrent" hidden>
+        <span class="complement-current-label">{{ _("Testing") }}:</span>
+        <span class="complement-effects" id="complementCurrentEffects"></span>
+        <span class="complement-current-bar"><span id="complementCurrentFill"></span></span>
+        <span class="complement-current-count" id="complementCurrentCount"></span>
+      </div>
+      <!-- Sort the ranking by mean, minimum or maximum score -->
+      <div class="complement-sort" role="radiogroup" aria-label="{{ _('Ordenar por') }}">
+        <span class="complement-sort-label">{{ _("Ordenar por") }}:</span>
+        <button type="button" class="complement-sort-btn" data-sort="worst" role="radio" aria-checked="false"
+                aria-label="{{ _('Mínimo') }}"
+                data-tip="{{ _('Mejor peor caso: la más segura sean cuales sean los ingredientes') }}">{{ _("Min") }}</button>
+        <button type="button" class="complement-sort-btn" data-sort="avg" role="radio" aria-checked="true"
+                aria-label="{{ _('Media') }}"
+                data-tip="{{ _('Mejor puntuación media: buena en la mayoría de combinaciones de ingredientes') }}">{{ _("Media") }}</button>
+        <button type="button" class="complement-sort-btn" data-sort="best" role="radio" aria-checked="false"
+                aria-label="{{ _('Máximo') }}"
+                data-tip="{{ _('Mejor caso: la puntuación más alta posible con algunos ingredientes') }}">{{ _("Max") }}</button>
+      </div>
+      <div class="complement-top" id="complementTop"></div>
+      <div class="avatar-actions">
+        <!-- Best result onto the effects panel (then the world's save button saves it) -->
+        <button type="button" class="avatar-btn avatar-btn-save" id="complementApply"
+                data-tip="{{ _('Marca en el panel los 10 efectos de la combinación seleccionada') }}">
+          <span>{{ _("Aplicar") }}</span>
+        </button>
+        <!-- Running: stops and saves. Stopped: continues. Finished: closes -->
+        <button type="button" class="avatar-btn avatar-btn-cancel" id="complementStop"
+                data-tip="{{ _('Detiene la búsqueda y guarda el progreso para continuarla después') }}">
+          <span>{{ _("Detener") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New search would discard saved progress: confirmation -->
+<div id="complementConfirm" class="avatar-overlay" hidden>
+  <div class="avatar-window delete-window complement-confirm-window" role="alertdialog" aria-modal="true" aria-labelledby="complementConfirmTitle">
+    <div class="avatar-header">
+      <h2 id="complementConfirmTitle" class="avatar-title">{{ _("Nueva búsqueda") }}</h2>
+      <button type="button" class="avatar-close" data-confirm-cancel aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+    <div class="avatar-body delete-body">
+      <p class="delete-text">
+        {{ _("Ya tienes una búsqueda en este mundo con otros parámetros. Si empiezas una nueva, se perderá su progreso.") }}
+      </p>
+      <div class="avatar-actions">
+        <button type="button" class="avatar-btn avatar-btn-save" data-confirm-cancel>
+          <span>{{ _("Cancelar") }}</span>
+        </button>
+        <!-- Puts the saved search's values back on the form and continues it -->
+        <button type="button" id="complementConfirmRestore" class="avatar-btn avatar-btn-save"
+                data-tip="{{ _('Vuelve a los valores de la búsqueda guardada y la continúa') }}">
+          <span>{{ _("Restaurar") }}</span>
+        </button>
+        <button type="button" id="complementConfirmOk" class="avatar-btn avatar-btn-cancel">
+          <span>{{ _("Empezar") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Best recipe of a complementary set -->
+<div id="complementRecipe" class="avatar-overlay" hidden>
+  <div class="avatar-window" role="dialog" aria-modal="true" aria-labelledby="complementRecipeTitle">
+    <div class="avatar-header">
+      <h2 id="complementRecipeTitle" class="avatar-title">{{ _("Mejor receta") }}</h2>
+      <button type="button" class="avatar-close" data-recipe-close aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+    <div class="avatar-body complement-recipe-body">
+      <p id="complementRecipeScore" class="complement-recipe-score"></p>
+      <div id="complementRecipeGrid" class="ingredients-grid result-grid"></div>
+      <div id="complementRecipeEffects" class="recipe-list"></div>
+      <div class="avatar-actions">
+        <button type="button" class="avatar-btn avatar-btn-save" data-recipe-close>
+          <span>{{ _("Cerrar") }}</span>
         </button>
       </div>
     </div>

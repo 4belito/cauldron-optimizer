@@ -347,11 +347,11 @@ msgstr "Worlds"
 
 #: cauldron_optimizer/templates/formula.html:4
 msgid "Fórmula"
-msgstr ""
+msgstr "Formula"
 
 #: cauldron_optimizer/templates/formula.html:13
 msgid "Diplomas:"
-msgstr ""
+msgstr "Diplomas:"
 
 # ###################
 # Index / Optimizer
@@ -596,3 +596,186 @@ msgstr "Number of diplomas: how many effects you have unlocked in the game"
 
 msgid "Calcula la mejor receta para esta configuración"
 msgstr "Calculate the best recipe for these settings"
+
+msgid "Descarta los cambios, vuelve a la configuración guardada y desmarca los ingredientes"
+msgstr "Discard changes, go back to the saved settings and uncheck the ingredients"
+
+msgid "Marca menos de 10 efectos y busca los efectos que mejor los completan, probando todas las combinaciones de 4 ingredientes evitados"
+msgstr "Check fewer than 10 effects and find the effects that best complete them, trying every combination of 4 avoided ingredients"
+
+msgid "Completar efectos"
+msgstr "Complete effects"
+
+msgid "Efectos complementarios"
+msgstr "Complementary effects"
+
+msgid "Detiene la búsqueda; puedes continuarla después"
+msgstr "Stops the search; you can continue it later"
+
+msgid "Detener"
+msgstr "Stop"
+
+msgid "Guarda el progreso en este mundo para continuar otro día"
+msgstr "Saves the progress in this world to continue another day"
+
+msgid "Completar"
+msgstr "Complete"
+
+msgid "Busca los efectos que completan los elegidos (o continúa la búsqueda)"
+msgstr "Finds the effects that complete the chosen ones (or continues the search)"
+
+msgid "Marca entre 1 y 9 efectos, al menos uno con peso. La búsqueda completa el resto hasta 10."
+msgstr "Check between 1 and 9 effects, at least one with a weight. The search completes the rest up to 10."
+
+msgid "Necesitas al menos 10 diplomas."
+msgstr "You need at least 10 diplomas."
+
+msgid "Marca los efectos que quieres y pulsa Completar."
+msgstr "Check the effects you want and press Complete."
+
+msgid "Buscando…"
+msgstr "Searching…"
+
+msgid "En pausa"
+msgstr "Paused"
+
+msgid "Búsqueda terminada"
+msgstr "Search finished"
+
+msgid "Progreso guardado"
+msgstr "Progress saved"
+
+msgid "{done} de {total} búsquedas ({pct}%)"
+msgstr "{done} of {total} searches ({pct}%)"
+
+msgid "Esta búsqueda necesita {total} búsquedas."
+msgstr "This search needs {total} searches."
+
+msgid "Quedan unos {eta}."
+msgstr "About {eta} left."
+
+msgid "media"
+msgstr "average"
+
+msgid "mejor"
+msgstr "best"
+
+msgid "Puntuación media {avg} · mejor {best}"
+msgstr "Average score {avg} · best {best}"
+
+msgid "Ver la mejor receta con estos efectos"
+msgstr "See the best recipe with these effects"
+
+msgid "Aún no hay resultados: cada combinación de efectos necesita 495 búsquedas."
+msgstr "No results yet: each combination of effects needs 495 searches."
+
+msgid "Nueva búsqueda"
+msgstr "New search"
+
+msgid "Ya tienes una búsqueda en este mundo con otros parámetros. Si empiezas una nueva, se perderá su progreso."
+msgstr "You already have a search in this world with other settings. If you start a new one, its progress will be lost."
+
+msgid "Empezar"
+msgstr "Start"
+
+msgid "Mejor receta"
+msgstr "Best recipe"
+
+msgid "Datos no válidos"
+msgstr "Invalid data"
+
+msgid "Progreso guardado: pulsa Completar para continuar cuando quieras."
+msgstr "Progress saved: press Complete to continue whenever you want."
+
+msgid "Detiene la búsqueda y guarda el progreso para continuarla después"
+msgstr "Stops the search and saves the progress to continue it later"
+
+msgid "Búsqueda guardada al {pct}%: pulsa Completar para continuar."
+msgstr "Search saved at {pct}%: press Complete to continue."
+
+msgid "Búsqueda terminada: pulsa Completar para ver los resultados."
+msgstr "Search finished: press Complete to see the results."
+
+msgid "Restaurar"
+msgstr "Restore"
+
+msgid "Vuelve a los valores de la búsqueda guardada y la continúa"
+msgstr "Go back to the saved search's values and continue it"
+
+msgid "Aplicar"
+msgstr "Apply"
+
+msgid "Marca en el panel los 10 efectos del mejor resultado"
+msgstr "Check the 10 effects of the best result on the panel"
+
+msgid "Marca los 10 efectos del mejor resultado y los guarda en este mundo"
+msgstr "Check the 10 effects of the best result and save them in this world"
+
+msgid "Tienes otra búsqueda guardada ({pct}%). Completar te deja restaurarla o empezar esta ({total} búsquedas)."
+msgstr "You have another saved search ({pct}%). Complete lets you restore it or start this one ({total} searches)."
+
+msgid "Continuar"
+msgstr "Continue"
+
+msgid "Continúa la búsqueda desde donde se detuvo"
+msgstr "Continues the search from where it stopped"
+
+msgid "peor · media ± desviación · mejor"
+msgstr "worst · average ± deviation · best"
+
+msgid "Media {avg} ± {std} · peor {worst} · mejor {best} (sobre las 495 combinaciones de ingredientes)"
+msgstr "Average {avg} ± {std} · worst {worst} · best {best} (over the 495 ingredient combinations)"
+
+msgid "Marca en el panel los 10 efectos de la combinación seleccionada"
+msgstr "Check the 10 effects of the selected combination on the panel"
+
+msgid "Mínimo"
+msgstr "Minimum"
+
+msgid "Máximo"
+msgstr "Maximum"
+
+msgid "Media"
+msgstr "Mean"
+
+msgid "Desviación"
+msgstr "Std. deviation"
+
+msgid "(sobre las 495 combinaciones de ingredientes)"
+msgstr "(over the 495 ingredient combinations)"
+
+msgid "Ordenar por"
+msgstr "Sort by"
+
+msgid "Mejor puntuación media: buena en la mayoría de combinaciones de ingredientes"
+msgstr "Best average score: good with most ingredient combinations"
+
+msgid "Mejor peor caso: la más segura sean cuales sean los ingredientes"
+msgstr "Best worst case: the safest whatever the ingredients"
+
+msgid "Mejor caso: la puntuación más alta posible con algunos ingredientes"
+msgstr "Best case: the highest score possible with some ingredients"
+
+msgid "Mín"
+msgstr "Min"
+
+msgid "Máx"
+msgstr "Max"
+
+msgid "Probando"
+msgstr "Testing"
+
+msgid "Quedan unos {eta}"
+msgstr "About {eta} left"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Testing"
+msgstr "Testing"
+
+msgid "Min"
+msgstr "Min"
+
+msgid "Max"
+msgstr "Max"

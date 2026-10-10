@@ -504,3 +504,572 @@ button:disabled[data-tip] {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
+
+/* ---- "Complete effects" mode (complement.js) ---- */
+.complement-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto 0.6rem;
+  font-weight: 700;
+  color: #51200d;
+  cursor: pointer;
+}
+
+.complement-switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Small wooden switch: knob slides right and turns green when on */
+.complement-switch-track {
+  position: relative;
+  width: 2.6rem;
+  height: 1.4rem;
+  border: 2px solid #7a5a3a;
+  border-radius: 1rem;
+  background: linear-gradient(#e2cfa3, #d3b884);
+  box-shadow: inset 0 1px 2px rgba(81, 32, 13, 0.35);
+  transition: background 0.15s;
+}
+
+.complement-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 0.1rem;
+  left: 0.12rem;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #a9774a, #6e4423);
+  box-shadow: 0 0 0 2px #e2b85a;
+  transition: transform 0.15s;
+}
+
+.complement-switch input:checked + .complement-switch-track {
+  background: linear-gradient(#8fc23a, #4f8a12);
+}
+
+.complement-switch input:checked + .complement-switch-track::after {
+  transform: translateX(1.2rem);
+}
+
+.complement-switch input:focus-visible + .complement-switch-track {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+}
+
+.effects-card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ingredients panel greyed out while the mode is on */
+.premium-card.is-disabled .card-body {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+  pointer-events: none;
+}
+
+/* Progress panel */
+.complement-status {
+  margin: 0 0 0.4rem;
+  font-weight: 700;
+  color: #51200d;
+}
+
+.complement-bar {
+  height: 1rem;
+  border: 2px solid #7a5a3a;
+  border-radius: 0.6rem;
+  background: #d9c08e;
+  box-shadow: inset 0 1px 3px rgba(81, 32, 13, 0.4);
+  overflow: hidden;
+}
+
+.complement-bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(#a8d84e, #5d9e0f);
+  transition: width 0.3s;
+}
+
+.complement-counts {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: #4b2e16;
+}
+
+.complement-message {
+  min-height: 1.2rem;
+  margin: 0.25rem 0;
+  font-weight: 700;
+  color: #3f6f10;
+  text-align: center;
+}
+
+.complement-message.is-error {
+  color: #a3261b;
+}
+
+.complement-message:empty {
+  min-height: 0;
+}
+
+.complement-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.complement-actions .avatar-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.complement-top {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.complement-row {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #b89a63;
+  border-radius: 0.4rem;
+  background: linear-gradient(#f6ead0, #ead7ad);
+  color: #3b2a16;
+  text-align: left;
+  cursor: pointer;
+}
+
+.complement-row:hover {
+  filter: brightness(1.05);
+}
+
+.complement-row.is-best {
+  border-color: #c9a44f;
+  box-shadow: 0 0 0 2px #e2b85a;
+}
+
+.complement-rank {
+  font-weight: 800;
+  color: #7a5a3a;
+}
+
+.complement-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.complement-effects img {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.complement-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+
+.complement-score small {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #7a5a3a;
+}
+
+.complement-empty {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b4a2a;
+}
+
+/* Best recipe window */
+.complement-recipe-body {
+  gap: 0.8rem;
+  overflow-y: auto;
+}
+
+.complement-recipe-score {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+}
+
+.complement-recipe-body .ingredient-card.avoided {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+
+.recipe-row.is-complement {
+  box-shadow: inset 0 0 0 2px #e2b85a;
+}
+
+/* Under the main button in "complete effects" mode */
+.submit-row {
+  flex-wrap: wrap;
+}
+
+/* Note under the "Complete effects" switch: what is missing (red tint) or
+   what Completar will do. Same parchment as the panels, with an info mark */
+.complement-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 34rem;
+  margin: 0 auto 0.75rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #b89a63;
+  border-left: 4px solid #6f9a2a;
+  border-radius: 0.35rem;
+  background: rgba(246, 234, 208, 0.75);
+  color: #51200d;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.complement-hint::before {
+  content: "i";
+  flex: 0 0 auto;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.05rem;
+  border-radius: 50%;
+  background: #6f9a2a;
+  color: #fff;
+  font: italic 700 0.8rem/1.15rem Georgia, serif;
+  text-align: center;
+}
+
+.complement-hint.is-error {
+  border-left-color: #a3261b;
+  background: rgba(240, 214, 200, 0.75);
+  color: #7a1d14;
+}
+
+.complement-hint.is-error::before {
+  content: "!";
+  background: #a3261b;
+  font-style: normal;
+  font-family: inherit;
+}
+
+/* Search window */
+.complement-window {
+  width: min(34rem, 100%);
+}
+
+.complement-body {
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+.complement-body .complement-status {
+  text-align: center;
+  margin: 0;
+}
+
+.complement-body .complement-counts {
+  text-align: center;
+}
+
+.complement-window .complement-top {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+/* New-search warning: three buttons (Cancel, Restore, Start) */
+.complement-confirm-window {
+  width: min(36rem, 100%);
+}
+
+.complement-confirm-window .avatar-actions {
+  /* The body centers its children, which would shrink this row */
+  align-self: stretch;
+  gap: 0.6rem;
+}
+
+.complement-confirm-window .avatar-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 10.5rem;
+  width: auto;
+}
+
+/* Search window: Apply, Save and Stop/Close in one row */
+.complement-window .avatar-actions {
+  align-self: stretch;
+  gap: 0.6rem;
+}
+
+.complement-window .avatar-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 10.5rem;
+}
+
+.complement-window .avatar-btn:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+  cursor: default;
+}
+
+/* Search window: the X is disabled while the search runs */
+.complement-window .avatar-close:disabled,
+.complement-window .avatar-close:disabled:hover {
+  background-image: url("/static/error/close_nohover.png");
+  filter: grayscale(1) brightness(0.9);
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Ranking rows: selectable, with a range bar of the 495 scores */
+.complement-head,
+.complement-window .complement-row {
+  display: grid;
+  /* icons: 1.6rem each + 0.2rem gaps (--icons set by complement.js) */
+  grid-template-columns:
+    1.3rem calc(var(--icons, 2) * 1.8rem) minmax(5rem, 1fr) 3.4rem 2rem;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.complement-head {
+  padding: 0 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #7a5a3a;
+}
+
+.complement-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.complement-head-avg {
+  text-align: right;
+}
+
+.complement-window .complement-row {
+  cursor: pointer;
+}
+
+.complement-window .complement-row.is-selected {
+  border-color: #4f8a12;
+  background: linear-gradient(#eef6d8, #dcebb4);
+  box-shadow: 0 0 0 2px #6fae1e;
+}
+
+.complement-window .complement-row:focus-visible {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+}
+
+.complement-window .complement-score {
+  font-size: 1rem;
+}
+
+/* Range: thin line worst..best, box average ± deviation, mark at average */
+.complement-range {
+  position: relative;
+  height: 1.1rem;
+}
+
+.complement-range > span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.range-line {
+  height: 2px;
+  background: #7a5a3a;
+}
+
+.range-box {
+  height: 0.7rem;
+  border: 1px solid #4f6f12;
+  border-radius: 0.15rem;
+  background: rgba(111, 174, 30, 0.45);
+}
+
+.range-avg {
+  width: 3px;
+  height: 1.05rem;
+  margin-left: -1.5px;
+  border-radius: 1px;
+  background: #51200d;
+}
+
+.complement-recipe-btn {
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0.3rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: url("/static/ui/square_btn_normal.png") center / 100% 100% no-repeat;
+  color: #fff;
+  cursor: pointer;
+}
+
+.complement-recipe-btn:hover {
+  background-image: url("/static/ui/square_btn_hover.png");
+}
+
+.complement-recipe-btn svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+@media (max-width: 30rem) {
+  .complement-head,
+  .complement-window .complement-row {
+    grid-template-columns:
+      1rem calc(var(--icons, 2) * 1.5rem) minmax(3.5rem, 1fr) 2.8rem 1.8rem;
+    gap: 0.35rem;
+  }
+
+  .complement-effects img {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+}
+
+/* Header row: the scale's ends sit exactly over the bars' ends */
+.complement-head {
+  border: 1px solid transparent;
+}
+
+.complement-effects {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.complement-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.75rem;
+  color: #7a5a3a;
+}
+
+.legend-sample {
+  display: inline-block;
+  width: 3.5rem;
+}
+
+/* Tip with name / value rows (stats of a combination) */
+.game-tip-rows {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 1.25rem;
+  row-gap: 0.15rem;
+  margin: 0;
+  text-align: left;
+}
+
+.game-tip-rows dt {
+  font-weight: 600;
+}
+
+.game-tip-rows dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ranking order: Mean / Minimum / Maximum */
+.complement-sort {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.complement-sort-label {
+  margin-right: 0.2rem;
+  font-weight: 600;
+  color: #7a5a3a;
+}
+
+.complement-sort-btn {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid #b89a63;
+  border-radius: 1rem;
+  background: linear-gradient(#f6ead0, #ead7ad);
+  color: #51200d;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.complement-sort-btn[aria-checked="true"] {
+  border-color: #2f5a05;
+  background: linear-gradient(#8fc23a, #4f8a12);
+  color: #fff;
+}
+
+.complement-sort-btn:focus-visible {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+}
+
+/* Set being tested: icons + its own progress over 495 ingredient sets */
+.complement-current {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px dashed #b89a63;
+  border-radius: 0.4rem;
+  background: rgba(246, 234, 208, 0.6);
+  font-size: 0.85rem;
+  color: #51200d;
+}
+
+.complement-current-label {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.complement-current-bar {
+  flex: 1 1 auto;
+  height: 0.6rem;
+  border: 1px solid #7a5a3a;
+  border-radius: 0.4rem;
+  background: #d9c08e;
+  overflow: hidden;
+}
+
+.complement-current-bar > span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(#a8d84e, #5d9e0f);
+}
+
+.complement-current-count {
+  min-width: 4.2rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}

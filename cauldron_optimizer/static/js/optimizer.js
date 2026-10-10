@@ -78,11 +78,20 @@ function makeEffectCheckbox(checked, labelText) {
 // With this many or fewer effects checked, checked boxes lock (like in the game)
 const MIN_CHECKED_EFFECTS = 10;
 
+// "Complete effects" mode (complement.js): the user picks fewer than 10 effects
+// and the search finds the rest, so at most this many can be checked
+const MAX_COMPLEMENT_CHOSEN = 9;
+let complementMode = false;
+let checkedBeforeComplement = null;
+
 function updateEffectLocks(root) {
   const inputs = [...root.querySelectorAll(".effect-check input")];
-  const locked = inputs.filter((el) => el.checked).length <= MIN_CHECKED_EFFECTS;
+  const nChecked = inputs.filter((el) => el.checked).length;
+  const locked = nChecked <= MIN_CHECKED_EFFECTS;
   inputs.forEach((el) => {
-    const isLocked = locked && el.checked;
+    const isLocked = complementMode
+      ? !el.checked && nChecked >= MAX_COMPLEMENT_CHOSEN
+      : locked && el.checked;
     el.disabled = isLocked;
     el.parentElement.classList.toggle("locked", isLocked);
   });
@@ -146,7 +155,7 @@ function rebuildWeights() {
   for (let i = 0; i < n; i++) {
     if (globalChecked[i] !== false) checkedCount++;
   }
-  if (checkedCount < Math.min(n, MIN_CHECKED_EFFECTS)) {
+  if (!complementMode && checkedCount < Math.min(n, MIN_CHECKED_EFFECTS)) {
     globalChecked = [];
   }
 
@@ -193,6 +202,77 @@ function rebuildWeights() {
   updateHiddenWeights(globalWeights.slice(0, n));
   updateHiddenExcluded(n);
 }
+
+// Hooks for complement.js
+window.cauldronForm = {
+  // On: keep checked only the effects with a weight. Off: restore the boxes,
+  // or, given a search result, check exactly its 10 effects (chosen +
+  // complementary) so the user can save it with the save button
+  setComplementMode(on, result = null) {
+    const { dom } = window.OPTIMIZER_CONFIG;
+    const n = Number(dom.nDiploma.value);
+    if (on && !complementMode) {
+      checkedBeforeComplement = [...globalChecked];
+      globalChecked = [];
+      for (let i = 0; i < n; i++) globalChecked[i] = (globalWeights[i] ?? 0) > 0;
+    } else if (!on && complementMode) {
+      const before = checkedBeforeComplement;
+      checkedBeforeComplement = null;
+      if (result) {
+        dom.nDiploma.value = result.n;
+        globalWeights = new Array(result.n).fill(0);
+        result.effects.forEach((e, k) => {
+          globalWeights[e] = result.weights[k];
+        });
+        const ten = new Set([...result.effects, ...result.comp]);
+        globalChecked = Array.from({ length: result.n }, (_, i) => ten.has(i));
+      } else {
+        globalChecked = before || [];
+      }
+    }
+    complementMode = on;
+    rebuildWeights();
+    if (!on && result) {
+      dom.nDiploma.dispatchEvent(new Event("input"));
+      setUnsaved(true);
+    }
+  },
+  // Show a saved search's parameters on the form (diplomas, chosen effects
+  // and weights, search limits)
+  applyComplementParams(p) {
+    const { dom } = window.OPTIMIZER_CONFIG;
+    dom.nDiploma.value = p.n;
+    globalWeights = new Array(p.n).fill(0);
+    globalChecked = new Array(p.n).fill(false);
+    p.effects.forEach((e, k) => {
+      globalWeights[e] = p.weights[k];
+      globalChecked[e] = true;
+    });
+    [["alpha_UB", p.alpha_ub], ["prob_UB", p.prob_ub], ["n_starts", p.depth]].forEach(
+      ([name, value]) => {
+        const el = document.querySelector(`input[name='${name}']`);
+        el.value = value;
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    );
+    rebuildWeights();
+    // Keeps the -/+ buttons in step with the new count
+    dom.nDiploma.dispatchEvent(new Event("input"));
+  },
+  // The effects the user wants (checked), with their weights
+  chosen() {
+    const n = Number(window.OPTIMIZER_CONFIG.dom.nDiploma.value);
+    const effects = [];
+    const weights = [];
+    for (let i = 0; i < n; i++) {
+      if (globalChecked[i] !== false) {
+        effects.push(i);
+        weights.push(globalWeights[i] ?? 0);
+      }
+    }
+    return { n, effects, weights };
+  },
+};
 
 function setRangeFill(el) {
   const min = Number(el.min ?? 0);

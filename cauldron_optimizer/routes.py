@@ -20,9 +20,11 @@ from cauldron_optimizer.constants import (
     MAX_PREMIUM_INGREDIENTS,
     MAX_SERVER_NAME_LENGTH,
     MAX_SERVERS_PER_USER,
+    MAX_STARTS,
+    MIN_CHECKED_EFFECTS,
 )
 from cauldron_optimizer.database import db_session
-from cauldron_optimizer.db_model import Server, User, UserSettings
+from cauldron_optimizer.db_model import ComplementSearch, Server, User, UserSettings
 from cauldron_optimizer.forms import LoginForm, RegisterForm, SearchForm
 from cauldron_optimizer.helpers import (
     avatar_url,
@@ -103,6 +105,11 @@ def index():
             server_name=server_label(settings),
             next_server_name=suggest_server_name(settings.user.servers),
             can_add_server=account.n_servers < MAX_SERVERS_PER_USER,
+            # For the in-browser "complete effects" search (solver.js)
+            solver_matrices={
+                "B": CauldronOptimizer.B_full.tolist(),
+                "V": CauldronOptimizer.V_full.tolist(),
+            },
             avatars=AVATARS,
             avatar=settings.avatar,
         )
@@ -457,6 +464,117 @@ def save_settings():
 def reset_settings():
     """Clear temporary ingredient selections before reloading saved settings."""
     session["premium_ingredients"] = []
+    return {"ok": True}
+
+
+# ---------------------------------------------------------------------------
+# "Complete effects" search: runs in the browser, progress saved per world
+# ---------------------------------------------------------------------------
+
+# A saved state holds 3 lists of 5 results (~3 KB); anything far bigger is
+# not ours
+MAX_COMPLEMENT_STATE_BYTES = 50_000
+
+
+def clean_complement_params(raw: Any) -> dict[str, Any]:
+    """Validate the search parameters; raises ValueError."""
+    if not isinstance(raw, dict):
+        raise ValueError
+    p = cast(dict[str, Any], raw)
+    n = int(p["n"])
+    effects = [int(i) for i in p["effects"]]
+    weights = [float(w) for w in p["weights"]]
+    params: dict[str, Any] = {
+        "n": n,
+        "effects": effects,
+        "weights": weights,
+        "alpha_ub": int(p["alpha_ub"]),
+        "prob_ub": int(p["prob_ub"]),
+        "depth": int(p["depth"]),
+    }
+    ok = (
+        MIN_CHECKED_EFFECTS <= n <= len(EFFECT_NAMES)
+        and 1 <= len(effects) < MIN_CHECKED_EFFECTS
+        and len(set(effects)) == len(effects) == len(weights)
+        and all(0 <= i < n for i in effects)
+        and all(0 <= w <= 1 for w in weights)
+        and sum(weights) > 0
+        and 1 <= params["alpha_ub"] <= CauldronOptimizer.sum_ingredients
+        and 1 <= params["prob_ub"] <= 100
+        and 1 <= params["depth"] <= MAX_STARTS
+    )
+    if not ok:
+        raise ValueError
+    return params
+
+
+@app.route("/complement/state")
+@login_required
+def complement_state():
+    """Saved search of the active world, or null"""
+    with db_session() as db_sa:
+        _account, server = get_active_server(db_sa, session["user_id"])
+        saved = db_sa.get(ComplementSearch, (server.username, server.server_number))
+        if saved is None:
+            return {"ok": True, "search": None}
+        return {
+            "ok": True,
+            "search": {"params": saved.params, "state": saved.state},
+        }
+
+
+@app.route("/complement/save", methods=["POST"])
+@login_required
+def complement_save():
+    """Save the search progress of the active world (called via fetch)"""
+    if (request.content_length or 0) > MAX_COMPLEMENT_STATE_BYTES:
+        return {"ok": False, "error": _("Datos no válidos")}, 400
+    data = request.get_json(silent=True)
+    try:
+        if not isinstance(data, dict):
+            raise ValueError
+        body = cast(dict[str, Any], data)
+        params = clean_complement_params(body.get("params"))
+        state = body.get("state")
+        if not isinstance(state, dict):
+            raise ValueError
+        state = cast(dict[str, Any], state)
+        done, total = int(state["done"]), int(state["total"])
+        if not 0 <= done <= total:
+            raise ValueError
+    except (ValueError, KeyError, TypeError):
+        return {"ok": False, "error": _("Datos no válidos")}, 400
+
+    try:
+        with db_session() as db_sa:
+            _account, server = get_active_server(db_sa, session["user_id"])
+            key = (server.username, server.server_number)
+            saved = db_sa.get(ComplementSearch, key)
+            if saved is None:
+                saved = ComplementSearch(username=key[0], server_number=key[1])
+                db_sa.add(saved)
+            saved.params = params
+            saved.state = state
+            saved.done = done
+            saved.total = total
+            saved.updated_at = datetime.now(timezone.utc)
+    except SQLAlchemyError:
+        return {"ok": False, "error": _("Error de base de datos")}, 500
+    return {"ok": True}
+
+
+@app.route("/complement/clear", methods=["POST"])
+@login_required
+def complement_clear():
+    """Forget the saved search of the active world (called via fetch)"""
+    try:
+        with db_session() as db_sa:
+            _account, server = get_active_server(db_sa, session["user_id"])
+            saved = db_sa.get(ComplementSearch, (server.username, server.server_number))
+            if saved is not None:
+                db_sa.delete(saved)
+    except SQLAlchemyError:
+        return {"ok": False, "error": _("Error de base de datos")}, 500
     return {"ok": True}
 
 

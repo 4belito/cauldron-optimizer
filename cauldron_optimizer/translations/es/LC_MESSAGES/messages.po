@@ -406,3 +406,12 @@ msgid "Volver"
 msgstr ""
 msgid "Guardar configuración del servidor %(n)s"
 msgstr ""
+
+msgid "Testing"
+msgstr "Probando"
+
+msgid "Min"
+msgstr "Mín"
+
+msgid "Max"
+msgstr "Máx"

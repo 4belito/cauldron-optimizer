@@ -1,10 +1,12 @@
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import (
     TIMESTAMP,
     BigInteger,
     Float,
     ForeignKey,
+    ForeignKeyConstraint,
     Integer,
     Text,
     func,
@@ -172,3 +174,34 @@ class OptimizationRun(Base):
     recipe: Mapped[list[list[int]]] = mapped_column(JSONB, nullable=False)
     score: Mapped[float] = mapped_column(Float, nullable=False)
     duration_ms: Mapped[int] = mapped_column(Integer, nullable=False)
+
+
+class ComplementSearch(Base):
+    """Saved progress of a "complete effects" search, one per world.
+
+    The search runs in the browser (static/js/complement-worker.js); this keeps
+    its parameters and state so it can be resumed later or from another device.
+    """
+
+    __tablename__ = "complement_searches"
+
+    username: Mapped[str] = mapped_column(Text, primary_key=True)
+    server_number: Mapped[int] = mapped_column(Integer, primary_key=True)
+    # n diplomas, chosen effects and weights, bounds and search depth
+    params: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
+    # position, current set, top results, done and total runs
+    state: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
+    done: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    total: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["username", "server_number"],
+            ["servers.username", "servers.server_number"],
+            ondelete="CASCADE",
+            onupdate="CASCADE",
+        ),
+    )
