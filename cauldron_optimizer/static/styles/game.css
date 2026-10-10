@@ -72,10 +72,11 @@ fieldset.card {
   position: relative;
   overflow: visible;
   /* 9-slice: corners and the curled bottom keep their size, only the
-     plain middle stretches (the image is 388x410, the curl ~46px) */
+     plain middle stretches. This wider frame has softer lower corners than
+     the compact popup body. */
   background: none;
   border: 0 solid transparent;
-  border-image: url("/static/error/popup_body.png") 8 24 46 24 fill / 0.5rem 1.5rem 2.9rem stretch;
+  border-image: url("/static/error/popup_body_.png") 10 30 54 30 fill / 0.6rem 1.75rem 3rem stretch;
   border-radius: 0;
   padding-bottom: 2.4rem;
   margin-top: 2.3rem;
