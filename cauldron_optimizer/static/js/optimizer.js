@@ -221,13 +221,47 @@ function setUnsaved(unsaved) {
   document.getElementById("restoreSettingsBtn").disabled = !unsaved;
 }
 
+function premiumInputs() {
+  return [...document.querySelectorAll("input[name='premium_ingredients[]']")];
+}
+
+function hasPremiumSelection() {
+  return premiumInputs().some((el) => el.checked);
+}
+
+function clearPremiumSelection() {
+  premiumInputs().forEach((el) => {
+    el.checked = false;
+  });
+  updatePremiumLocks();
+}
+
 function initRestoreButton() {
   const { form } = window.OPTIMIZER_CONFIG.dom;
   form.addEventListener("input", () => setUnsaved(true));
   form.addEventListener("change", () => setUnsaved(true));
-  // Reloading the page shows the selected server's saved settings
-  document.getElementById("restoreSettingsBtn").addEventListener("click", () => {
-    window.location.assign(window.location.pathname);
+  setUnsaved(hasPremiumSelection());
+
+  // Reloading the page shows the selected server's saved settings. The
+  // ingredient exclusions are temporary, so clear their session copy first.
+  document.getElementById("restoreSettingsBtn").addEventListener("click", async () => {
+    const btn = document.getElementById("restoreSettingsBtn");
+    const data = new FormData();
+    const csrf = form.querySelector("input[name='csrf_token']");
+    if (csrf) data.append("csrf_token", csrf.value);
+
+    btn.disabled = true;
+    clearPremiumSelection();
+    try {
+      const resp = await fetch(btn.dataset.url, {
+        method: "POST",
+        body: data,
+        headers: { Accept: "application/json" },
+      });
+      if (!resp.ok) throw new Error(resp.statusText);
+    } finally {
+      window.location.assign(window.location.pathname);
+    }
   });
 }
 
@@ -242,17 +276,21 @@ async function saveSettings() {
   status.classList.remove("error");
 
   try {
+    const payload = new FormData(form);
+    payload.delete("premium_ingredients[]");
     const resp = await fetch(btn.dataset.url, {
       method: "POST",
-      body: new FormData(form),
+      body: payload,
       headers: { Accept: "application/json" },
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
 
     replayClass(btn, "saved");
-    setUnsaved(false);
-    form.querySelectorAll(".card[data-saved]").forEach((card) => replayClass(card, "just-saved"));
+    setUnsaved(hasPremiumSelection());
+    form
+      .querySelectorAll(".card[data-saved]")
+      .forEach((card) => replayClass(card, "just-saved"));
     setTimeout(() => btn.classList.remove("saved"), 1500);
   } catch (err) {
     replayClass(btn, "save-failed");

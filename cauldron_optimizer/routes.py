@@ -387,7 +387,7 @@ def register():
     return render_template("register.html", form=form, avatars=AVATARS)
 
 
-def parse_search_form() -> dict[str, Any]:
+def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
     """Validate the optimizer form and return its settings.
 
     Raises ValueError with a user-facing message if anything is invalid.
@@ -396,14 +396,20 @@ def parse_search_form() -> dict[str, Any]:
     if not form.validate_on_submit():
         raise ValueError(first_form_error(form))
 
-    # effect weights are validated and parsed by the form validator
-    premium_ingr = sorted(set(request.form.getlist("premium_ingredients[]", type=int)))
-    if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
-        raise ValueError(_("Ingredientes premium no válidos"))
-    if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
-        raise ValueError(
-            _("Puedes evitar como máximo %(n)s ingredientes", n=MAX_PREMIUM_INGREDIENTS)
+    premium_ingr: list[int] = []
+    if include_premium:
+        premium_ingr = sorted(
+            set(request.form.getlist("premium_ingredients[]", type=int))
         )
+        if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
+            raise ValueError(_("Ingredientes premium no válidos"))
+        if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
+            raise ValueError(
+                _(
+                    "Puedes evitar como máximo %(n)s ingredientes",
+                    n=MAX_PREMIUM_INGREDIENTS,
+                )
+            )
 
     return {
         "effect_weights": [
@@ -424,7 +430,7 @@ def parse_search_form() -> dict[str, Any]:
 def save_settings():
     """Save the optimizer settings for the active server (called via fetch)"""
     try:
-        s = parse_search_form()
+        s = parse_search_form(include_premium=False)
     except ValueError as e:
         return {"ok": False, "error": str(e)}, 400
 
@@ -443,6 +449,14 @@ def save_settings():
         return {"ok": False, "error": _("Error de base de datos")}, 500
 
     session["lang"] = s["language"]
+    return {"ok": True}
+
+
+@app.route("/settings/reset", methods=["POST"])
+@login_required
+def reset_settings():
+    """Clear temporary ingredient selections before reloading saved settings."""
+    session["premium_ingredients"] = []
     return {"ok": True}
 
 
