@@ -89,9 +89,23 @@ def index():
         form.alpha_UB.data = int(settings.max_ingredients)
         form.prob_UB.data = int(settings.max_effects)
         form.n_starts.data = int(settings.search_depth)
+        form.exact_search.data = bool(settings.exact_search)
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
         form.excluded_effects_json.data = json.dumps(settings.excluded_effects or [])
         form.language.data = session.get("lang", "es")
+        # Back from the results: the form shows the settings of that search
+        # (maybe unsaved), not the saved ones. Only for the world it ran on
+        last = session.get("last_search")
+        unsaved = False
+        if last and last.get("server") == settings.server_number:
+            form.n_diploma.data = len(last["effect_weights"])
+            form.alpha_UB.data = last["alpha_ub"]
+            form.prob_UB.data = last["prob_ub"]
+            form.n_starts.data = last["n_starts"]
+            form.exact_search.data = last["exact"]
+            form.effect_weights_json.data = json.dumps(last["effect_weights"])
+            form.excluded_effects_json.data = json.dumps(last["excluded_effects"])
+            unsaved = True
 
         return render_template(
             "index.html",
@@ -105,6 +119,8 @@ def index():
             server_name=server_label(settings),
             next_server_name=suggest_server_name(settings.user.servers),
             can_add_server=account.n_servers < MAX_SERVERS_PER_USER,
+            # The form differs from the saved settings: restore button on
+            unsaved=unsaved,
             # For the in-browser "complete effects" search (solver.js)
             solver_matrices={
                 "B": CauldronOptimizer.B_full.tolist(),
@@ -215,6 +231,7 @@ def add_server():
                 max_ingredients=current.max_ingredients,
                 max_effects=current.max_effects,
                 search_depth=current.search_depth,
+                exact_search=current.exact_search,
             )
             servers.append(server)
             account.active_server = server.server_number
@@ -289,6 +306,7 @@ def select_server():
             if number not in {s.server_number for s in server.user.servers}:
                 return error(_("Mundo no válido"), url=url_for("index"))
             account.active_server = number
+        session.pop("last_search", None)
     except SQLAlchemyError:
         return error(_("Error de base de datos"), url=url_for("index"))
     return redirect(url_for("index"))
@@ -410,10 +428,11 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         )
         if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
             raise ValueError(_("Ingredientes premium no válidos"))
-        if len(premium_ingr) > MAX_PREMIUM_INGREDIENTS:
+        # The game always avoids exactly this many
+        if len(premium_ingr) != MAX_PREMIUM_INGREDIENTS:
             raise ValueError(
                 _(
-                    "Puedes evitar como máximo %(n)s ingredientes",
+                    "Elige exactamente %(n)s ingredientes para evitar",
                     n=MAX_PREMIUM_INGREDIENTS,
                 )
             )
@@ -428,6 +447,7 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         "alpha_ub": int(form.alpha_UB.data or 0),
         "prob_ub": int(form.prob_UB.data or 0),
         "n_starts": int(form.n_starts.data or 0),
+        "exact": bool(form.exact_search.data),
         "language": form.language.data,
     }
 
@@ -451,11 +471,13 @@ def save_settings():
             server.max_ingredients = s["alpha_ub"]
             server.max_effects = s["prob_ub"]
             server.search_depth = s["n_starts"]
+            server.exact_search = s["exact"]
             server.updated_at = datetime.now(timezone.utc)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
 
     session["lang"] = s["language"]
+    session.pop("last_search", None)  # the form now matches the saved settings
     return {"ok": True}
 
 
@@ -464,6 +486,7 @@ def save_settings():
 def reset_settings():
     """Clear temporary ingredient selections before reloading saved settings."""
     session["premium_ingredients"] = []
+    session.pop("last_search", None)
     return {"ok": True}
 
 
@@ -578,6 +601,30 @@ def complement_clear():
     return {"ok": True}
 
 
+def browser_recipe(
+    opt: CauldronOptimizer, s: dict[str, Any]
+) -> tuple[np.ndarray, int] | None:
+    """The recipe found by the browser and its search time, if valid.
+
+    Only the recipe is taken from the browser: the server checks it against
+    the limits and computes its score and probabilities itself.
+    """
+    try:
+        recipe = [int(x) for x in json.loads(request.form.get("recipe_json", ""))]
+        search_ms = int(request.form.get("search_ms", 0))
+    except (ValueError, TypeError):
+        return None
+    ok = (
+        len(recipe) == CauldronOptimizer.n_ingredients
+        and all(0 <= x <= s["alpha_ub"] for x in recipe)
+        and 0 < sum(recipe) <= CauldronOptimizer.sum_ingredients
+        and all(recipe[j] == 0 for j in s["premium_ingr"])
+    )
+    if not ok:
+        return None
+    return np.array(recipe, dtype=int), max(0, min(search_ms, 600_000))
+
+
 @app.route("/optimize", methods=["GET", "POST"])
 @login_required
 def optimize():
@@ -602,9 +649,20 @@ def optimize():
         prob_UB=s["prob_ub"],
     )
 
-    start = time.perf_counter()
-    alpha_best, val_best = opt.multistart(n_starts)
-    duration_ms = round((time.perf_counter() - start) * 1000)
+    # The browser normally searches (static/js/search.js) and sends its recipe;
+    # without one (no JavaScript) the server searches
+    browser = browser_recipe(opt, s)
+    # Guaranteed optimum: the browser checked every recipe (search.js)
+    exact = False
+    if browser is not None:
+        alpha_best, duration_ms = browser
+        exact = s["exact"] and request.form.get("recipe_exact") == "1"
+        probs = opt.effect_probabilities(alpha_best)
+        val_best = float(np.minimum(probs, opt.prob_UB) @ opt.w)
+    else:
+        start = time.perf_counter()
+        alpha_best, val_best = opt.multistart(n_starts)
+        duration_ms = round((time.perf_counter() - start) * 1000)
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = float(val_best)
     log_optimization_run(s, alpha_matrix, score, duration_ms)
@@ -630,8 +688,21 @@ def optimize():
         "alpha_matrix": alpha_matrix,
         "effects": filtered_effects,
         "score": score,
+        "exact": exact,
     }
     session["premium_ingredients"] = premium_ingr
+    # The settings of this search, shown again when going back to the form
+    with db_session() as db_sa:
+        _account, server = get_active_server(db_sa, session["user_id"])
+        session["last_search"] = {
+            "server": server.server_number,
+            "effect_weights": s["effect_weights"],
+            "excluded_effects": s["excluded_effects"],
+            "alpha_ub": s["alpha_ub"],
+            "prob_ub": s["prob_ub"],
+            "n_starts": n_starts,
+            "exact": s["exact"],
+        }
 
     return redirect(url_for("results"))
 
@@ -649,6 +720,7 @@ def results():
         alpha_matrix=last_results["alpha_matrix"],
         effects=last_results["effects"],
         score=last_results["score"],
+        exact=last_results.get("exact", False),
     )
 
 

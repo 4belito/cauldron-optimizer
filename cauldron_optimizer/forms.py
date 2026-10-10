@@ -4,6 +4,7 @@ from typing import cast
 from flask_babel import lazy_gettext
 from flask_wtf import FlaskForm
 from wtforms import (
+    BooleanField,
     Field,
     FieldList,
     HiddenField,
@@ -209,6 +210,9 @@ class SearchForm(FlaskForm):
         ],
         render_kw={"type": "number", "min": 1, "max": MAX_STARTS, "step": 1},
     )
+    # "Optimal solution": check every recipe instead of the search depth
+    # (the default)
+    exact_search = BooleanField(default=True)
     effect_weights_json = HiddenField()
     excluded_effects_json = HiddenField(default="[]")
     premium_ingr = FieldList(unbound_field=IntegerField(), min_entries=0)

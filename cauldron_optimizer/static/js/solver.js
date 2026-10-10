@@ -7,6 +7,10 @@
 
 /* exported CauldronSolver */
 const SUM_INGREDIENTS = 25;
+// Search settings (same values as CauldronOptimizer in optimizer.py): share
+// of the budget on random starts, and units moved by each kick
+const EXPLORE_SHARE = 0.5;
+const ILS_KICK = 6;
 
 class CauldronSolver {
   // B, V: full matrices (rows = effects, cols = 12 ingredients)
@@ -129,30 +133,116 @@ class CauldronSolver {
     return current;
   }
 
-  // Random starts + greedy; returns {score, recipe} (recipe: 12 amounts)
-  multistart(nStarts) {
+  // Random recipe (reduced) with 1..25 ingredients within the bounds
+  randomStart() {
     const { n, alphaUB } = this;
     const randInt = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
-    let bestVal = -1e18;
-    let bestAlpha = new Int32Array(n);
-    for (let s = 0; s < nStarts; s++) {
-      const alpha = new Int32Array(n);
-      let remaining = randInt(1, SUM_INGREDIENTS);
-      let free = [];
-      for (let j = 0; j < n; j++) if (alphaUB > 0) free.push(j);
-      while (remaining > 0 && free.length) {
-        const j = free[randInt(0, free.length - 1)];
-        const add = randInt(1, Math.min(remaining, alphaUB - alpha[j]));
-        alpha[j] += add;
-        remaining -= add;
-        if (alpha[j] >= alphaUB) free = free.filter((x) => x !== j);
+    const alpha = new Int32Array(n);
+    let remaining = randInt(1, SUM_INGREDIENTS);
+    let free = alphaUB > 0 ? [...Array(n).keys()] : [];
+    while (remaining > 0 && free.length) {
+      const j = free[randInt(0, free.length - 1)];
+      const add = randInt(1, Math.min(remaining, alphaUB - alpha[j]));
+      alpha[j] += add;
+      remaining -= add;
+      if (alpha[j] >= alphaUB) free = free.filter((x) => x !== j);
+    }
+    return alpha;
+  }
+
+  // Copy of alpha with ILS_KICK random units moved
+  kick(alpha) {
+    const a = Int32Array.from(alpha);
+    for (let k = 0; k < ILS_KICK; k++) {
+      const donors = [];
+      for (let j = 0; j < this.n; j++) if (a[j] > 0) donors.push(j);
+      if (!donors.length) break;
+      const from = donors[Math.floor(Math.random() * donors.length)];
+      const to = Math.floor(Math.random() * this.n);
+      if (to !== from && a[to] < this.alphaUB) {
+        a[from] -= 1;
+        a[to] += 1;
       }
+    }
+    return a;
+  }
+
+  // nStarts local searches in total (same as the Python
+  // CauldronOptimizer.multistart): first half from independent random
+  // recipes, keeping the best; second half kicks that best recipe and climbs
+  // again, keeping improvements. Returns {score, recipe} (recipe: 12 amounts)
+  multistart(nStarts) {
+    const nExplore = Math.max(1, Math.round(nStarts * EXPLORE_SHARE));
+    let bestVal = -1e18;
+    let bestAlpha = new Int32Array(this.n);
+    for (let i = 0; i < nExplore; i++) {
+      const alpha = this.randomStart();
       const val = this.greedy(alpha);
       if (val > bestVal) {
         bestVal = val;
         bestAlpha = alpha;
       }
     }
+    for (let i = nExplore; i < nStarts; i++) {
+      const alpha = this.kick(bestAlpha);
+      const val = this.greedy(alpha);
+      if (val > bestVal + 1e-12) {
+        bestVal = val;
+        bestAlpha = alpha;
+      }
+    }
+    const recipe = new Array(this.nIngredients).fill(0);
+    this.freeIdx.forEach((j, r) => {
+      recipe[j] = bestAlpha[r];
+    });
+    return { score: bestVal, recipe };
+  }
+
+  // Guaranteed optimum: checks every recipe (each free ingredient 0..alphaUB,
+  // total <= 25). With 4 ingredients avoided that is ~12-14 million recipes,
+  // about 1-2 s. Ties keep the first recipe found, so the same settings
+  // always give the same recipe. onProgress(fraction) is called now and then.
+  // Returns {score, recipe} (recipe: 12 amounts)
+  exact(onProgress = () => {}) {
+    const { n, m, Vc, Bc } = this;
+    const ub = Math.min(this.alphaUB, SUM_INGREDIENTS);
+    const Sv = new Float64Array(m);
+    const Sb = new Float64Array(m);
+    const alpha = new Int32Array(n);
+    let bestVal = -1e18;
+    let bestAlpha = new Int32Array(n);
+    const self = this;
+
+    function visit(j, total) {
+      if (j === n) {
+        const val = self.objective(Sv, Sb, total);
+        if (val > bestVal + 1e-12) {
+          bestVal = val;
+          bestAlpha = Int32Array.from(alpha);
+        }
+        return;
+      }
+      const maxHere = Math.min(ub, SUM_INGREDIENTS - total);
+      for (let x = 0; x <= maxHere; x++) {
+        alpha[j] = x;
+        visit(j + 1, total + x);
+        if (j === 0) onProgress((x + 1) / (maxHere + 1));
+        // next amount: one more unit of ingredient j
+        for (let i = 0; i < m; i++) {
+          Sv[i] += Vc[j][i];
+          Sb[i] += Bc[j][i];
+        }
+      }
+      // back to 0 units of ingredient j
+      const added = maxHere + 1;
+      for (let i = 0; i < m; i++) {
+        Sv[i] -= added * Vc[j][i];
+        Sb[i] -= added * Bc[j][i];
+      }
+      alpha[j] = 0;
+    }
+
+    if (n > 0) visit(0, 0);
     const recipe = new Array(this.nIngredients).fill(0);
     this.freeIdx.forEach((j, r) => {
       recipe[j] = bestAlpha[r];

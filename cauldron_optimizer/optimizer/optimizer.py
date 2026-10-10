@@ -160,37 +160,72 @@ class CauldronOptimizer:
         alpha_full[self.free_idx] = alpha
         return alpha_full, current_val
 
-    # ------------- multi-start wrapper -------------
+    # ------------- multistart + iterated local search -------------
+
+    # Share of the budget spent on independent random starts; the rest kicks
+    # the best recipe found (benchmarked on random recipes against the exact
+    # optimum: better than random starts alone at every depth)
+    EXPLORE_SHARE = 0.5
+    # Units moved at random to escape a local optimum
+    ILS_KICK = 6
+
+    def _random_start(self) -> np.ndarray:
+        """Random recipe (reduced) with 1..25 ingredients within the bounds."""
+        alpha0 = np.zeros(self.n_freeingr, dtype=int)
+        remaining = np.random.randint(1, self.sum_ingredients + 1)
+        free = np.where(self.alpha_UB - alpha0 > 0)[0]
+        while remaining > 0 and free.size > 0:
+            j = np.random.choice(free)
+            cap = self.alpha_UB[j] - alpha0[j]
+            add = np.random.randint(1, min(remaining, cap) + 1)
+            alpha0[j] += add
+            remaining -= add
+            if alpha0[j] >= self.alpha_UB[j]:
+                free = free[free != j]  # remove full ingredient
+        return alpha0
+
+    def _kick(self, alpha: np.ndarray) -> np.ndarray:
+        """Copy of alpha (reduced) with ILS_KICK random units moved."""
+        alpha = alpha.copy()
+        for _ in range(self.ILS_KICK):
+            donors = np.where(alpha > 0)[0]
+            if donors.size == 0:
+                break
+            k = np.random.choice(donors)
+            j = np.random.randint(self.n_freeingr)
+            if j != k and alpha[j] < self.alpha_UB[j]:
+                alpha[k] -= 1
+                alpha[j] += 1
+        return alpha
 
     def multistart(
         self, n_starts: int = 20, allow_mass_moves: bool = True
     ) -> tuple[np.ndarray, float]:
+        """Search with n_starts local searches in total.
+
+        First half: climb from independent random recipes, keeping the best
+        (explores the space). Second half: repeatedly kick that best recipe
+        (move a few units) and climb again, keeping improvements (escapes the
+        local optimum it is stuck in).
+        """
+        n_explore = max(1, round(n_starts * self.EXPLORE_SHARE))
         best_alpha = np.zeros(self.n_ingredients, dtype=int)
         best_val = -1e18
-        n_ingr = self.n_freeingr
 
-        for _ in range(n_starts):
-            alpha0 = np.zeros(n_ingr, dtype=int)
-            remaining = np.random.randint(1, self.sum_ingredients + 1)
-
-            # avoid infinite loops if all UBs reached
-
-            free = np.where(self.alpha_UB - alpha0 > 0)[0]
-            while remaining > 0 and free.size > 0:
-                j = np.random.choice(free)
-                cap = self.alpha_UB[j] - alpha0[j]
-                add = np.random.randint(1, min(remaining, cap) + 1)
-                alpha0[j] += add
-                remaining -= add
-                if alpha0[j] >= self.alpha_UB[j]:
-                    free = free[free != j]  # remove full ingredien
-
+        for _ in range(n_explore):
             alpha, val = self.greedy(
-                start_alpha=alpha0, allow_mass_moves=allow_mass_moves
+                start_alpha=self._random_start(), allow_mass_moves=allow_mass_moves
             )
             if val > best_val:
-                best_val = val
-                best_alpha = alpha
+                best_alpha, best_val = alpha, val
+
+        for _ in range(n_starts - n_explore):
+            alpha, val = self.greedy(
+                start_alpha=self._kick(best_alpha[self.free_idx]),
+                allow_mass_moves=allow_mass_moves,
+            )
+            if val > best_val + 1e-12:
+                best_alpha, best_val = alpha, val
 
         return best_alpha, best_val
 

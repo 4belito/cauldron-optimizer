@@ -36,7 +36,7 @@
 
   <!-- "Complete effects" mode (see complement.js) -->
   <label class="complement-switch server-switch"
-         data-tip="{{ _('Marca menos de 10 efectos y busca los efectos que mejor los completan, probando todas las combinaciones de 4 ingredientes evitados') }}">
+         data-tip="{{ _('Busca los efectos que mejor completan tus efectos con peso hasta 10, probando todas las combinaciones de 4 ingredientes evitados. Los ajustes se cambian con el modo apagado') }}">
     <input type="checkbox" id="complementToggle">
     <span class="complement-switch-track" aria-hidden="true"></span>
     <span class="server-switch-text">{{ _("Complete effects") }}</span>
@@ -90,11 +90,15 @@
   <span id="saveStatus" class="save-status" role="status" aria-live="polite"></span>
 </section>
 
-<form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}">
+<form id="optimizerForm" class="optimizer" method="post" action="{{ url_for('optimize') }}"{% if unsaved %} data-unsaved{% endif %}>
   {{ form.hidden_tag() }}
   {{ form.effect_weights_json(id="effect_weights_json") }}
   {{ form.excluded_effects_json(id="excluded_effects_json") }}
   {{ form.language() }}
+  <!-- Recipe found in the browser and its search time (see search.js) -->
+  <input type="hidden" name="recipe_json" id="recipeJson">
+  <input type="hidden" name="search_ms" id="searchMs">
+  <input type="hidden" name="recipe_exact" id="recipeExact">
   <!-- Diplomas + weights -->
   <fieldset class="card effects-card" data-saved>
     <legend class="card-legend">
@@ -125,13 +129,13 @@
   <!-- Premium ingredients -->
   <fieldset class="card premium-card">
     <legend class="card-legend">
-      <strong class="premium-title">{{ _("Evitar Ingredientes (Premium)") }}</strong>
+      <strong class="premium-title">{{ _("Evitar ingredientes premium") }}<img class="premium-diamond" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt=""></strong>
       <strong class="complement-title" hidden>{{ _("Completar efectos") }}</strong>
     </legend>
     <div class="card-body">
       <div class="complement-panel-content" id="complementPanelContent" hidden>
         <p class="complement-intro">
-          {{ _("Marca los efectos que quieres (menos de 10). La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan.") }}
+          {{ _("Se usan tus efectos con peso (menos de 10); los demás se desmarcan. La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan. Para cambiar los ajustes, apaga el modo.") }}
         </p>
         <p class="complement-hint" id="complementHint" role="status" aria-live="polite"></p>
       </div>
@@ -156,6 +160,14 @@
           </label>
         {% endfor %}
       </div>
+      <!-- The four chosen ingredients remain visible at the panel's bottom. -->
+      <div class="premium-counter" id="premiumCounter"
+           data-text-button="{{ _('Elige 4 ingredientes para evitar') }}">
+        <div class="premium-slots" aria-hidden="true">
+          {% for i in range(4) %}<span class="premium-slot"></span>{% endfor %}
+        </div>
+        <span class="premium-counter-text">{{ _("Elige los 4 ingredientes premium") }}</span>
+      </div>
     </div>
   </fieldset>
 
@@ -166,6 +178,17 @@
     </legend>
     <div class="card-body">
       <div id="boundsContainer" class="bounds-row"></div>
+      <!-- "Óptima": check every recipe instead of the search depth (its
+           limit). optimizer.js moves it to the top of the depth card -->
+      <label class="exact-check" id="exactCheck"
+             data-tip="{{ _('Comprueba todas las recetas posibles: garantiza la mejor (tarda 1-2 segundos). Es el límite de la profundidad de búsqueda; mover la barra lo desactiva.') }}">
+        {{ form.exact_search(id="exactSearch") }}
+        <span class="exact-check-box" aria-hidden="true">
+          <img src="{{ url_for('static', filename='checkbox.png') }}" alt="">
+          <img class="exact-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+        </span>
+        <span>{{ _("Óptima") }}</span>
+      </label>
     </div>
   </fieldset>
 
@@ -176,10 +199,6 @@
     <div class="complement-buttons" id="complementButtons" hidden>
       <button type="button" id="complementGo" class="game-btn game-btn-main complement-action-btn">
         <span></span>
-      </button>
-      <button type="button" id="complementNew" class="game-btn game-btn-main complement-action-btn complement-new-btn"
-              data-tip="{{ _('Borra la búsqueda guardada para elegir otros efectos, pesos o límites') }}">
-        <span>{{ _("Nueva búsqueda") }}</span>
       </button>
     </div>
   </div>
@@ -218,7 +237,7 @@
     ],
   };
 </script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=70"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=76"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -231,17 +250,19 @@
     urls: {
       worker: "{{ url_for('static', filename='js/complement-worker.js') }}",
       state: "{{ url_for('complement_state') }}",
+      searchWorker: "{{ url_for('static', filename='js/search-worker.js') }}",
       save: "{{ url_for('complement_save') }}",
       clear: "{{ url_for('complement_clear') }}",
     },
     text: {
+      savedProgress: {{ _("Progreso: {pct}%.") | tojson }},
       button: {{ _("Completar") | tojson }},
       viewResults: {{ _("Ver resultados") | tojson }},
       goTip: {{ _("Busca los efectos que mejor completan los elegidos") | tojson }},
       buttonTip: {{ _("Busca los efectos que completan los elegidos (o continúa la búsqueda)") | tojson }},
-      needEffects: {{ _("Marca entre 1 y 9 efectos, al menos uno con peso. La búsqueda completa el resto hasta 10.") | tojson }},
-      needDiplomas: {{ _("Necesitas al menos 10 diplomas.") | tojson }},
-      ready: {{ _("Marca los efectos que quieres y pulsa Completar.") | tojson }},
+      needEffects: {{ _("Necesitas entre 1 y 9 efectos con peso. Apaga el modo para cambiar los pesos.") | tojson }},
+      needDiplomas: {{ _("Necesitas al menos 10 diplomas. Apaga el modo para cambiarlos.") | tojson }},
+      ready: {{ _("Se usan tus efectos con peso. Pulsa Completar.") | tojson }},
       running: {{ _("Buscando…") | tojson }},
       paused: {{ _("En pausa") | tojson }},
       done: {{ _("Búsqueda terminada") | tojson }},
@@ -270,7 +291,9 @@
   };
 </script>
 <script src="{{ url_for('static', filename='js/solver.js') }}"></script>
-<script src="{{ url_for('static', filename='js/complement.js') }}"></script>
+<!-- "Buscar receta" searches in the browser (falls back to the server) -->
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}?v=3"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script src="{{ url_for('static', filename='js/autofill.js') }}"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
@@ -367,23 +390,41 @@
   </div>
 </div>
 
-<!-- New search would discard saved progress: confirmation -->
+<!-- "Buscar receta" with "Solución óptima": progress of the exact search -->
+<div id="searchWindow" class="avatar-overlay" hidden>
+  <div class="avatar-window search-window" role="dialog" aria-modal="true" aria-labelledby="searchWindowTitle">
+    <div class="avatar-header">
+      <h2 id="searchWindowTitle" class="avatar-title">{{ _("Solución óptima") }}</h2>
+    </div>
+    <div class="avatar-body search-body">
+      <p class="complement-status">{{ _("Comprobando todas las recetas posibles…") }}</p>
+      <div class="complement-bar"><div class="complement-bar-fill" id="searchBarFill"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Turning the mode on with a saved search for other settings: continue it
+     or start a new one (complement.js, askSaved) -->
 <div id="complementConfirm" class="avatar-overlay" hidden>
   <div class="avatar-window delete-window complement-confirm-window" role="alertdialog" aria-modal="true" aria-labelledby="complementConfirmTitle">
     <div class="avatar-header">
-      <h2 id="complementConfirmTitle" class="avatar-title">{{ _("Nueva búsqueda") }}</h2>
+      <h2 id="complementConfirmTitle" class="avatar-title">{{ _("Búsqueda guardada") }}</h2>
       <button type="button" class="avatar-close" data-confirm-cancel aria-label="{{ _('Cerrar') }}"></button>
     </div>
     <div class="avatar-body delete-body">
       <p class="delete-text">
-        {{ _("Se borrará la búsqueda de este mundo con su progreso y resultados. Después podrás elegir otros efectos, pesos y límites.") }}
+        {{ _("Este mundo tiene una búsqueda guardada con otros efectos, pesos o límites.") }}
+        <strong id="complementConfirmProgress"></strong>
+      </p>
+      <p class="delete-text">
+        {{ _("Puedes continuarla (sus ajustes se mostrarán en los paneles) o empezar una nueva con los ajustes actuales, que borra la guardada.") }}
       </p>
       <div class="avatar-actions">
-        <button type="button" class="avatar-btn avatar-btn-save" data-confirm-cancel>
-          <span>{{ _("Cancelar") }}</span>
+        <button type="button" id="complementConfirmContinue" class="avatar-btn avatar-btn-save">
+          <span>{{ _("Continuar") }}</span>
         </button>
-        <button type="button" id="complementConfirmOk" class="avatar-btn avatar-btn-cancel">
-          <span>{{ _("Borrar") }}</span>
+        <button type="button" id="complementConfirmNew" class="avatar-btn avatar-btn-cancel">
+          <span>{{ _("Nueva búsqueda") }}</span>
         </button>
       </div>
     </div>

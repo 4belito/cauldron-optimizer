@@ -1,4 +1,6 @@
-// "Complete effects" mode: the user picks fewer than 10 effects and a long
+// "Complete effects" mode: the effects with a weight (fewer than 10) are kept,
+// the rest unchecked, and the form is locked while the mode is on: the
+// settings are changed with the mode off. A long
 // search (complement-worker.js, in the browser) finds the complementary
 // effects that complete them to 10, trying all 495 sets of 4 avoided
 // ingredients for each. The search runs in a window opened by "Completar";
@@ -30,7 +32,6 @@ function initComplement() {
   const stopBtn = $("complementStop");
   const stopLabel = stopBtn.querySelector("span");
   const applyBtn = $("complementApply");
-  const newBtn = $("complementNew");
   const goBtn = $("complementGo");
   const buttons = $("complementButtons");
   const closeX = win.querySelector("[data-complement-close]");
@@ -88,9 +89,9 @@ function initComplement() {
   const totalRuns = (p) => binom(p.n - p.effects.length, 10 - p.effects.length) * RUNS_PER_SET;
 
   // ---- Mode on / off ----
-  // While a search exists (running, stopped or finished) the form shows its
-  // values and is locked: Completar always continues it. "Nueva búsqueda"
-  // discards it and unlocks the form.
+  // The form is locked for the whole mode: it searches with the settings it
+  // was turned on with (or those of the saved search, shown on the form), so
+  // nothing changes under the user's feet. To change them, turn the mode off.
   const lockedParts = () => [
     document.querySelector(".diploma-input"),
     $("weightsContainer"),
@@ -135,6 +136,8 @@ function initComplement() {
       if (on) el.checked = false;
       el.disabled = on;
     });
+    // Back to the normal search: the 4-ingredient counter and its button
+    if (!on && typeof updatePremiumLocks === "function") updatePremiumLocks();
     saveSettingsBtn.disabled = on;
     // The normal search does not apply in this mode: its own buttons do.
     searchBtn.hidden = on;
@@ -142,36 +145,47 @@ function initComplement() {
     try {
       sessionStorage.setItem("complementMode", on ? "1" : "");
     } catch (e) {}
-    if (!on) setLocked(false);
-    else if (params) showSearch();
-    else loadSaved();
+    setLocked(on);
+    if (on) checkSaved();
     render();
   }
 
-  async function loadSaved() {
-    try {
-      const resp = await fetch(C.urls.state, { headers: { Accept: "application/json" } });
-      const data = await resp.json();
-      if (data.search && !state && toggle.checked) {
-        params = data.search.params;
-        state = data.search.state;
-        showSearch();
-      }
-    } catch (e) {}
-    render();
+  // Same search settings? (weights compared to 2 decimals, as the sliders)
+  const sameParams = (a, b) => {
+    const key = (p) => JSON.stringify([
+      p.n, p.effects, p.weights.map((w) => Math.round(w * 100)), p.alpha_ub, p.prob_ub, p.depth,
+    ]);
+    return key(a) === key(b);
+  };
+
+  // Turning the mode on: with a saved search (in memory or in the database)
+  // for the same settings, it is shown and Completar continues it. With other
+  // settings the user chooses: continue it (its settings go on the form) or
+  // start a new one with the current settings (the saved one is deleted).
+  async function checkSaved() {
+    if (!params) {
+      try {
+        const resp = await fetch(C.urls.state, { headers: { Accept: "application/json" } });
+        const data = await resp.json();
+        if (data.search && !params) {
+          params = data.search.params;
+          state = data.search.state;
+        }
+      } catch (e) {}
+    }
+    if (!toggle.checked || !params) return render();
+    if (sameParams(params, currentParams())) return showSearch();
+    askSaved();
   }
 
-  // "Nueva búsqueda": discard the search (after confirming) and unlock
-  function newSearch() {
-    confirmDiscard(async () => {
-      await clearSaved();
-      params = null;
-      state = null;
-      rate = null;
-      selectedKey = null;
-      setLocked(false);
-      render();
-    });
+  // Discard the saved search: Completar starts a new one with the form's settings
+  async function discardSaved() {
+    await clearSaved();
+    params = null;
+    state = null;
+    rate = null;
+    selectedKey = null;
+    render();
   }
 
   // ---- Windows (same look as the other game windows) ----
@@ -276,19 +290,28 @@ function initComplement() {
     setLocked(true);
   }
 
-  // ---- Confirmation window (same look as the delete window) ----
-  function confirmDiscard(onConfirm) {
+  // ---- Saved search with other settings: continue it or start a new one ----
+  function askSaved() {
     const modal = $("complementConfirm");
+    const pct = state && state.total ? (100 * state.done) / state.total : 0;
+    $("complementConfirmProgress").textContent = fmt(T.savedProgress, { pct: pct.toFixed(pct < 10 ? 2 : 1) });
     openWindow(modal);
     const close = () => closeWindow(modal);
-    $("complementConfirmOk").onclick = () => {
+    $("complementConfirmContinue").onclick = () => {
       close();
-      onConfirm();
+      showSearch();
     };
-    modal.querySelectorAll("[data-confirm-cancel]").forEach((b) => {
-      b.onclick = close;
-    });
-    modal.querySelector("[data-confirm-cancel]").focus();
+    $("complementConfirmNew").onclick = () => {
+      close();
+      discardSaved();
+    };
+    // Closing without choosing: the mode stays off
+    modal.querySelector("[data-confirm-cancel]").onclick = () => {
+      close();
+      toggle.checked = false;
+      setMode(false);
+    };
+    $("complementConfirmContinue").focus();
   }
 
   // ---- Best recipe window ----
@@ -411,7 +434,6 @@ function initComplement() {
     setGoLabel(!s ? T.button : running || finishedNow ? T.viewResults : T.resume);
     goBtn.dataset.tip = !s ? T.goTip : running || finishedNow ? "" : T.resumeTip;
     goBtn.disabled = !s && !!validate(currentParams());
-    newBtn.disabled = running || !s;
 
     // Note under the switch: with a search, its state (the form is locked
     // on its values); otherwise what is missing or the size of the search
@@ -529,7 +551,6 @@ function initComplement() {
   }
 
   // ---- Wiring ----
-  newBtn.addEventListener("click", newSearch);
   const sortBtns = [...win.querySelectorAll(".complement-sort-btn")];
   sortBtns.forEach((btn) => {
     btn.addEventListener("click", () => {

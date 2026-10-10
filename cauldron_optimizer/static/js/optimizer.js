@@ -107,17 +107,72 @@ function updateHiddenExcluded(n) {
   excludedHidden.value = JSON.stringify(excluded);
 }
 
-// At most this many premium ingredients can be avoided; the rest lock
+// The game always avoids exactly this many premium ingredients: once they
+// are chosen the rest lock, and "Buscar receta" waits until they are
 const MAX_PREMIUM_INGREDIENTS = 4;
 
 function updatePremiumLocks() {
   const inputs = [...document.querySelectorAll("input[name='premium_ingredients[]']")];
-  const full = inputs.filter((el) => el.checked).length >= MAX_PREMIUM_INGREDIENTS;
+  const chosen = inputs.filter((el) => el.checked);
+  const full = chosen.length >= MAX_PREMIUM_INGREDIENTS;
   inputs.forEach((el) => {
     const isLocked = full && !el.checked;
     el.disabled = isLocked;
     el.closest(".ingredient-check").classList.toggle("locked", isLocked);
   });
+  updatePremiumCounter(chosen);
+}
+
+// Four slots that fill with the chosen ingredients, and the search button
+// enabled only with exactly four.
+function updatePremiumCounter(chosen) {
+  const counter = document.getElementById("premiumCounter");
+  if (!counter) return;
+  const slots = counter.querySelectorAll(".premium-slot");
+  slots.forEach((slot, k) => {
+    const el = chosen[k];
+    const icon = el && el.closest(".ingredient-check").querySelector(".ingredient-check-icon");
+    slot.style.backgroundImage = icon ? `url("${icon.src}")` : "";
+    slot.classList.toggle("filled", !!el);
+  });
+  const n = chosen.length;
+  const missing = MAX_PREMIUM_INGREDIENTS - n;
+  counter.classList.toggle("is-complete", missing <= 0);
+
+  const searchBtn = document.getElementById("searchBtn");
+  if (searchBtn) {
+    // Remember the button's own help text, shown again once 4 are chosen
+    searchBtn.dataset.tipDefault ??= searchBtn.dataset.tip || "";
+    searchBtn.disabled = missing !== 0;
+    searchBtn.dataset.tip = missing !== 0 ? counter.dataset.textButton : searchBtn.dataset.tipDefault;
+  }
+}
+
+// "Óptima" checks every recipe: the limit of the search depth. Its checkmark
+// sits at the top of the depth card; while on, the depth reads "∞" and its
+// slider is dimmed. Moving the slider turns it off (one or the other).
+function initExactSearch() {
+  const toggle = document.getElementById("exactSearch");
+  const check = document.getElementById("exactCheck");
+  const depth = document.querySelector("input[name='n_starts']");
+  if (!toggle || !check || !depth) return;
+  const card = depth.closest(".weight-card");
+  const value = card.querySelector(".weight-value");
+  card.classList.add("depth-card");
+  card.querySelector(".weight-top-row").append(check);
+
+  const update = () => {
+    card.classList.toggle("is-exact", toggle.checked);
+    value.textContent = toggle.checked ? "∞" : String(parseInt(depth.value, 10));
+  };
+  toggle.addEventListener("change", update);
+  depth.addEventListener("input", (e) => {
+    // Only the user moving it: a value set by code (e.g. a saved "Completar
+    // efectos" search shown on the form) leaves "Óptima" as it is
+    if (e.isTrusted) toggle.checked = false;
+    update();
+  });
+  update();
 }
 
 // Store current weights globally to preserve them across rebuilds
@@ -320,7 +375,8 @@ function initRestoreButton() {
   const { form } = window.OPTIMIZER_CONFIG.dom;
   form.addEventListener("input", () => setUnsaved(true));
   form.addEventListener("change", () => setUnsaved(true));
-  setUnsaved(hasPremiumSelection());
+  // data-unsaved: the form shows the last search's settings, not the saved ones
+  setUnsaved(hasPremiumSelection() || "unsaved" in form.dataset);
 
   // Reloading the page shows the selected server's saved settings. The
   // ingredient exclusions are temporary, so clear their session copy first.
@@ -434,6 +490,7 @@ function initOptimizer() {
     
     dom.boundsContainer.append(card);
   });
+  initExactSearch();
 
   rebuildWeights();
 

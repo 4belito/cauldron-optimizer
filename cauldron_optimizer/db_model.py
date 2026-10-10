@@ -4,6 +4,7 @@ from typing import Any
 from sqlalchemy import (
     TIMESTAMP,
     BigInteger,
+    Boolean,
     Float,
     ForeignKey,
     ForeignKeyConstraint,
@@ -123,6 +124,11 @@ class Server(Base):
     avatar: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Chosen by the user; None for servers made before names existed
     name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Search every recipe (guaranteed optimum) instead of search_depth
+    # starts; on by default
+    exact_search: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default="true"
+    )
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 

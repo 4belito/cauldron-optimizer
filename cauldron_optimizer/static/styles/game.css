@@ -1124,24 +1124,10 @@ button:disabled[data-tip] {
   display: none;
 }
 
-.complement-action-btn {
-  width: clamp(10rem, 24vw, 16rem);
-}
-
 .complement-action-btn:disabled {
   opacity: 1;
   filter: grayscale(1) brightness(0.78) contrast(0.75);
   cursor: default;
-}
-
-@media (max-width: 37.5rem) {
-  .complement-buttons {
-    gap: 0.6rem;
-  }
-
-  .complement-action-btn {
-    width: min(10rem, 46vw);
-  }
 }
 
 /* Legacy rounded mode buttons, kept for older markup if present */
@@ -1210,4 +1196,236 @@ button:disabled[data-tip] {
   color: #51200d;
   font-size: 0.92rem;
   line-height: 1.4;
+}
+
+/* ---- Exactly 4 avoided ingredients: slots that fill with the chosen ---- */
+.premium-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  max-width: 100%;
+  margin: 0.65rem auto 0;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #b89a63;
+  border-left: 4px solid #c9a44f;
+  border-radius: 0.35rem;
+  background: rgba(246, 234, 208, 0.75);
+}
+
+.premium-counter.is-complete {
+  border-left-color: var(--game-green-main);
+}
+
+.premium-counter {
+  gap: 0.7rem;
+}
+
+/* Diamond after the title: premium, as the game marks it */
+.premium-diamond {
+  width: 1.15em;
+  height: auto;
+  margin-left: 0.35em;
+  vertical-align: -0.12em;
+  filter: drop-shadow(0 1px 1px rgba(81, 32, 13, 0.35));
+}
+
+.premium-counter-text {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #51200d;
+}
+
+.premium-counter.is-complete .premium-counter-text {
+  color: var(--game-green-dark);
+}
+
+.premium-slots {
+  display: flex;
+  gap: 0.3rem;
+  flex: 0 0 auto;
+}
+
+.premium-slot {
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 2px dashed #b89a63;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35) center / 78% no-repeat;
+}
+
+.premium-slot.filled {
+  border: 2px solid var(--game-green-main);
+  background-color: #f6ead0;
+}
+
+/* "Completar efectos" mode uses this panel for its own content */
+.premium-card.is-complement .premium-counter {
+  visibility: hidden;
+}
+
+/* Search button waiting for the 4 ingredients */
+.game-btn:disabled {
+  filter: grayscale(0.85) brightness(0.95);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---- "Solución óptima": switch under the limits; depth card disabled ---- */
+/* "Óptima" checkmark at the top of the depth card: the limit of the depth */
+/* The three limit cards: same height, and the same top row height, so their
+   numbers, sliders and labels line up (the depth card also holds "Óptima") */
+.bounds-card .bounds-row {
+  align-items: stretch;
+}
+
+.bounds-card .weight-top-row {
+  height: 1.6rem;
+  gap: 0.5rem;
+}
+
+.exact-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #51200d;
+  cursor: pointer;
+}
+
+.exact-check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.exact-check-box {
+  position: relative;
+  width: 1.375rem;
+  height: 1.375rem;
+  flex-shrink: 0;
+}
+
+.exact-check-box img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.exact-check-box .exact-check-mark {
+  position: absolute;
+  left: 0.1rem;
+  bottom: 0.1rem;
+  width: 1.4rem;
+  height: auto;
+  visibility: hidden;
+}
+
+.exact-check input:checked + .exact-check-box .exact-check-mark {
+  visibility: visible;
+}
+
+.exact-check input:focus-visible + .exact-check-box {
+  border-radius: 0.2rem;
+  box-shadow: 0 0 0 2px rgba(226, 184, 90, 0.9);
+}
+
+/* While "Óptima" is on: the depth reads ∞ and its slider is dimmed (still
+   usable: moving it turns "Óptima" off) */
+/* Values of the limit cards: the panel title's bold face and brown, at the
+   left; the depth's ∞ the same */
+.bounds-card .weight-value {
+  width: auto;
+  min-width: 2.25rem;
+  padding-left: 0.35rem;
+  text-align: left;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #51200d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ∞ is a short glyph: a bit larger so it looks as tall as the numbers */
+.depth-card.is-exact .weight-value {
+  font-size: 1.4rem;
+  transform: translateY(-0.08rem);
+}
+
+.depth-card.is-exact input[type="range"],
+.depth-card.is-exact .weight-label {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+/* Progress window of the exact search */
+.search-window {
+  width: min(26rem, 100%);
+}
+
+.search-body {
+  gap: 0.6rem;
+  padding-block: 1rem 1.4rem;
+  text-align: center;
+}
+
+/* Results page */
+/* Results: the score with a small gold seal when it is the proven optimum */
+/* The seal hangs to the right, so the score itself stays centered */
+.score-line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.exact-seal {
+  position: absolute;
+  left: calc(100% + 0.4rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  width: 1.6rem;
+  height: 1.6rem;
+  cursor: help;
+  filter: drop-shadow(0 1px 1px rgba(81, 32, 13, 0.35));
+}
+
+.exact-seal svg {
+  width: 100%;
+  height: 100%;
+}
+
+.exact-seal .seal-ribbon {
+  fill: #a8452b;
+}
+
+.exact-seal .seal-rosette {
+  fill: #e2b85a;
+  stroke: #8a5a1c;
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+
+.exact-seal .seal-face {
+  fill: #f3d68a;
+  stroke: #8a5a1c;
+  stroke-width: 0.6;
+}
+
+.exact-seal .seal-check {
+  fill: none;
+  stroke: #51200d;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.exact-seal:focus-visible {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+  border-radius: 50%;
 }
