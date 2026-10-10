@@ -402,6 +402,9 @@ function initDiplomaSteppers() {
       const current = Number(input.value) || min();
       const next = Math.min(max(), Math.max(min(), current + Number(btn.dataset.step)));
       if (next === current) return;
+      if (complementMode && next > current) {
+        for (let i = current; i < next; i++) globalChecked[i] = false;
+      }
       input.value = next;
       input.dispatchEvent(new Event("change", { bubbles: true }));
     });

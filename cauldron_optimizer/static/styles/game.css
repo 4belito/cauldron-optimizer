@@ -12,6 +12,15 @@
   src: url("/static/fonts/cinzel-700-latin.woff2") format("woff2");
 }
 
+:root {
+  /* Sampled from the normal green action-button artwork. */
+  --game-green-highlight: #90cf1b;
+  --game-green-main: #61910b;
+  --game-green-dark: #4b7306;
+  --game-green-edge: #203200;
+  --game-green-rgb: 97, 145, 11;
+}
+
 .main-navbar {
   /* Only the middle of the image stretches; the gold ends stay crisp */
   background: none;
@@ -548,7 +557,7 @@ button:disabled[data-tip] {
 }
 
 .complement-switch input:checked + .complement-switch-track {
-  background: linear-gradient(#8fc23a, #4f8a12);
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
 }
 
 .complement-switch input:checked + .complement-switch-track::after {
@@ -565,11 +574,28 @@ button:disabled[data-tip] {
   flex-direction: column;
 }
 
-/* Ingredients panel greyed out while the mode is on */
-.premium-card.is-disabled .card-body {
-  opacity: 0.45;
-  filter: grayscale(0.7);
+/* In complete mode, the premium panel keeps its exact footprint: the
+   ingredient grid remains in layout but becomes the message surface. */
+.premium-card .card-body {
+  position: relative;
+}
+
+.premium-card.is-complement .ingredients-grid {
+  visibility: hidden;
+}
+
+.complement-panel-content {
+  position: absolute;
+  inset: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
   pointer-events: none;
+}
+
+.complement-panel-content[hidden] {
+  display: none;
 }
 
 /* Progress panel */
@@ -591,7 +617,7 @@ button:disabled[data-tip] {
 .complement-bar-fill {
   height: 100%;
   width: 0;
-  background: linear-gradient(#a8d84e, #5d9e0f);
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
   transition: width 0.3s;
 }
 
@@ -605,7 +631,7 @@ button:disabled[data-tip] {
   min-height: 1.2rem;
   margin: 0.25rem 0;
   font-weight: 700;
-  color: #3f6f10;
+  color: var(--game-green-dark);
   text-align: center;
 }
 
@@ -732,7 +758,7 @@ button:disabled[data-tip] {
   margin: 0 auto 0.75rem;
   padding: 0.45rem 0.75rem;
   border: 1px solid #b89a63;
-  border-left: 4px solid #6f9a2a;
+  border-left: 4px solid var(--game-green-main);
   border-radius: 0.35rem;
   background: rgba(246, 234, 208, 0.75);
   color: #51200d;
@@ -748,7 +774,7 @@ button:disabled[data-tip] {
   height: 1.15rem;
   margin-top: 0.05rem;
   border-radius: 50%;
-  background: #6f9a2a;
+  background: var(--game-green-main);
   color: #fff;
   font: italic 700 0.8rem/1.15rem Georgia, serif;
   text-align: center;
@@ -803,7 +829,7 @@ button:disabled[data-tip] {
 }
 
 .complement-confirm-window .avatar-btn {
-  flex: 1 1 0;
+  flex: 0 1 10rem;
   min-width: 0;
   max-width: 10.5rem;
   width: auto;
@@ -825,6 +851,11 @@ button:disabled[data-tip] {
   opacity: 0.5;
   filter: grayscale(0.6);
   cursor: default;
+}
+
+.complement-window #complementApply:disabled {
+  opacity: 1;
+  filter: grayscale(1) brightness(0.78) contrast(0.75);
 }
 
 /* Search window: the X is disabled while the search runs */
@@ -871,9 +902,9 @@ button:disabled[data-tip] {
 }
 
 .complement-window .complement-row.is-selected {
-  border-color: #4f8a12;
+  border-color: var(--game-green-dark);
   background: linear-gradient(#eef6d8, #dcebb4);
-  box-shadow: 0 0 0 2px #6fae1e;
+  box-shadow: 0 0 0 2px var(--game-green-highlight);
 }
 
 .complement-window .complement-row:focus-visible {
@@ -904,9 +935,9 @@ button:disabled[data-tip] {
 
 .range-box {
   height: 0.7rem;
-  border: 1px solid #4f6f12;
+  border: 1px solid var(--game-green-dark);
   border-radius: 0.15rem;
-  background: rgba(111, 174, 30, 0.45);
+  background: rgba(var(--game-green-rgb), 0.45);
 }
 
 .range-avg {
@@ -1023,8 +1054,8 @@ button:disabled[data-tip] {
 }
 
 .complement-sort-btn[aria-checked="true"] {
-  border-color: #2f5a05;
-  background: linear-gradient(#8fc23a, #4f8a12);
+  border-color: var(--game-green-edge);
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
   color: #fff;
 }
 
@@ -1064,7 +1095,7 @@ button:disabled[data-tip] {
   display: block;
   height: 100%;
   width: 0;
-  background: linear-gradient(#a8d84e, #5d9e0f);
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
 }
 
 .complement-current-count {
@@ -1072,4 +1103,111 @@ button:disabled[data-tip] {
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
+}
+
+/* Form locked on the values of an existing search */
+.is-locked {
+  opacity: 0.7;
+  filter: saturate(0.6);
+}
+
+/* The mode's buttons replace the normal Find Recipe button */
+.complement-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: min(42rem, 100%);
+  margin: 0 auto;
+}
+
+.complement-buttons[hidden] {
+  display: none;
+}
+
+.complement-action-btn {
+  width: clamp(10rem, 24vw, 16rem);
+}
+
+.complement-action-btn:disabled {
+  opacity: 1;
+  filter: grayscale(1) brightness(0.78) contrast(0.75);
+  cursor: default;
+}
+
+@media (max-width: 37.5rem) {
+  .complement-buttons {
+    gap: 0.6rem;
+  }
+
+  .complement-action-btn {
+    width: min(10rem, 46vw);
+  }
+}
+
+/* Legacy rounded mode buttons, kept for older markup if present */
+.complement-pill {
+  min-width: 8rem;
+  padding: 0.3rem 1rem;
+  border: 1px solid #7a5a3a;
+  border-radius: 1rem;
+  background: linear-gradient(#f6ead0, #e2c896);
+  color: #51200d;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.complement-pill.complement-go {
+  border-color: var(--game-green-edge);
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+}
+
+.complement-pill:hover:not(:disabled) {
+  filter: brightness(1.07);
+}
+
+.complement-pill:disabled {
+  opacity: 0.5;
+  filter: grayscale(0.7);
+  cursor: default;
+}
+
+.complement-pill:focus-visible {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+}
+
+
+/* "Completar efectos" switch in the World bar: short label (its help text
+   explains it) so the bar stays on one line */
+.server-bar {
+  column-gap: 0.9rem;
+}
+
+.server-bar .server-select {
+  width: 10rem;
+}
+
+.server-switch {
+  margin: 0;
+}
+
+.server-switch-text {
+  display: inline-block;
+  font-size: 0.78rem;
+  line-height: 0.95;
+  width: 4.6rem;
+  white-space: normal;
+  text-align: left;
+}
+
+/* The mode's panel (in the ingredients panel's place) */
+.complement-intro {
+  margin: 0 auto 0.75rem;
+  max-width: 34rem;
+  color: #51200d;
+  font-size: 0.92rem;
+  line-height: 1.4;
 }

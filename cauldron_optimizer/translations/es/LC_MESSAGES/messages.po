@@ -415,3 +415,30 @@ msgstr "Mín"
 
 msgid "Max"
 msgstr "Máx"
+
+msgid "Marca los efectos que quieres (menos de 10). La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan."
+msgstr "Marca los efectos que quieres (menos de 10). La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan."
+
+msgid "Borra la búsqueda guardada para elegir otros efectos, pesos o límites"
+msgstr "Borra la búsqueda guardada para elegir otros efectos, pesos o límites"
+
+msgid "Se borrará la búsqueda de este mundo con su progreso y resultados. Después podrás elegir otros efectos, pesos y límites."
+msgstr "Se borrará la búsqueda de este mundo con su progreso y resultados. Después podrás elegir otros efectos, pesos y límites."
+
+msgid "Borrar"
+msgstr "Borrar"
+
+msgid "Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para seguir."
+msgstr "Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para seguir."
+
+msgid "Búsqueda terminada con estos valores: pulsa Ver resultados."
+msgstr "Búsqueda terminada con estos valores: pulsa Ver resultados."
+
+msgid "Ver resultados"
+msgstr "Ver resultados"
+
+msgid "Busca los efectos que mejor completan los elegidos"
+msgstr "Busca los efectos que mejor completan los elegidos"
+
+msgid "Complete effects"
+msgstr "Completar efectos"

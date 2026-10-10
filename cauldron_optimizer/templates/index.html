@@ -34,6 +34,13 @@
     <noscript><button type="submit" class="server-btn">OK</button></noscript>
   </form>
 
+  <!-- "Complete effects" mode (see complement.js) -->
+  <label class="complement-switch server-switch"
+         data-tip="{{ _('Marca menos de 10 efectos y busca los efectos que mejor los completan, probando todas las combinaciones de 4 ingredientes evitados') }}">
+    <input type="checkbox" id="complementToggle">
+    <span class="complement-switch-track" aria-hidden="true"></span>
+    <span class="server-switch-text">{{ _("Complete effects") }}</span>
+  </label>
   <div class="server-actions">
   <!-- Saves the search settings below to the selected server -->
   <button
@@ -94,15 +101,6 @@
       <strong>{{ _("Diplomas & Efectos Deseados") }}</strong>
     </legend>
     <div class="card-body">
-      <!-- "Complete effects" mode (see complement.js) -->
-      <label class="complement-switch"
-             data-tip="{{ _('Marca menos de 10 efectos y busca los efectos que mejor los completan, probando todas las combinaciones de 4 ingredientes evitados') }}">
-        <input type="checkbox" id="complementToggle">
-        <span class="complement-switch-track" aria-hidden="true"></span>
-        <span>{{ _("Completar efectos") }}</span>
-      </label>
-      <!-- "Complete effects" mode: what is missing, or what Completar will do -->
-      <p class="complement-hint" id="complementHint" role="status" aria-live="polite" hidden></p>
 
       <div class="diploma-row">
         <div class="diploma-input">
@@ -127,9 +125,16 @@
   <!-- Premium ingredients -->
   <fieldset class="card premium-card">
     <legend class="card-legend">
-      <strong>{{ _("Evitar Ingredientes (Premium)") }}</strong>
+      <strong class="premium-title">{{ _("Evitar Ingredientes (Premium)") }}</strong>
+      <strong class="complement-title" hidden>{{ _("Completar efectos") }}</strong>
     </legend>
     <div class="card-body">
+      <div class="complement-panel-content" id="complementPanelContent" hidden>
+        <p class="complement-intro">
+          {{ _("Marca los efectos que quieres (menos de 10). La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan.") }}
+        </p>
+        <p class="complement-hint" id="complementHint" role="status" aria-live="polite"></p>
+      </div>
       <div class="ingredients-grid">
         {% for name in ingredient_names %}
           <label class="ingredient-check">
@@ -168,6 +173,15 @@
     <button type="submit" id="searchBtn" class="game-btn game-btn-main" data-tip="{{ _('Calcula la mejor receta para esta configuración') }}">
       <span>{{ _("Buscar Receta") }}</span>
     </button>
+    <div class="complement-buttons" id="complementButtons" hidden>
+      <button type="button" id="complementGo" class="game-btn game-btn-main complement-action-btn">
+        <span></span>
+      </button>
+      <button type="button" id="complementNew" class="game-btn game-btn-main complement-action-btn complement-new-btn"
+              data-tip="{{ _('Borra la búsqueda guardada para elegir otros efectos, pesos o límites') }}">
+        <span>{{ _("Nueva búsqueda") }}</span>
+      </button>
+    </div>
   </div>
 
 </form>
@@ -204,7 +218,7 @@
     ],
   };
 </script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=70"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -222,6 +236,8 @@
     },
     text: {
       button: {{ _("Completar") | tojson }},
+      viewResults: {{ _("Ver resultados") | tojson }},
+      goTip: {{ _("Busca los efectos que mejor completan los elegidos") | tojson }},
       buttonTip: {{ _("Busca los efectos que completan los elegidos (o continúa la búsqueda)") | tojson }},
       needEffects: {{ _("Marca entre 1 y 9 efectos, al menos uno con peso. La búsqueda completa el resto hasta 10.") | tojson }},
       needDiplomas: {{ _("Necesitas al menos 10 diplomas.") | tojson }},
@@ -235,9 +251,8 @@
       close: {{ _("Cerrar") | tojson }},
       resume: {{ _("Continuar") | tojson }},
       resumeTip: {{ _("Continúa la búsqueda desde donde se detuvo") | tojson }},
-      resumeHint: {{ _("Búsqueda guardada al {pct}%: pulsa Completar para continuar.") | tojson }},
-      otherSaved: {{ _("Tienes otra búsqueda guardada ({pct}%). Completar te deja restaurarla o empezar esta ({total} búsquedas).") | tojson }},
-      doneHint: {{ _("Búsqueda terminada: pulsa Completar para ver los resultados.") | tojson }},
+      resumeHint: {{ _("Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para seguir.") | tojson }},
+      doneHint: {{ _("Búsqueda terminada con estos valores: pulsa Ver resultados.") | tojson }},
       runs: {{ _("{done} de {total} búsquedas ({pct}%)") | tojson }},
       estimate: {{ _("Esta búsqueda necesita {total} búsquedas.") | tojson }},
       eta: {{ _("Quedan unos {eta}.") | tojson }},
@@ -361,19 +376,14 @@
     </div>
     <div class="avatar-body delete-body">
       <p class="delete-text">
-        {{ _("Ya tienes una búsqueda en este mundo con otros parámetros. Si empiezas una nueva, se perderá su progreso.") }}
+        {{ _("Se borrará la búsqueda de este mundo con su progreso y resultados. Después podrás elegir otros efectos, pesos y límites.") }}
       </p>
       <div class="avatar-actions">
         <button type="button" class="avatar-btn avatar-btn-save" data-confirm-cancel>
           <span>{{ _("Cancelar") }}</span>
         </button>
-        <!-- Puts the saved search's values back on the form and continues it -->
-        <button type="button" id="complementConfirmRestore" class="avatar-btn avatar-btn-save"
-                data-tip="{{ _('Vuelve a los valores de la búsqueda guardada y la continúa') }}">
-          <span>{{ _("Restaurar") }}</span>
-        </button>
         <button type="button" id="complementConfirmOk" class="avatar-btn avatar-btn-cancel">
-          <span>{{ _("Empezar") }}</span>
+          <span>{{ _("Borrar") }}</span>
         </button>
       </div>
     </div>

@@ -170,6 +170,10 @@ msgstr "Community Work"
 msgid "Productos en Conserva"
 msgstr "Canned Goods"
 
+#: cauldron_optimizer/constants.py:55
+msgid "Nox"
+msgstr "Nox"
+
 #: cauldron_optimizer/forms.py:26 cauldron_optimizer/forms.py:36
 #: cauldron_optimizer/forms.py:58 cauldron_optimizer/forms.py:68
 msgid "Usuario"
@@ -280,9 +284,8 @@ msgid "Al menos debes querer algun efecto"
 msgstr "You must select at least one effect"
 
 #: cauldron_optimizer/forms.py:203
-#, fuzzy
 msgid "Idioma inválido"
-msgstr "Invalid form"
+msgstr "Invalid language"
 
 #: cauldron_optimizer/helpers.py:33
 msgid ""
@@ -397,9 +400,8 @@ msgid "Optimizador del Caldero"
 msgstr "Cauldron Optimizer"
 
 #: cauldron_optimizer/templates/layout.html:45
-#, fuzzy
 msgid "Mostrar menú"
-msgstr "Toggle navigation"
+msgstr "Show menu"
 
 #: cauldron_optimizer/templates/layout.html:63
 msgid "Mostrar navegación"
@@ -779,3 +781,30 @@ msgstr "Min"
 
 msgid "Max"
 msgstr "Max"
+
+msgid "Borra la búsqueda guardada para elegir otros efectos, pesos o límites"
+msgstr "Delete the saved search to choose different effects, weights, or limits"
+
+msgid "Se borrará la búsqueda de este mundo con su progreso y resultados. Después podrás elegir otros efectos, pesos y límites."
+msgstr "This world's search, including its progress and results, will be deleted. You can then choose different effects, weights, or limits."
+
+msgid "Borrar"
+msgstr "Delete"
+
+msgid "Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para seguir."
+msgstr "A search with these settings is saved at {pct}%. Press Continue to resume."
+
+msgid "Búsqueda terminada con estos valores: pulsa Ver resultados."
+msgstr "The search with these settings is complete. Press View results."
+
+msgid "Ver resultados"
+msgstr "View results"
+
+msgid "Busca los efectos que mejor completan los elegidos"
+msgstr "Find the effects that best complete your selection"
+
+msgid "Marca los efectos que quieres (menos de 10). La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan."
+msgstr "Select the effects you want (fewer than 10). The search tests the missing effects until it reaches 10, using every combination of 4 avoided ingredients, and shows which ones complete your selection best."
+
+msgid "Complete effects"
+msgstr "Complete effects"

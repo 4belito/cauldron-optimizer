@@ -17,8 +17,8 @@ function initComplement() {
   const toggle = $("complementToggle");
   const win = $("complementWindow");
   const hint = $("complementHint");
+  const panelContent = $("complementPanelContent");
   const searchBtn = $("searchBtn");
-  const searchLabel = searchBtn.querySelector("span");
   const premiumCard = document.querySelector(".premium-card");
   const saveSettingsBtn = $("saveSettingsBtn");
   const statusEl = $("complementStatus");
@@ -30,12 +30,14 @@ function initComplement() {
   const stopBtn = $("complementStop");
   const stopLabel = stopBtn.querySelector("span");
   const applyBtn = $("complementApply");
+  const newBtn = $("complementNew");
+  const goBtn = $("complementGo");
+  const buttons = $("complementButtons");
   const closeX = win.querySelector("[data-complement-close]");
   const topList = $("complementTop");
   const csrf = () => document.querySelector("input[name='csrf_token']").value;
 
   let worker = null;
-  let saved = null; // {params, state} stored in the database for this world
   let params = null; // parameters of the search in memory
   let state = null; // latest state of that search
   let rate = null; // runs per second, measured
@@ -83,13 +85,38 @@ function initComplement() {
     return null;
   }
 
-  // Key order differs once saved (the database sorts JSON keys)
-  const PARAM_KEYS = ["n", "effects", "weights", "alpha_ub", "prob_ub", "depth"];
-  const sameParams = (a, b) =>
-    !!a && !!b && PARAM_KEYS.every((k) => JSON.stringify(a[k]) === JSON.stringify(b[k]));
   const totalRuns = (p) => binom(p.n - p.effects.length, 10 - p.effects.length) * RUNS_PER_SET;
 
   // ---- Mode on / off ----
+  // While a search exists (running, stopped or finished) the form shows its
+  // values and is locked: Completar always continues it. "Nueva búsqueda"
+  // discards it and unlocks the form.
+  const lockedParts = () => [
+    document.querySelector(".diploma-input"),
+    $("weightsContainer"),
+    $("boundsContainer"),
+  ];
+
+  function setLocked(locked) {
+    lockedParts().forEach((el) => {
+      el.inert = locked; // no clicks, no keyboard focus
+      el.classList.toggle("is-locked", locked);
+    });
+  }
+
+  function setGoLabel(text) {
+    const label = goBtn.querySelector("span");
+    if (label) label.textContent = text;
+    else goBtn.textContent = text;
+  }
+
+  // Show the search on the form and lock it
+  function showSearch() {
+    window.cauldronForm.applyComplementParams(params);
+    setLocked(true);
+    render();
+  }
+
   function setMode(on) {
     if (!on && worker) stop();
     // Leaving the mode with a result: the selected set's 10 effects end up
@@ -99,22 +126,25 @@ function initComplement() {
       on,
       best && { n: params.n, effects: params.effects, weights: params.weights, comp: best.comp }
     );
-    hint.hidden = !on;
     document.body.classList.toggle("complement-on", on);
-    premiumCard.classList.toggle("is-disabled", on);
+    premiumCard.classList.toggle("is-complement", on);
+    panelContent.hidden = !on;
+    premiumCard.querySelector(".premium-title").hidden = on;
+    premiumCard.querySelector(".complement-title").hidden = !on;
     premiumCard.querySelectorAll("input[name='premium_ingredients[]']").forEach((el) => {
       if (on) el.checked = false;
       el.disabled = on;
     });
     saveSettingsBtn.disabled = on;
-    searchLabel.textContent = on ? T.button : C.searchLabel;
-    searchBtn.dataset.tip = on ? T.buttonTip : C.searchTip;
+    // The normal search does not apply in this mode: its own buttons do.
+    searchBtn.hidden = on;
+    buttons.hidden = !on;
     try {
       sessionStorage.setItem("complementMode", on ? "1" : "");
     } catch (e) {}
-    // The form is left as it is: a saved search is offered by the hint and
-    // by "Restaurar" in the new-search window
-    if (on && !params) loadSaved();
+    if (!on) setLocked(false);
+    else if (params) showSearch();
+    else loadSaved();
     render();
   }
 
@@ -122,15 +152,26 @@ function initComplement() {
     try {
       const resp = await fetch(C.urls.state, { headers: { Accept: "application/json" } });
       const data = await resp.json();
-      saved = data.search;
-      if (saved && !state) {
-        params = saved.params;
-        state = saved.state;
+      if (data.search && !state && toggle.checked) {
+        params = data.search.params;
+        state = data.search.state;
+        showSearch();
       }
-    } catch (e) {
-      saved = null;
-    }
+    } catch (e) {}
     render();
+  }
+
+  // "Nueva búsqueda": discard the search (after confirming) and unlock
+  function newSearch() {
+    confirmDiscard(async () => {
+      await clearSaved();
+      params = null;
+      state = null;
+      rate = null;
+      selectedKey = null;
+      setLocked(false);
+      render();
+    });
   }
 
   // ---- Windows (same look as the other game windows) ----
@@ -198,7 +239,6 @@ function initComplement() {
       });
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
-      saved = { params, state };
       msgEl.classList.remove("is-error");
       msgEl.textContent = state.done >= state.total ? "" : T.saved;
     } catch (err) {
@@ -213,61 +253,35 @@ function initComplement() {
       method: "POST",
       headers: { Accept: "application/json", "X-CSRFToken": csrf() },
     }).catch(() => {});
-    saved = null;
   }
 
-  // "Completar": continue the same search (or show its results), or start a
-  // new one after warning that the previous progress will be lost
-  function onSearch(e) {
-    if (!toggle.checked) return;
-    e.preventDefault();
+  // The mode's button: with a search, continue it (or show its progress or
+  // results); otherwise start one with the form's values
+  function go() {
     if (worker) {
       openWindow(win);
       return;
     }
+    if (state) {
+      if (state.done >= state.total) openWindow(win);
+      else start(params, state);
+      return;
+    }
     const p = currentParams();
-    const problem = validate(p);
-    if (problem) {
+    if (validate(p)) {
       render();
       return;
     }
-    if (sameParams(p, params) && state) {
-      if (state.done >= state.total) openWindow(win);
-      else start(p, state);
-      return;
-    }
-    if (saved || (state && state.done > 0)) {
-      confirmNew(
-        () => {
-          clearSaved();
-          state = null;
-          rate = null;
-          selectedKey = null;
-          start(p, null);
-        },
-        () => {
-          // Back to the saved search's values: continue it, or show its results
-          window.cauldronForm.applyComplementParams(params);
-          if (state.done >= state.total) openWindow(win);
-          else start(params, state);
-        }
-      );
-      return;
-    }
     start(p, null);
+    setLocked(true);
   }
 
   // ---- Confirmation window (same look as the delete window) ----
-  function confirmNew(onConfirm, onRestore) {
+  function confirmDiscard(onConfirm) {
     const modal = $("complementConfirm");
-    const ok = $("complementConfirmOk");
-    $("complementConfirmRestore").onclick = () => {
-      closeWindow(modal);
-      onRestore();
-    };
     openWindow(modal);
     const close = () => closeWindow(modal);
-    ok.onclick = () => {
+    $("complementConfirmOk").onclick = () => {
       close();
       onConfirm();
     };
@@ -392,29 +406,27 @@ function initComplement() {
     // The X stops nothing: only usable when the search is not running
     closeX.disabled = running;
 
-    // Line under the button: what is missing, or what "Completar" will do
-    const cur = currentParams();
-    const problem = validate(cur);
-    hint.classList.toggle("is-error", !!problem);
-    if (problem) hint.textContent = problem;
-    else if (running && s) {
+    // The mode's button: what it will do now
+    const finishedNow = !!s && s.done >= s.total;
+    setGoLabel(!s ? T.button : running || finishedNow ? T.viewResults : T.resume);
+    goBtn.dataset.tip = !s ? T.goTip : running || finishedNow ? "" : T.resumeTip;
+    goBtn.disabled = !s && !!validate(currentParams());
+    newBtn.disabled = running || !s;
+
+    // Note under the switch: with a search, its state (the form is locked
+    // on its values); otherwise what is missing or the size of the search
+    hint.classList.remove("is-error");
+    if (s) {
       const pct = s.total ? (100 * s.done) / s.total : 0;
-      hint.textContent = `${T.running} ${pct.toFixed(pct < 10 ? 2 : 1)}%`;
-    }
-    else if (s && sameParams(cur, params)) {
-      const pct = s.total ? (100 * s.done) / s.total : 0;
-      hint.textContent = s.done >= s.total
-        ? T.doneHint
-        : fmt(T.resumeHint, { pct: pct.toFixed(pct < 10 ? 2 : 1) });
-    } else if (s && s.done > 0) {
-      // A different search is saved: Completar offers to restore it
-      const pct = s.total ? (100 * s.done) / s.total : 0;
-      hint.textContent = fmt(T.otherSaved, {
-        pct: pct.toFixed(pct < 10 ? 2 : 1),
-        total: totalRuns(cur).toLocaleString(),
-      });
+      const p = pct.toFixed(pct < 10 ? 2 : 1);
+      hint.textContent = running
+        ? `${T.running} ${p}%`
+        : s.done >= s.total ? T.doneHint : fmt(T.resumeHint, { pct: p });
     } else {
-      hint.textContent = fmt(T.estimate, { total: totalRuns(cur).toLocaleString() });
+      const cur = currentParams();
+      const problem = validate(cur);
+      hint.classList.toggle("is-error", !!problem);
+      hint.textContent = problem || fmt(T.estimate, { total: totalRuns(cur).toLocaleString() });
     }
 
     if (s) {
@@ -517,6 +529,7 @@ function initComplement() {
   }
 
   // ---- Wiring ----
+  newBtn.addEventListener("click", newSearch);
   const sortBtns = [...win.querySelectorAll(".complement-sort-btn")];
   sortBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -526,7 +539,11 @@ function initComplement() {
     });
   });
   toggle.addEventListener("change", () => setMode(toggle.checked));
-  searchBtn.form.addEventListener("submit", onSearch);
+  // Enter in the form would submit the normal search: not in this mode
+  searchBtn.form.addEventListener("submit", (e) => {
+    if (toggle.checked) e.preventDefault();
+  });
+  goBtn.addEventListener("click", go);
   // Running: stop and save. Stopped: continue. Finished: close the window
   stopBtn.addEventListener("click", () => {
     if (worker) stop();
