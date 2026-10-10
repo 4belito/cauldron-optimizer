@@ -4,15 +4,15 @@
 .cauldron-page,
 .book-page {
   min-height: 100vh;
-  background: center / cover no-repeat;
+  background: #1f1713;
 }
 
 .cauldron-page { 
-  background-image: url("/static/illustration_cauldron.png"); 
+  --page-bg: url("/static/illustration_cauldron.png"); 
 }
 
 .book-page { 
-  background-image: url("/static/illustration_book.png"); 
+  --page-bg: url("/static/illustration_book.png"); 
 }
 
 .cauldron-page::before,
@@ -20,7 +20,9 @@
   content: "";
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+    var(--page-bg) center / cover no-repeat;
   pointer-events: none;
   z-index: -1;
 }
