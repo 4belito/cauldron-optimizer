@@ -102,8 +102,19 @@ fieldset.card::before {
 /* Narrow screens: less overhang, so the page never scrolls sideways */
 @media (max-width: 36rem) {
   fieldset.card::before {
-    left: -0.7rem;
-    right: -0.7rem;
+    left: -1.05rem;
+    right: -1.05rem;
+    top: -1.55rem;
+    background:
+      url("/static/ui/leaf_ornament.png") center -0.25rem / 9.6rem auto no-repeat,
+      url("/static/ui/elf_corner_left.png") left top / 4.9rem auto no-repeat,
+      url("/static/ui/elf_corner_right.png") right top / 4.9rem auto no-repeat;
+  }
+}
+
+@media (max-width: 24rem) {
+  fieldset.card::before {
+    background-size: 8.8rem auto, 4.45rem auto, 4.45rem auto;
   }
 }
 
