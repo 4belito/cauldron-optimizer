@@ -312,6 +312,90 @@ def select_server():
     return redirect(url_for("index"))
 
 
+@app.route("/integration/world/select", methods=["POST"])
+@login_required
+def select_world_integration():
+    """Select or create a named world for the page's postMessage API."""
+    create = request.form.get("create") == "1"
+    raw_name = request.form.get("name")
+
+    try:
+        with db_session() as db_sa:
+            account, current = get_active_server(db_sa, session["user_id"])
+            servers = current.user.servers
+            normalized_name = " ".join((raw_name or "").split())
+            target = next(
+                (
+                    server
+                    for server in servers
+                    if server_label(server).casefold() == normalized_name.casefold()
+                ),
+                None,
+            )
+            created = False
+
+            if target is None:
+                # code: stable, for the extension; error: for the player
+                if not create:
+                    return {
+                        "ok": False,
+                        "code": "not_found",
+                        "error": _("Mundo no válido"),
+                    }, 404
+                if len(servers) >= MAX_SERVERS_PER_USER:
+                    return {
+                        "ok": False,
+                        "code": "too_many_worlds",
+                        "error": _(
+                            "Puedes tener como máximo %(n)s mundos",
+                            n=MAX_SERVERS_PER_USER,
+                        ),
+                    }, 400
+                try:
+                    name = clean_server_name(raw_name, servers, None)
+                except ValueError as e:
+                    return {"ok": False, "code": "invalid_name", "error": str(e)}, 400
+
+                target = Server(
+                    server_number=max(s.server_number for s in servers) + 1,
+                    name=name,
+                    avatar=None,
+                    effect_weights=list(current.effect_weights),
+                    excluded_effects=list(current.excluded_effects or []),
+                    max_ingredients=current.max_ingredients,
+                    max_effects=current.max_effects,
+                    search_depth=current.search_depth,
+                    exact_search=current.exact_search,
+                )
+                servers.append(target)
+                account.n_servers = len(servers)
+                created = True
+
+            changed = account.active_server != target.server_number
+            account.active_server = target.server_number
+            avatar = target.avatar
+            world = {
+                "name": server_label(target),
+                "number": target.server_number,
+            }
+    except SQLAlchemyError:
+        return {
+            "ok": False,
+            "code": "db_error",
+            "error": _("Error de base de datos"),
+        }, 500
+
+    session["avatar"] = avatar
+    if changed:
+        session.pop("last_search", None)
+    return {
+        "ok": True,
+        "created": created,
+        "changed": changed,
+        "world": world,
+    }
+
+
 def keep_across_logout():
     """Clear the session except the language and the analytics visitor id."""
     kept = {k: session[k] for k in ("lang", "vid") if k in session}

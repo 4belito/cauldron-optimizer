@@ -13,18 +13,46 @@
 //    The page answers with { type: "cauldron:autofill:result", ok, applied,
 //    errors }, and announces { type: "cauldron:ready", version } once loaded.
 //
-// Fields (both optional):
+// Fields (all optional):
 //   n_diploma     integer, 1..number of effects; rebuilds the effect sliders
 //   premium_ingr  ingredient indexes 0..11 (game order), at most 4
+//   save           boolean; save settings after applying the values
 
-const AUTOFILL_VERSION = 1;
+// A content script may also select (or create) a world by name:
+//   window.postMessage({ type: "cauldron:selectWorld",
+//                        name: "EA-Balrogville-en3", create: true },
+//                      window.location.origin)
+//
+// Failed results carry a stable `code` (besides the readable `errors`):
+//   complement_mode  "Completar efectos" is on: nothing is changed
+//   not_found        no world with that name (and create was not true)
+//   too_many_worlds  the account already has the maximum number of worlds
+//   invalid_name     empty or too long name
+//   invalid_data     wrong fields (see errors)
+//   network, db_error, save_failed
+
+// "Completar efectos" mode shows a search's settings, locked: leave it alone
+function complementActive() {
+  return Boolean(window.cauldronComplement && window.cauldronComplement.active());
+}
+
+const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
+
+const AUTOFILL_VERSION = 2;
 const N_INGREDIENTS = 12;
 
 function applyAutofill(data) {
   const { dom, effectNames } = window.OPTIMIZER_CONFIG;
   const result = { ok: true, applied: {}, errors: [] };
   if (!data || typeof data !== "object") {
-    return { ok: false, applied: {}, errors: ["data must be an object"] };
+    return { ok: false, code: "invalid_data", applied: {}, errors: ["data must be an object"] };
+  }
+  if (complementActive()) {
+    return { ok: false, code: "complement_mode", applied: {}, errors: [COMPLEMENT_ERROR] };
+  }
+
+  if (data.save !== undefined && typeof data.save !== "boolean") {
+    result.errors.push("save must be a boolean");
   }
 
   if (data.n_diploma !== undefined) {
@@ -59,19 +87,124 @@ function applyAutofill(data) {
   }
 
   result.ok = result.errors.length === 0;
+  if (!result.ok) result.code = "invalid_data";
+  // Changed values: the restore button can undo them (until saved)
+  if (Object.keys(result.applied).length) setUnsaved(true);
   return result;
 }
 
-window.cauldronAutofill = applyAutofill;
+async function applyAndMaybeSave(data) {
+  const result = applyAutofill(data);
+  if (!result.ok || data.save !== true) return result;
+
+  if (typeof window.cauldronSaveSettings !== "function") {
+    result.ok = false;
+    result.code = "save_failed";
+    result.errors.push("save is not available");
+    return result;
+  }
+
+  const saveResult = await window.cauldronSaveSettings();
+  if (!saveResult.ok) {
+    result.ok = false;
+    result.code = "save_failed";
+    result.errors.push(saveResult.error || "settings could not be saved");
+    return result;
+  }
+
+  result.saved = true;
+  return result;
+}
+
+// Calls without save remain synchronous for backwards compatibility.
+window.cauldronAutofill = (data) => (
+  data && data.save === true ? applyAndMaybeSave(data) : applyAutofill(data)
+);
+
+function trustedMessage(event) {
+  return event.source === window
+    && event.origin === window.location.origin
+    && event.data
+    && typeof event.data === "object";
+}
+
+function selectWorldError(code, message) {
+  return {
+    ok: false,
+    code,
+    created: false,
+    reloading: false,
+    errors: [message],
+  };
+}
+
+async function selectWorld(data) {
+  if (typeof data.name !== "string" || !data.name.trim()) {
+    return selectWorldError("invalid_name", "name must be a non-empty string");
+  }
+  if (data.create !== undefined && typeof data.create !== "boolean") {
+    return selectWorldError("invalid_data", "create must be a boolean");
+  }
+  // Switching reloads the page: not while the mode shows a search (a running
+  // search would also stop the reload with a "leave page?" dialog)
+  if (complementActive()) return selectWorldError("complement_mode", COMPLEMENT_ERROR);
+
+  const url = window.CAULDRON_INTEGRATION?.selectWorldUrl;
+  if (!url) return selectWorldError("invalid_data", "world selection is not available");
+
+  const body = new FormData();
+  body.append("name", data.name);
+  body.append("create", data.create === true ? "1" : "0");
+  const csrf = document.querySelector("input[name='csrf_token']");
+  if (csrf) body.append("csrf_token", csrf.value);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body,
+      headers: { Accept: "application/json" },
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || !payload.ok) {
+      return selectWorldError(payload.code || "network", payload.error || response.statusText);
+    }
+
+    return {
+      ok: true,
+      created: Boolean(payload.created),
+      reloading: Boolean(payload.changed),
+      errors: [],
+      world: payload.world,
+    };
+  } catch (err) {
+    return selectWorldError("network", err instanceof Error ? err.message : String(err));
+  }
+}
 
 // Messages from extension content scripts share this window, so only accept
-// messages sent from this same window
-window.addEventListener("message", (event) => {
-  if (event.source !== window || !event.data || event.data.type !== "cauldron:autofill") {
+// messages sent from this same window and origin.
+window.addEventListener("message", async (event) => {
+  if (!trustedMessage(event)) return;
+
+  if (event.data.type === "cauldron:autofill") {
+    const result = await applyAndMaybeSave(event.data);
+    window.postMessage(
+      { type: "cauldron:autofill:result", ...result },
+      window.location.origin
+    );
     return;
   }
-  const result = applyAutofill(event.data);
-  window.postMessage({ type: "cauldron:autofill:result", ...result }, window.location.origin);
+
+  if (event.data.type === "cauldron:selectWorld") {
+    const result = await selectWorld(event.data);
+    window.postMessage(
+      { type: "cauldron:selectWorld:result", ...result },
+      window.location.origin
+    );
+    if (result.reloading) {
+      setTimeout(() => window.location.reload(), 100);
+    }
+  }
 });
 
 // Announced after optimizer.js has built the form (its DOMContentLoaded

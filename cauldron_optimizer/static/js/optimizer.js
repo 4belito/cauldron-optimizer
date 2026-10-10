@@ -428,14 +428,21 @@ async function saveSettings() {
       .querySelectorAll(".card[data-saved]")
       .forEach((card) => replayClass(card, "just-saved"));
     setTimeout(() => btn.classList.remove("saved"), 1500);
+    return { ok: true };
   } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
     replayClass(btn, "save-failed");
-    status.textContent = err.message;
+    status.textContent = message;
     status.classList.add("error");
+    return { ok: false, error: message };
   } finally {
     btn.disabled = false;
   }
 }
+
+// Public hook used by autofill.js. Keeping the save operation here guarantees
+// that integrations use the same validation and UI feedback as the button.
+window.cauldronSaveSettings = saveSettings;
 
 // Arrow buttons beside the diploma count: one less / one more, as if the
 // user typed the new number (so the weights are rebuilt)

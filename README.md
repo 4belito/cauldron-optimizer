@@ -107,6 +107,51 @@ See: CauldronOptimizer.greedy() and CauldronOptimizer.multistart().
    flask run
    ```
 
+## Browser extension integration
+
+The page exposes a same-origin `postMessage` API so browser extensions do not
+need to depend on internal routes or CSRF implementation details.
+
+Select an existing world, or create it with the default avatar when missing:
+
+```js
+window.postMessage({
+  type: "cauldron:selectWorld",
+  name: "EA-Balrogville-en3",
+  create: true,
+}, location.origin);
+```
+
+The page responds with `cauldron:selectWorld:result` containing `ok`,
+`created`, `reloading`, `errors`, and the selected `world`. A changed
+selection reloads the page; the extension can resume after the next
+`cauldron:ready`.
+
+Autofill can optionally save through the same operation as the Save button:
+
+```js
+window.postMessage({
+  type: "cauldron:autofill",
+  n_diploma: 7,
+  premium_ingr: [0, 1, 10, 11],
+  save: true,
+}, location.origin);
+```
+
+Premium ingredient exclusions remain temporary and are never persisted, which
+matches the Save button's behavior.
+
+Failed results include a stable `code` next to the readable `errors`:
+
+| code | meaning |
+|---|---|
+| `complement_mode` | "Complete effects" mode is on; nothing was changed (the player must turn it off) |
+| `not_found` | no world with that name, and `create` was not `true` |
+| `too_many_worlds` | the account already has the maximum number of worlds |
+| `invalid_name` | empty name, or longer than the 24-character limit |
+| `invalid_data` | wrong fields (details in `errors`) |
+| `save_failed`, `network`, `db_error` | the request did not go through |
+
 ## Notebook (explanation and examples)
 
 A Jupyter notebook (`optimizer/solver.ipynb`) is included with a step-by-step explanation

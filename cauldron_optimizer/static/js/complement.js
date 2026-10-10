@@ -604,6 +604,10 @@ function initComplement() {
     }
   }
   restoreMode();
+
+  // For autofill.js: integrations must not change the form while this mode
+  // is on (it shows a search's settings, locked)
+  window.cauldronComplement = { active: () => toggle.checked };
 }
 
 // After the whole page is parsed: the windows are at the end of the page.

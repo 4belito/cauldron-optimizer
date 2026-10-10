@@ -293,9 +293,14 @@
 <script src="{{ url_for('static', filename='js/solver.js') }}"></script>
 <!-- "Buscar receta" searches in the browser (falls back to the server) -->
 <script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/complement.js') }}?v=3"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}?v=4"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
-<script src="{{ url_for('static', filename='js/autofill.js') }}"></script>
+<script>
+  window.CAULDRON_INTEGRATION = {
+    selectWorldUrl: {{ url_for('select_world_integration') | tojson }},
+  };
+</script>
+<script src="{{ url_for('static', filename='js/autofill.js') }}?v=3"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 
