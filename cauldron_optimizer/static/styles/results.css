@@ -571,19 +571,40 @@
 .cw-effects {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0;
 }
 
 .cw-effect {
+  /* Where the column lines go: half a gap after each of the first columns */
+  --sep1: calc(0.45rem + 4.2rem + 0.25rem);
+  --sep2: calc(var(--sep1) + 0.25rem + 1.6rem + 0.25rem);
+  position: relative;
   display: grid;
   grid-template-columns: 4.2rem 1.6rem minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
   padding: 0.3rem 0.45rem;
-  border-radius: 0.3rem;
+  border-bottom: 1px solid rgba(140, 105, 60, 0.28);
   background: rgba(94, 55, 36, calc(var(--hl, 0) * 0.16));
   color: #3e2a17;
 }
+
+/* Carved column lines, like the game's table: a dark line with a light edge.
+   They sit above the row's background, so the green band of a desired
+   effect still shows under them. */
+.cw-effect::before,
+.cw-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(90deg, rgba(120, 85, 45, 0.35) 50%, rgba(255, 250, 232, 0.65) 50%);
+  pointer-events: none;
+}
+
+.cw-effect::before { left: var(--sep1); }
+.cw-effect::after { left: var(--sep2); }
 
 .cw-effect:hover {
   background: rgba(150, 110, 60, 0.14);
@@ -591,8 +612,9 @@
 
 /* Desired effects: green band (stronger the higher their weight), an
    accent on the left and bold text; the rest step back */
+/* The rest sit in pale cells, as in the game */
 .cw-effect:not(.wanted) {
-  background: none;
+  background: rgba(255, 250, 235, 0.32);
   color: #6b5640;
 }
 
@@ -863,7 +885,7 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    gap: 0.25cqw;
+    gap: 0;
     padding-right: 0.4cqw;
   }
 
@@ -896,10 +918,12 @@
   }
 
   .cw-effect {
+    --sep1: calc(0.8cqw + 6.4cqw + 0.4cqw);
+    --sep2: calc(var(--sep1) + 0.4cqw + 2.8cqw + 0.4cqw);
     grid-template-columns: 6.4cqw 2.8cqw minmax(0, 1fr);
     gap: 0.8cqw;
-    padding: 0.45cqw 0.6cqw 0.45cqw 0.8cqw;
-    border-radius: 0.35cqw;
+    padding: 0.55cqw 0.6cqw 0.55cqw 0.8cqw;
+    border-radius: 0;
   }
 
   .cw-effect.wanted {
