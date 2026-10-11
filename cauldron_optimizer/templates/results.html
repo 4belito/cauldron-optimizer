@@ -62,23 +62,23 @@
       <!-- RIGHT: effects scroll and score -->
       <div class="cw-side">
         <div class="cw-scroll">
-          {# Header columns line up with the rows: icon, name, chance (the dice) #}
+          {# As in the game: chance (the dice) first, then the effect #}
           <div class="cw-scroll-head">
+            <img class="cw-dice" src="{{ url_for('static', filename='ui/cauldron/dice.png') }}" alt="%">
             <span></span>
             <span>{{ _("Efectos") }}</span>
-            <img class="cw-dice" src="{{ url_for('static', filename='ui/cauldron/dice.png') }}" alt="%">
           </div>
           <div class="cw-effects">
             {% for effect in effects %}
               {# Effects the user asked for (weight > 0) stand out #}
               <div class="cw-effect {{ 'wanted' if effect.weight > 0 else '' }}" style="--hl: {{ effect.weight }};">
+                <span class="cw-effect-value">{{ "%.2f"|format(effect.value) }}%</span>
                 <img
                   class="cw-effect-icon"
                   src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
                   alt=""
                 >
                 <span class="cw-effect-name" title="{{ _(effect.name) }}">{{ _(effect.name) }}</span>
-                <span class="cw-effect-value">{{ "%.2f"|format(effect.value) }}%</span>
               </div>
             {% endfor %}
           </div>

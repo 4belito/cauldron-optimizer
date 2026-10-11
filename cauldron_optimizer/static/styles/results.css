@@ -549,7 +549,7 @@
 
 .cw-scroll-head {
   display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  grid-template-columns: 4.2rem 1.6rem minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
   padding-inline: 0.45rem;
@@ -565,8 +565,7 @@
 .cw-dice {
   width: 1.6rem;
   height: 1.6rem;
-  margin-right: 0.6rem;
-  justify-self: end;
+  justify-self: center;
 }
 
 .cw-effects {
@@ -577,7 +576,7 @@
 
 .cw-effect {
   display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  grid-template-columns: 4.2rem 1.6rem minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
   padding: 0.3rem 0.45rem;
@@ -625,6 +624,7 @@
 }
 
 .cw-effect-value {
+  text-align: right;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -846,7 +846,7 @@
   }
 
   .cw-scroll-head {
-    grid-template-columns: 2.8cqw minmax(0, 1fr) auto;
+    grid-template-columns: 6.4cqw 2.8cqw minmax(0, 1fr);
     gap: 0.8cqw;
     margin: 0 0 0.4cqw;
     padding: 0.3cqw 0.6cqw 0.5cqw;
@@ -896,7 +896,7 @@
   }
 
   .cw-effect {
-    grid-template-columns: 2.8cqw minmax(0, 1fr) auto;
+    grid-template-columns: 6.4cqw 2.8cqw minmax(0, 1fr);
     gap: 0.8cqw;
     padding: 0.45cqw 0.6cqw 0.45cqw 0.8cqw;
     border-radius: 0.35cqw;
@@ -914,7 +914,6 @@
   .cw-dice {
     width: 2.6cqw;
     height: 2.6cqw;
-    margin-right: 2.6cqw;
   }
 
   .cw-effect-name,
