@@ -900,7 +900,7 @@ msgid "Elige tu avatar"
 msgstr ""
 
 #: cauldron_optimizer/templates/results.html:4
-msgid "Receta Óptima"
+msgid "Receta optimizada"
 msgstr ""
 
 #: cauldron_optimizer/templates/results.html:64

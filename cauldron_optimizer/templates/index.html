@@ -166,22 +166,21 @@
       </div>
       <div class="ingredients-grid">
         {% for name in ingredient_names %}
-          <label class="ingredient-check">
-            <span class="effect-check">
-              <input type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}"
-              {% if loop.index0 in premiums %}checked{% endif %}
-              >
-              <img class="effect-check-box" src="{{ url_for('static', filename='checkbox.png') }}" alt="">
-              <img class="effect-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
-            </span>
-
+          {# As in the game's cauldron: the ingredient on a green base. The base
+             holds a diamond that lights up when chosen; the name is a tooltip #}
+          <label class="ingredient-check" data-tip="{{ _(name) }}">
             <img
               class="ingredient-check-icon"
               src="{{ url_for('static', filename='ingredients/ingredient' ~ loop.index ~ '.png') }}"
               alt=""
             >
 
-            <span class="ingredient-name" title="{{ _(name) }}">{{ _(name) }}</span>
+            <span class="ingredient-base">
+              <input class="ingredient-input" type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}"
+              {% if loop.index0 in premiums %}checked{% endif %}
+              aria-label="{{ _(name) }}">
+              <img class="ingredient-diamond" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
+            </span>
           </label>
         {% endfor %}
       </div>

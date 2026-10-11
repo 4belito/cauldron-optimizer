@@ -12,18 +12,89 @@
   text-align: center;
 }
 
-/* Premium ingredient checkbox layout */
+/* Premium ingredient tile, as in the game's cauldron: a big icon on a green
+   base. The base holds a diamond (the checkbox) that lights up when chosen.
+   The name is a game tooltip (data-tip). The whole tile is the label. */
 .ingredient-check{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.15rem;
   width: 100%;
+  max-width: 6rem;
   min-width: 0;
+  cursor: pointer;
+  transition: transform 0.1s;
 }
 
-.ingredient-check .effect-check{
-  flex: 0 0 auto;
+.ingredient-check:active{
+  transform: scale(0.96);
+}
+
+.ingredient-check-icon{
+  display: block;
+  width: clamp(2.6rem, 5vw, 3.6rem);
+  height: clamp(2.6rem, 5vw, 3.6rem);
+  object-fit: contain;
+  filter: drop-shadow(0 0.2rem 0.2rem rgba(60, 30, 10, 0.35));
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.ingredient-check:hover .ingredient-check-icon{
+  transform: translateY(-0.1rem) scale(1.05);
+}
+
+/* Selected: the icon glows gold */
+.ingredient-check:has(input:checked) .ingredient-check-icon{
+  filter: drop-shadow(0 0 0.3rem #ffd34d) drop-shadow(0 0 0.15rem #ffb400);
+}
+
+.ingredient-base{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72%;
+  aspect-ratio: 81 / 36;
+  padding-bottom: 0.25rem;
+  background: url("/static/ui/ingredient_base.png") center / 100% 100% no-repeat;
+  transition: filter 0.15s;
+}
+
+.ingredient-check:hover .ingredient-base{
+  filter: brightness(1.1);
+}
+
+/* The real checkbox stays in the page (keyboard, forms) but is invisible */
+.ingredient-input{
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Diamond: dull grey when not chosen, bright blue when chosen */
+.ingredient-diamond{
+  width: 45%;
+  max-width: 1.35rem;
+  height: auto;
+  filter: grayscale(1) brightness(1.15);
+  opacity: 0.55;
+  pointer-events: none;
+  transition: filter 0.15s, opacity 0.15s, transform 0.15s;
+}
+
+.ingredient-input:checked ~ .ingredient-diamond{
+  filter: drop-shadow(0 0 0.25rem rgba(170, 235, 255, 0.95));
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+.ingredient-input:focus-visible ~ .ingredient-diamond{
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  border-radius: 0.2rem;
 }
 
 /* Locked (maximum reached): unchecked ingredients look disabled */
@@ -31,48 +102,18 @@
   cursor: not-allowed;
 }
 
-.ingredient-check.locked .effect-check,
 .ingredient-check.locked .ingredient-check-icon,
-.ingredient-check.locked .ingredient-name{
+.ingredient-check.locked .ingredient-base{
   opacity: 0.45;
   filter: grayscale(0.8);
 }
 
-.ingredient-check.locked .effect-check input{
+.ingredient-check.locked .ingredient-check-icon{
+  transform: none;
+}
+
+.ingredient-check.locked .ingredient-input{
   cursor: not-allowed;
-}
-
-.ingredient-check-icon{
-  width: clamp(1.5rem, 3.2vw, 2.125rem);
-  height: clamp(1.5rem, 3.2vw, 2.125rem);
-  object-fit: contain;
-  flex: 0 0 auto;
-}
-
-.ingredient-name{
-  flex: 1 1 auto;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: clamp(0.78rem, 1.5vw, 0.95rem);
-  line-height: 1.1;
-  text-align: left;
-}
-
-/* Mobile: stacked layout */
-@media (max-width: 37.5rem){
-  .ingredient-check{
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.35rem;
-    text-align: center;
-  }
-  .ingredient-name{
-    width: 100%;
-    text-align: center;
-  }
 }
 
 /* Ingredient cards (results page) */

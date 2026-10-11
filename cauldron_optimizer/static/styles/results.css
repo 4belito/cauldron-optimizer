@@ -115,3 +115,864 @@
     height: 1.5rem;
   }
 }
+
+/* =========================
+   Results: game cauldron window
+   ========================= */
+
+/* Dark wooden window with a title bar, as in the game */
+.cw-window {
+  /* Wood palette shared by the frame, the planks and the panel frames */
+  --cw-seam: rgba(22, 11, 4, 0.8);
+  --cw-grain:
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 5px,
+      rgba(255, 220, 170, 0.05) 5px 6px, transparent 6px 11px);
+  --cw-beam:
+    linear-gradient(rgba(255, 215, 160, 0.12), transparent 35%, rgba(0, 0, 0, 0.25)),
+    url("/static/ui/cauldron/window_topbar.png") 0 0 / 16rem 100% repeat;
+
+  position: relative;
+  width: min(68rem, 100%);
+  margin: 0 auto 1.25rem;
+  padding: 0.5rem 0.75rem 0.85rem;
+  border: 0.6rem solid transparent;
+  border-radius: 1rem;
+  background:
+    /* nails in the four corners of the frame */
+    radial-gradient(circle at 0.3rem 0.3rem, #e8c27a 0 0.1rem, #6b4520 0.16rem, #2a170b 0.2rem, transparent 0.23rem) border-box,
+    radial-gradient(circle at calc(100% - 0.3rem) 0.3rem, #e8c27a 0 0.1rem, #6b4520 0.16rem, #2a170b 0.2rem, transparent 0.23rem) border-box,
+    radial-gradient(circle at 0.3rem calc(100% - 0.3rem), #e8c27a 0 0.1rem, #6b4520 0.16rem, #2a170b 0.2rem, transparent 0.23rem) border-box,
+    radial-gradient(circle at calc(100% - 0.3rem) calc(100% - 0.3rem), #e8c27a 0 0.1rem, #6b4520 0.16rem, #2a170b 0.2rem, transparent 0.23rem) border-box,
+    /* planks: grain, shading top and bottom, seams, and one tone per plank */
+    var(--cw-grain) padding-box,
+    linear-gradient(rgba(0, 0, 0, 0.25), transparent 12%, transparent 85%, rgba(0, 0, 0, 0.35)) padding-box,
+    repeating-linear-gradient(90deg,
+      var(--cw-seam) 0 2px, rgba(255, 210, 150, 0.14) 2px 3px, transparent 3px 4.6rem) padding-box,
+    linear-gradient(90deg,
+      #6e4426 0 4.6rem, #5f3a1f 4.6rem 9.2rem, #74482a 9.2rem 13.8rem,
+      #66401f 13.8rem 18.4rem, #5a361c 18.4rem 23rem) 0 0 / 23rem 100% repeat-x padding-box,
+    /* the frame beam */
+    var(--cw-beam) border-box;
+  box-shadow:
+    0 0 0 2px #1e1007,
+    inset 0 0 0 2px #2a170b,
+    inset 0 0 1.6rem rgba(0, 0, 0, 0.55),
+    0 0.8rem 1.8rem rgba(0, 0, 0, 0.5);
+}
+/* Vines over the top corners, as on the game's windows */
+.cw-window::before {
+  content: "";
+  position: absolute;
+  top: -2.3rem;
+  left: -2.3rem;
+  right: -2.3rem;
+  height: 8rem;
+  background:
+    url("/static/ui/elf_corner_left.png") left top / 7rem auto no-repeat,
+    url("/static/ui/elf_corner_right.png") right top / 7rem auto no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Title bar: a long dark plank across the top, with the close button */
+.cw-titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 0.7rem;
+  padding: 0 3rem;
+  min-height: 2.6rem;
+}
+
+.cw-title {
+  flex: 1;
+  max-width: 48rem;
+  padding: 0.35rem 1.6rem;
+  border: 2px solid #1e1007;
+  border-radius: 1.4rem;
+  /* the game's dark wooden title plank */
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.5)),
+    url("/static/ui/cauldron/window_topbar.png") center / 100% 100%;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 170, 0.15),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+    0 2px 3px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #f2e2c4;
+  text-shadow: 0 1px 2px #000;
+}
+/* The game's orange X button: back to the form */
+.cw-close {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.2rem;
+  background: url("/static/ui/cauldron/close_btn_normal.png") center / 100% 100% no-repeat;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.cw-close:hover {
+  background-image: url("/static/ui/cauldron/close_btn_hover.png");
+}
+
+.cw-close:active {
+  background-image: url("/static/ui/cauldron/close_btn_pressed.png");
+}
+
+.cw-close:focus-visible {
+  outline: 2px solid #f2e2c4;
+  outline-offset: 2px;
+}.cw-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(7rem, 0.5fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+/* ---- Left: stone wall with wooden shelves ---- */
+.cw-shelves-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2.4rem 0.6rem 0.6rem;
+  border: 0.45rem solid transparent;
+  border-radius: 0.6rem;
+  /* stone wall inside a wooden frame */
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.35) 0 2px, transparent 2px 2.6rem) padding-box,
+    repeating-linear-gradient(90deg,
+      rgba(0, 0, 0, 0.25) 0 2px, transparent 2px 4.2rem) padding-box,
+    radial-gradient(ellipse at 50% 30%, #6e6861, #4c4641 75%) padding-box,
+    var(--cw-beam) border-box;
+  box-shadow:
+    0 0 0 2px #1e1007,
+    inset 0 0 0 2px #1e1007,
+    inset 0 0 1.4rem rgba(0, 0, 0, 0.6),
+    0 0.2rem 0.5rem rgba(0, 0, 0, 0.45);
+}
+/* Parchment ribbon heading ("Selección de ingredientes") */
+.cw-ribbon {
+  position: absolute;
+  top: 0.45rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 92%;
+  padding: 0.2rem 0.75rem;
+  border-block: 2px solid #9a7a50;
+  background: linear-gradient(#f1e4c4, #dcc69a);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  font-weight: 700;
+  color: #5a4128;
+  z-index: 1;
+}
+
+/* Rolled ends of the parchment */
+.cw-ribbon::before,
+.cw-ribbon::after {
+  content: "";
+  position: absolute;
+  top: -0.3rem;
+  bottom: -0.3rem;
+  width: 0.65rem;
+  border-radius: 0.3rem;
+  background: linear-gradient(90deg, #b79a6a, #f3e6c8 45%, #c6a878);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.5);
+}
+
+.cw-ribbon::before { left: -0.4rem; }
+.cw-ribbon::after { right: -0.4rem; }
+.cw-ribbon span::before {
+  content: "\2500\2500\2500\2726\2003";
+  color: #a78a60;
+}
+
+.cw-ribbon span::after {
+  content: "\2003\2726\2500\2500\2500";
+  color: #a78a60;
+}
+
+.cw-shelves {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* One shelf: 4 domes standing on a wooden plank */
+.cw-shelf {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0 0.4rem;
+}
+
+.cw-shelf::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22%;
+  height: 0.85rem;
+  border-radius: 0.2rem;
+  background: linear-gradient(#8a5a33 0 25%, #6a4022 25% 70%, #4a2b15);
+  box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 0.5);
+}
+
+.cw-jar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The whole dome, wooden ring included, so it stands on the shelf. The
+   ingredient_dome images are ingredient_crystal re-cropped to 224 x 250 with
+   the glass at the same spot in all twelve, so domes and bases line up.
+   Their own "0" plate (x 52-172, y 193-244) is covered by .cw-count. */
+.cw-dome {
+  display: block;
+  width: 100%;
+  aspect-ratio: 224 / 250;
+  border-radius: 45% 45% 0.4rem 0.4rem / 35% 35% 0.4rem 0.4rem;
+}
+
+/* The count plate, drawn where the game's is */
+.cw-count {
+  position: relative;  /* above the dome, which its filter may lift */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 53.6%;
+  aspect-ratio: 120 / 51;
+  margin-top: -25.4%;
+  padding: 0;
+  border: 2px solid #6f5a3e;
+  border-radius: 0.2rem;
+  background: linear-gradient(#f4ecd6, #d9cba8);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-weight: 900;
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: #4a2a12;
+}
+
+/* Green base under each dome; the avoided premium ones show the diamond */
+.cw-base {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92%;
+  aspect-ratio: 81 / 30;
+  margin-top: 1%;
+  padding-bottom: 0.2rem;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* The green itself is a layer of its own, so it can light up or grey out
+   without touching the diamond on it. Used ingredients get brighter the
+   larger their amount (--amt: 0..1 of the most used one). */
+.cw-base::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("/static/ui/ingredient_base.png") center / 100% 100% no-repeat;
+  filter:
+    brightness(calc(0.8 + var(--amt, 0) * 0.75))
+    saturate(calc(0.85 + var(--amt, 0) * 0.9))
+    drop-shadow(0 0 calc(var(--amt, 0) * 0.6rem) rgba(190, 255, 90, 0.85));
+}
+
+/* Unused: the base looks disabled */
+.cw-jar.zero .cw-base::before {
+  filter: grayscale(1) brightness(0.62) contrast(0.85);
+  opacity: 0.75;
+}
+
+.cw-base-gem {
+  width: 1.35rem;
+  height: auto;
+  filter: drop-shadow(0 0 0.15rem rgba(170, 235, 255, 0.8));
+}
+
+/* Unused ingredients step back so the recipe reads at a glance */
+.cw-jar.zero .cw-dome {
+  filter: grayscale(0.85) brightness(0.62);
+  opacity: 0.85;
+}
+
+.cw-jar.zero .cw-count {
+  color: #8a7a66;
+  filter: grayscale(1) brightness(0.8);
+}
+
+/* ---- Center: green mist rising from the cauldron ---- */
+.cw-cauldron {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 0.6rem;
+  border: 3px solid #26303a;
+  border-radius: 3.5rem 3.5rem 0.6rem 0.6rem;
+  background:
+    radial-gradient(ellipse 60% 28% at 50% 22%, rgba(10, 18, 30, 0.85), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 70%, rgba(70, 200, 150, 0.55), transparent 70%),
+    linear-gradient(#1e2b3c, #24425a 45%, #1d3a3a);
+  box-shadow: inset 0 0 1.2rem rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.cw-mist {
+  position: absolute;
+  inset: 15% 10% 30%;
+  background:
+    radial-gradient(ellipse 40% 30% at 35% 60%, rgba(140, 255, 200, 0.35), transparent 70%),
+    radial-gradient(ellipse 45% 35% at 65% 40%, rgba(90, 220, 180, 0.3), transparent 70%);
+  filter: blur(6px);
+  animation: cw-mist 6s ease-in-out infinite alternate;
+}
+
+@keyframes cw-mist {
+  from { transform: translateY(0.4rem) scale(1); opacity: 0.8; }
+  to   { transform: translateY(-0.6rem) scale(1.08); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-mist { animation: none; }
+}
+
+.cw-pot {
+  position: relative;
+  width: 82%;
+  max-width: 8rem;
+}
+
+/* Fire under the pot */
+.cw-pot::before {
+  content: "";
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: -0.6rem;
+  height: 55%;
+  background: radial-gradient(ellipse at 50% 100%, #ffb43a, #e25a12 45%, transparent 72%);
+  filter: blur(3px);
+}
+
+.cw-pot img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The game's cauldron: body, dark inside, and the potion filled to --fill */
+.cw-pot .cw-pot-base,
+.cw-pot .cw-pot-fill {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.cw-pot .cw-pot-fill {
+  clip-path: inset(calc((1 - var(--fill, 0)) * 100%) 0 0 0);
+}
+.cw-total {
+  position: absolute;
+  left: 34.8%;
+  top: 62%;
+  width: 31.2%;
+  height: 16.4%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* the game's counter plate */
+  background: url("/static/ui/cauldron/ui_cauldron_brownbg.png") center / 100% 100% no-repeat;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: #fff;
+}
+
+/* ---- Right: parchment scroll with the effects, then the score ---- */
+.cw-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.cw-scroll {
+  position: relative;
+  flex: 1;
+  margin-top: 0.3rem;
+  padding: 0.8rem 0.55rem;
+  border-radius: 0.35rem;
+  background: linear-gradient(90deg, #d6c19a, #efe2c2 12%, #efe2c2 88%, #d6c19a);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+/* Scroll rods at the top and bottom */
+.cw-scroll::before,
+.cw-scroll::after {
+  content: "";
+  position: absolute;
+  left: -0.3rem;
+  right: -0.3rem;
+  height: 0.7rem;
+  border-radius: 0.35rem;
+  background: linear-gradient(#e9d7ae, #b89a68);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.cw-scroll::before { top: -0.3rem; }
+.cw-scroll::after { bottom: -0.3rem; }
+
+.cw-scroll-head {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 0.45rem;
+  text-align: left;
+  margin-bottom: 0.4rem;
+  padding: 0.2rem 0.5rem 0.3rem;
+  border-bottom: 2px solid rgba(122, 90, 58, 0.45);
+  font-weight: 700;
+  color: #5a4128;
+}
+
+/* The game marks the chance column with a dice */
+.cw-dice {
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-right: 0.6rem;
+  justify-self: end;
+}
+
+.cw-effects {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cw-effect {
+  display: grid;
+  grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.3rem;
+  background: rgba(94, 55, 36, calc(var(--hl, 0) * 0.16));
+  color: #3e2a17;
+}
+
+.cw-effect:hover {
+  background: rgba(150, 110, 60, 0.14);
+}
+
+/* Desired effects: green band (stronger the higher their weight), an
+   accent on the left and bold text; the rest step back */
+.cw-effect:not(.wanted) {
+  background: none;
+  color: #6b5640;
+}
+
+.cw-effect.wanted {
+  background: linear-gradient(90deg,
+    rgba(120, 165, 35, calc(0.22 + var(--hl, 0) * 0.3)),
+    rgba(120, 165, 35, 0.06));
+  box-shadow: inset 0.25rem 0 0 #5f8a17;
+  font-weight: 600;
+  color: #2e1c0c;
+}
+
+.cw-effect.wanted:hover {
+  filter: brightness(1.05);
+}
+
+.cw-effect-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  object-fit: contain;
+}
+
+.cw-effect-name {
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.92rem;
+}
+
+.cw-effect-value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Score: like the game's "Probabilidad de éxito" bar */
+.cw-stat {
+  padding: 0.6rem 0.8rem 0.75rem;
+  border: 2px solid #120a04;
+  border-radius: 0.8rem;
+  background: linear-gradient(#2a221c, #1e1814);
+  box-shadow: inset 0 0 0.8rem rgba(0, 0, 0, 0.7), 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+.cw-stat-label {
+  margin-bottom: 0.3rem;
+  font-size: 1.05rem;
+  color: #e6c99a;
+}
+.cw-stat-bar {
+  position: relative;
+  margin-inline: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border: 2px solid #8a6a3a;
+  border-radius: 0.15rem;
+  background: linear-gradient(#1a0f07, #2b1a0d);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Ornate brass caps on the ends of the bar */
+.cw-stat-bar::before,
+.cw-stat-bar::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid #5a3a14;
+  background: linear-gradient(135deg, #f0cf86, #9a6a2a);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.cw-stat-bar::before { left: -0.4rem; }
+.cw-stat-bar::after { right: -0.4rem; }
+.cw-stat-value {
+  font-weight: 900;
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.cw-actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Narrow screens: shelves, then effects; the cauldron is decoration only */
+@media (max-width: 47.5rem) {
+  .cw-body {
+    grid-template-columns: 1fr;
+  }
+
+  .cw-cauldron {
+    display: none;
+  }
+}
+
+@media (max-width: 30rem) {
+  .cw-window {
+    padding-inline: 0.4rem;
+  }
+
+  .cw-shelves-panel {
+    padding-inline: 0.3rem;
+  }
+
+  .cw-shelf {
+    gap: 0.25rem;
+    padding-inline: 0.15rem;
+  }
+}
+
+/* =========================
+   Wide screens: the game's own cauldron window art, with the recipe placed
+   where the game shows it. Positions are in % of the art (852 x 525) and
+   sizes in cqw, so everything scales with the window.
+   ========================= */
+@media (min-width: 48rem) {
+  .cw-body {
+    position: relative;
+    display: block;
+    margin-bottom: 1.4rem;
+    container-type: inline-size;
+    aspect-ratio: 852 / 525;
+    border-radius: 0.4rem;
+    background: url("/static/ui/cauldron/background_cauldron.png") center / 100% 100% no-repeat;
+    box-shadow: 0 0 0 2px #1e1007;
+  }
+
+  /* The art already has the wall, shelves, tube, scroll and panels */
+  .cw-shelves-panel,
+  .cw-cauldron,
+  .cw-scroll,
+  .cw-stat {
+    position: absolute;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .cw-scroll::before,
+  .cw-scroll::after,
+  .cw-ribbon::before,
+  .cw-ribbon::after,
+  .cw-shelf::after,
+  .cw-mist {
+    display: none;
+  }
+
+  /* Ribbon text on the art's "Selección de ingredientes" band */
+  .cw-shelves-panel {
+    inset: 0;
+    display: block;
+  }
+
+  .cw-ribbon {
+    top: 12.4%;
+    left: 2%;
+    width: 43%;
+    height: 5.1%;
+    transform: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 2.1cqw;
+    font-weight: 800;
+    color: #4a2e16;
+    text-shadow: 0 1px 0 rgba(255, 244, 220, 0.7);
+  }
+
+  /* Three shelves of four, standing where the game's are */
+  .cw-shelves {
+    position: absolute;
+    left: 3.25%;
+    top: 17.75%;
+    width: 38.95%;
+    height: 71.4%;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .cw-shelf {
+    height: 31.8%;
+    gap: 0 1.8%;
+    padding: 0;
+  }
+
+  .cw-jar {
+    justify-content: flex-start;
+  }
+
+  .cw-dome {
+    width: 94%;
+  }
+
+  /* Dome at 94% of the jar: plate 50.4% wide, top 23.9% above its bottom */
+  .cw-count {
+    width: 50.4%;
+    margin-top: -23.9%;
+    border-width: 0.2cqw;
+    font-size: 1.6cqw;
+  }
+
+  .cw-base {
+    width: 92%;
+    margin-top: 0.5%;
+  }
+
+  .cw-base-gem {
+    width: 2.1cqw;
+  }
+
+  /* The cauldron at the bottom of the tube */
+  .cw-cauldron {
+    left: 46.95%;
+    top: 70%;
+    width: 16.2%;
+    display: block;
+    overflow: visible;
+  }
+
+  .cw-pot {
+    width: 100%;
+    max-width: none;
+  }
+
+  .cw-pot::before {
+    display: none;
+  }
+
+  .cw-total {
+    font-size: 1.5cqw;
+  }
+
+  /* Effects on the scroll */
+  .cw-scroll {
+    left: 67.3%;
+    top: 17.2%;
+    width: 29.2%;
+    height: 62%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .cw-scroll-head {
+    grid-template-columns: 2.8cqw minmax(0, 1fr) auto;
+    gap: 0.8cqw;
+    margin: 0 0 0.4cqw;
+    padding: 0.3cqw 0.6cqw 0.5cqw;
+    border-bottom: 0.2cqw solid rgba(122, 90, 58, 0.45);
+    font-size: 1.9cqw;
+    font-weight: 800;
+    color: #4a2e16;
+    text-shadow: 0 1px 0 rgba(255, 244, 220, 0.7);
+  }
+
+  /* Scrolls when there are many effects, with a game-like green scrollbar
+     that is always visible (not the hidden macOS overlay one) */
+  .cw-effects {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    gap: 0.25cqw;
+    padding-right: 0.4cqw;
+  }
+
+  .cw-effects::-webkit-scrollbar {
+    width: 1.1cqw;
+  }
+
+  .cw-effects::-webkit-scrollbar-track {
+    border-radius: 0.6cqw;
+    background: rgba(90, 60, 30, 0.18);
+    box-shadow: inset 0 0 0.2cqw rgba(0, 0, 0, 0.35);
+  }
+
+  .cw-effects::-webkit-scrollbar-thumb {
+    border: 0.15cqw solid #2f4a0c;
+    border-radius: 0.6cqw;
+    background: linear-gradient(90deg, #8fbf2f, #5f8a17);
+  }
+
+  .cw-effects::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #a2d33a, #6f9a1e);
+  }
+
+  /* Browsers without ::-webkit-scrollbar (Firefox) */
+  @supports not selector(::-webkit-scrollbar) {
+    .cw-effects {
+      scrollbar-width: thin;
+      scrollbar-color: #6f9a1e rgba(90, 60, 30, 0.18);
+    }
+  }
+
+  .cw-effect {
+    grid-template-columns: 2.8cqw minmax(0, 1fr) auto;
+    gap: 0.8cqw;
+    padding: 0.45cqw 0.6cqw 0.45cqw 0.8cqw;
+    border-radius: 0.35cqw;
+  }
+
+  .cw-effect.wanted {
+    box-shadow: inset 0.45cqw 0 0 #5f8a17;
+  }
+
+  .cw-effect-icon {
+    width: 2.8cqw;
+    height: 2.8cqw;
+  }
+
+  .cw-dice {
+    width: 2.6cqw;
+    height: 2.6cqw;
+    margin-right: 2.6cqw;
+  }
+
+  .cw-effect-name,
+  .cw-effect-value {
+    font-size: 1.62cqw;
+  }
+
+  /* Score centered on the wood strip under the scroll */
+  .cw-stat {
+    left: 66.5%;
+    top: 87.6%;
+    width: 31.5%;
+    height: 8.4%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1cqw;
+  }
+
+  .cw-stat-label {
+    margin: 0;
+    font-size: 2cqw;
+  }
+
+  .cw-stat-bar {
+    min-width: 40%;
+    margin-inline: 1cqw;
+    padding: 0.2cqw 0.5cqw;
+    border-width: 0.2cqw;
+  }
+
+  .cw-stat-value {
+    font-size: 1.8cqw;
+  }
+
+  .cw-stat .exact-seal {
+    width: 2.2cqw;
+    height: 2.2cqw;
+  }
+
+  /* Centered on the stone under the bottom shelf */
+  .cw-actions {
+    position: absolute;
+    left: 3.25%;
+    top: 88%;
+    width: 38.95%;
+    height: 6%;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .cw-actions .game-btn {
+    min-width: 0;
+    width: 60%;
+    min-height: 0;
+    height: 100%;
+    padding-block: 0;
+    font-size: 1.55cqw;
+  }
+
+}

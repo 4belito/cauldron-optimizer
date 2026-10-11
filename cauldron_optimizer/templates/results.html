@@ -1,93 +1,122 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    {{ _("Receta Óptima") }}
+    {{ _("Receta optimizada") }}
 {% endblock %}
 {% block main %}
 <div class="optimizer">
 
-  <!-- MATRIX -->
-  <fieldset class="card">
-    <div class="recipe-split">
+  {# Laid out like the game's cauldron window: the ingredient domes on
+     stone-wall shelves, the cauldron with the total, and the effects scroll #}
+  <section class="cw-window">
+    <header class="cw-titlebar">
+      <span class="cw-title">{{ _("Receta optimizada") }}</span>
+      <a href="{{ url_for('index') }}" class="cw-close" aria-label="{{ _('Volver') }}" data-tip="{{ _('Volver') }}"></a>
+    </header>
 
-      <!-- LEFT: grid -->
-      <div class="recipe-left">
-        <div class="recipe-header"><strong>{{ _("Receta") }}</strong></div>
-        <div class="ingredients-grid result-grid">
-          {% set ns = namespace(idx=0) %}
+    <div class="cw-body">
+
+      <!-- LEFT: ingredient shelves -->
+      <div class="cw-shelves-panel">
+        <div class="cw-ribbon"><span>{{ _("Receta") }}</span></div>
+        <div class="cw-shelves">
+          {% set ns = namespace(idx=0, total=0) %}
+          {# The most used ingredient sets the brightest green base #}
+          {% set max_val = [alpha_matrix|map('max')|max, 1]|max %}
           {% for row in alpha_matrix %}
-            {% for val in row %}
-              {% set ns.idx = ns.idx + 1 %}
-              <div class="ingredient-card {{ 'zero' if val == 0 else '' }}">
-                <img
-                  class="ingredient-icon"
-                  src="{{ url_for('static', filename='ingredients/ingredient_crystal' ~ ns.idx ~ '.png') }}"
-                  alt=""
-                >
-                <div class="value-overlay">
-                  <span class="value-text">{{ val }}</span>
+            <div class="cw-shelf">
+              {% for val in row %}
+                {% set ns.idx = ns.idx + 1 %}
+                {% set ns.total = ns.total + val %}
+                <div class="cw-jar {{ 'zero' if val == 0 else '' }}" style="--amt: {{ val / max_val }};">
+                  <img
+                    class="cw-dome"
+                    src="{{ url_for('static', filename='ingredients/ingredient_dome' ~ ns.idx ~ '.png') }}"
+                    alt=""
+                  >
+                  <span class="cw-count">{{ val }}</span>
+                  <span class="cw-base">
+                    {% if (ns.idx - 1) in premiums %}
+                      <img class="cw-base-gem" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
+                    {% endif %}
+                  </span>
                 </div>
-              </div>
-            {% endfor %}
-          {% endfor %}
-        </div>
-      </div>
-
-      <!-- DIVIDER -->
-      <div class="recipe-divider"></div>
-
-      <!-- RIGHT: effects list -->
-      <div class="recipe-right">
-        <div class="recipe-header"><strong>{{ _("Efectos") }}</strong></div>
-        <div class="recipe-list">
-          {% for effect in effects %}
-            <div class="recipe-row" style="--hl: {{ effect.weight }};">
-              <span class="recipe-row-value">{{ "%.2f"|format(effect.value) }}%</span>
-              <img
-                class="recipe-row-icon"
-                src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
-                alt=""
-              >
-              <span class="recipe-row-name" title="{{ _(effect.name) }}">
-                {{ _(effect.name) }}
-              </span>
+              {% endfor %}
             </div>
           {% endfor %}
         </div>
       </div>
 
-    </div>
-  </fieldset>
-
-  <fieldset class="card">
-    <div class="result-score">
-      <legend><strong>{{ _("Score") }}</strong></legend>
-      <div class="score-line">
-        <span class="result-score-value">
-          {{ "%.2f"|format(score) }}
-        </span>
-        {% if exact %}
-          <!-- Every recipe was checked: a small gold seal, explained on hover -->
-          <span class="exact-seal" tabindex="0" role="img"
-                aria-label="{{ _('Óptimo garantizado') }}"
-                data-tip="{{ _('Óptimo garantizado: se comprobaron todas las recetas posibles, no existe ninguna mejor con estos ajustes') }}">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path class="seal-ribbon" d="M7.5 14.5 5 22l3.2-1.4L10 23.5l2-6.5zM16.5 14.5 19 22l-3.2-1.4L14 23.5l-2-6.5z"/>
-              <path class="seal-rosette" d="M12 1.5l1.9 1.4 2.3-.4 1 2.1 2.1 1-.4 2.3 1.4 1.9-1.4 1.9.4 2.3-2.1 1-1 2.1-2.3-.4L12 18.1l-1.9-1.4-2.3.4-1-2.1-2.1-1 .4-2.3L3.7 9.8l1.4-1.9-.4-2.3 2.1-1 1-2.1 2.3.4z"/>
-              <circle class="seal-face" cx="12" cy="9.8" r="5.2"/>
-              <path class="seal-check" d="M9.4 10 11.3 11.9 14.8 8.2"/>
-            </svg>
-          </span>
-        {% endif %}
+      <!-- CENTER: the cauldron, filled with the recipe's share of the maximum -->
+      {% set fill = [ns.total / max_ingredients, 1]|min if max_ingredients else (1 if ns.total else 0) %}
+      <div class="cw-cauldron" aria-hidden="true">
+        <div class="cw-mist"></div>
+        <div class="cw-pot" style="--fill: {{ fill }};">
+          <img class="cw-pot-body" src="{{ url_for('static', filename='ingredients/ui_element_cauldron-5ee900618750a3a14e2b38d4d7fc8f35.png') }}" alt="">
+          <img class="cw-pot-base" src="{{ url_for('static', filename='ui/cauldron/ui_cauldron_progressbar_base.png') }}" alt="">
+          <img class="cw-pot-fill" src="{{ url_for('static', filename='ui/cauldron/ui_cauldron_progressbar_fill.png') }}" alt="">
+          <span class="cw-total">{{ ns.total }}</span>
+        </div>
       </div>
-    </div>
-  </fieldset>
 
-  <div class="submit-row">
-    <a href="{{ url_for('index') }}" class="game-btn game-btn-main">
-      <span>{{ _("Volver") }}</span>
-    </a>
-  </div>
+      <!-- RIGHT: effects scroll and score -->
+      <div class="cw-side">
+        <div class="cw-scroll">
+          {# Header columns line up with the rows: icon, name, chance (the dice) #}
+          <div class="cw-scroll-head">
+            <span></span>
+            <span>{{ _("Efectos") }}</span>
+            <img class="cw-dice" src="{{ url_for('static', filename='ui/cauldron/dice.png') }}" alt="%">
+          </div>
+          <div class="cw-effects">
+            {% for effect in effects %}
+              {# Effects the user asked for (weight > 0) stand out #}
+              <div class="cw-effect {{ 'wanted' if effect.weight > 0 else '' }}" style="--hl: {{ effect.weight }};">
+                <img
+                  class="cw-effect-icon"
+                  src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
+                  alt=""
+                >
+                <span class="cw-effect-name" title="{{ _(effect.name) }}">{{ _(effect.name) }}</span>
+                <span class="cw-effect-value">{{ "%.2f"|format(effect.value) }}%</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="cw-stat">
+          <div class="cw-stat-label">{{ _("Score") }}:</div>
+          <div class="cw-stat-bar">
+            <span class="score-line">
+              <span class="cw-stat-value">{{ "%.2f"|format(score) }}</span>
+              {% if exact %}
+                <!-- Every recipe was checked: a small gold seal, explained on hover -->
+                <span class="exact-seal" tabindex="0" role="img"
+                      aria-label="{{ _('Óptimo garantizado') }}"
+                      data-tip="{{ _('Óptimo garantizado: se comprobaron todas las recetas posibles, no existe ninguna mejor con estos ajustes') }}">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path class="seal-ribbon" d="M7.5 14.5 5 22l3.2-1.4L10 23.5l2-6.5zM16.5 14.5 19 22l-3.2-1.4L14 23.5l-2-6.5z"/>
+                    <path class="seal-rosette" d="M12 1.5l1.9 1.4 2.3-.4 1 2.1 2.1 1-.4 2.3 1.4 1.9-1.4 1.9.4 2.3-2.1 1-1 2.1-2.3-.4L12 18.1l-1.9-1.4-2.3.4-1-2.1-2.1-1 .4-2.3L3.7 9.8l1.4-1.9-.4-2.3 2.1-1 1-2.1 2.3.4z"/>
+                    <circle class="seal-face" cx="12" cy="9.8" r="5.2"/>
+                    <path class="seal-check" d="M9.4 10 11.3 11.9 14.8 8.2"/>
+                  </svg>
+                </span>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- On the bottom edge, where the game has "¡Elaborar!" -->
+      <div class="cw-actions">
+        <a href="{{ url_for('index') }}" class="game-btn game-btn-main">
+          <span>{{ _("Volver") }}</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
 </div>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>

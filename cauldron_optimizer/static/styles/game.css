@@ -511,17 +511,11 @@ button:disabled[data-tip] {
   }
 
   /* Long names wrap onto a second line instead of being cut with "..." */
-  .premium-card .ingredient-name,
   .bounds-card .weight-label {
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
     line-height: 1.2;
-  }
-
-  /* Half width: 3 ingredients per row, so their names fit */
-  .premium-card .ingredients-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 

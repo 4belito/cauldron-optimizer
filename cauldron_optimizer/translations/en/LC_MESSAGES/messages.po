@@ -929,8 +929,8 @@ msgstr "Choose your avatar"
 # ###################
 # Results
 #: cauldron_optimizer/templates/results.html:4
-msgid "Receta Óptima"
-msgstr "Optimal Recipe"
+msgid "Receta optimizada"
+msgstr "Optimized recipe"
 
 #: cauldron_optimizer/templates/results.html:64
 msgid "Score"

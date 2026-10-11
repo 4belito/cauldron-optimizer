@@ -775,6 +775,8 @@ def optimize():
         "effects": filtered_effects,
         "score": score,
         "exact": exact,
+        # Kept with the recipe: the form's selection can be reset meanwhile
+        "premiums": premium_ingr,
     }
     session["premium_ingredients"] = premium_ingr
     # The settings of this search, shown again when going back to the form
@@ -807,6 +809,8 @@ def results():
         effects=last_results["effects"],
         score=last_results["score"],
         exact=last_results.get("exact", False),
+        premiums=last_results.get("premiums", session.get("premium_ingredients", [])),
+        max_ingredients=CauldronOptimizer.sum_ingredients,
     )
 
 
