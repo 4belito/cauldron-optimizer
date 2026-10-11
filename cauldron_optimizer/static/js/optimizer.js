@@ -99,8 +99,8 @@ function updateEffectLocks(root) {
 
 // One slot per diploma, filled with the checked effects' icons: the first
 // slots up to the minimum are required (dashed), the rest optional (dotted).
-// Room is kept for every possible diploma (unused slots are invisible), so
-// the counter and its text never move when the diplomas change
+// Slots beyond the player's diplomas are hidden; the rows of 10 only grow
+// when the diplomas pass a multiple of 10
 let effectsProblem = null; // why the effects do not allow a search, or null
 
 function updateEffectsCounter() {

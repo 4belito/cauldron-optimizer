@@ -1470,8 +1470,9 @@ button:disabled[data-tip] {
 }
 
 /* ---- Effects counter under the diplomas: one slot per diploma ----
-   A fixed grid with room for every diploma (2 rows of 13), and the text in
-   a fixed-width column: nothing moves when the diplomas change */
+   A grid with room for every diploma in rows of 10, and the text in a
+   fixed-width column: nothing moves when the diplomas change. The columns
+   shrink with the panel, so the slots never spill out of it */
 .effects-counter {
   flex-wrap: wrap;
   row-gap: 0.5rem;
@@ -1479,14 +1480,17 @@ button:disabled[data-tip] {
 
 .effects-slots {
   display: grid;
-  grid-template-columns: repeat(13, 1.55rem);
+  grid-template-columns: repeat(10, minmax(0, 1.55rem));
   gap: 0.25rem;
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .effect-slot {
-  width: 1.55rem;
-  height: 1.55rem;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
 }
 
 /* Beyond the minimum: may stay empty */
@@ -1519,9 +1523,10 @@ button:disabled[data-tip] {
   visibility: visible;
 }
 
-/* More diplomas than the player has: kept only for the space */
+/* More diplomas than the player has: not shown (a row is only added
+   when the diplomas pass a multiple of 10) */
 .effect-slot.unused {
-  visibility: hidden;
+  display: none;
 }
 
 .effects-counter .premium-counter-text {
@@ -1531,13 +1536,7 @@ button:disabled[data-tip] {
 
 @media (max-width: 37.5rem) {
   .effects-slots {
-    grid-template-columns: repeat(13, 1.2rem);
     gap: 0.2rem;
-  }
-
-  .effect-slot {
-    width: 1.2rem;
-    height: 1.2rem;
   }
 }
 

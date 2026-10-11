@@ -718,6 +718,15 @@
     padding-inline: 0.4rem;
   }
 
+  /* Smaller vines that overhang less, so the page never scrolls sideways */
+  .cw-window::before {
+    top: -1.2rem;
+    left: -0.7rem;
+    right: -0.7rem;
+    height: 4.5rem;
+    background-size: 3.8rem auto, 3.8rem auto;
+  }
+
   .cw-shelves-panel {
     padding-inline: 0.3rem;
   }
