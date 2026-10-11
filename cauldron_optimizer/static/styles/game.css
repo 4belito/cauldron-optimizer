@@ -1179,8 +1179,8 @@ button:disabled[data-tip] {
 
 .server-bar .server-select {
   width: auto;
-  min-width: 10rem;
-  max-width: min(17rem, 100%);
+  min-width: 12rem;
+  max-width: min(18rem, 100%);
 }
 
 /* "Complete effects" switch in the diploma row: the stepper stays centred
