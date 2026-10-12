@@ -5,95 +5,146 @@
 {% endblock %}
 
 {% block main %}
-<form method="post" class="optimizer">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-]   <!-- ================= DIPLOMAS (TOP RECTANGLE) ================= -->
-    <fieldset class="card">
-    <div class="diploma-row-inline">
-        <span class="recipe-header">{{ _("Diplomas:") }}</span>
-        <input
-        type="number"
-        name="n_diplomas"
-        value="{{ n_diplomas }}"
-        min="1"
-        max="{{ max_diplomas }}"
-        >
+<div class="optimizer formula-page">
+
+  {# Formula test bench: the results page's cauldron window, but editable.
+     Everything is computed live in the browser (static/js/formula.js) #}
+
+  <!-- Effects to consider: click an icon to add it to or remove it from the
+       effects the cauldron can brew -->
+  <div class="premium-counter effects-counter is-complete fx-effects" id="fxEffects">
+    <label class="effect-check effects-all" data-tip="{{ _('Marcar o desmarcar todos los efectos') }}">
+      <input type="checkbox" id="fxEffectsAll" aria-label="{{ _('Marcar o desmarcar todos los efectos') }}">
+      <img class="effect-check-box" src="{{ url_for('static', filename='checkbox.png') }}" alt="">
+      <img class="effect-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+      <span class="effects-all-dash" aria-hidden="true"></span>
+    </label>
+    <div class="premium-slots effects-slots">
+      {% for name in effect_names %}
+        <button type="button" class="premium-slot effect-slot fx-effect{{ ' filled' if loop.index0 < 10 else '' }}"
+                data-effect="{{ loop.index0 }}" data-tip="{{ _(name) }}" aria-label="{{ _(name) }}"
+                aria-pressed="{{ 'true' if loop.index0 < 10 else 'false' }}"
+                style="background-image: url('{{ url_for('static', filename='effects/effect' ~ loop.index ~ '.png') }}')"></button>
+      {% endfor %}
     </div>
-    </fieldset>
-  <!-- ================= INGREDIENTS + EFFECTS ================= -->
-  <fieldset class="card">
-    <div class="recipe-split">
+    <span class="premium-counter-text" id="fxEffectsText"
+          data-text="{{ _('{n} efectos en juego') }}"></span>
+  </div>
 
-      <!-- LEFT: INGREDIENTS -->
-      <div class="recipe-left">
-        <div class="recipe-header">
-          <strong>{{ _("Receta") }}</strong>
-        </div>
+  <section class="cw-window cw-wp">
+    <header class="cw-titlebar">
+      <span class="cw-title">{{ _("Fórmula") }}</span>
+      <a href="{{ url_for('index') }}" class="cw-close" aria-label="{{ _('Volver') }}" data-tip="{{ _('Volver') }}"></a>
+    </header>
 
-        <div class="ingredients-grid result-grid">
-          {% set ns = namespace(idx=0) %}
-          {% for row in alpha_matrix %}
-            {% for val in row %}
-              {% set ns.idx = ns.idx + 1 %}
-              <div class="ingredient-card">
-                <img
-                  class="ingredient-icon"
-                  src="{{ url_for('static', filename='ingredients/ingredient_crystal' ~ ns.idx ~ '.png') }}"
-                  alt=""
-                >
-                <div class="value-overlay">
-                  <input
-                    type="number"
-                    name="alpha_{{ ns.idx - 1 }}"
-                    value="{{ val }}"
-                    min="0"
-                    max="25"
-                    class="value-input"
-                  >
+    <div class="cw-body">
+
+      <!-- Top left, as in the game: the player's Witch Points (editable) -->
+      <label class="cw-wp-plate" data-tip="{{ _('Tus puntos de bruja: el coste se ve en rojo si no te llegan') }}">
+        <img class="cw-wp-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="">
+        <input id="fxWp" class="cw-wp-input" type="text" inputmode="decimal" autocomplete="off"
+               placeholder="0" aria-label="{{ _('Tus puntos de bruja') }}">
+      </label>
+
+      <!-- LEFT: ingredient shelves. Click a dome to add one (right click
+           removes one), type the amount, or click the base for premium -->
+      <div class="cw-shelves-panel">
+        <div class="cw-ribbon"><span>{{ _("Receta") }}</span></div>
+        <div class="cw-shelves">
+          {% for row in range(3) %}
+            <div class="cw-shelf">
+              {% for col in range(4) %}
+                {% set i = row * 4 + col %}
+                <div class="cw-jar zero fx-jar" data-ingredient="{{ i }}">
+                  <button type="button" class="fx-dome" data-tip="{{ _(ingredient_names[i]) }}"
+                          aria-label="{{ _('Añadir %(name)s', name=_(ingredient_names[i])) }}">
+                    <img class="cw-dome"
+                         src="{{ url_for('static', filename='ingredients/ingredient_dome' ~ (i + 1) ~ '.png') }}" alt="">
+                  </button>
+                  <input class="cw-count fx-count" type="number" min="0" max="{{ max_ingredients }}" value="0"
+                         inputmode="numeric" autocomplete="off" aria-label="{{ _(ingredient_names[i]) }}">
+                  {# Price of the next copy, as on the game's base; click: premium #}
+                  <button type="button" class="cw-base fx-premium" aria-pressed="false"
+                          data-tip="{{ _('Premium: se paga con diamantes') }}">
+                    <img class="cw-base-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="">
+                    <span class="cw-base-price">0</span>
+                  </button>
                 </div>
-              </div>
-            {% endfor %}
-          {% endfor %}
-        </div>
-      </div>
-
-      <!-- DIVIDER -->
-      <div class="recipe-divider"></div>
-
-      <!-- RIGHT: EFFECTS -->
-      <div class="recipe-right">
-        <div class="recipe-header">
-          <strong>{{ _("Efectos") }}</strong>
-        </div>
-
-        <div class="recipe-list">
-          {% for effect in effects %}
-            <div class="recipe-row" style="--hl: {{ effect.weight }};">
-              <span class="recipe-row-value">
-                {{ "%.2f"|format(effect.value) }}%
-              </span>
-              <img
-                class="recipe-row-icon"
-                src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
-                alt=""
-              >
-              <span class="recipe-row-name" title="{{ _(effect.name) }}">
-                {{ _(effect.name) }}
-              </span>
+              {% endfor %}
             </div>
           {% endfor %}
         </div>
       </div>
 
+      <!-- CENTER: the cauldron, filled with the recipe's share of the maximum.
+           As in the game: the last ingredient added, with a button to take it
+           out, and a button by the total to empty the cauldron -->
+      <div class="cw-cauldron">
+        <div class="cw-mist"></div>
+        <div class="cw-pot" id="fxPot" style="--fill: 0;">
+          <img class="cw-pot-body" src="{{ url_for('static', filename='ingredients/ui_element_cauldron-5ee900618750a3a14e2b38d4d7fc8f35.png') }}" alt="">
+          <img class="cw-pot-base" src="{{ url_for('static', filename='ui/cauldron/ui_cauldron_progressbar_base.png') }}" alt="">
+          <img class="cw-pot-fill" src="{{ url_for('static', filename='ui/cauldron/ui_cauldron_progressbar_fill.png') }}" alt="">
+          <span class="cw-total" id="fxTotal">0</span>
+          <img class="cw-pot-last" id="fxLast" alt="" hidden>
+          <button type="button" class="cw-pot-btn cw-pot-remove" id="fxRemoveLast" hidden
+                  data-tip="{{ _('Quitar el último ingrediente') }}" aria-label="{{ _('Quitar el último ingrediente') }}"></button>
+          <button type="button" class="cw-pot-btn cw-pot-empty" id="fxEmpty"
+                  data-tip="{{ _('Vaciar el caldero') }}" aria-label="{{ _('Vaciar el caldero') }}"></button>
+        </div>
+      </div>
+
+      <!-- RIGHT: effects scroll -->
+      <div class="cw-side">
+        <div class="cw-scroll">
+          <div class="cw-scroll-head">
+            <img class="cw-dice" src="{{ url_for('static', filename='ui/cauldron/dice.png') }}" alt="%">
+            <span></span>
+            <span>{{ _("Efectos") }}</span>
+          </div>
+          <div class="cw-effects" id="fxScroll"></div>
+        </div>
+      </div>
+
+      <!-- Under the tube, as in the game: the recipe's cost. Hover for the
+           cheapest order to add the ingredients -->
+      <div class="cw-costs" id="fxCost" tabindex="0">
+        <div class="cw-costs-label"><span>{{ _("Costes") }}</span></div>
+        <div class="cw-costs-values">
+          <span class="cw-costs-item">
+            <img src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="{{ _('Puntos de bruja') }}">
+            <span id="fxCostWp">0</span>
+          </span>
+          <span class="cw-costs-item" id="fxCostDiaItem" hidden>
+            <img src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="{{ _('diamantes') }}">
+            <span id="fxCostDia">0</span>
+          </span>
+        </div>
+      </div>
+
     </div>
-  </fieldset>
+  </section>
 
-  <!-- ================= SUBMIT ================= -->
-  <div class="submit-row">
-    <button type="submit" class="game-btn game-btn-main">
-      <span>{{ _("Elaborar") }}</span>
-    </button>
-  </div>
+</div>
 
-</form>
+<script>
+  window.FORMULA_CONFIG = {
+    B: {{ matrices.B | tojson }},
+    V: {{ matrices.V | tojson }},
+    maxIngredients: {{ max_ingredients }},
+    effectNames: [{% for n in effect_names %}{{ _(n) | tojson }}{{ "," if not loop.last }}{% endfor %}],
+    ingredientNames: [{% for n in ingredient_names %}{{ _(n) | tojson }}{{ "," if not loop.last }}{% endfor %}],
+    icons: {
+      wp: {{ url_for('static', filename='ui/cauldron/witch_points.png') | tojson }},
+      diamond: {{ url_for('static', filename='ui/diamond.svg') | tojson }},
+    },
+    text: {
+      premium: {{ _("premium") | tojson }},
+    },
+  };
+</script>
+<script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
+<script src="{{ url_for('static', filename='js/formula.js') }}"></script>
+<!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
+<script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 {% endblock %}

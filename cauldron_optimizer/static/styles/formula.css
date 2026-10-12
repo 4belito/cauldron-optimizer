@@ -1,0 +1,370 @@
+/* =========================
+   Formula page (formula.html): the results page's cauldron window, made
+   editable and laid out like the game's cauldron screen, with the Witch
+   Points plate and the "Costes" scroll. Everything is scoped to .cw-wp, so
+   the results page does not change.
+   ========================= */
+
+/* ---- Effects in play: the tray icons toggle ---- */
+.formula-page .fx-effect {
+  padding: 0;
+  cursor: pointer;
+}
+
+.formula-page .fx-effect:not(.filled) {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+.formula-page .fx-effect:hover {
+  opacity: 1;
+}
+
+.formula-page .fx-effects .premium-counter-text {
+  color: var(--game-green-dark);
+}
+
+/* ---- Ingredients: dome adds one, plate is typed, base toggles premium ---- */
+.cw-wp .fx-dome {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.cw-wp .fx-count {
+  font-family: inherit;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.cw-wp .fx-count::-webkit-inner-spin-button,
+.cw-wp .fx-count::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* The base shows the next copy's price, as in the game: always green */
+.cw-wp .fx-premium {
+  gap: 0.2rem;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.cw-wp .cw-jar.zero .cw-base::before {
+  filter: none;
+  opacity: 1;
+}
+
+.cw-wp .cw-base-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
+}
+
+.cw-wp .cw-base-price {
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  text-shadow:
+    -1px -1px 0 #2b3d0c, 1px -1px 0 #2b3d0c,
+    -1px 1px 0 #2b3d0c, 1px 1px 0 #2b3d0c;
+}
+
+/* ---- Cauldron: the last ingredient added, the button to take it out
+   (red X) and, by the total, the one to empty the cauldron (C), placed
+   as in the game. Positions in % of the pot ---- */
+.cw-wp .cw-pot-last {
+  position: absolute;
+  left: 33%;
+  top: 22%;
+  width: 28%;
+  height: auto;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+.cw-wp .cw-pot-btn {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background: center / 100% 100% no-repeat;
+  cursor: pointer;
+  image-rendering: auto;
+}
+
+.cw-wp .cw-pot-remove {
+  left: 59%;
+  top: 21%;
+  width: 12%;
+  aspect-ratio: 1;
+  background-image: url("/static/ui/cauldron/remove_last_normal.png");
+}
+
+.cw-wp .cw-pot-remove:hover {
+  background-image: url("/static/ui/cauldron/remove_last_hover.png");
+}
+
+.cw-wp .cw-pot-remove:active {
+  background-image: url("/static/ui/cauldron/remove_last_pressed.png");
+}
+
+.cw-wp .cw-pot-empty {
+  left: 67.5%;
+  top: 62%;
+  height: 16.4%;
+  aspect-ratio: 20 / 19;
+  background-image: url("/static/ui/cauldron/empty_normal.png");
+}
+
+.cw-wp .cw-pot-empty:hover {
+  background-image: url("/static/ui/cauldron/empty_hover.png");
+}
+
+.cw-wp .cw-pot-empty:active {
+  background-image: url("/static/ui/cauldron/empty_pressed.png");
+}
+
+.cw-wp .cw-pot-btn:focus-visible {
+  outline: 2px solid #f2e2c4;
+  outline-offset: 1px;
+}
+
+/* Narrow screens hide the cauldron on the results page; here it holds the
+   controls, so it stays */
+@media (max-width: 47.5rem) {
+  .cw-wp .cw-cauldron {
+    display: flex;
+    min-height: 11rem;
+  }
+}
+
+/* ---- Witch Points plate (top left in the game) ---- */
+.cw-wp-plate {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: max-content;
+  margin: 0 auto 0.6rem;
+  padding: 0.25rem 0.6rem;
+  border: 2px solid #1e1007;
+  border-radius: 0.4rem;
+  background: linear-gradient(#3a2414, #24150a);
+  box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.7);
+}
+
+.cw-wp-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.cw-wp-input {
+  width: 5.5rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  color: #f2e2c4;
+}
+
+.cw-wp-input::placeholder {
+  color: rgba(242, 226, 196, 0.45);
+}
+
+.cw-wp-input:focus {
+  outline: none;
+  box-shadow: 0 1px 0 #e2b85a;
+}
+
+/* ---- Costes scroll (under the tube in the game) ---- */
+.cw-costs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.35rem;
+  background: linear-gradient(90deg, #d6c19a, #efe2c2 12%, #efe2c2 88%, #d6c19a);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  cursor: help;
+}
+
+.cw-costs-label {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #5a4128;
+}
+
+.cw-costs-label span::before {
+  content: "\2500\2500\2726\2003";
+  color: #a78a60;
+}
+
+.cw-costs-label span::after {
+  content: "\2003\2726\2500\2500";
+  color: #a78a60;
+}
+
+.cw-costs-values {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cw-costs-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  color: #4a2e16;
+}
+
+.cw-costs-item img {
+  width: 1.6rem;
+  height: 1.6rem;
+  object-fit: contain;
+}
+
+/* As in the game: green when the Witch Points are enough, red when not */
+.cw-costs.enough #fxCostWp {
+  color: #4f7a12;
+}
+
+.cw-costs.short #fxCostWp {
+  color: #b3261e;
+}
+
+/* =========================
+   Wide screens: the game's art with the Witch Points plate and the Costes
+   scroll (background_cauldron_wp.png, 1742 x 1084). Positions in % of the
+   art, sizes in cqw, as in results.css.
+   ========================= */
+@media (min-width: 48rem) {
+  .cw-wp .cw-body {
+    aspect-ratio: 1742 / 1084;
+    background-image: url("/static/ui/cauldron/background_cauldron_wp.png");
+  }
+
+  /* On the dark plate at the top of the shelves: icon | value */
+  .cw-wp .cw-wp-plate {
+    position: absolute;
+    left: 19.3%;
+    top: 3.1%;
+    width: 8.6%;
+    height: 6.6%;
+    margin: 0;
+    padding: 0 0.4cqw;
+    gap: 0.7cqw;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    z-index: 2;
+  }
+
+  .cw-wp .cw-wp-icon {
+    width: 2.6cqw;
+    height: 2.6cqw;
+  }
+
+  .cw-wp .cw-wp-input {
+    width: 100%;
+    font-size: 1.5cqw;
+    text-align: center;
+  }
+
+  .cw-wp .cw-ribbon {
+    top: 11.6%;
+    left: 1.8%;
+    width: 43.6%;
+    height: 5.4%;
+  }
+
+  /* Rows one plank apart (20.75% of the art), the bottom one on the third */
+  .cw-wp .cw-shelves {
+    left: 5%;
+    top: 17.5%;
+    width: 37.6%;
+    height: 59.4%;
+  }
+
+  .cw-wp .cw-shelf {
+    height: 30%;
+  }
+
+  .cw-wp .cw-base {
+    gap: 0.4cqw;
+  }
+
+  .cw-wp .cw-base-icon {
+    width: 1.8cqw;
+    height: 1.8cqw;
+  }
+
+  .cw-wp .cw-base-price {
+    font-size: 1.5cqw;
+  }
+
+  .cw-wp .cw-cauldron {
+    left: 48.6%;
+    top: 61%;
+    width: 15%;
+  }
+
+  .cw-wp .cw-scroll {
+    left: 67.8%;
+    top: 17.4%;
+    width: 30%;
+    height: 57%;
+  }
+
+  /* On the art's Costes scroll */
+  .cw-wp .cw-costs {
+    position: absolute;
+    left: 42.4%;
+    top: 82.2%;
+    width: 26.4%;
+    height: 9.6%;
+    justify-content: center;
+    gap: 0.3cqw;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    z-index: 2;
+  }
+
+  .cw-wp .cw-costs-label {
+    font-size: 1.7cqw;
+    font-weight: 800;
+    color: #4a2e16;
+    text-shadow: 0 1px 0 rgba(255, 244, 220, 0.7);
+  }
+
+  .cw-wp .cw-costs-values {
+    gap: 1.6cqw;
+  }
+
+  .cw-wp .cw-costs-item {
+    gap: 0.5cqw;
+    font-size: 1.8cqw;
+  }
+
+  .cw-wp .cw-costs-item img {
+    width: 2.3cqw;
+    height: 2.3cqw;
+  }
+}

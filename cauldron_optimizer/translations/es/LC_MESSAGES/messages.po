@@ -941,3 +941,48 @@ msgstr ""
 #~ msgid "Evitar Ingredientes (Premium)"
 #~ msgstr ""
 
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Costes"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "diamantes"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "{n} efectos en juego"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+#, python-format
+msgid "Añadir %(name)s"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Premium: se paga con diamantes"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "premium"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Tus puntos de bruja"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Tus puntos de bruja: el coste se ve en rojo si no te llegan"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Puntos de bruja"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Quitar el último ingrediente"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Vaciar el caldero"
+msgstr ""

@@ -1095,3 +1095,48 @@ msgstr "Back"
 #~ msgid "4 de 4 ingredientes evitados."
 #~ msgstr "4 of 4 ingredients avoided."
 
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Costes"
+msgstr "Costs"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "diamantes"
+msgstr "diamonds"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "{n} efectos en juego"
+msgstr "{n} effects in play"
+
+#: cauldron_optimizer/templates/formula.html
+#, python-format
+msgid "Añadir %(name)s"
+msgstr "Add %(name)s"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Premium: se paga con diamantes"
+msgstr "Premium: paid with diamonds"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "premium"
+msgstr "premium"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Tus puntos de bruja"
+msgstr "Your Witch Points"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Tus puntos de bruja: el coste se ve en rojo si no te llegan"
+msgstr "Your Witch Points: the cost turns red when they are not enough"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Puntos de bruja"
+msgstr "Witch Points"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Quitar el último ingrediente"
+msgstr "Remove the last ingredient"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Vaciar el caldero"
+msgstr "Empty the cauldron"
