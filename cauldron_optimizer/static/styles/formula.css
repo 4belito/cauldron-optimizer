@@ -488,12 +488,12 @@
   }
 
   .cw-wp .cw-base-icon {
-    width: 1.8cqw;
-    height: 1.8cqw;
+    width: 1.55cqw;
+    height: 1.55cqw;
   }
 
   .cw-wp .cw-base-price {
-    font-size: 1.5cqw;
+    font-size: 1.25cqw;
   }
 
   .cw-wp .cw-cauldron {
@@ -502,11 +502,12 @@
     width: 15%;
   }
 
+  /* Inset from the art's paper edges, so the rows do not show as a patch */
   .cw-wp .cw-scroll {
-    left: 67.8%;
-    top: 17.4%;
-    width: 30%;
-    height: 57%;
+    left: 68.8%;
+    top: 18%;
+    width: 28.2%;
+    height: 55.6%;
   }
 
   /* On the art's Costes scroll */
