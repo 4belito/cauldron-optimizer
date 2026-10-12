@@ -4,7 +4,9 @@
 //   cost = round(basicCost * factorAllGrowth^(rank-1) * factorSameGrowth^(amount-1))
 // rank   = its position among the normal ingredients in the pot (premium ones do not count)
 // amount = which copy of this ingredient it is
-// The total is the sum of those prices, so the order matters. No ancient wonder reduction here.
+// The total is the sum of those prices, so the order matters.
+// Ancient wonder reduction (cauldron_ingredients_costs_reduction, B_Ch21_AW2): the price above
+// times (1 - reduction), rounded down. Matches the game: 974, 47 and 32 per copy, 1763 for 9.
 // Premium ingredients cost a flat premiumBasicCost in diamonds and do not move the rank.
 //
 // The search is exact: a dynamic program over "how many copies of each ingredient are in the pot",
@@ -16,7 +18,16 @@ const DEFAULTS = {
   factorSameGrowth: 1.4,
   ingredientsMax: 25,
   premiumBasicCost: 25,
+  reduction: 0, // ancient wonder discount on Witch Points, 0..1 (diamonds are not reduced)
 };
+
+// Witch Point reduction of the Escuela de hechicería valoriana wonder (B_Ch21_AW2) by level, from the game's
+// EffectConfigs (effect 2214); index 0 = not built
+const WONDER_REDUCTION = [
+  0, 0.06, 0.09, 0.12, 0.15, 0.18, 0.22, 0.24, 0.26, 0.28, 0.3, 0.34, 0.36, 0.38, 0.4, 0.42, 0.45,
+  0.46, 0.47, 0.48, 0.49, 0.5, 0.505, 0.51, 0.515, 0.52, 0.53, 0.535, 0.54, 0.545, 0.55, 0.56,
+  0.565, 0.57, 0.575, 0.6,
+];
 
 /**
  * Witch Point price of one normal ingredient when it is added.
@@ -26,7 +37,9 @@ const DEFAULTS = {
  */
 function cauldronPrice(rank, amount, options = {}) {
   const v = { ...DEFAULTS, ...options };
-  return Math.round(v.basicCost * v.factorAllGrowth ** (rank - 1) * v.factorSameGrowth ** (amount - 1));
+  const price = Math.round(v.basicCost * v.factorAllGrowth ** (rank - 1) * v.factorSameGrowth ** (amount - 1));
+  // The epsilon keeps e.g. 50 * 0.4 from flooring to 19
+  return v.reduction ? Math.floor(price * (1 - v.reduction) + 1e-9) : price;
 }
 
 /**
@@ -113,7 +126,7 @@ function cauldronBuyOrder(recipe, options = {}) {
 }
 
 // Node: export it and run the examples; browser: a plain global (formula page)
-if (typeof module !== 'undefined') module.exports = { cauldronBuyOrder, cauldronPrice, DEFAULTS };
+if (typeof module !== 'undefined') module.exports = { cauldronBuyOrder, cauldronPrice, DEFAULTS, WONDER_REDUCTION };
 
 if (typeof require !== 'undefined' && require.main === module) {
   const show = (title, recipe, options) => {

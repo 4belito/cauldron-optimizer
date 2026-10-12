@@ -964,19 +964,15 @@ msgid "Premium: se paga con diamantes"
 msgstr ""
 
 #: cauldron_optimizer/templates/formula.html
-msgid "premium"
+msgid "Tus puntos de hechicería"
 msgstr ""
 
 #: cauldron_optimizer/templates/formula.html
-msgid "Tus puntos de bruja"
+msgid "Tus puntos de hechicería: el coste se ve en rojo si no te llegan"
 msgstr ""
 
 #: cauldron_optimizer/templates/formula.html
-msgid "Tus puntos de bruja: el coste se ve en rojo si no te llegan"
-msgstr ""
-
-#: cauldron_optimizer/templates/formula.html
-msgid "Puntos de bruja"
+msgid "Puntos de hechicería"
 msgstr ""
 
 #: cauldron_optimizer/templates/formula.html
@@ -985,4 +981,62 @@ msgstr ""
 
 #: cauldron_optimizer/templates/formula.html
 msgid "Vaciar el caldero"
+msgstr ""
+
+
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Sin construir"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Nivel {n}"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Escuela de hechicería valoriana: su nivel rebaja los puntos de hechicería"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Nivel de la Escuela de hechicería valoriana"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Escuela de hechicería valoriana"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus ingredientes (y los diamantes de los premium), con el descuento de la maravilla. Supone que los añades de mayor a menor cantidad."
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Orden: de mayor a menor cantidad"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Los ingredientes van de mayor a menor cantidad, en el orden en que los añades: ninguno puede tener más unidades que uno añadido antes (empatar sí), y cada uno se añade de una vez, todas sus unidades seguidas. Es el orden más barato, y así el coste coincide con el del juego, donde el orden cambia el coste."
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Entendido"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "{later} no puede tener {n}: sería más que {earlier} ({m}), que se añadió antes."
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "No se pueden añadir más unidades de {name}: después ya añadiste {later}. Cada ingrediente se añade de una vez."
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "No volver a mostrar"
+msgstr ""
+
+#: cauldron_optimizer/templates/layout.html
+msgid "Modo manual"
+msgstr ""
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Marca los mismos efectos que tienes marcados en el caldero del juego: los que elegiste entre los que te dan tus diplomas. Solo esos pueden salir, y de ellos dependen las probabilidades."
 msgstr ""

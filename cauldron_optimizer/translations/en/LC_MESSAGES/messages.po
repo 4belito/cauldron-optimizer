@@ -1118,19 +1118,15 @@ msgid "Premium: se paga con diamantes"
 msgstr "Premium: paid with diamonds"
 
 #: cauldron_optimizer/templates/formula.html
-msgid "premium"
-msgstr "premium"
-
-#: cauldron_optimizer/templates/formula.html
-msgid "Tus puntos de bruja"
+msgid "Tus puntos de hechicería"
 msgstr "Your Witch Points"
 
 #: cauldron_optimizer/templates/formula.html
-msgid "Tus puntos de bruja: el coste se ve en rojo si no te llegan"
+msgid "Tus puntos de hechicería: el coste se ve en rojo si no te llegan"
 msgstr "Your Witch Points: the cost turns red when they are not enough"
 
 #: cauldron_optimizer/templates/formula.html
-msgid "Puntos de bruja"
+msgid "Puntos de hechicería"
 msgstr "Witch Points"
 
 #: cauldron_optimizer/templates/formula.html
@@ -1140,3 +1136,61 @@ msgstr "Remove the last ingredient"
 #: cauldron_optimizer/templates/formula.html
 msgid "Vaciar el caldero"
 msgstr "Empty the cauldron"
+
+
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Sin construir"
+msgstr "Not built"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Nivel {n}"
+msgstr "Level {n}"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Escuela de hechicería valoriana: su nivel rebaja los puntos de hechicería"
+msgstr "Valorian School of Sorcery: its level lowers the Witch Points"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Nivel de la Escuela de hechicería valoriana"
+msgstr "Valorian School of Sorcery level"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Escuela de hechicería valoriana"
+msgstr "Valorian School of Sorcery"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus ingredientes (y los diamantes de los premium), con el descuento de la maravilla. Supone que los añades de mayor a menor cantidad."
+msgstr "What brewing this recipe costs: the Witch Points of all its ingredients (and the diamonds of the premium ones), with the wonder's discount. It assumes you add them from the largest amount to the smallest."
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Orden: de mayor a menor cantidad"
+msgstr "Order: largest amount first"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Los ingredientes van de mayor a menor cantidad, en el orden en que los añades: ninguno puede tener más unidades que uno añadido antes (empatar sí), y cada uno se añade de una vez, todas sus unidades seguidas. Es el orden más barato, y así el coste coincide con el del juego, donde el orden cambia el coste."
+msgstr "Ingredients go from the largest amount to the smallest, in the order you add them: none may have more units than one added before it (ties are fine), and each one is added in one go, all its units in a row. It is the cheapest order, and that way the cost matches the game's, where the order changes the cost."
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Entendido"
+msgstr "Got it"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "{later} no puede tener {n}: sería más que {earlier} ({m}), que se añadió antes."
+msgstr "{later} cannot have {n}: that would be more than {earlier} ({m}), which was added before."
+
+#: cauldron_optimizer/templates/formula.html
+msgid "No se pueden añadir más unidades de {name}: después ya añadiste {later}. Cada ingrediente se añade de una vez."
+msgstr "You cannot add more units of {name}: you already added {later} after it. Each ingredient is added in one go."
+
+#: cauldron_optimizer/templates/formula.html
+msgid "No volver a mostrar"
+msgstr "Don't show again"
+
+#: cauldron_optimizer/templates/layout.html
+msgid "Modo manual"
+msgstr "Manual mode"
+
+#: cauldron_optimizer/templates/formula.html
+msgid "Marca los mismos efectos que tienes marcados en el caldero del juego: los que elegiste entre los que te dan tus diplomas. Solo esos pueden salir, y de ellos dependen las probabilidades."
+msgstr "Tick the same effects you have ticked in the game's cauldron: the ones you chose among those your diplomas give you. Only those can come out, and the chances depend on them."

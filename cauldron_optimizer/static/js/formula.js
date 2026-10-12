@@ -5,9 +5,18 @@
 // effects in play only:  E_i = max(V_i·alpha, 0) * 1.1^(B_i·alpha),
 //                        p_i = 20 * E_i / sum(E) * sqrt(sum(alpha))
 // Premium ingredients still count for the effects: they only change the cost.
-// Cost: cauldronBuyOrder and cauldronPrice (cauldron-order.js). Each base
+// Cost: cauldronBuyOrder and cauldronPrice (cauldron-order.js), with the
+// Escuela de hechicería valoriana wonder's discount for the chosen level (WONDER_REDUCTION). Each base
 // shows the price of the next copy, as in the game; the Witch Points plate
 // (top left) turns the cost red when it is not enough.
+// The cost is that of the cheapest order, which is adding the ingredients from
+// the largest amount to the smallest, each one's copies together (checked
+// against cauldronBuyOrder's exact search on 9000 random recipes). So that it
+// matches the game's, the recipe keeps that order: no ingredient may have more
+// units than one added before it (ties are fine), and each one's units go in a
+// row, so only the last one started can still grow. Premium ones do not count,
+// as they do not change the Witch Point prices. A change that breaks it is not
+// made, and a window explains why.
 
 (() => {
   const C = window.FORMULA_CONFIG;
@@ -16,10 +25,16 @@
   const effectBtns = [...document.querySelectorAll(".fx-effect")];
   const allBox = document.getElementById("fxEffectsAll");
   const wpInput = document.getElementById("fxWp");
-  const WP_KEY = "formula.witchPoints";
+  const orderNote = document.getElementById("fxOrderNote");
+  const ORDER_MUTE_KEY = "formula.orderNoteMuted";
+  const wonderSelect = document.getElementById("fxWonder");
+  const WONDER_KEY = "formula.wonderLevel";
 
-  const amount = (i) => Math.max(0, Math.floor(Number(counts[i].value) || 0));
-  const total = () => counts.reduce((s, _, i) => s + amount(i), 0);
+  // The accepted amounts; the plates show them, a typed value is checked first
+  const amounts = counts.map(() => 0);
+  const amount = (i) => amounts[i];
+  const total = () => amounts.reduce((s, a) => s + a, 0);
+  const isPremium = (i) => jars[i].classList.contains("premium");
 
   // Ingredients in the order they were added, so the last one can be taken out
   // as in the game. Kept in step with the amounts: a raised amount adds copies
@@ -74,7 +89,10 @@
 
   function update() {
     syncAdded();
-    const alpha = counts.map((_, i) => amount(i));
+    const alpha = [...amounts];
+    counts.forEach((c, i) => {
+      if (document.activeElement !== c || Number(c.value) !== alpha[i]) c.value = alpha[i];
+    });
     const n = alpha.reduce((a, b) => a + b, 0);
     const max = Math.max(...alpha, 1);
     jars.forEach((jar, i) => {
@@ -104,44 +122,155 @@
     const order = effects.map((e, k) => [e, p[k]]).sort((a, b) => b[1] - a[1] || a[0] - b[0]);
     document.getElementById("fxScroll").replaceChildren(...order.map(([e, v]) => effectRow(e, v)));
 
+    // Escuela de hechicería valoriana: its level's discount on every Witch Point price
+    const level = Number(wonderSelect.value) || 0;
+    const reduction = WONDER_REDUCTION[level] ?? 0;
+    document.getElementById("fxWonderLevel").textContent = level;
+    document.getElementById("fxWonderDiscount").textContent = reduction ? `−${+(reduction * 100).toFixed(1)}%` : "—";
+    wonderSelect.closest(".fx-wonder").classList.toggle("unbuilt", !level);
+
     // Price of the next copy on each base: Witch Points, or diamonds when premium
-    const isPremium = jars.map((j) => j.classList.contains("premium"));
-    const normalCount = alpha.reduce((sum, a, i) => sum + (isPremium[i] ? 0 : a), 0);
+    const premiumNow = jars.map((_, i) => isPremium(i));
+    const normalCount = alpha.reduce((sum, a, i) => sum + (premiumNow[i] ? 0 : a), 0);
     jars.forEach((jar, i) => {
       const icon = jar.querySelector(".cw-base-icon");
-      const price = isPremium[i]
+      const price = premiumNow[i]
         ? DEFAULTS.premiumBasicCost
-        : cauldronPrice(normalCount + 1, alpha[i] + 1);
-      icon.src = isPremium[i] ? C.icons.diamond : C.icons.wp;
+        : cauldronPrice(normalCount + 1, alpha[i] + 1, { reduction });
+      icon.src = premiumNow[i] ? C.icons.diamond : C.icons.wp;
       jar.querySelector(".cw-base-price").textContent = formatAmount(price);
     });
 
     // Cost, with the cheapest order on hover
     const recipe = Object.fromEntries(alpha.map((a, i) => [i, a]));
-    const premium = jars.filter((_, i) => isPremium[i]).map((j) => j.dataset.ingredient);
+    const premium = jars.filter((_, i) => premiumNow[i]).map((j) => j.dataset.ingredient);
     const costEl = document.getElementById("fxCost");
     const wpEl = document.getElementById("fxCostWp");
     try {
-      const r = cauldronBuyOrder(recipe, { premium, ingredientsMax: C.maxIngredients });
+      const r = cauldronBuyOrder(recipe, { premium, reduction, ingredientsMax: C.maxIngredients });
       wpEl.textContent = formatAmount(r.witchPoints);
       document.getElementById("fxCostDia").textContent = r.diamonds;
       document.getElementById("fxCostDiaItem").hidden = !r.diamonds;
       // As in the game: green when the Witch Points are enough, red when not
       const have = parseWp(wpInput.value);
-      costEl.classList.toggle("short", have > 0 && r.witchPoints > have);
-      costEl.classList.toggle("enough", have > 0 && r.witchPoints <= have);
-      costEl.dataset.tipRows = JSON.stringify(
-        r.order.map((s, k) => [
-          `${k + 1}. ${C.ingredientNames[s.ingredient]}${s.premium ? ` (${C.text.premium})` : ""}`,
-          s.premium ? `${s.cost} 💎` : formatAmount(s.cost),
-        ])
-      );
-      if (!r.order.length) delete costEl.dataset.tipRows;
+      costEl.classList.toggle("short", r.witchPoints > have);
+      costEl.classList.toggle("enough", r.witchPoints <= have);
     } catch (e) {
       wpEl.textContent = e.message;
-      delete costEl.dataset.tipRows;
     }
   }
+
+  // Ingredients in the order they were first added (the order the cost assumes)
+  function firstOrder(next) {
+    const order = [...new Set(added)].filter((i) => next[i] > 0);
+    next.forEach((a, i) => {
+      if (a > 0 && !order.includes(i)) order.push(i);
+    });
+    return order;
+  }
+
+  // Why new amounts break the order, or null. Premium ones are left out.
+  // grown: the ingredient being raised, which must be the last one started
+  // (each one's units go in a row) or a new one
+  function orderProblem(next, premium = isPremium, grown = null) {
+    const name = (i) => C.ingredientNames[i];
+    if (grown !== null && !premium(grown)) {
+      const before = firstOrder(amounts).filter((i) => !premium(i));
+      const at = before.indexOf(grown);
+      if (at >= 0 && at < before.length - 1) {
+        return C.text.orderBack.replace("{name}", name(grown)).replace("{later}", name(before[at + 1]));
+      }
+    }
+    const order = firstOrder(next).filter((i) => !premium(i));
+    for (let k = 1; k < order.length; k++) {
+      for (let j = 0; j < k; j++) {
+        const [earlier, later] = [order[j], order[k]];
+        if (next[later] > next[earlier]) {
+          return C.text.orderWhy
+            .replace("{later}", name(later))
+            .replace("{n}", next[later])
+            .replace("{earlier}", name(earlier))
+            .replace("{m}", next[earlier]);
+        }
+      }
+    }
+    return null;
+  }
+
+  // Apply new amounts, or, if they break the order, keep the old ones and say why
+  // changed: the ingredient the change was on, shaken when the window is muted
+  function tryAmounts(next, premium, grown = null, changed = grown) {
+    const problem = orderProblem(next, premium, grown);
+    if (problem) {
+      if (orderNoteMuted()) refuse(changed);
+      else showOrderNote(problem);
+      update();
+      return false;
+    }
+    next.forEach((a, i) => (amounts[i] = a));
+    update();
+    return true;
+  }
+
+  // "No volver a mostrar": remembered in this browser only
+  function orderNoteMuted() {
+    try {
+      return localStorage.getItem(ORDER_MUTE_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // A refused change with the window muted: the ingredient shakes
+  function refuse(i) {
+    if (i === null || i === undefined) return;
+    const jar = jars[i];
+    jar.classList.remove("fx-refused");
+    void jar.offsetWidth; // restart the animation
+    jar.classList.add("fx-refused");
+  }
+
+  // The window: what was not allowed, and the recipe in order
+  function showOrderNote(why) {
+    document.getElementById("fxOrderNoteMute").checked = false;
+    document.getElementById("fxOrderNoteWhy").textContent = why;
+    renderOrderExample();
+    orderNote.hidden = false;
+    document.body.classList.add("avatar-open");
+    document.getElementById("fxOrderNoteOk").focus();
+  }
+
+  // The current recipe in the order it was added (premium ones marked)
+  function renderOrderExample() {
+    document.getElementById("fxOrderExample").replaceChildren(
+      ...firstOrder(amounts).map((i) => {
+        const li = document.createElement("li");
+        const img = document.createElement("img");
+        img.src = `/static/ingredients/ingredient${i + 1}.png`;
+        img.alt = "";
+        const name = document.createElement("span");
+        name.textContent = C.ingredientNames[i] + (isPremium(i) ? " 💎" : "");
+        const n = document.createElement("strong");
+        n.textContent = `× ${amounts[i]}`;
+        li.append(img, name, n);
+        return li;
+      })
+    );
+  }
+
+  // Entendido or the header's X; with the tick box, not shown again
+  orderNote.querySelectorAll("[data-order-ok]").forEach((btn) =>
+    btn.addEventListener("click", () => {
+      orderNote.hidden = true;
+      document.body.classList.remove("avatar-open");
+      if (document.getElementById("fxOrderNoteMute").checked) {
+        try {
+          localStorage.setItem(ORDER_MUTE_KEY, "1");
+        } catch (e) {}
+      }
+    })
+  );
+  jars.forEach((jar) => jar.addEventListener("animationend", () => jar.classList.remove("fx-refused")));
 
   // Witch Points as typed: 175000, 175K, 1.2M (comma or dot decimals)
   function parseWp(text) {
@@ -158,32 +287,60 @@
     return String(n);
   }
 
-  // The Witch Points field: empty instead of 0, so the placeholder shows
-  const formatWp = (n) => (n ? formatAmount(n) : "");
-
-  // Remembered in this browser only; storage may be unavailable
+  // The Witch Points field: remembered in a cookie for a year, 0 without one
+  const WP_COOKIE = "formula_wp";
+  const formatWp = formatAmount;
+  function readWpCookie() {
+    const m = document.cookie.match(new RegExp(`(?:^|; )${WP_COOKIE}=(\\d+)`));
+    return m ? Number(m[1]) : 0;
+  }
+  function saveWpCookie(n) {
+    document.cookie = `${WP_COOKIE}=${n}; path=/; max-age=31536000; SameSite=Lax`;
+  }
+  wpInput.value = formatWp(readWpCookie());
+  // Forget the amount older versions of this page saved in local storage
   try {
-    wpInput.value = formatWp(parseWp(localStorage.getItem(WP_KEY) || ""));
+    localStorage.removeItem("formula.witchPoints");
   } catch (e) {}
+  // Editing shows the full number, selected so typing replaces it
   wpInput.addEventListener("focus", () => {
-    const n = parseWp(wpInput.value);
-    wpInput.value = n ? String(n) : "";
+    wpInput.value = String(parseWp(wpInput.value));
+    wpInput.select();
   });
   wpInput.addEventListener("blur", () => {
     wpInput.value = formatWp(parseWp(wpInput.value));
   });
   wpInput.addEventListener("input", () => {
+    saveWpCookie(parseWp(wpInput.value));
+    update();
+  });
+
+  // Wonder levels: "Sin construir", then "Nivel 1 · −6%" ... "Nivel 35 · −60%"
+  wonderSelect.replaceChildren(
+    ...WONDER_REDUCTION.map((r, level) => {
+      const label = level
+        ? `${C.text.wonderLevel.replace("{n}", level)} · −${+(r * 100).toFixed(1)}%`
+        : C.text.wonderNone;
+      return new Option(label, level);
+    })
+  );
+  try {
+    wonderSelect.value = String(Math.min(Number(localStorage.getItem(WONDER_KEY)) || 0, WONDER_REDUCTION.length - 1));
+  } catch (e) {}
+  wonderSelect.addEventListener("change", () => {
     try {
-      localStorage.setItem(WP_KEY, String(parseWp(wpInput.value)));
+      localStorage.setItem(WONDER_KEY, wonderSelect.value);
     } catch (e) {}
     update();
   });
 
-  // Set an ingredient's amount, keeping the recipe within the cauldron's limit
+  // Set an ingredient's amount, within the cauldron's limit and the order
   function setAmount(i, value) {
     const room = C.maxIngredients - (total() - amount(i));
-    counts[i].value = Math.max(0, Math.min(value, room));
-    update();
+    const next = [...amounts];
+    next[i] = Math.max(0, Math.min(Math.floor(value) || 0, room));
+    if (next[i] !== amounts[i]) tryAmounts(next, undefined, next[i] > amounts[i] ? i : null, i);
+    else update();
   }
 
   jars.forEach((jar, i) => {
@@ -193,11 +350,18 @@
       e.preventDefault();
       setAmount(i, amount(i) - 1);
     });
-    counts[i].addEventListener("input", update);
-    counts[i].addEventListener("change", () => setAmount(i, amount(i)));
+    // Typed amounts are checked as they are typed; an empty box waits
+    counts[i].addEventListener("input", () => {
+      if (counts[i].value !== "") setAmount(i, Number(counts[i].value));
+    });
+    counts[i].addEventListener("change", () => setAmount(i, Number(counts[i].value)));
+    // Premium off brings it back into the order: only if it fits
     jar.querySelector(".fx-premium").addEventListener("click", (e) => {
-      const on = jar.classList.toggle("premium");
-      e.currentTarget.setAttribute("aria-pressed", on);
+      const btn = e.currentTarget;
+      const on = !isPremium(i);
+      if (!on && !tryAmounts([...amounts], (k) => (k === i ? false : isPremium(k)), null, i)) return;
+      jar.classList.toggle("premium", on);
+      btn.setAttribute("aria-pressed", on);
       update();
     });
   });
@@ -223,7 +387,7 @@
   });
 
   document.getElementById("fxEmpty").addEventListener("click", () => {
-    counts.forEach((c) => (c.value = 0));
+    amounts.fill(0);
     update();
   });
 

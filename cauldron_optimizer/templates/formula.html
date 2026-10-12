@@ -28,7 +28,16 @@
       {% endfor %}
     </div>
     <span class="premium-counter-text" id="fxEffectsText"
-          data-text="{{ _('{n} efectos en juego') }}"></span>
+          data-text="{{ _('{n} efectos en juego') }}"
+          data-tip="{{ _("Marca los mismos efectos que tienes marcados en el caldero del juego: los que elegiste entre los que te dan tus diplomas. Solo esos pueden salir, y de ellos dependen las probabilidades.") }}"></span>
+    <!-- Escuela de hechicería valoriana (ancient wonder): its level discounts the Witch Points. Click the
+         picture to pick the level -->
+    <label class="fx-wonder" data-tip="{{ _('Escuela de hechicería valoriana: su nivel rebaja los puntos de hechicería') }}">
+      <img class="fx-wonder-icon" src="{{ url_for('static', filename='ui/cauldron/wonder_school.png') }}" alt="{{ _('Escuela de hechicería valoriana') }}">
+      <span class="fx-wonder-level" id="fxWonderLevel">0</span>
+      <span class="fx-wonder-discount" id="fxWonderDiscount"></span>
+      <select id="fxWonder" class="fx-wonder-select" aria-label="{{ _('Nivel de la Escuela de hechicería valoriana') }}"></select>
+    </label>
   </div>
 
   <section class="cw-window cw-wp">
@@ -40,10 +49,10 @@
     <div class="cw-body">
 
       <!-- Top left, as in the game: the player's Witch Points (editable) -->
-      <label class="cw-wp-plate" data-tip="{{ _('Tus puntos de bruja: el coste se ve en rojo si no te llegan') }}">
+      <label class="cw-wp-plate" data-tip="{{ _('Tus puntos de hechicería: el coste se ve en rojo si no te llegan') }}">
         <img class="cw-wp-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="">
         <input id="fxWp" class="cw-wp-input" type="text" inputmode="decimal" autocomplete="off"
-               placeholder="0" aria-label="{{ _('Tus puntos de bruja') }}">
+               value="0" aria-label="{{ _('Tus puntos de hechicería') }}">
       </label>
 
       <!-- LEFT: ingredient shelves. Click a dome to add one (right click
@@ -106,13 +115,13 @@
         </div>
       </div>
 
-      <!-- Under the tube, as in the game: the recipe's cost. Hover for the
-           cheapest order to add the ingredients -->
-      <div class="cw-costs" id="fxCost" tabindex="0">
+      <!-- Under the tube, as in the game: the recipe's cost -->
+      <div class="cw-costs" id="fxCost" tabindex="0"
+           data-tip="{{ _('Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus ingredientes (y los diamantes de los premium), con el descuento de la maravilla. Supone que los añades de mayor a menor cantidad.') }}">
         <div class="cw-costs-label"><span>{{ _("Costes") }}</span></div>
         <div class="cw-costs-values">
           <span class="cw-costs-item">
-            <img src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="{{ _('Puntos de bruja') }}">
+            <img src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="{{ _('Puntos de hechicería') }}">
             <span id="fxCostWp">0</span>
           </span>
           <span class="cw-costs-item" id="fxCostDiaItem" hidden>
@@ -122,9 +131,49 @@
         </div>
       </div>
 
+
     </div>
   </section>
 
+</div>
+
+<!-- Shown when a change would break the cost's order (an ingredient with more
+     units than one added before it, or more units of one already left
+     behind): the change is not made, and this says why. In the game the order
+     changes the cost, so otherwise it would not match. A game window that only
+     closes by acknowledging it (Entendido, or the header's X, which does the
+     same); the Costes tooltip keeps the information -->
+<div id="fxOrderNote" class="avatar-overlay" hidden>
+  <div class="avatar-window delete-window order-window" role="alertdialog" aria-modal="true"
+       aria-labelledby="fxOrderNoteTitle" aria-describedby="fxOrderNoteText">
+    <div class="avatar-header">
+      <h2 id="fxOrderNoteTitle" class="avatar-title">{{ _("Orden: de mayor a menor cantidad") }}</h2>
+      <button type="button" class="avatar-close" data-order-ok aria-label="{{ _('Entendido') }}"></button>
+    </div>
+    <div class="avatar-body delete-body">
+      <p id="fxOrderNoteWhy" class="delete-text order-why"></p>
+      <p id="fxOrderNoteText" class="delete-text">
+        {{ _("Los ingredientes van de mayor a menor cantidad, en el orden en que los añades: ninguno puede tener más unidades que uno añadido antes (empatar sí), y cada uno se añade de una vez, todas sus unidades seguidas. Es el orden más barato, y así el coste coincide con el del juego, donde el orden cambia el coste.") }}
+      </p>
+      <!-- The recipe as it is, in the order it was added (formula.js) -->
+      <ol class="order-example" id="fxOrderExample"></ol>
+      <!-- Game tick box: if ticked on closing, refused changes only shake the
+           ingredient from then on (remembered in this browser) -->
+      <label class="order-mute">
+        <span class="effect-check">
+          <input type="checkbox" id="fxOrderNoteMute">
+          <img class="effect-check-box" src="{{ url_for('static', filename='checkbox.png') }}" alt="">
+          <img class="effect-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+        </span>
+        <span>{{ _("No volver a mostrar") }}</span>
+      </label>
+      <div class="avatar-actions">
+        <button type="button" id="fxOrderNoteOk" class="avatar-btn avatar-btn-save" data-order-ok>
+          <span>{{ _("Entendido") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -139,7 +188,10 @@
       diamond: {{ url_for('static', filename='ui/diamond.svg') | tojson }},
     },
     text: {
-      premium: {{ _("premium") | tojson }},
+      wonderNone: {{ _("Sin construir") | tojson }},
+      wonderLevel: {{ _("Nivel {n}") | tojson }},
+      orderBack: {{ _("No se pueden añadir más unidades de {name}: después ya añadiste {later}. Cada ingrediente se añade de una vez.") | tojson }},
+      orderWhy: {{ _("{later} no puede tener {n}: sería más que {earlier} ({m}), que se añadió antes.") | tojson }},
     },
   };
 </script>

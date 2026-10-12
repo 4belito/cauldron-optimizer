@@ -24,6 +24,97 @@
   color: var(--game-green-dark);
 }
 
+/* ---- Escuela de hechicería valoriana (wonder): its picture opens the level list (a transparent
+   select over it); the level on a badge, the discount below ---- */
+.fx-wonder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  flex: 0 0 auto;
+  width: 4.2rem;   /* fixed: the tray never moves when the level changes */
+  cursor: pointer;
+}
+
+/* The building on a round parchment plate, like the effect slots */
+.fx-wonder-icon {
+  width: 3.3rem;
+  height: 3.3rem;
+  padding: 0.2rem;
+  object-fit: contain;
+  border: 2px solid var(--game-green-main);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #fffaf0, #ead7ab 70%, #d9c08a);
+  box-shadow:
+    inset 0 -2px 4px rgba(81, 32, 13, 0.25),
+    0 2px 4px rgba(81, 32, 13, 0.35);
+  transition: transform 0.15s, filter 0.15s;
+}
+
+.fx-wonder:hover .fx-wonder-icon,
+.fx-wonder:focus-within .fx-wonder-icon {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -2px 4px rgba(81, 32, 13, 0.25),
+    0 0 0 3px rgba(127, 174, 36, 0.35),
+    0 3px 6px rgba(81, 32, 13, 0.4);
+}
+
+.fx-wonder-level {
+  position: absolute;
+  top: 2.35rem;
+  right: 0.1rem;
+  min-width: 1.4rem;
+  padding: 0 0.3rem;
+  border: 1px solid #1e1007;
+  border-radius: 0.6rem;
+  background: linear-gradient(#7fae24, #4f7a12);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  font-weight: 800;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  text-align: center;
+  color: #fff;
+}
+
+/* Always one line, so nothing moves: the discount, or a dash */
+.fx-wonder-discount {
+  height: 1.1rem;
+  font-weight: 800;
+  font-size: 0.85rem;
+  line-height: 1.1rem;
+  color: var(--game-green-dark);
+}
+
+/* Not built: greyed building, no level badge, a grey dash */
+.fx-wonder.unbuilt .fx-wonder-icon {
+  border-color: #b89a63;
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+.fx-wonder.unbuilt:hover .fx-wonder-icon {
+  opacity: 0.85;
+}
+
+.fx-wonder.unbuilt .fx-wonder-level {
+  visibility: hidden;
+}
+
+.fx-wonder.unbuilt .fx-wonder-discount {
+  color: #9a8a70;
+}
+
+.fx-wonder-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
 /* ---- Ingredients: dome adds one, plate is typed, base toggles premium ---- */
 .cw-wp .fx-dome {
   display: flex;
@@ -237,6 +328,93 @@
   width: 1.6rem;
   height: 1.6rem;
   object-fit: contain;
+}
+
+/* The once-only window on the cost's order: this recipe, largest amount
+   first, as a numbered list of ingredients */
+/* "No volver a mostrar", with the game's tick box */
+.order-mute {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: -0.3rem;
+  font-size: 0.9rem;
+  color: #5a4128;
+  cursor: pointer;
+}
+
+/* A refused change with the window muted: the ingredient shakes */
+.cw-wp .fx-jar.fx-refused {
+  animation: fx-refused 0.4s ease-in-out;
+}
+
+@keyframes fx-refused {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6%); }
+  40%, 80% { transform: translateX(6%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-wp .fx-jar.fx-refused {
+    animation: none;
+    outline: 2px solid #b3261e;
+    outline-offset: 2px;
+  }
+}
+
+.order-why {
+  margin: 0;
+  font-weight: 700;
+  color: #9b1c14;
+}
+
+.order-example {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0.2rem 0 0.9rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: order;
+}
+
+.order-example li {
+  display: grid;
+  grid-template-columns: 1.4rem 2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(184, 154, 99, 0.7);
+  border-radius: 0.35rem;
+  background: rgba(255, 250, 235, 0.55);
+  box-shadow: inset 0 1px 2px rgba(81, 32, 13, 0.18);
+  counter-increment: order;
+  color: #3e2a17;
+}
+
+.order-example li::before {
+  content: counter(order) ".";
+  font-weight: 800;
+  color: #7a5a3a;
+}
+
+.order-example img {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+}
+
+.order-example span {
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.order-example strong {
+  font-variant-numeric: tabular-nums;
 }
 
 /* As in the game: green when the Witch Points are enough, red when not */
