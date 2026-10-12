@@ -117,9 +117,12 @@
     const text = document.getElementById("fxEffectsText");
     text.textContent = text.dataset.text.replace("{n}", effects.length);
 
-    // Chances, highest first
+    // Chances, highest first; effects with no chance left out, as on the results page
     const p = chances(alpha, effects);
-    const order = effects.map((e, k) => [e, p[k]]).sort((a, b) => b[1] - a[1] || a[0] - b[0]);
+    const order = effects
+      .map((e, k) => [e, p[k]])
+      .filter(([, v]) => v > 0)
+      .sort((a, b) => b[1] - a[1] || a[0] - b[0]);
     document.getElementById("fxScroll").replaceChildren(...order.map(([e, v]) => effectRow(e, v)));
 
     // Escuela de hechicería valoriana: its level's discount on every Witch Point price
