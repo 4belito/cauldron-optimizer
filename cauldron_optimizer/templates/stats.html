@@ -84,6 +84,11 @@
       .recipe-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
       table.recipe { width: auto; }
       table.recipe td { border: 1px solid var(--line); width: 2.1rem; text-align: center; }
+
+      .users-wrap { max-height: 420px; overflow: auto; }
+      .users-wrap th { position: sticky; top: 0; background: var(--card); }
+      .users-wrap td { white-space: nowrap; }
+      .muted { color: var(--muted); }
     </style>
   </head>
   <body>
@@ -133,6 +138,39 @@
       </nav>
     </header>
 
+    <h2 class="section">Users</h2>
+    <p class="section-note">
+      Every account, most recently seen first. Country, device and last seen come
+      from page views; language is the account's saved one (else the page's).
+      Views and runs are in the selected period; "all" is all-time runs.
+    </p>
+    <div class="card">
+      {% if users %}
+      <div class="table-wrap users-wrap"><table>
+        <tr><th>Username</th><th>Country</th><th>Language</th><th>Device</th>
+          <th class="num">Worlds</th><th>Active world</th>
+          <th class="num">Views</th><th class="num">Runs</th><th class="num">All</th>
+          <th>First seen</th><th>Last seen</th></tr>
+        {% for u in users %}
+        <tr>
+          <td><strong>{{ u.username }}</strong></td>
+          <td>{{ u.country or "—" }}</td>
+          <td>{{ u.language or "—" }}</td>
+          <td>{{ u.device or "—" }}</td>
+          <td class="num">{{ u.worlds }}</td>
+          <td>{{ u.active_world or "—" }}</td>
+          <td class="num">{{ u.views }}</td>
+          <td class="num">{{ u.runs }}</td>
+          <td class="num muted">{{ u.runs_total }}</td>
+          <td class="muted">{{ u.first_seen.strftime("%Y-%m-%d") if u.first_seen else "—" }}</td>
+          <td>{{ u.last_seen.strftime("%Y-%m-%d %H:%M") if u.last_seen else "never" }}</td>
+        </tr>
+        {% endfor %}
+      </table></div>
+      {% else %}<p class="empty">No accounts yet.</p>{% endif %}
+    </div>
+
+    <h2 class="section">Overview</h2>
     <div class="grid kpis">
       {% for label, value in [
         ("Page views", traffic.views),
@@ -186,7 +224,31 @@
     <div class="grid">
       <div class="card"><h3>Max ingredients</h3>{{ bars(usage.max_ingredients, cls="alt") }}</div>
       <div class="card"><h3>Max effect probability</h3>{{ bars(usage.max_effects, cls="alt") }}</div>
-      <div class="card"><h3>Search depth</h3>{{ bars(usage.search_depth, cls="alt") }}</div>
+      <div class="card span-2">
+        <h3>Search mode</h3>
+        {% if usage.modes %}
+        <div class="table-wrap"><table>
+          <tr><th>Mode</th><th class="num">Runs</th><th class="num">%</th>
+            <th class="num">Avg s</th><th class="num">p95 s</th></tr>
+          {% for m in usage.modes %}
+          <tr><td>{{ m.name }}</td><td class="num">{{ m.runs }}</td>
+            <td class="num">{{ "%.0f" | format(m.pct) }}%</td>
+            <td class="num">{{ "%.1f" | format(m.avg_ms / 1000) }}</td>
+            <td class="num">{{ "%.1f" | format(m.p95_ms / 1000) }}</td></tr>
+          {% endfor %}
+        </table></div>
+        <p class="note">"Not recorded" are runs from before the search mode was logged.</p>
+        {% else %}<p class="empty">No data yet.</p>{% endif %}
+      </div>
+      <div class="card">
+        <h3>Optimal-solution runs</h3>{{ bars(usage.proven_optimum, cls="alt") }}
+        <p class="note">Not proven: the browser search did not finish checking every recipe.</p>
+      </div>
+      <div class="card">
+        <h3>Where the search ran</h3>{{ bars(usage.searched_in, cls="alt") }}
+        <p class="note">Server: the visitor had no JavaScript.</p>
+      </div>
+      <div class="card"><h3>Search depth</h3>{{ bars(usage.search_depth, cls="alt") }}<p class="note">Runs without the optimal-solution option.</p></div>
       <div class="card"><h3>Diplomas (unlocked effects)</h3>{{ bars(usage.n_diplomas, cls="alt") }}</div>
       <div class="card"><h3>Run language</h3>{{ bars(usage.languages, cls="alt") }}</div>
       <div class="card"><h3>Wanted effects per run</h3>{{ bars(usage.n_wanted, cls="alt") }}</div>
@@ -256,14 +318,27 @@
     <h2 class="section">Saved settings (all accounts, now)</h2>
     <p class="section-note">
       Current state of every account, not limited to the selected period.
-      {{ accounts.saved_servers }} servers saved across {{ accounts.users }} accounts.
+      {{ accounts.saved_servers }} worlds saved across {{ accounts.users }} accounts.
     </p>
     <div class="grid">
-      <div class="card"><h3>Servers per account</h3>{{ bars(accounts.n_servers) }}</div>
+      <div class="card"><h3>Worlds per account</h3>{{ bars(accounts.n_servers) }}</div>
+      <div class="card"><h3>Search mode</h3>{{ bars(accounts.saved_exact_search) }}</div>
+      <div class="card"><h3>World names</h3>{{ bars(accounts.named_servers) }}</div>
+      <div class="card"><h3>Avatars</h3>{{ bars(accounts.avatars) }}</div>
       <div class="card"><h3>Account language</h3>{{ bars(accounts.account_languages) }}</div>
       <div class="card"><h3>Max ingredients</h3>{{ bars(accounts.saved_max_ingredients) }}</div>
       <div class="card"><h3>Max effect probability</h3>{{ bars(accounts.saved_max_effects) }}</div>
-      <div class="card"><h3>Search depth</h3>{{ bars(accounts.saved_search_depth) }}</div>
+      <div class="card"><h3>Search depth</h3>{{ bars(accounts.saved_search_depth) }}<p class="note">Worlds without the optimal-solution option.</p></div>
+    </div>
+
+    <h2 class="section">Complete-effects searches (now)</h2>
+    <p class="section-note">
+      Saved progress of the "complete effects" search, one per world:
+      {{ accounts.complement_searches }} saved, {{ accounts.complement_finished }} finished.
+    </p>
+    <div class="grid">
+      <div class="card"><h3>Progress (%)</h3>{{ bars(accounts.complement_progress, cls="alt") }}</div>
+      <div class="card"><h3>Chosen effects per search</h3>{{ bars(accounts.complement_effects, cls="alt") }}</div>
     </div>
   </main>
   </body>

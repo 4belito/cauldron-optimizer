@@ -55,10 +55,11 @@ function makeRangeCard({ labelText, name, iconSrc, min, max, step, value, format
 function makeEffectCheckbox(checked, labelText) {
   const label = document.createElement("label");
   label.className = "effect-check";
-  label.title = labelText;
 
+  // Named for screen readers only: the card shows the name on hover
   const input = document.createElement("input");
   input.type = "checkbox";
+  input.setAttribute("aria-label", labelText);
   input.checked = checked;
 
   const box = document.createElement("img");
@@ -129,6 +130,8 @@ function updateEffectsCounter() {
         // Checked only to reach the minimum (no weight): grey ring
         if (!((globalWeights[checked[k]] ?? 0) > 0)) slot.classList.add("filler");
         slot.style.backgroundImage = `url("/static/effects/effect${checked[k] + 1}.png")`;
+        // Name on hover, as in the ingredients grid
+        slot.dataset.tip = window.OPTIMIZER_CONFIG.effectNames[checked[k]] ?? "";
       } else if (k >= required) {
         slot.classList.add("optional");
       }
@@ -211,6 +214,8 @@ function updatePremiumCounter(chosen) {
     const icon = el && el.closest(".ingredient-check").querySelector(".ingredient-check-icon");
     slot.style.backgroundImage = icon ? `url("${icon.src}")` : "";
     slot.classList.toggle("filled", !!el);
+    if (el) slot.dataset.tip = el.closest(".ingredient-check").dataset.tip;
+    else delete slot.dataset.tip;
   });
   const missing = MAX_PREMIUM_INGREDIENTS - chosen.length;
   counter.classList.toggle("is-complete", missing <= 0);
@@ -324,6 +329,10 @@ function rebuildWeights() {
       value: currentW,
       format: (x) => Number(x).toFixed(2),
     });
+
+    // No name text: it shows on hover, as in the ingredients grid
+    card.querySelector(".weight-label").remove();
+    card.dataset.tip = effectNames[i] ?? "";
 
     const slider = card.querySelector('input[type="range"]');
     // Checkbox to the left of the slider

@@ -180,6 +180,12 @@ class OptimizationRun(Base):
     recipe: Mapped[list[list[int]]] = mapped_column(JSONB, nullable=False)
     score: Mapped[float] = mapped_column(Float, nullable=False)
     duration_ms: Mapped[int] = mapped_column(Integer, nullable=False)
+    # None for runs logged before these were recorded.
+    # "Optimal solution" option on; the recipe is a proven optimum; and
+    # where the search ran ("browser" or "server")
+    exact_search: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    exact: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    searched_in: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class ComplementSearch(Base):

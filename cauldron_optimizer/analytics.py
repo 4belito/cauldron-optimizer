@@ -20,6 +20,7 @@ from cauldron_optimizer import app
 from cauldron_optimizer.constants import EFFECT_NAMES, INGREDIENT_NAMES
 from cauldron_optimizer.database import db_session
 from cauldron_optimizer.db_model import (
+    ComplementSearch,
     OptimizationRun,
     PageView,
     Server,
@@ -100,7 +101,12 @@ def log_page_view(response: Response) -> Response:
 
 
 def log_optimization_run(
-    settings: dict[str, Any], recipe: list[list[int]], score: float, duration_ms: int
+    settings: dict[str, Any],
+    recipe: list[list[int]],
+    score: float,
+    duration_ms: int,
+    exact: bool,
+    searched_in: str,
 ) -> None:
     """Record the settings and result of an optimizer run."""
     try:
@@ -121,6 +127,9 @@ def log_optimization_run(
                     recipe=recipe,
                     score=score,
                     duration_ms=duration_ms,
+                    exact_search=settings["exact"],
+                    exact=exact,
+                    searched_in=searched_in,
                 )
             )
     except Exception:
@@ -267,6 +276,26 @@ def usage_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
     durations = [r.duration_ms for r in runs]
     daily = Counter(r.created_at.date() for r in runs)
 
+    # Search mode, recorded since migration 006 (None before)
+    def mode(run: OptimizationRun) -> str:
+        if run.exact_search is None:
+            return "not recorded"
+        return "optimal solution" if run.exact_search else "search depth"
+
+    modes = []
+    for name, _n, _pct in counted(mode(r) for r in runs):
+        mode_durations = [r.duration_ms for r in runs if mode(r) == name]
+        modes.append(
+            {
+                "name": name,
+                "runs": len(mode_durations),
+                "pct": 100 * len(mode_durations) / n_runs,
+                "avg_ms": sum(mode_durations) / (len(mode_durations) or 1),
+                "p95_ms": percentile(mode_durations, 0.95),
+            }
+        )
+    exact_runs = [r for r in runs if r.exact_search]
+
     return {
         "runs": len(runs),
         "users": len(per_user),
@@ -280,7 +309,13 @@ def usage_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
         "n_diplomas": histogram(r.n_diplomas for r in runs),
         "max_ingredients": histogram(r.max_ingredients for r in runs),
         "max_effects": histogram(r.max_effects for r in runs),
-        "search_depth": histogram(r.search_depth for r in runs),
+        # The depth is not used when the optimal solution is searched
+        "search_depth": histogram(r.search_depth for r in runs if not r.exact_search),
+        "modes": modes,
+        "proven_optimum": counted(
+            "proven optimum" if r.exact else "not proven" for r in exact_runs
+        ),
+        "searched_in": counted(r.searched_in or "not recorded" for r in runs),
         "n_wanted": histogram(sum(w > 0 for w in r.effect_weights) for r in runs),
         "n_excluded": histogram(len(r.excluded_effects) for r in runs),
         "premiums": counted(
@@ -297,6 +332,7 @@ def account_stats(db_sa: Session) -> dict[str, Any]:
     """Snapshot of all accounts and their saved settings (not limited by period)."""
     usernames = dict(db_sa.execute(select(User.id, User.username)).tuples().all())
     servers = db_sa.scalars(select(Server)).all()
+    searches = db_sa.scalars(select(ComplementSearch)).all()
     return {
         "usernames": usernames,
         "users": len(usernames),
@@ -307,8 +343,121 @@ def account_stats(db_sa: Session) -> dict[str, Any]:
         "saved_servers": len(servers),
         "saved_max_ingredients": histogram(s.max_ingredients for s in servers),
         "saved_max_effects": histogram(s.max_effects for s in servers),
-        "saved_search_depth": histogram(s.search_depth for s in servers),
+        "saved_search_depth": histogram(
+            s.search_depth for s in servers if not s.exact_search
+        ),
+        "saved_exact_search": counted(
+            "optimal solution" if s.exact_search else "search depth" for s in servers
+        ),
+        "named_servers": counted(
+            "named" if s.name else "unnamed (old)" for s in servers
+        ),
+        "avatars": counted(
+            (s.avatar or "default").rsplit(".", 1)[0] for s in servers
+        )[:12],
+        # Saved "complete effects" searches, one per world
+        "complement_searches": len(searches),
+        "complement_finished": sum(c.done >= c.total for c in searches),
+        "complement_progress": histogram(
+            min(100, 25 * (4 * c.done // (c.total or 1))) for c in searches
+        ),
+        "complement_effects": histogram(
+            len(c.params.get("effects", [])) for c in searches
+        ),
     }
+
+
+def user_stats(db_sa: Session, since: datetime) -> list[dict[str, Any]]:
+    """One row per account: where they come from and how active they are.
+
+    Country, language and device come from the account's page views (the
+    latest known country and language, the most used device); the account's
+    saved language is preferred when set.
+    """
+    rows: dict[int, dict[str, Any]] = {}
+    for user_id, username, language, n_servers, active in db_sa.execute(
+        select(
+            User.id,
+            User.username,
+            UserSettings.language,
+            UserSettings.n_servers,
+            UserSettings.active_server,
+        ).outerjoin(UserSettings, UserSettings.user_id == User.id)
+    ):
+        rows[user_id] = {
+            "username": username,
+            "language": language,
+            "country": None,
+            "devices": Counter(),
+            "worlds": n_servers or 0,
+            "active_world": active,
+            "first_seen": None,
+            "last_seen": None,
+            "views": 0,
+            "runs": 0,
+            "runs_total": 0,
+        }
+
+    world_names = {
+        (s.username, s.server_number): s.name
+        for s in db_sa.scalars(select(Server))
+    }
+    for row in rows.values():
+        row["active_world"] = world_names.get((row["username"], row["active_world"]))
+
+    page_language: dict[int, str] = {}
+    for user_id, created_at, country, language, device in db_sa.execute(
+        select(
+            PageView.user_id,
+            PageView.created_at,
+            PageView.country,
+            PageView.language,
+            PageView.device,
+        )
+        .where(PageView.user_id.is_not(None), PageView.device != "bot")
+        .order_by(PageView.created_at)
+    ):
+        row = rows.get(user_id)
+        if row is None:
+            continue
+        row["first_seen"] = row["first_seen"] or created_at
+        row["last_seen"] = created_at
+        row["country"] = country or row["country"]
+        if language:
+            page_language[user_id] = language
+        if device:
+            row["devices"][device] += 1
+        if aware(created_at) >= since:
+            row["views"] += 1
+
+    for user_id, created_at in db_sa.execute(
+        select(OptimizationRun.user_id, OptimizationRun.created_at)
+    ):
+        row = rows.get(user_id)
+        if row is None:
+            continue
+        row["runs_total"] += 1
+        if aware(created_at) >= since:
+            row["runs"] += 1
+
+    for user_id, row in rows.items():
+        row["language"] = row["language"] or page_language.get(user_id)
+        row["device"] = (
+            row["devices"].most_common(1)[0][0] if row["devices"] else None
+        )
+
+    # Most recently seen first; never seen at the end
+    epoch = datetime.min.replace(tzinfo=timezone.utc)
+    return sorted(
+        rows.values(),
+        key=lambda r: (aware(r["last_seen"]) if r["last_seen"] else epoch),
+        reverse=True,
+    )
+
+
+def aware(dt: datetime) -> datetime:
+    """SQLite returns naive datetimes; treat them as UTC."""
+    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
 
 
 @app.route("/stats")
@@ -329,4 +478,5 @@ def stats():
             traffic=traffic_stats(db_sa, since),
             usage=usage_stats(db_sa, since),
             accounts=account_stats(db_sa),
+            users=user_stats(db_sa, since),
         )

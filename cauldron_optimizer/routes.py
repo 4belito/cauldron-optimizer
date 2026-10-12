@@ -751,7 +751,14 @@ def optimize():
         duration_ms = round((time.perf_counter() - start) * 1000)
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = float(val_best)
-    log_optimization_run(s, alpha_matrix, score, duration_ms)
+    log_optimization_run(
+        s,
+        alpha_matrix,
+        score,
+        duration_ms,
+        exact=exact,
+        searched_in="browser" if browser is not None else "server",
+    )
     out_effects = opt.effect_probabilities(alpha_best)
     order = sorted(range(len(out_effects)), key=lambda i: (-out_effects[i], i))
 

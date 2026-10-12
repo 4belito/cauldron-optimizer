@@ -833,8 +833,8 @@ msgid "Aplicar"
 msgstr "Apply"
 
 #: cauldron_optimizer/templates/index.html:418
-msgid "Solución óptima"
-msgstr "Optimal solution"
+msgid "Receta óptima"
+msgstr "Optimal recipe"
 
 #: cauldron_optimizer/templates/index.html:421
 msgid "Comprobando todas las recetas posibles…"
