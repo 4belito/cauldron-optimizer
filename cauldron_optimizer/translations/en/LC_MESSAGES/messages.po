@@ -441,8 +441,8 @@ msgid "Mundos"
 msgstr "Worlds"
 
 #: cauldron_optimizer/templates/formula.html:4
-msgid "Fórmula"
-msgstr "Formula"
+msgid "Receta manual"
+msgstr "Manual recipe"
 
 #: cauldron_optimizer/templates/formula.html:13
 msgid "Diplomas:"
