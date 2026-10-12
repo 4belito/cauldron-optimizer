@@ -110,8 +110,8 @@
           {% if session.get("user_id") %}
           {# Manual mode: the formula page, to try a recipe and its cost by hand #}
           <li class="nav-item">
-            <a class="nav-link {{ 'active' if request.endpoint == 'formula' }}" href="{{ url_for('formula') }}"
-              {% if request.endpoint == 'formula' %}aria-current="page"{% endif %}>{{ _("Modo manual") }}</a>
+            <a class="nav-link {{ 'active' if request.endpoint == 'manual' }}" href="{{ url_for('manual') }}"
+              {% if request.endpoint == 'manual' %}aria-current="page"{% endif %}>{{ _("Modo manual") }}</a>
           </li>
           {% endif %}
           <li class="nav-item">

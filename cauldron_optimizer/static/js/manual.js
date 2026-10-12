@@ -1,4 +1,4 @@
-// Formula test bench (formula.html): pick the effects in play, the recipe and
+// Manual recipe test bench (manual.html): pick the effects in play, the recipe and
 // the premium ingredients, and see the effect chances and the cost live.
 //
 // Chances, as CauldronOptimizer.effect_probabilities (optimizer.py), over the
@@ -28,7 +28,9 @@
   const orderNote = document.getElementById("fxOrderNote");
   const ORDER_MUTE_KEY = "formula.orderNoteMuted";
   const wonderSelect = document.getElementById("fxWonder");
-  const WONDER_KEY = "formula.wonderLevel";
+  const WONDER_LEVEL_KEY = "formula.wonderLevel";
+  const WONDER_DISCOUNT_KEY = "formula.wonderDiscount";
+  const EFFECTS_KEY = "manual.selectedEffects";
 
   // The accepted amounts; the plates show them, a typed value is checked first
   const amounts = counts.map(() => 0);
@@ -116,6 +118,9 @@
     allBox.indeterminate = effects.length > 0 && !allBox.checked;
     const text = document.getElementById("fxEffectsText");
     text.textContent = text.dataset.text.replace("{n}", effects.length);
+    try {
+      localStorage.setItem(EFFECTS_KEY, JSON.stringify(effects));
+    } catch (e) {}
 
     // Chances, highest first; effects with no chance left out, as on the results page
     const p = chances(alpha, effects);
@@ -327,12 +332,27 @@
       return new Option(label, level);
     })
   );
-  try {
-    wonderSelect.value = String(Math.min(Number(localStorage.getItem(WONDER_KEY)) || 0, WONDER_REDUCTION.length - 1));
-  } catch (e) {}
-  wonderSelect.addEventListener("change", () => {
+  function readWonderCache() {
     try {
-      localStorage.setItem(WONDER_KEY, wonderSelect.value);
+      const level = Number(localStorage.getItem(WONDER_LEVEL_KEY)) || 0;
+      const discount = Number(localStorage.getItem(WONDER_DISCOUNT_KEY)) || 0;
+      return {
+        level: Math.min(Math.max(level, 0), WONDER_REDUCTION.length - 1),
+        discount: Math.max(0, Math.min(discount, 1)),
+      };
+    } catch (e) {
+      return { level: 0, discount: 0 };
+    }
+  }
+
+  const savedWonder = readWonderCache();
+  wonderSelect.value = String(savedWonder.level);
+  wonderSelect.addEventListener("change", () => {
+    const level = Number(wonderSelect.value) || 0;
+    const reduction = WONDER_REDUCTION[level] ?? 0;
+    try {
+      localStorage.setItem(WONDER_LEVEL_KEY, String(level));
+      localStorage.setItem(WONDER_DISCOUNT_KEY, String(reduction));
     } catch (e) {}
     update();
   });
@@ -368,6 +388,29 @@
       update();
     });
   });
+
+  function readSelectedEffects() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(EFFECTS_KEY) || "[]");
+      if (!Array.isArray(raw)) return null;
+      const cleaned = [...new Set(raw.map(Number).filter((n) => Number.isInteger(n) && n >= 0 && n < effectBtns.length))];
+      return cleaned.length ? cleaned : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function applySelectedEffects(ids) {
+    const selected = new Set(ids);
+    effectBtns.forEach((btn) => {
+      const isFilled = selected.has(Number(btn.dataset.effect));
+      btn.classList.toggle("filled", isFilled);
+      btn.setAttribute("aria-pressed", String(isFilled));
+    });
+  }
+
+  const savedEffects = readSelectedEffects();
+  if (savedEffects) applySelectedEffects(savedEffects);
 
   effectBtns.forEach((btn) =>
     btn.addEventListener("click", () => {

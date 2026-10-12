@@ -826,13 +826,13 @@ def contact():
     return render_template("contact.html")
 
 
-# Formula test bench: recipe, premiums and effects in play are picked in the
-# page, which computes the chances and the cost itself (static/js/formula.js)
-@app.route("/formula")
+# Manual recipe test bench: recipe, premiums and effects in play are picked in
+# the page, which computes the chances and the cost itself (static/js/formula.js)
+@app.route("/manual")
 @login_required
-def formula():
+def manual():
     return render_template(
-        "formula.html",
+        "manual.html",
         effect_names=EFFECT_NAMES,
         ingredient_names=INGREDIENT_NAMES,
         max_ingredients=CauldronOptimizer.sum_ingredients,
@@ -841,3 +841,9 @@ def formula():
             "V": CauldronOptimizer.V_full.tolist(),
         },
     )
+
+
+@app.route("/formula")
+@login_required
+def formula():
+    return redirect(url_for("manual"))

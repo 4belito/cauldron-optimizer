@@ -7,8 +7,8 @@
 {% block main %}
 <div class="optimizer formula-page">
 
-  {# Formula test bench: the results page's cauldron window, but editable.
-     Everything is computed live in the browser (static/js/formula.js) #}
+  {# Manual recipe test bench: the results page's cauldron window, but editable.
+     Everything is computed live in the browser (static/js/manual.js) #}
 
   <!-- Effects to consider: click an icon to add it to or remove it from the
        effects the cauldron can brew -->
@@ -196,7 +196,7 @@
   };
 </script>
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/formula.js') }}"></script>
+<script src="{{ url_for('static', filename='js/manual.js') }}"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 {% endblock %}
