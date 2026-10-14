@@ -1,6 +1,6 @@
 import json
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
@@ -558,7 +558,7 @@ def save_settings():
             server.max_effects = s["prob_ub"]
             server.search_depth = s["n_starts"]
             server.exact_search = s["exact"]
-            server.updated_at = datetime.now(timezone.utc)
+            server.updated_at = datetime.now(UTC)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
 
@@ -666,7 +666,7 @@ def complement_save():
             saved.state = state
             saved.done = done
             saved.total = total
-            saved.updated_at = datetime.now(timezone.utc)
+            saved.updated_at = datetime.now(UTC)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
     return {"ok": True}

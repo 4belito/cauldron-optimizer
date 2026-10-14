@@ -6,7 +6,7 @@ import secrets
 import time
 from collections import Counter
 from collections.abc import Iterable, Sequence
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from urllib.parse import urlparse
 
@@ -352,9 +352,9 @@ def account_stats(db_sa: Session) -> dict[str, Any]:
         "named_servers": counted(
             "named" if s.name else "unnamed (old)" for s in servers
         ),
-        "avatars": counted(
-            (s.avatar or "default").rsplit(".", 1)[0] for s in servers
-        )[:12],
+        "avatars": counted((s.avatar or "default").rsplit(".", 1)[0] for s in servers)[
+            :12
+        ],
         # Saved "complete effects" searches, one per world
         "complement_searches": len(searches),
         "complement_finished": sum(c.done >= c.total for c in searches),
@@ -399,8 +399,7 @@ def user_stats(db_sa: Session, since: datetime) -> list[dict[str, Any]]:
         }
 
     world_names = {
-        (s.username, s.server_number): s.name
-        for s in db_sa.scalars(select(Server))
+        (s.username, s.server_number): s.name for s in db_sa.scalars(select(Server))
     }
     for row in rows.values():
         row["active_world"] = world_names.get((row["username"], row["active_world"]))
@@ -417,9 +416,9 @@ def user_stats(db_sa: Session, since: datetime) -> list[dict[str, Any]]:
         .where(PageView.user_id.is_not(None), PageView.device != "bot")
         .order_by(PageView.created_at)
     ):
-        row = rows.get(user_id)
-        if row is None:
+        if user_id not in rows:
             continue
+        row = rows[user_id]
         row["first_seen"] = row["first_seen"] or created_at
         row["last_seen"] = created_at
         row["country"] = country or row["country"]
@@ -433,31 +432,29 @@ def user_stats(db_sa: Session, since: datetime) -> list[dict[str, Any]]:
     for user_id, created_at in db_sa.execute(
         select(OptimizationRun.user_id, OptimizationRun.created_at)
     ):
-        row = rows.get(user_id)
-        if row is None:
+        if user_id not in rows:
             continue
+        row = rows[user_id]
         row["runs_total"] += 1
         if aware(created_at) >= since:
             row["runs"] += 1
 
     for user_id, row in rows.items():
         row["language"] = row["language"] or page_language.get(user_id)
-        row["device"] = (
-            row["devices"].most_common(1)[0][0] if row["devices"] else None
-        )
+        row["device"] = row["devices"].most_common(1)[0][0] if row["devices"] else None
 
     # Most recently seen first; never seen at the end
-    epoch = datetime.min.replace(tzinfo=timezone.utc)
+    epoch = datetime.min.replace(tzinfo=UTC)
     return sorted(
         rows.values(),
-        key=lambda r: (aware(r["last_seen"]) if r["last_seen"] else epoch),
+        key=lambda r: aware(r["last_seen"]) if r["last_seen"] else epoch,
         reverse=True,
     )
 
 
 def aware(dt: datetime) -> datetime:
     """SQLite returns naive datetimes; treat them as UTC."""
-    return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+    return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
 
 
 @app.route("/stats")
@@ -468,7 +465,7 @@ def stats():
     days = request.args.get("days", 30, type=int)
     if days not in STATS_PERIODS:
         days = 30
-    since = datetime.now(timezone.utc) - timedelta(days=days)
+    since = datetime.now(UTC) - timedelta(days=days)
 
     with db_session() as db_sa:
         return render_template(
