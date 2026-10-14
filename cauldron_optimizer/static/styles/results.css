@@ -1014,8 +1014,11 @@
 /* Wide screens: the recipe's cost on the art's scroll under the tube, and
    the cauldron raised above it */
 @media (min-width: 48rem) {
+  /* Centered in the tube (47.7% to 63.8% of the art), feet in the flames
+     just above the Costes scroll (86.6%) */
   .cw-results .cw-cauldron {
-    top: 61%;
+    left: 47.65%;
+    top: 64.8%;
   }
 
   /* Inside the art's paper (68.4% to 96.2%), so the rows never reach the frame */
