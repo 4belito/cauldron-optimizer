@@ -40,6 +40,7 @@ function initBrowserSearch() {
     });
     const premiumIngr = [...form.querySelectorAll("input[name='premium_ingredients[]']:checked")]
       .map((el) => Number(el.value));
+    const wpMax = Number(form.querySelector("input[name='wp_max']").value);
     return {
       effects,
       weights: activeWeights,
@@ -47,6 +48,8 @@ function initBrowserSearch() {
       alphaUB: val("alpha_UB"),
       probUB: val("prob_UB"),
       depth: val("n_starts"),
+      wpMax: wpMax > 0 ? wpMax : null, // empty: no limit
+      wonderLevel: val("wonder_level"),
     };
   }
 

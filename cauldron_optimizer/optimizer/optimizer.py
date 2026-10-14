@@ -1,4 +1,5 @@
-from collections.abc import Sequence
+import math
+from collections.abc import Iterable, Sequence
 from pathlib import Path
 
 import numpy as np
@@ -7,6 +8,74 @@ from numpy.typing import ArrayLike
 BASE_DIR = Path(__file__).resolve().parent
 B = np.loadtxt(BASE_DIR / "B_values.csv", delimiter=",", skiprows=1)
 V = np.loadtxt(BASE_DIR / "V_values.csv", delimiter=",", skiprows=1)
+
+# Witch Point prices, as in static/js/cauldron-order.js (the game's
+# CauldronController.getBrewingCostFormula): an ingredient added as the
+# rank-th one, being its amount-th copy, costs
+#   round(50 * 1.1^(rank-1) * 1.4^(amount-1))
+# times (1 - wonder reduction), rounded down
+WP_BASIC_COST = 50
+WP_FACTOR_ALL = 1.1
+WP_FACTOR_SAME = 1.4
+# Witch Point reduction of the Escuela de hechicería valoriana wonder by level
+# (same table as WONDER_REDUCTION in cauldron-order.js); index 0 = not built
+WONDER_REDUCTION = [
+    0, 0.06, 0.09, 0.12, 0.15, 0.18, 0.22, 0.24, 0.26, 0.28, 0.3, 0.34, 0.36,
+    0.38, 0.4, 0.42, 0.45, 0.46, 0.47, 0.48, 0.49, 0.5, 0.505, 0.51, 0.515,
+    0.52, 0.53, 0.535, 0.54, 0.545, 0.55, 0.56, 0.565, 0.57, 0.575, 0.6,
+]  # fmt: skip
+
+
+def wp_price(rank: int, amount: int, reduction: float = 0.0) -> int:
+    """Price of one ingredient added as the rank-th one, its amount-th copy."""
+    price = math.floor(
+        WP_BASIC_COST * WP_FACTOR_ALL ** (rank - 1) * WP_FACTOR_SAME ** (amount - 1)
+        + 0.5
+    )
+    # The epsilon keeps e.g. 50 * 0.4 from flooring to 19
+    return math.floor(price * (1 - reduction) + 1e-9) if reduction else price
+
+
+def wp_block_table(size: int, reduction: float = 0.0) -> list[list[int]]:
+    """block[r][n]: price of n copies of one ingredient added right after r others."""
+    return [
+        [
+            sum(wp_price(r + a + 1, a + 1, reduction) for a in range(n))
+            for n in range(size - r + 1)
+        ]
+        for r in range(size + 1)
+    ]
+
+
+def recipe_witch_points(counts: Iterable[int], block: list[list[int]]) -> int:
+    """Witch Points of a recipe bought in the cheapest order.
+
+    The cheapest order adds whole ingredients one after the other, the most
+    used first (checked against the exact search in cauldron-order.js), so
+    the cost only depends on the sorted amounts.
+    """
+    cost = 0
+    rank = 0
+    for n in sorted((int(c) for c in counts if c > 0), reverse=True):
+        cost += block[rank][n]
+        rank += n
+    return cost
+
+
+def ingredient_witch_points(counts: Sequence[int], block: list[list[int]]) -> list[int]:
+    """Witch Points of each ingredient (all its units) in the cheapest order.
+
+    Ties go in ingredient order; they add up to recipe_witch_points either way.
+    """
+    costs = [0] * len(counts)
+    rank = 0
+    for j in sorted(range(len(counts)), key=lambda j: -counts[j]):
+        n = int(counts[j])
+        if n <= 0:
+            break
+        costs[j] = block[rank][n]
+        rank += n
+    return costs
 
 
 class CauldronOptimizer:
@@ -22,6 +91,8 @@ class CauldronOptimizer:
         excluded_effects: Sequence[int] = (),
         alpha_UB: int | None = None,
         prob_UB: int = 100,
+        wp_max: int | None = None,
+        wonder_level: int = 0,
         cache_max_size: int = 1_000_000,
     ):
         effect_weights = np.asarray(effect_weights, dtype=float)
@@ -55,6 +126,12 @@ class CauldronOptimizer:
         # alpha upper bounds (reduced)
         self.alpha_UB = np.full(self.n_freeingr, int(alpha_UB), dtype=int)
         self.prob_UB = np.full(self.n_dipl, float(prob_UB), dtype=float)
+        # Witch Points the recipe may cost (None: no limit), with the wonder's
+        # discount of that level
+        self.wp_max = wp_max
+        self._wp_block = wp_block_table(
+            self.sum_ingredients, WONDER_REDUCTION[wonder_level]
+        )
 
         # objective cache
         self._obj_cache: dict[tuple[int, ...], float] = {}
@@ -79,6 +156,10 @@ class CauldronOptimizer:
                 break
             j = np.random.choice(candidates)
             alpha[j] -= 1
+        # over the Witch Point limit: drop units of the most used ingredient
+        # (saves the most)
+        while not self._wp_ok(alpha):
+            alpha[int(np.argmax(alpha))] -= 1
 
         # ---- initialize state (Sv, Sb, total) ----
         total = alpha.sum()
@@ -99,6 +180,8 @@ class CauldronOptimizer:
             if total < self.sum_ingredients:
                 for j in range(n_ingr):
                     if alpha[j] >= self.alpha_UB[j]:
+                        continue
+                    if not self._wp_ok_after(alpha, None, j):
                         continue
 
                     Sv_n = Sv + self.V[:, j]
@@ -124,6 +207,8 @@ class CauldronOptimizer:
                             if j == k:
                                 continue
                             if alpha[j] >= self.alpha_UB[j]:
+                                continue
+                            if not self._wp_ok_after(alpha, k, j):
                                 continue
 
                             Sv_n = Sv_minus + self.V[:, j]
@@ -236,6 +321,23 @@ class CauldronOptimizer:
         alpha = alpha_full[self.free_idx]
         return self._effect_probabilities(alpha)
 
+    def witch_points(self, alpha_full: Iterable[int]) -> int:
+        """Witch Points of a recipe (any length), bought in the cheapest order."""
+        return recipe_witch_points(alpha_full, self._wp_block)
+
+    def _wp_ok(self, alpha: np.ndarray) -> bool:
+        return self.wp_max is None or self.witch_points(alpha) <= self.wp_max
+
+    def _wp_ok_after(self, alpha: np.ndarray, k: int | None, j: int) -> bool:
+        """Within the Witch Point limit after moving a unit k -> j (k None: add one)."""
+        if self.wp_max is None:
+            return True
+        counts = alpha.tolist()
+        if k is not None:
+            counts[k] -= 1
+        counts[j] += 1
+        return self.witch_points(counts) <= self.wp_max
+
     # ------------------ caching helpers ------------------
 
     def _key(self, alpha: np.ndarray) -> tuple[int, ...]:
@@ -299,6 +401,7 @@ class CauldronOptimizer:
             (alpha < 0).any()
             or (alpha > self.alpha_UB + 1e-9).any()
             or s > self.sum_ingredients
+            or not self._wp_ok(alpha)
         ):
             val = -1e12
             self._cache_put(key, val)

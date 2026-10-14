@@ -33,7 +33,12 @@ from cauldron_optimizer.helpers import (
     is_avatar,
     login_required,
 )
-from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
+from cauldron_optimizer.optimizer.optimizer import (
+    WONDER_REDUCTION,
+    CauldronOptimizer,
+    ingredient_witch_points,
+    wp_block_table,
+)
 
 if TYPE_CHECKING:
     from flask import Response
@@ -90,6 +95,8 @@ def index():
         form.prob_UB.data = int(settings.max_effects)
         form.n_starts.data = int(settings.search_depth)
         form.exact_search.data = bool(settings.exact_search)
+        form.wp_max.data = settings.max_witch_points
+        form.wonder_level.data = settings.wonder_level
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
         form.excluded_effects_json.data = json.dumps(settings.excluded_effects or [])
         form.language.data = session.get("lang", "es")
@@ -103,6 +110,8 @@ def index():
             form.prob_UB.data = last["prob_ub"]
             form.n_starts.data = last["n_starts"]
             form.exact_search.data = last["exact"]
+            form.wp_max.data = last.get("wp_max")
+            form.wonder_level.data = last.get("wonder_level", settings.wonder_level)
             form.effect_weights_json.data = json.dumps(last["effect_weights"])
             form.excluded_effects_json.data = json.dumps(last["excluded_effects"])
             unsaved = True
@@ -232,6 +241,8 @@ def add_server():
                 max_effects=current.max_effects,
                 search_depth=current.search_depth,
                 exact_search=current.exact_search,
+                max_witch_points=current.max_witch_points,
+                wonder_level=current.wonder_level,
             )
             servers.append(server)
             account.active_server = server.server_number
@@ -366,6 +377,8 @@ def select_world_integration():
                     max_effects=current.max_effects,
                     search_depth=current.search_depth,
                     exact_search=current.exact_search,
+                    max_witch_points=current.max_witch_points,
+                    wonder_level=current.wonder_level,
                 )
                 servers.append(target)
                 account.n_servers = len(servers)
@@ -534,6 +547,9 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         "prob_ub": int(form.prob_UB.data or 0),
         "n_starts": int(form.n_starts.data or 0),
         "exact": bool(form.exact_search.data),
+        # None: no Witch Point limit
+        "wp_max": form.wp_max.data,
+        "wonder_level": int(form.wonder_level.data or 0),
         "language": form.language.data,
     }
 
@@ -558,6 +574,8 @@ def save_settings():
             server.max_effects = s["prob_ub"]
             server.search_depth = s["n_starts"]
             server.exact_search = s["exact"]
+            server.max_witch_points = s["wp_max"]
+            server.wonder_level = s["wonder_level"]
             server.updated_at = datetime.now(UTC)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
@@ -600,6 +618,9 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         "alpha_ub": int(p["alpha_ub"]),
         "prob_ub": int(p["prob_ub"]),
         "depth": int(p["depth"]),
+        # Searches saved before the Witch Point limit have neither: no limit
+        "wp_max": None if p.get("wp_max") is None else int(p["wp_max"]),
+        "wonder_level": int(p.get("wonder_level") or 0),
     }
     ok = (
         MIN_CHECKED_EFFECTS <= n <= len(EFFECT_NAMES)
@@ -611,6 +632,8 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         and 1 <= params["alpha_ub"] <= CauldronOptimizer.sum_ingredients
         and 1 <= params["prob_ub"] <= 100
         and 1 <= params["depth"] <= MAX_STARTS
+        and (params["wp_max"] is None or params["wp_max"] >= 1)
+        and 0 <= params["wonder_level"] < len(WONDER_REDUCTION)
     )
     if not ok:
         raise ValueError
@@ -705,6 +728,7 @@ def browser_recipe(
         and all(0 <= x <= s["alpha_ub"] for x in recipe)
         and 0 < sum(recipe) <= CauldronOptimizer.sum_ingredients
         and all(recipe[j] == 0 for j in s["premium_ingr"])
+        and (s["wp_max"] is None or opt.witch_points(recipe) <= s["wp_max"])
     )
     if not ok:
         return None
@@ -733,6 +757,8 @@ def optimize():
         excluded_effects=s["excluded_effects"],
         alpha_UB=s["alpha_ub"],
         prob_UB=s["prob_ub"],
+        wp_max=s["wp_max"],
+        wonder_level=s["wonder_level"],
     )
 
     # The browser normally searches (static/js/search.js) and sends its recipe;
@@ -784,6 +810,8 @@ def optimize():
         "exact": exact,
         # Kept with the recipe: the form's selection can be reset meanwhile
         "premiums": premium_ingr,
+        # The school's level the costs are priced with
+        "wonder_level": s["wonder_level"],
     }
     session["premium_ingredients"] = premium_ingr
     # The settings of this search, shown again when going back to the form
@@ -797,9 +825,22 @@ def optimize():
             "prob_ub": s["prob_ub"],
             "n_starts": n_starts,
             "exact": s["exact"],
+            "wp_max": s["wp_max"],
+            "wonder_level": s["wonder_level"],
         }
 
     return redirect(url_for("results"))
+
+
+@app.template_filter("amount")
+def format_amount(n: int) -> str:
+    """As the game shows amounts: up to 4 digits as they are, then 175K, 1.2M
+    (same as formatWitchPoints in cauldron-order.js)."""
+    if n >= 1_000_000:
+        return f"{round(n / 1_000_000, 1):g}M"
+    if n >= 10_000:
+        return f"{n // 1000}K"
+    return str(n)
 
 
 @app.route("/results")
@@ -810,8 +851,22 @@ def results():
     if not last_results:
         return redirect(url_for("index"))
 
+    # Witch Points of each ingredient and in all, bought in the cheapest order
+    # with the school's discount of the search (results from before it: none)
+    wonder_level = int(last_results.get("wonder_level", 0))
+    block = wp_block_table(
+        CauldronOptimizer.sum_ingredients, WONDER_REDUCTION[wonder_level]
+    )
+    ingredient_wp = ingredient_witch_points(
+        [x for row in last_results["alpha_matrix"] for x in row], block
+    )
+
     return render_template(
         "results.html",
+        ingredient_wp=ingredient_wp,
+        recipe_wp=sum(ingredient_wp),
+        wonder_level=wonder_level,
+        wonder_discount=WONDER_REDUCTION[wonder_level],
         alpha_matrix=last_results["alpha_matrix"],
         effects=last_results["effects"],
         score=last_results["score"],

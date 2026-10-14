@@ -280,6 +280,121 @@ function initExactSearch() {
   update();
 }
 
+// Witch Point limit (first row of "Limitar Búsqueda"): a log-scale slider
+// from the price of one ingredient to that of 25 units of one ingredient (the
+// most any recipe costs: there it means no limit), or an exact number typed
+// in the box (12000, 12K, 1.2M). The hidden wp_max field gets the limit
+// (empty: none), and wonder_level the level of the Escuela de hechicería
+// valoriana, shared with "Receta manual" (its discount changes every price)
+const WONDER_LEVEL_KEY = "formula.wonderLevel";
+const WONDER_DISCOUNT_KEY = "formula.wonderDiscount";
+const WP_STEPS = 1000; // slider positions
+
+function initWitchPointLimit() {
+  const text = document.getElementById("wpMaxText");
+  const range = document.getElementById("wpMaxRange");
+  const hidden = document.getElementById("wpMax");
+  const levelInput = document.getElementById("wonderLevel");
+  const select = document.getElementById("wpWonder");
+  if (!text || !range || !hidden || !levelInput || !select) return;
+
+  // The world's saved level (empty: never saved), else the browser's last
+  // choice; "Receta manual" then shows the same
+  const saveLevel = () => {
+    try {
+      localStorage.setItem(WONDER_LEVEL_KEY, String(level));
+      localStorage.setItem(WONDER_DISCOUNT_KEY, String(WONDER_REDUCTION[level]));
+    } catch (e) {}
+  };
+  let level = Number(levelInput.value);
+  if (levelInput.value === "") {
+    try {
+      level = Number(localStorage.getItem(WONDER_LEVEL_KEY)) || 0;
+    } catch (e) {}
+  }
+  level = Math.min(Math.max(Math.trunc(level) || 0, 0), WONDER_REDUCTION.length - 1);
+  saveLevel();
+
+  // Cheapest single ingredient and dearest recipe at the current level
+  const bounds = () => {
+    const reduction = WONDER_REDUCTION[level];
+    return {
+      min: cauldronPrice(1, 1, { reduction }),
+      max: cauldronBuyOrder({ one: 25 }, { reduction }).witchPoints,
+    };
+  };
+  const limit = () => Number(hidden.value) || Infinity;
+  const toPos = (v, { min, max }) =>
+    Math.round((WP_STEPS * Math.log(Math.max(v, min) / min)) / Math.log(max / min));
+  // Slider values: 2 significant digits (3400, not 3437); the ends exact
+  const fromPos = (pos, { min, max }) => {
+    if (pos <= 0) return min;
+    if (pos >= WP_STEPS) return max;
+    const v = min * (max / min) ** (pos / WP_STEPS);
+    const unit = 10 ** Math.max(0, Math.floor(Math.log10(v)) - 1);
+    return Math.round(v / unit) * unit;
+  };
+
+  // The box shows the short form (12K) except while it is being typed in
+  function render() {
+    const b = bounds();
+    const v = Math.min(limit(), b.max);
+    range.value = String(toPos(v, b));
+    setRangeFill(range);
+    if (document.activeElement !== text) text.value = formatWitchPoints(v);
+  }
+  // From the price of one ingredient up; the maximum or more: no limit
+  function setLimit(v) {
+    const b = bounds();
+    hidden.value = v >= b.max ? "" : String(Math.max(b.min, Math.round(v)));
+    render();
+  }
+
+  range.addEventListener("input", () => setLimit(fromPos(Number(range.value), bounds())));
+  text.addEventListener("input", () => {
+    const n = parseWitchPoints(text.value);
+    if (n > 0) setLimit(n);
+  });
+  text.addEventListener("focus", () => {
+    text.value = String(Math.min(limit(), bounds().max));
+    text.select();
+  });
+  text.addEventListener("blur", render);
+  text.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // not a search
+      text.blur();
+    }
+  });
+  hidden.addEventListener("change", render); // set by code (applyComplementParams)
+
+  // The school, as in "Receta manual": the picture opens the level list
+  select.replaceChildren(
+    ...WONDER_REDUCTION.map((r, n) => new Option(
+      n ? `${select.dataset.level.replace("{n}", n)} · −${+(r * 100).toFixed(1)}%` : select.dataset.none,
+      n
+    ))
+  );
+  function showLevel() {
+    const reduction = WONDER_REDUCTION[level];
+    select.value = String(level);
+    levelInput.value = String(level);
+    select.closest(".fx-wonder").classList.toggle("unbuilt", !level);
+    document.getElementById("wpWonderLevel").textContent = level;
+    document.getElementById("wpWonderDiscount").textContent =
+      reduction ? `−${+(reduction * 100).toFixed(1)}%` : "—";
+  }
+  select.addEventListener("change", () => {
+    level = Number(select.value) || 0;
+    saveLevel();
+    showLevel();
+    setLimit(limit()); // above the new maximum: no limit
+  });
+
+  showLevel();
+  setLimit(limit());
+}
+
 // Store current weights globally to preserve them across rebuilds
 let globalWeights = [];
 // Store effect checkbox states (all checked by default)
@@ -432,6 +547,10 @@ window.cauldronForm = {
         el.dispatchEvent(new Event("input", { bubbles: true }));
       }
     );
+    // Searches saved before the Witch Point limit have none
+    const wp = document.getElementById("wpMax");
+    wp.value = p.wp_max ? String(p.wp_max) : "";
+    wp.dispatchEvent(new Event("change", { bubbles: true }));
     rebuildWeights();
     // Keeps the -/+ buttons in step with the new count
     dom.nDiploma.dispatchEvent(new Event("input"));
@@ -620,6 +739,7 @@ function initOptimizer() {
     dom.boundsContainer.append(card);
   });
   initExactSearch();
+  initWitchPointLimit();
   initEffectsAll();
 
   rebuildWeights();

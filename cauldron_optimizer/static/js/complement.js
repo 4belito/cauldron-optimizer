@@ -75,6 +75,8 @@ function initComplement() {
       alpha_ub: val("alpha_UB"),
       prob_ub: val("prob_UB"),
       depth: val("n_starts"),
+      wp_max: val("wp_max") || null, // empty: no limit
+      wonder_level: val("wonder_level"),
     };
   }
 
@@ -156,6 +158,8 @@ function initComplement() {
   const sameParams = (a, b) => {
     const key = (p) => JSON.stringify([
       p.n, p.effects, p.weights.map((w) => Math.round(w * 100)), p.alpha_ub, p.prob_ub, p.depth,
+      // Searches saved before the Witch Point limit have none
+      p.wp_max ?? null, p.wp_max ? p.wonder_level ?? 0 : 0,
     ]);
     return key(a) === key(b);
   };

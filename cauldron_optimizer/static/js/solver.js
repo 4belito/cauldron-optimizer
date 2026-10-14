@@ -4,6 +4,10 @@
 // p_i = min(20 * E_i / sum(E) * sqrt(sum(alpha)), probUB), score = sum(w_i * p_i).
 // Excluded effects (V row zeroed in Python) add nothing to E or to the score, so
 // here they are simply left out: only the active effect rows are kept.
+// Optional Witch Point limit (wpMax): the recipe, bought in the cheapest order
+// (cauldron-order.js, with the wonder's discount of wonderLevel), may cost at
+// most wpMax. That order adds whole ingredients, the most used first, so the
+// cost only depends on the sorted amounts.
 
 /* exported CauldronSolver */
 const SUM_INGREDIENTS = 25;
@@ -11,11 +15,21 @@ const SUM_INGREDIENTS = 25;
 // of the budget on random starts, and units moved by each kick
 const EXPLORE_SHARE = 0.5;
 const ILS_KICK = 6;
+// cauldron-order.js: a global in the page and the workers, a module in Node
+// (only needed with a Witch Point limit)
+const cauldronOrder =
+  typeof cauldronPrice !== "undefined"
+    ? { cauldronPrice, WONDER_REDUCTION }
+    : typeof require !== "undefined"
+      ? require("./cauldron-order.js")
+      : null;
 
 class CauldronSolver {
   // B, V: full matrices (rows = effects, cols = 12 ingredients)
   // effects: indices of the active effects; weights: their weights (same order)
-  constructor({ B, V, effects, weights, premiumIngr = [], alphaUB = 25, probUB = 100 }) {
+  constructor({
+    B, V, effects, weights, premiumIngr = [], alphaUB = 25, probUB = 100, wpMax = null, wonderLevel = 0,
+  }) {
     this.nIngredients = B[0].length;
     const avoided = new Set(premiumIngr);
     this.freeIdx = [];
@@ -33,6 +47,46 @@ class CauldronSolver {
     this.probUB = probUB;
     this.Sv = new Float64Array(this.m);
     this.Sb = new Float64Array(this.m);
+
+    // Witch Point limit (Infinity: none). wpBlock[r][c]: price of c copies of
+    // one ingredient added right after r others
+    this.wpMax = wpMax == null ? Infinity : wpMax;
+    if (this.wpMax < Infinity) {
+      const reduction = cauldronOrder.WONDER_REDUCTION[wonderLevel] ?? 0;
+      this.wpBlock = Array.from({ length: SUM_INGREDIENTS + 1 }, (_, r) => {
+        const row = [0];
+        for (let c = 1; r + c <= SUM_INGREDIENTS; c++) {
+          row.push(row[c - 1] + cauldronOrder.cauldronPrice(r + c, c, { reduction }));
+        }
+        return row;
+      });
+      this._sorted = new Int32Array(this.n);
+    }
+  }
+
+  // Witch Points of a reduced recipe, bought in the cheapest order
+  witchPoints(alpha) {
+    const a = this._sorted;
+    a.set(alpha);
+    a.sort(); // ascending: the most used last
+    let cost = 0;
+    let rank = 0;
+    for (let i = a.length - 1; i >= 0 && a[i] > 0; i--) {
+      cost += this.wpBlock[rank][a[i]];
+      rank += a[i];
+    }
+    return cost;
+  }
+
+  // Within the Witch Point limit after moving a unit k -> j (k = -1: adding one)
+  wpOk(alpha, k, j) {
+    if (this.wpMax === Infinity) return true;
+    alpha[j] += 1;
+    if (k >= 0) alpha[k] -= 1;
+    const ok = this.witchPoints(alpha) <= this.wpMax;
+    alpha[j] -= 1;
+    if (k >= 0) alpha[k] += 1;
+    return ok;
   }
 
   objective(Sv, Sb, total) {
@@ -55,6 +109,12 @@ class CauldronSolver {
 
   greedy(alpha) {
     const { n, m, Vc, Bc, alphaUB } = this;
+    // Over the Witch Point limit: drop units of the most used ingredient (saves the most)
+    while (this.wpMax < Infinity && this.witchPoints(alpha) > this.wpMax) {
+      let top = 0;
+      for (let j = 1; j < n; j++) if (alpha[j] > alpha[top]) top = j;
+      alpha[top] -= 1;
+    }
     const Sv = new Float64Array(m);
     const Sb = new Float64Array(m);
     let total = 0;
@@ -80,7 +140,7 @@ class CauldronSolver {
       // +1 moves
       if (total < SUM_INGREDIENTS) {
         for (let j = 0; j < n; j++) {
-          if (alpha[j] >= alphaUB) continue;
+          if (alpha[j] >= alphaUB || !this.wpOk(alpha, -1, j)) continue;
           for (let i = 0; i < m; i++) {
             tv[i] = Sv[i] + Vc[j][i];
             tb[i] = Sb[i] + Bc[j][i];
@@ -97,7 +157,7 @@ class CauldronSolver {
       for (let k = 0; k < n; k++) {
         if (alpha[k] <= 0) continue;
         for (let j = 0; j < n; j++) {
-          if (j === k || alpha[j] >= alphaUB) continue;
+          if (j === k || alpha[j] >= alphaUB || !this.wpOk(alpha, k, j)) continue;
           for (let i = 0; i < m; i++) {
             tv[i] = Sv[i] - Vc[k][i] + Vc[j][i];
             tb[i] = Sb[i] - Bc[k][i] + Bc[j][i];
@@ -199,12 +259,12 @@ class CauldronSolver {
   }
 
   // Guaranteed optimum: checks every recipe (each free ingredient 0..alphaUB,
-  // total <= 25). With 4 ingredients avoided that is ~12-14 million recipes,
+  // total <= 25, within the Witch Point limit). With 4 ingredients avoided that is ~12-14 million recipes,
   // about 1-2 s. Ties keep the first recipe found, so the same settings
   // always give the same recipe. onProgress(fraction) is called now and then.
   // Returns {score, recipe} (recipe: 12 amounts)
   exact(onProgress = () => {}) {
-    const { n, m, Vc, Bc } = this;
+    const { n, m, Vc, Bc, wpMax } = this;
     const ub = Math.min(this.alphaUB, SUM_INGREDIENTS);
     const Sv = new Float64Array(m);
     const Sb = new Float64Array(m);
@@ -223,8 +283,11 @@ class CauldronSolver {
         return;
       }
       const maxHere = Math.min(ub, SUM_INGREDIENTS - total);
-      for (let x = 0; x <= maxHere; x++) {
+      let x = 0;
+      for (; x <= maxHere; x++) {
         alpha[j] = x;
+        // A unit more never costs less: neither will the next amounts
+        if (x > 0 && wpMax < Infinity && self.witchPoints(alpha) > wpMax) break;
         visit(j + 1, total + x);
         if (j === 0) onProgress((x + 1) / (maxHere + 1));
         // next amount: one more unit of ingredient j
@@ -233,11 +296,10 @@ class CauldronSolver {
           Sb[i] += Bc[j][i];
         }
       }
-      // back to 0 units of ingredient j
-      const added = maxHere + 1;
+      // back to 0 units of ingredient j (x were added)
       for (let i = 0; i < m; i++) {
-        Sv[i] -= added * Vc[j][i];
-        Sb[i] -= added * Bc[j][i];
+        Sv[i] -= x * Vc[j][i];
+        Sb[i] -= x * Bc[j][i];
       }
       alpha[j] = 0;
     }

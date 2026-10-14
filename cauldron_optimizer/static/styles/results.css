@@ -750,7 +750,7 @@
     container-type: inline-size;
     aspect-ratio: 852 / 525;
     border-radius: 0.4rem;
-    background: url("/static/ui/cauldron/background_cauldron.png") center / 100% 100% no-repeat;
+    background: url("/static/ui/cauldron/background_cauldron_cost.png") center / 100% 100% no-repeat;
     box-shadow: 0 0 0 2px #1e1007;
   }
 
@@ -1007,4 +1007,19 @@
     font-size: 1.55cqw;
   }
 
+}
+
+/* Wide screens: the recipe's cost on the art's scroll under the tube, and
+   the cauldron raised above it */
+@media (min-width: 48rem) {
+  .cw-results .cw-cauldron {
+    top: 61%;
+  }
+
+  .cw-results .cw-costs {
+    left: 44%;
+    top: 87.6%;
+    width: 22.7%;
+    height: 10.4%;
+  }
 }

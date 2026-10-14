@@ -152,14 +152,15 @@
   opacity: 1;
 }
 
-.cw-wp .cw-base-icon {
+/* Witch Points on a base (also on the results page) */
+.cw-base-icon {
   width: 1.3rem;
   height: 1.3rem;
   object-fit: contain;
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.6));
 }
 
-.cw-wp .cw-base-price {
+.cw-base-price {
   font-weight: 900;
   font-size: 1rem;
   line-height: 1;
@@ -483,16 +484,17 @@
     height: 30%;
   }
 
-  .cw-wp .cw-base {
+  .cw-wp .cw-base,
+  .cw-results .cw-base {
     gap: 0.4cqw;
   }
 
-  .cw-wp .cw-base-icon {
+  .cw-base-icon {
     width: 1.55cqw;
     height: 1.55cqw;
   }
 
-  .cw-wp .cw-base-price {
+  .cw-base-price {
     font-size: 1.25cqw;
   }
 
@@ -510,13 +512,9 @@
     height: 55.6%;
   }
 
-  /* On the art's Costes scroll */
-  .cw-wp .cw-costs {
+  /* On the art's Costes scroll (the results page places it in results.css) */
+  .cw-costs {
     position: absolute;
-    left: 42.4%;
-    top: 82.2%;
-    width: 26.4%;
-    height: 9.6%;
     justify-content: center;
     gap: 0.3cqw;
     padding: 0;
@@ -526,23 +524,30 @@
     z-index: 2;
   }
 
-  .cw-wp .cw-costs-label {
+  .cw-wp .cw-costs {
+    left: 42.4%;
+    top: 82.2%;
+    width: 26.4%;
+    height: 9.6%;
+  }
+
+  .cw-costs-label {
     font-size: 1.7cqw;
     font-weight: 800;
     color: #4a2e16;
     text-shadow: 0 1px 0 rgba(255, 244, 220, 0.7);
   }
 
-  .cw-wp .cw-costs-values {
+  .cw-costs-values {
     gap: 1.6cqw;
   }
 
-  .cw-wp .cw-costs-item {
+  .cw-costs-item {
     gap: 0.5cqw;
     font-size: 1.8cqw;
   }
 
-  .cw-wp .cw-costs-item img {
+  .cw-costs-item img {
     width: 2.3cqw;
     height: 2.3cqw;
   }

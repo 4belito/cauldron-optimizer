@@ -124,6 +124,11 @@ class Server(Base):
     avatar: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Chosen by the user; None for servers made before names existed
     name: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Witch Points the recipe may cost; None: no limit
+    max_witch_points: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # Level of the Escuela de hechicería valoriana (its discount on the Witch
+    # Points); None: never saved, the browser's last choice is used
+    wonder_level: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # Search every recipe (guaranteed optimum) instead of search_depth
     # starts; on by default
     exact_search: Mapped[bool] = mapped_column(
@@ -186,6 +191,8 @@ class OptimizationRun(Base):
     exact_search: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     exact: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     searched_in: Mapped[str | None] = mapped_column(Text, nullable=True)
+    # Witch Point limit of the search (None: no limit, or not recorded)
+    max_witch_points: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
 
 class ComplementSearch(Base):

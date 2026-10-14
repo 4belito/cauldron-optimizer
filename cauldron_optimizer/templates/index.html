@@ -92,6 +92,11 @@
   <input type="hidden" name="recipe_json" id="recipeJson">
   <input type="hidden" name="search_ms" id="searchMs">
   <input type="hidden" name="recipe_exact" id="recipeExact">
+  <!-- Witch Point limit as a number (empty: none), from the text field of its
+       card, and the wonder level it is priced with (see optimizer.js) -->
+  <input type="hidden" name="wp_max" id="wpMax" value="{{ form.wp_max.data or '' }}">
+  <input type="hidden" name="wonder_level" id="wonderLevel"
+         value="{{ '' if form.wonder_level.data is none else form.wonder_level.data }}">
   <!-- Diplomas + weights -->
   <fieldset class="card effects-card" data-saved>
     <legend class="card-legend">
@@ -193,6 +198,31 @@
       <strong>{{ _("Limitar Búsqueda") }}</strong>
     </legend>
     <div class="card-body">
+      <!-- First row: the Witch Point limit. A slider (log scale) up to the price of
+           25 units of one ingredient (the most a recipe can cost: no limit), or an
+           exact number typed in the box; the school's level sets the prices
+           (see initWitchPointLimit in optimizer.js) -->
+      <div class="weight-card wp-card" id="wpCard">
+        <div class="wp-card-main"
+             data-tip="{{ _('Puntos de hechicería que puede costar la receta, añadiendo los ingredientes en el orden más barato. Mueve la barra o escribe el número exacto; al máximo no hay límite.') }}">
+          <div class="weight-top-row">
+            <img class="wp-card-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="">
+            <input type="text" id="wpMaxText" class="wp-max-input" inputmode="decimal" autocomplete="off"
+                   aria-label="{{ form.wp_max.label.text }}">
+          </div>
+          <input type="range" id="wpMaxRange" min="0" max="1000" step="1" aria-label="{{ form.wp_max.label.text }}">
+          <div class="weight-label">{{ form.wp_max.label.text }}</div>
+        </div>
+        <!-- Escuela de hechicería valoriana, as in Receta manual (same level, kept in the browser) -->
+        <label class="fx-wonder" data-tip="{{ _('Escuela de hechicería valoriana: su nivel rebaja los puntos de hechicería') }}">
+          <img class="fx-wonder-icon" src="{{ url_for('static', filename='ui/cauldron/wonder_school.png') }}" alt="{{ _('Escuela de hechicería valoriana') }}">
+          <span class="fx-wonder-level" id="wpWonderLevel">0</span>
+          <span class="fx-wonder-discount" id="wpWonderDiscount"></span>
+          <select id="wpWonder" class="fx-wonder-select" aria-label="{{ _('Nivel de la Escuela de hechicería valoriana') }}"
+                  data-none="{{ _('Sin construir') }}" data-level="{{ _('Nivel {n}') }}"></select>
+        </label>
+      </div>
+      <!-- Second row: the other limits -->
       <div id="boundsContainer" class="bounds-row"></div>
       <!-- "Óptima": check every recipe instead of the search depth (its
            limit). optimizer.js moves it to the top of the depth card -->
@@ -253,7 +283,9 @@
     ],
   };
 </script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=85"></script>
+<!-- Witch Point prices, also used by the solver (solver.js) -->
+<script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=87"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -309,7 +341,7 @@
 <script src="{{ url_for('static', filename='js/solver.js') }}"></script>
 <!-- "Buscar receta" searches in the browser (falls back to the server) -->
 <script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/complement.js') }}?v=5"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}?v=6"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script>
   window.CAULDRON_INTEGRATION = {

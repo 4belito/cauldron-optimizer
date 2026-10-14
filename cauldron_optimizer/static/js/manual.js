@@ -280,20 +280,9 @@
   );
   jars.forEach((jar) => jar.addEventListener("animationend", () => jar.classList.remove("fx-refused")));
 
-  // Witch Points as typed: 175000, 175K, 1.2M (comma or dot decimals)
-  function parseWp(text) {
-    const m = String(text).trim().replace(",", ".").match(/^(\d*\.?\d+)\s*([kKmM]?)$/);
-    if (!m) return 0;
-    const mult = { k: 1e3, m: 1e6 }[m[2].toLowerCase()] ?? 1;
-    return Math.round(Number(m[1]) * mult);
-  }
-
-  // As the game shows amounts: up to 4 digits as they are, then 175K, 1.2M
-  function formatAmount(n) {
-    if (n >= 1e6) return `${+(n / 1e6).toFixed(1)}M`;
-    if (n >= 1e4) return `${Math.floor(n / 1e3)}K`;
-    return String(n);
-  }
+  // Witch Points as typed (175K, 1.2M) and as the game shows them (cauldron-order.js)
+  const parseWp = parseWitchPoints;
+  const formatAmount = formatWitchPoints;
 
   // The Witch Points field: remembered in a cookie for a year, 0 without one
   const WP_COOKIE = "formula_wp";

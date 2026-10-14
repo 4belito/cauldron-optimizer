@@ -125,8 +125,25 @@ function cauldronBuyOrder(recipe, options = {}) {
   };
 }
 
-// Node: export it and run the examples; browser: a plain global (formula page)
-if (typeof module !== 'undefined') module.exports = { cauldronBuyOrder, cauldronPrice, DEFAULTS, WONDER_REDUCTION };
+// Witch Points as typed: 175000, 175K, 1.2M (comma or dot decimals); 0 if not a number
+function parseWitchPoints(text) {
+  const m = String(text).trim().replace(',', '.').match(/^(\d*\.?\d+)\s*([kKmM]?)$/);
+  if (!m) return 0;
+  const mult = { k: 1e3, m: 1e6 }[m[2].toLowerCase()] ?? 1;
+  return Math.round(Number(m[1]) * mult);
+}
+
+// As the game shows amounts: up to 4 digits as they are, then 175K, 1.2M
+function formatWitchPoints(n) {
+  if (n >= 1e6) return `${+(n / 1e6).toFixed(1)}M`;
+  if (n >= 1e4) return `${Math.floor(n / 1e3)}K`;
+  return String(n);
+}
+
+// Node: export it and run the examples; browser: plain globals (formula and search pages)
+if (typeof module !== 'undefined') {
+  module.exports = { cauldronBuyOrder, cauldronPrice, DEFAULTS, WONDER_REDUCTION, parseWitchPoints, formatWitchPoints };
+}
 
 if (typeof require !== 'undefined' && require.main === module) {
   const show = (title, recipe, options) => {

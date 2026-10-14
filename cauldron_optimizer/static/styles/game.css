@@ -1403,6 +1403,62 @@ button:disabled[data-tip] {
   filter: grayscale(0.7);
 }
 
+/* Witch Point limit: its own row above the other limits. Like them (value,
+   slider, label), but the value is a box that also takes an exact number,
+   and the school (as in "Receta manual") sits on the right */
+.bounds-card .wp-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.wp-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bounds-card .wp-card .weight-top-row {
+  justify-content: flex-start;
+}
+
+.wp-card-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Reads like the other limits' numbers; a light frame shows it can be typed in */
+.bounds-card .wp-max-input {
+  width: 7rem;
+  min-width: 0;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid rgba(184, 154, 99, 0.7);
+  border-radius: 0.3rem;
+  background: rgba(255, 250, 235, 0.6);
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #51200d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.bounds-card .wp-max-input:hover {
+  border-color: #b89a63;
+}
+
+.bounds-card .wp-max-input:focus-visible {
+  outline: none;
+  border-color: #b89a63;
+  box-shadow: 0 0 0 2px rgba(226, 184, 90, 0.9);
+}
+
 /* Progress window of the exact search */
 .search-window {
   width: min(26rem, 100%);

@@ -14,7 +14,7 @@
 // repeats a run. The worker posts its whole state
 // a few times per second; the page keeps the last one and saves it.
 
-importScripts("solver.js");
+importScripts("cauldron-order.js", "solver.js");
 
 const N_INGREDIENTS = 12;
 const AVOIDED = 4;
@@ -85,7 +85,9 @@ function keepTop(list, entry, key) {
 }
 
 function run({ B, V, params, state }) {
-  const { n, effects, weights, alpha_ub: alphaUB, prob_ub: probUB, depth } = params;
+  const {
+    n, effects, weights, alpha_ub: alphaUB, prob_ub: probUB, depth, wp_max: wpMax, wonder_level: wonderLevel,
+  } = params;
   const chosen = new Set(effects);
   const candidates = [];
   for (let i = 0; i < n; i++) if (!chosen.has(i)) candidates.push(i);
@@ -139,7 +141,7 @@ function run({ B, V, params, state }) {
       const avoid = avoidSets[avoidIdx];
       const solver = new CauldronSolver({
         B, V, effects: allEffects, weights: allWeights,
-        premiumIngr: avoid, alphaUB, probUB,
+        premiumIngr: avoid, alphaUB, probUB, wpMax, wonderLevel,
       });
       const { score, recipe } = solver.multistart(depth);
       current.sum += score;

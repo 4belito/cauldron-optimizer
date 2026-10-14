@@ -1,7 +1,7 @@
 // Web Worker for "Buscar receta" (started by search.js): runs the depth
 // search or the exact one (every recipe) off the page, so it never freezes.
 
-importScripts("solver.js");
+importScripts("cauldron-order.js", "solver.js");
 
 self.onmessage = (e) => {
   const { B, V, config, exact, depth } = e.data;

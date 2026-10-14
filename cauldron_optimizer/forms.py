@@ -17,6 +17,7 @@ from wtforms.validators import (
     EqualTo,
     Length,
     NumberRange,
+    Optional,
     ValidationError,
 )
 
@@ -27,7 +28,7 @@ from cauldron_optimizer.constants import (
     MIN_CHECKED_EFFECTS,
 )
 from cauldron_optimizer.helpers import is_avatar
-from cauldron_optimizer.optimizer.optimizer import CauldronOptimizer
+from cauldron_optimizer.optimizer.optimizer import WONDER_REDUCTION, CauldronOptimizer
 
 
 # Babel extraction marker: extracted, but does NOT translate at definition time.
@@ -213,6 +214,24 @@ class SearchForm(FlaskForm):
             ),
         ],
         render_kw={"type": "number", "min": 1, "max": MAX_STARTS, "step": 1},
+    )
+    # Witch Points the recipe may cost; empty: no limit. The page shows its
+    # own text field (accepts 12K, 1.2M) and fills this hidden one
+    wp_max = IntegerField(
+        label=_l(N_("máx puntos de hechicería")),
+        validators=[
+            Optional(),
+            NumberRange(
+                min=1,
+                message=_l(N_("El máximo de puntos de hechicería debe ser positivo")),
+            ),
+        ],
+    )
+    # Level of the Escuela de hechicería valoriana wonder (its discount on the
+    # Witch Points), chosen on the formula page
+    wonder_level = IntegerField(
+        validators=[Optional(), NumberRange(min=0, max=len(WONDER_REDUCTION) - 1)],
+        default=0,
     )
     # "Optimal solution": check every recipe instead of the search depth
     # (the default)

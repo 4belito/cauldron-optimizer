@@ -8,7 +8,7 @@
 
   {# Laid out like the game's cauldron window: the ingredient domes on
      stone-wall shelves, the cauldron with the total, and the effects scroll #}
-  <section class="cw-window">
+  <section class="cw-window cw-results">
     <header class="cw-titlebar">
       <span class="cw-title">{{ _("Receta optimizada") }}</span>
       <a href="{{ url_for('index') }}" class="cw-close" aria-label="{{ _('Volver') }}" data-tip="{{ _('Volver') }}"></a>
@@ -35,9 +35,15 @@
                     alt=""
                   >
                   <span class="cw-count">{{ val }}</span>
-                  <span class="cw-base">
+                  {# As in Receta manual, but only shown: the Witch Points of all its units #}
+                  {% set wp = ingredient_wp[ns.idx - 1] %}
+                  <span class="cw-base"
+                        {% if val %}data-tip="{{ _('Puntos de hechicería de este ingrediente: todas sus unidades') }}"{% endif %}>
                     {% if (ns.idx - 1) in premiums %}
                       <img class="cw-base-gem" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
+                    {% elif val %}
+                      <img class="cw-base-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="{{ _('Puntos de hechicería') }}">
+                      <span class="cw-base-price">{{ wp | amount }}</span>
                     {% endif %}
                   </span>
                 </div>
@@ -104,6 +110,18 @@
               {% endif %}
             </span>
           </div>
+        </div>
+      </div>
+
+      <!-- Under the tube, as in Receta manual: the recipe's cost -->
+      <div class="cw-costs" tabindex="0"
+           data-tip="{{ _('Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus ingredientes, añadidos de mayor a menor cantidad (el orden más barato), con el descuento de la Escuela de hechicería valoriana: %(discount)s', discount=('−%g%%' % (wonder_discount * 100)) if wonder_level else _('sin construir')) }}">
+        <div class="cw-costs-label"><span>{{ _("Costes") }}</span></div>
+        <div class="cw-costs-values">
+          <span class="cw-costs-item">
+            <img src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="{{ _('Puntos de hechicería') }}">
+            <span>{{ recipe_wp | amount }}</span>
+          </span>
         </div>
       </div>
 
