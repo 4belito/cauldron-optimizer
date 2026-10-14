@@ -709,8 +709,8 @@ msgid "Búsqueda terminada"
 msgstr "Search finished"
 
 #: cauldron_optimizer/templates/index.html:317
-msgid "Progreso guardado: pulsa Completar para continuar cuando quieras."
-msgstr "Progress saved: press Complete to continue whenever you want."
+msgid "Progreso guardado: pulsa Continuar cuando quieras."
+msgstr "Progress saved: press Continue whenever you want."
 
 #: cauldron_optimizer/templates/index.html:318
 #: cauldron_optimizer/templates/index.html:439

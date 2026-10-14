@@ -683,7 +683,7 @@ msgid "Búsqueda terminada"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:317
-msgid "Progreso guardado: pulsa Completar para continuar cuando quieras."
+msgid "Progreso guardado: pulsa Continuar cuando quieras."
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:318

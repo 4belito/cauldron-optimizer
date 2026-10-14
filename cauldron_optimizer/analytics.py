@@ -157,6 +157,17 @@ def histogram(values: Iterable[Any]) -> list[Row]:
     return sorted(counted(values), key=lambda row: row[0])
 
 
+def histogram_or(values: Iterable[Any], none_label: str) -> list[Row]:
+    """histogram() with None values shown last under none_label."""
+    values = list(values)
+    rows = histogram(v for v in values if v is not None)
+    rows += [
+        (none_label, n, pct) for _v, n, pct in counted(v for v in values if v is None)
+    ]
+    total = len(values) or 1
+    return [(v, n, 100 * n / total) for v, n, _pct in rows]
+
+
 def percentile(values: Sequence[float], p: float) -> float:
     if not values:
         return 0
@@ -312,6 +323,9 @@ def usage_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
         "max_effects": histogram(r.max_effects for r in runs),
         # The depth is not used when the optimal solution is searched
         "search_depth": histogram(r.search_depth for r in runs if not r.exact_search),
+        "max_witch_points": histogram_or(
+            (r.max_witch_points for r in runs), "no limit / not recorded"
+        ),
         "modes": modes,
         "proven_optimum": counted(
             "proven optimum" if r.exact else "not proven" for r in exact_runs
@@ -347,6 +361,10 @@ def account_stats(db_sa: Session) -> dict[str, Any]:
         "saved_search_depth": histogram(
             s.search_depth for s in servers if not s.exact_search
         ),
+        "saved_max_witch_points": histogram_or(
+            (s.max_witch_points for s in servers), "no limit"
+        ),
+        "wonder_levels": histogram_or((s.wonder_level for s in servers), "never saved"),
         "saved_exact_search": counted(
             "optimal solution" if s.exact_search else "search depth" for s in servers
         ),

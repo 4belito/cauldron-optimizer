@@ -224,6 +224,7 @@
     <div class="grid">
       <div class="card"><h3>Max ingredients</h3>{{ bars(usage.max_ingredients, cls="alt") }}</div>
       <div class="card"><h3>Max effect probability</h3>{{ bars(usage.max_effects, cls="alt") }}</div>
+      <div class="card"><h3>Witch Point limit</h3>{{ bars(usage.max_witch_points, cls="alt") }}<p class="note">Recorded since migration 007.</p></div>
       <div class="card span-2">
         <h3>Search mode</h3>
         {% if usage.modes %}
@@ -328,6 +329,8 @@
       <div class="card"><h3>Account language</h3>{{ bars(accounts.account_languages) }}</div>
       <div class="card"><h3>Max ingredients</h3>{{ bars(accounts.saved_max_ingredients) }}</div>
       <div class="card"><h3>Max effect probability</h3>{{ bars(accounts.saved_max_effects) }}</div>
+      <div class="card"><h3>Witch Point limit</h3>{{ bars(accounts.saved_max_witch_points) }}</div>
+      <div class="card"><h3>Wonder level (School of Sorcery)</h3>{{ bars(accounts.wonder_levels) }}</div>
       <div class="card"><h3>Search depth</h3>{{ bars(accounts.saved_search_depth) }}<p class="note">Worlds without the optimal-solution option.</p></div>
     </div>
 

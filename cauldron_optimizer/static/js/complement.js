@@ -432,6 +432,10 @@ function initComplement() {
     const finished = !!s && s.done >= s.total;
     stopLabel.textContent = running ? T.stop : finished || !s ? T.close : T.resume;
     stopBtn.dataset.tip = running ? T.stopTip : finished || !s ? "" : T.resumeTip;
+    // Green when it continues the search, red when it stops or closes
+    const resumes = !running && !finished && !!s;
+    stopBtn.classList.toggle("avatar-btn-save", resumes);
+    stopBtn.classList.toggle("avatar-btn-cancel", !resumes);
     // The X stops nothing: only usable when the search is not running
     closeX.disabled = running;
 
