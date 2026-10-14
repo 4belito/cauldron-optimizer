@@ -75,16 +75,20 @@
             <span>{{ _("Efectos") }}</span>
           </div>
           <div class="cw-effects">
+            {# Effects the user asked for (weight > 0) stand out, greener the
+               higher their weight next to the highest one; hover: the weight #}
+            {% set max_weight = [effects|map(attribute='weight')|max if effects else 0, 0.000001]|max %}
             {% for effect in effects %}
-              {# Effects the user asked for (weight > 0) stand out #}
-              <div class="cw-effect {{ 'wanted' if effect.weight > 0 else '' }}" style="--hl: {{ effect.weight }};">
+              <div class="cw-effect {{ 'wanted' if effect.weight > 0 else '' }}" tabindex="0"
+                   style="--hl: {{ '%.3f'|format(effect.weight / max_weight) }};"
+                   data-tip="{{ _(effect.name) }} · {{ _('Peso: %(w)s', w='%.2f'|format(effect.weight)) if effect.weight > 0 else _('Sin peso') }}">
                 <span class="cw-effect-value">{{ "%.2f"|format(effect.value) }}%</span>
                 <img
                   class="cw-effect-icon"
                   src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"
                   alt=""
                 >
-                <span class="cw-effect-name" title="{{ _(effect.name) }}">{{ _(effect.name) }}</span>
+                <span class="cw-effect-name">{{ _(effect.name) }}</span>
               </div>
             {% endfor %}
           </div>

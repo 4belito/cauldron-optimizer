@@ -618,11 +618,13 @@
   color: #6b5640;
 }
 
+/* --hl: the weight next to the highest one (0..1): the green and the accent
+   get stronger with it */
 .cw-effect.wanted {
   background: linear-gradient(90deg,
-    rgba(120, 165, 35, calc(0.22 + var(--hl, 0) * 0.3)),
-    rgba(120, 165, 35, 0.06));
-  box-shadow: inset 0.25rem 0 0 #5f8a17;
+    rgba(120, 165, 35, calc(0.1 + var(--hl, 0) * 0.5)),
+    rgba(120, 165, 35, calc(0.03 + var(--hl, 0) * 0.12)));
+  box-shadow: inset 0.25rem 0 0 rgba(95, 138, 23, calc(0.35 + var(--hl, 0) * 0.65));
   font-weight: 600;
   color: #2e1c0c;
 }
@@ -936,7 +938,7 @@
   }
 
   .cw-effect.wanted {
-    box-shadow: inset 0.45cqw 0 0 #5f8a17;
+    box-shadow: inset 0.45cqw 0 0 rgba(95, 138, 23, calc(0.35 + var(--hl, 0) * 0.65));
   }
 
   .cw-effect-icon {
@@ -1014,6 +1016,12 @@
 @media (min-width: 48rem) {
   .cw-results .cw-cauldron {
     top: 61%;
+  }
+
+  /* Inside the art's paper (68.4% to 96.2%), so the rows never reach the frame */
+  .cw-results .cw-scroll {
+    left: 68.9%;
+    width: 27%;
   }
 
   .cw-results .cw-costs {
