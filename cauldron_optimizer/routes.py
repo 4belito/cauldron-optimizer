@@ -242,7 +242,8 @@ def add_server():
                 search_depth=current.search_depth,
                 exact_search=current.exact_search,
                 max_witch_points=current.max_witch_points,
-                wonder_level=current.wonder_level,
+                # Each world has its own school: a new one starts not built
+                wonder_level=None,
             )
             servers.append(server)
             account.active_server = server.server_number
@@ -378,7 +379,8 @@ def select_world_integration():
                     search_depth=current.search_depth,
                     exact_search=current.exact_search,
                     max_witch_points=current.max_witch_points,
-                    wonder_level=current.wonder_level,
+                    # Each world has its own school: a new one starts not built
+                    wonder_level=None,
                 )
                 servers.append(target)
                 account.n_servers = len(servers)

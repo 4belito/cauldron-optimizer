@@ -298,8 +298,8 @@ function initWitchPointLimit() {
   const select = document.getElementById("wpWonder");
   if (!text || !range || !hidden || !levelInput || !select) return;
 
-  // The world's saved level (empty: never saved), else the browser's last
-  // choice; "Receta manual" then shows the same
+  // The world's saved level (empty: never saved, so not built); "Receta
+  // manual" then shows the same
   const saveLevel = () => {
     try {
       localStorage.setItem(WONDER_LEVEL_KEY, String(level));
@@ -307,11 +307,6 @@ function initWitchPointLimit() {
     } catch (e) {}
   };
   let level = Number(levelInput.value);
-  if (levelInput.value === "") {
-    try {
-      level = Number(localStorage.getItem(WONDER_LEVEL_KEY)) || 0;
-    } catch (e) {}
-  }
   level = Math.min(Math.max(Math.trunc(level) || 0, 0), WONDER_REDUCTION.length - 1);
   saveLevel();
 
@@ -393,6 +388,22 @@ function initWitchPointLimit() {
 
   showLevel();
   setLimit(limit());
+
+  // Public hooks used by autofill.js: as if the player chose them here
+  window.cauldronWitchPoints = {
+    maxLevel: WONDER_REDUCTION.length - 1,
+    setLevel(n) {
+      level = n;
+      saveLevel();
+      showLevel();
+      setLimit(limit());
+    },
+    // null: no limit; returns the limit kept (null: none)
+    setLimit(v) {
+      setLimit(v == null ? Infinity : v);
+      return hidden.value === "" ? null : Number(hidden.value);
+    },
+  };
 }
 
 // Store current weights globally to preserve them across rebuilds

@@ -82,7 +82,9 @@
               <div class="cw-effect {{ 'wanted' if effect.weight > 0 else '' }}" tabindex="0"
                    style="--hl: {{ '%.3f'|format(effect.weight / max_weight) }};"
                    data-tip="{{ _(effect.name) }} · {{ _('Peso: %(w)s', w='%.2f'|format(effect.weight)) if effect.weight > 0 else _('Sin peso') }}">
-                <span class="cw-effect-value">{{ "%.2f"|format(effect.value) }}%</span>
+                {# "100.00%" is too wide for the column: "100%" #}
+                {% set value = "%.2f"|format(effect.value) %}
+                <span class="cw-effect-value">{{ "100" if value == "100.00" else value }}%</span>
                 <img
                   class="cw-effect-icon"
                   src="{{ url_for('static', filename='effects/effect' ~ (effect.index + 1) ~ '.png') }}"

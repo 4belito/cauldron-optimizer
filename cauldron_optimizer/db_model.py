@@ -66,7 +66,7 @@ class UserSettings(Base):
         Integer, nullable=False, server_default="100"
     )
     search_depth: Mapped[int] = mapped_column(
-        Integer, nullable=False, server_default="50"
+        Integer, nullable=False, server_default="100"
     )
     updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
@@ -115,7 +115,7 @@ class Server(Base):
         Integer, nullable=False, server_default="100"
     )
     search_depth: Mapped[int] = mapped_column(
-        Integer, nullable=False, server_default="50"
+        Integer, nullable=False, server_default="100"
     )
     updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
@@ -127,7 +127,7 @@ class Server(Base):
     # Witch Points the recipe may cost; None: no limit
     max_witch_points: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # Level of the Escuela de hechicería valoriana (its discount on the Witch
-    # Points); None: never saved, the browser's last choice is used
+    # Points); None: never saved, not built
     wonder_level: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # Search every recipe (guaranteed optimum) instead of search_depth
     # starts; on by default

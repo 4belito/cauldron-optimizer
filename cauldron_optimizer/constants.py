@@ -73,7 +73,7 @@ DEFAULTS = {
     "effect_weights": "[0, 0, 0, 0]",
     "max_ingredients": 25,
     "max_effects": 100,
-    "search_depth": 50,
+    "search_depth": 100,
 }
 
 

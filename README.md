@@ -134,12 +134,31 @@ window.postMessage({
   type: "cauldron:autofill",
   n_diploma: 7,
   premium_ingr: [0, 1, 10, 11],
+  wonder_level: 12,
+  wp_max: 15000,
   save: true,
 }, location.origin);
 ```
 
+The values are only examples; send the player's own. All fields are optional:
+
+| field | value |
+|---|---|
+| `n_diploma` | integer, 1 to the number of effects |
+| `premium_ingr` | ingredient indexes 0–11 (game order), at most 4 |
+| `wonder_level` | level of the Escuela de hechicería valoriana, 0 (not built) to 35; sets the Witch Point prices |
+| `wp_max` | Witch Points the recipe may cost: a positive integer, or `null` for no limit. The useful range runs from the price of one ingredient (50 with the school not built, 32 at level 12) to the most expensive recipe, 25 units of one ingredient (about 4.5M not built, 2.9M at level 12) |
+| `save` | `true` to save after applying |
+
+`wonder_level` is applied before `wp_max`, so the limit is checked against the
+new prices. A `wp_max` at or above the cost of the most expensive recipe means
+no limit, so `applied.wp_max` comes back as `null`. The page announces
+`cauldron:ready` with `version: 3` when it supports these two fields.
+
 Premium ingredient exclusions remain temporary and are never persisted, which
-matches the Save button's behavior.
+matches the Save button's behavior. The wonder level and Witch Point limit are
+saved per world; a world that never saved a level (new worlds included)
+starts with the school not built.
 
 Failed results include a stable `code` next to the readable `errors`:
 

@@ -76,7 +76,9 @@
     row.className = "cw-effect";
     const value = document.createElement("span");
     value.className = "cw-effect-value";
-    value.textContent = `${p.toFixed(2)}%`;
+    // "100.00%" is too wide for the column: "100%"
+    const shown = p.toFixed(2);
+    value.textContent = `${shown === "100.00" ? "100" : shown}%`;
     const icon = document.createElement("img");
     icon.className = "cw-effect-icon";
     icon.src = `/static/effects/effect${e + 1}.png`;

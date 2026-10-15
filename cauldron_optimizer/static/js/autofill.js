@@ -16,6 +16,11 @@
 // Fields (all optional):
 //   n_diploma     integer, 1..number of effects; rebuilds the effect sliders
 //   premium_ingr  ingredient indexes 0..11 (game order), at most 4
+//   wonder_level  integer, 0..35: level of the Escuela de hechicería
+//                 valoriana (0: not built); sets the Witch Point prices
+//   wp_max        Witch Points the recipe may cost: integer >= 1, or null for
+//                 no limit (applied after wonder_level; at or above the
+//                 dearest recipe it means no limit, so `applied` gets null)
 //   save           boolean; save settings after applying the values
 
 // A content script may also select (or create) a world by name:
@@ -38,7 +43,7 @@ function complementActive() {
 
 const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
 
-const AUTOFILL_VERSION = 2;
+const AUTOFILL_VERSION = 3;
 const N_INGREDIENTS = 12;
 
 function applyAutofill(data) {
@@ -83,6 +88,30 @@ function applyAutofill(data) {
         });
       updatePremiumLocks();
       result.applied.premium_ingr = unique;
+    }
+  }
+
+  const wp = window.cauldronWitchPoints;
+  if (data.wonder_level !== undefined) {
+    const n = data.wonder_level;
+    if (!wp) {
+      result.errors.push("wonder_level is not available");
+    } else if (Number.isInteger(n) && n >= 0 && n <= wp.maxLevel) {
+      wp.setLevel(n);
+      result.applied.wonder_level = n;
+    } else {
+      result.errors.push(`wonder_level must be an integer from 0 to ${wp.maxLevel}`);
+    }
+  }
+
+  if (data.wp_max !== undefined) {
+    const v = data.wp_max;
+    if (!wp) {
+      result.errors.push("wp_max is not available");
+    } else if (v === null || (Number.isInteger(v) && v >= 1)) {
+      result.applied.wp_max = wp.setLimit(v);
+    } else {
+      result.errors.push("wp_max must be a positive integer or null");
     }
   }
 
