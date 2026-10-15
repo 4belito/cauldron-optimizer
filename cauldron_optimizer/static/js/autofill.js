@@ -16,6 +16,8 @@
 // Fields (all optional):
 //   n_diploma     integer, 1..number of effects; rebuilds the effect sliders
 //   premium_ingr  ingredient indexes 0..11 (game order), at most 4
+//   selected_effects  effect indexes 0..n_diploma - 1 to check; the rest are
+//                 unchecked and lose their weight (applied after n_diploma)
 //   wonder_level  integer, 0..35: level of the Escuela de hechicería
 //                 valoriana (0: not built); sets the Witch Point prices
 //   wp_max        Witch Points the recipe may cost: integer >= 1, or null for
@@ -43,7 +45,7 @@ function complementActive() {
 
 const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
 
-const AUTOFILL_VERSION = 3;
+const AUTOFILL_VERSION = 4;
 const N_INGREDIENTS = 12;
 
 function applyAutofill(data) {
@@ -88,6 +90,19 @@ function applyAutofill(data) {
         });
       updatePremiumLocks();
       result.applied.premium_ingr = unique;
+    }
+  }
+
+  if (data.selected_effects !== undefined) {
+    const n = Number(dom.nDiploma.value);
+    const v = data.selected_effects;
+    const valid = Array.isArray(v) && v.every((i) => Number.isInteger(i) && i >= 0 && i < n);
+    if (!valid) {
+      result.errors.push(`selected_effects must be a list of integers from 0 to ${n - 1}`);
+    } else {
+      const unique = [...new Set(v)].sort((a, b) => a - b);
+      window.cauldronForm.setSelectedEffects(unique);
+      result.applied.selected_effects = unique;
     }
   }
 

@@ -505,6 +505,15 @@ function rebuildWeights() {
 
 // Hooks for complement.js
 window.cauldronForm = {
+  // Used by autofill.js: check exactly these effects (indexes below the
+  // diplomas), as if the player clicked the boxes; the unchecked ones lose
+  // their weight
+  setSelectedEffects(indexes) {
+    const n = Number(window.OPTIMIZER_CONFIG.dom.nDiploma.value);
+    const selected = new Set(indexes);
+    for (let i = 0; i < n; i++) globalChecked[i] = selected.has(i);
+    rebuildWeights();
+  },
   // On: keep checked only the effects with a weight. Off: restore the boxes,
   // or, given a search result, check exactly its 10 effects (chosen +
   // complementary) so the user can save it with the save button
