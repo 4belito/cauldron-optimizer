@@ -23,6 +23,10 @@
 //   wp_max        Witch Points the recipe may cost: integer >= 1, or null for
 //                 no limit (applied after wonder_level; at or above the
 //                 dearest recipe it means no limit, so `applied` gets null)
+//   goblets       integer, 1..5: goblets (brews) for "Todos en" / "All in"
+//   all_in        boolean; the "Todos en" / "All in" switch: the best chance
+//                 of getting all the wanted effects within the goblets (the
+//                 weights become 0 or 1). Applied after selected_effects
 //   save           boolean; save settings after applying the values
 
 // A content script may also select (or create) a world by name:
@@ -45,7 +49,7 @@ function complementActive() {
 
 const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
 
-const AUTOFILL_VERSION = 4;
+const AUTOFILL_VERSION = 5;
 const N_INGREDIENTS = 12;
 
 function applyAutofill(data) {
@@ -127,6 +131,30 @@ function applyAutofill(data) {
       result.applied.wp_max = wp.setLimit(v);
     } else {
       result.errors.push("wp_max must be a positive integer or null");
+    }
+  }
+
+  const all = window.cauldronAllEffects;
+  if (data.goblets !== undefined) {
+    const n = data.goblets;
+    if (!all) {
+      result.errors.push("goblets is not available");
+    } else if (Number.isInteger(n) && n >= 1 && n <= all.maxRounds) {
+      all.setRounds(n);
+      result.applied.goblets = n;
+    } else {
+      result.errors.push(`goblets must be an integer from 1 to ${all.maxRounds}`);
+    }
+  }
+
+  if (data.all_in !== undefined) {
+    if (!all) {
+      result.errors.push("all_in is not available");
+    } else if (typeof data.all_in === "boolean") {
+      all.setOn(data.all_in);
+      result.applied.all_in = data.all_in;
+    } else {
+      result.errors.push("all_in must be a boolean");
     }
   }
 

@@ -348,6 +348,21 @@ function initAllEffects() {
   });
   if (toggle.checked) moveCap();
   update();
+
+  // Public hooks used by autofill.js: as if the player chose them here
+  window.cauldronAllEffects = {
+    maxRounds: select.options.length,
+    setOn(on) {
+      if (toggle.checked === on) return;
+      toggle.checked = on;
+      toggle.dispatchEvent(new Event("change", { bubbles: true }));
+    },
+    // Only the number: "Todos en" stays as it is
+    setRounds(n) {
+      rounds.value = String(n);
+      update();
+    },
+  };
 }
 
 // Witch Point limit (first row of "Limitar Búsqueda"): a log-scale slider

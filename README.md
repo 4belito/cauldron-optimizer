@@ -137,6 +137,8 @@ window.postMessage({
   selected_effects: [0, 1, 2, 3, 4, 5, 6],
   wonder_level: 12,
   wp_max: 15000,
+  goblets: 5,
+  all_in: true,
   save: true,
 }, location.origin);
 ```
@@ -150,6 +152,8 @@ The values are only examples; send the player's own. All fields are optional:
 | `selected_effects` | effect indexes 0 to `n_diploma` − 1 to check; the others are unchecked and their weight goes to 0. A search needs at least 10 checked (or all of them, with fewer than 10 diplomas) and one with a weight |
 | `wonder_level` | level of the Escuela de hechicería valoriana, 0 (not built) to 35; sets the Witch Point prices |
 | `wp_max` | Witch Points the recipe may cost: a positive integer, or `null` for no limit. The useful range runs from the price of one ingredient (50 with the school not built, 32 at level 12) to the most expensive recipe, 25 units of one ingredient (about 4.5M not built, 2.9M at level 12) |
+| `goblets` | goblets (brews) for "All in", 1 to 5 |
+| `all_in` | `true`/`false`: the "All in" switch. On, the search looks for the best chance of getting all the wanted effects (weight > 0) within `goblets` brews, or as many as there are goblets when more effects are wanted; the weights become 0 or 1 and the per-effect probability cap does not apply |
 | `save` | `true` to save after applying |
 
 `selected_effects` is applied after `n_diploma`, so the indexes refer to the
@@ -157,11 +161,13 @@ new number of diplomas. `wonder_level` is applied before `wp_max`, so the limit
 is checked against the new prices. A `wp_max` at or above the cost of the most expensive recipe means
 no limit, so `applied.wp_max` comes back as `null`. The page announces
 `cauldron:ready` with `version: 3` when it supports `wonder_level` and
-`wp_max`, and `version: 4` for `selected_effects`.
+`wp_max`, `version: 4` for `selected_effects`, and `version: 5` for `goblets`
+and `all_in`. Setting `goblets` alone leaves the switch as it is (in the page,
+picking goblets also turns it on).
 
 Premium ingredient exclusions remain temporary and are never persisted, which
-matches the Save button's behavior. The selected effects, wonder level and Witch Point limit are
-saved per world; a world that never saved a level (new worlds included)
+matches the Save button's behavior. The selected effects, wonder level, Witch Point limit,
+goblets and "All in" switch are saved per world; a world that never saved a level (new worlds included)
 starts with the school not built.
 
 Failed results include a stable `code` next to the readable `errors`:
