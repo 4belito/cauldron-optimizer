@@ -1218,7 +1218,8 @@ button:disabled[data-tip] {
   .effects-card .diploma-row {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    /* "Todos en" at the left edge, "Completar efectos" at the right */
+    justify-content: space-between;
     gap: 0.6rem 0.5rem;
     /* into the card's side padding: room for both modes on small phones */
     margin-inline: -0.75rem;
