@@ -1489,53 +1489,62 @@ button:disabled[data-tip] {
   cursor: pointer;
 }
 
-/* "Todos": the weight slider turns into a rigid two-position lever: a squarer
-   striped groove, all green when wanted, and a square gold block for knob */
+/* "Todos": the weight slider dressed as the mode switches (a long toggle):
+   a bordered pill, beige when off and green when on, with the knob inside */
+.weight-card.flip-weight input[type="range"] {
+  height: 1.15rem;
+}
+
 .weight-card.flip-weight input[type="range"]::-webkit-slider-runnable-track {
-  height: 0.7rem;
-  border-radius: 0.2rem;
-  background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
-    linear-gradient(
-      to right,
-      var(--game-green-dark) 0%,
-      var(--game-green-highlight) var(--p),
-      #cdb98f var(--p),
-      #cdb98f 100%
-    );
+  box-sizing: border-box;
+  height: 1.15rem;
+  border: 2px solid #7a5a3a;
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 2px rgba(81, 32, 13, 0.35);
+  background: linear-gradient(
+    to right,
+    var(--game-green-highlight) 0%,
+    var(--game-green-dark) var(--p),
+    #d8c08e var(--p),
+    #e2cfa3 100%
+  );
 }
 
 .weight-card.flip-weight input[type="range"]::-moz-range-track {
-  height: 0.7rem;
-  border-radius: 0.2rem;
-  background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
-    #cdb98f;
+  box-sizing: border-box;
+  height: 1.15rem;
+  border: 2px solid #7a5a3a;
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 2px rgba(81, 32, 13, 0.35);
+  background: linear-gradient(#e2cfa3, #d3b884);
 }
 
 .weight-card.flip-weight input[type="range"]::-moz-range-progress {
-  height: 0.7rem;
-  border-radius: 0.2rem;
-  background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
-    linear-gradient(to right, var(--game-green-dark), var(--game-green-highlight));
+  height: 1.15rem;
+  border-radius: 1rem;
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
 }
 
+/* The switch's knob: inside the track, not over it */
 .weight-card.flip-weight input[type="range"]::-webkit-slider-thumb {
-  width: 1.1rem;
-  height: 1.1rem;
-  margin-top: -0.2rem;
-  border: 2px solid #51200d;
-  border-radius: 0.2rem;
-  background: linear-gradient(#f3d27a, #b07d24);
+  box-sizing: border-box;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: -1px;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #a9774a, #6e4423);
+  box-shadow: 0 0 0 2px #e2b85a;
 }
 
 .weight-card.flip-weight input[type="range"]::-moz-range-thumb {
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 2px solid #51200d;
-  border-radius: 0.2rem;
-  background: linear-gradient(#f3d27a, #b07d24);
+  box-sizing: border-box;
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #a9774a, #6e4423);
+  box-shadow: 0 0 0 2px #e2b85a;
 }
 
 body.complement-on .all-effects-row {
