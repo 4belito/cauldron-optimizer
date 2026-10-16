@@ -97,6 +97,8 @@
   <input type="hidden" name="wp_max" id="wpMax" value="{{ form.wp_max.data or '' }}">
   <input type="hidden" name="wonder_level" id="wonderLevel"
          value="{{ '' if form.wonder_level.data is none else form.wonder_level.data }}">
+  <!-- Goblets (brews) of "Todos", picked on the goblet (see initAllEffects in optimizer.js) -->
+  <input type="hidden" name="n_rounds" id="nRounds" value="{{ form.n_rounds.data }}">
   <!-- Diplomas + weights -->
   <fieldset class="card effects-card" data-saved>
     <legend class="card-legend">
@@ -105,6 +107,27 @@
     <div class="card-body">
 
       <div class="diploma-row">
+        <!-- "Todos": the recipe with the best chance of getting the wanted
+             effects within the goblets (brews), left of the diplomas (the other
+             mode on the right); the goblet opens the list of goblets, as the
+             school its levels (see initAllEffects in optimizer.js) -->
+        <div class="all-effects-row" id="allEffectsRow">
+          <!-- A switch, as "Completar efectos": both are modes of this panel -->
+          <label class="complement-switch" id="allEffectsCheck"
+                 data-tip="{{ _('Maximiza la probabilidad de conseguir TODOS los efectos deseados en los cálices elegidos. Cada efecto se desea o no: sin pesos intermedios.') }}">
+            {{ form.all_effects(id="allEffects") }}
+            <span class="complement-switch-track" aria-hidden="true"></span>
+            <span class="effects-mode-text">{{ _("Todos en") }}</span>
+          </label>
+          <label class="rounds-pick" id="roundsPick"
+                 data-tip="{{ _('Cálices: las veces que se prepara la poción con esta receta') }}">
+            <img class="rounds-pick-icon" src="{{ url_for('static', filename='ui/cauldron/goblet.png') }}" alt="{{ _('Cálices') }}">
+            <span class="rounds-pick-value" id="roundsValue">{{ form.n_rounds.data }}</span>
+            <select id="roundsSelect" class="rounds-pick-select" aria-label="{{ _('Número de cálices') }}">
+              {% for n in range(1, max_rounds + 1) %}<option value="{{ n }}">{{ n }}</option>{% endfor %}
+            </select>
+          </label>
+        </div>
         <div class="diploma-input">
           <!-- Game's green -/+ buttons: one diploma less / more (see optimizer.js) -->
           <button type="button" class="step-btn step-down" data-step="-1"
@@ -285,7 +308,7 @@
 </script>
 <!-- Witch Point prices, also used by the solver (solver.js) -->
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=90"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=91"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {

@@ -41,12 +41,17 @@ function initBrowserSearch() {
     const premiumIngr = [...form.querySelectorAll("input[name='premium_ingredients[]']:checked")]
       .map((el) => Number(el.value));
     const wpMax = Number(form.querySelector("input[name='wp_max']").value);
+    // "Todos": the chance of getting the wanted effects within the goblets,
+    // with no cap per effect (as the server: optimize in routes.py)
+    const allEffects = document.getElementById("allEffects");
+    const nRounds = allEffects && allEffects.checked ? Number(document.getElementById("nRounds").value) : 0;
     return {
       effects,
       weights: activeWeights,
       premiumIngr,
       alphaUB: val("alpha_UB"),
-      probUB: val("prob_UB"),
+      probUB: nRounds ? 100 : val("prob_UB"),
+      nRounds,
       depth: val("n_starts"),
       wpMax: wpMax > 0 ? wpMax : null, // empty: no limit
       wonderLevel: val("wonder_level"),

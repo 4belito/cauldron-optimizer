@@ -280,6 +280,76 @@ function initExactSearch() {
   update();
 }
 
+// "Todos": the recipe with the best chance of getting the wanted effects
+// within the goblets (brews). A switch left of the diplomas: while on,
+// the weights are 0 or 1 (a weight only says the effect is wanted) and the
+// probability cap does not apply (its slider moves to 100, dimmed, as the
+// depth with "Óptima"; moving it turns "Todos" off). The goblet beside it
+// opens the list of goblets, as the school its levels; picking some turns
+// "Todos" on. Not with "Completar efectos" (setComplementMode)
+function allEffectsOn() {
+  const toggle = document.getElementById("allEffects");
+  return !!(toggle && toggle.checked);
+}
+
+function initAllEffects() {
+  const toggle = document.getElementById("allEffects");
+  const check = document.getElementById("allEffectsCheck");
+  const pick = document.getElementById("roundsPick");
+  const cap = document.querySelector("input[name='prob_UB']");
+  const rounds = document.getElementById("nRounds");
+  const select = document.getElementById("roundsSelect");
+  if (!toggle || !check || !pick || !cap || !rounds || !select) return;
+  const card = cap.closest(".weight-card");
+  const row = document.getElementById("allEffectsRow");
+  card.classList.add("cap-card");
+
+  const update = () => {
+    card.classList.toggle("is-all", toggle.checked);
+    row.classList.toggle("is-all", toggle.checked);
+    select.value = rounds.value;
+    document.getElementById("roundsValue").textContent = rounds.value;
+  };
+  // While on, the slider sits at 100 (no cap); turning it off puts back the
+  // cap it had. Set by code: does not count as the user moving it
+  let savedCap = cap.value;
+  const setCap = (v) => {
+    cap.value = v;
+    cap.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  const moveCap = () => {
+    if (toggle.checked) {
+      savedCap = cap.value;
+      setCap(cap.max);
+    } else {
+      setCap(savedCap);
+    }
+  };
+  toggle.addEventListener("change", () => {
+    moveCap();
+    update();
+    rebuildWeights(); // 0 or 1 while on
+  });
+  select.addEventListener("change", () => {
+    rounds.value = select.value;
+    if (!toggle.checked) {
+      toggle.checked = true;
+      toggle.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    update();
+  });
+  cap.addEventListener("input", (e) => {
+    // Only the user moving it (as with "Óptima")
+    if (e.isTrusted && toggle.checked) {
+      toggle.checked = false;
+      rebuildWeights();
+    }
+    update();
+  });
+  if (toggle.checked) moveCap();
+  update();
+}
+
 // Witch Point limit (first row of "Limitar Búsqueda"): a log-scale slider
 // from the price of one ingredient to that of 25 units of one ingredient (the
 // most any recipe costs: there it means no limit), or an exact number typed
@@ -440,6 +510,11 @@ function rebuildWeights() {
   while (globalWeights.length < n) {
     globalWeights.push(0);
   }
+  // "Todos": a weight only says the effect is wanted, 0 or 1
+  const binary = allEffectsOn();
+  if (binary) {
+    for (let i = 0; i < n; i++) if (globalWeights[i] > 0) globalWeights[i] = 1;
+  }
 
   for (let i = 0; i < n; i++) {
     // Use the current weight value, defaulting to 0 if not set
@@ -451,7 +526,7 @@ function rebuildWeights() {
       name: "",
       min: 0,
       max: 1,
-      step: 0.01,
+      step: binary ? 1 : 0.01,
       value: currentW,
       format: (x) => Number(x).toFixed(2),
     });
@@ -493,6 +568,17 @@ function rebuildWeights() {
     });
     slider.replaceWith(sliderRow);
     sliderRow.append(check, slider);
+    // "Todos": a click anywhere on the box flips the weight 0 <-> 1 (the
+    // checkbox and the slider keep their own clicks)
+    if (binary) {
+      card.classList.add("flip-weight");
+      card.addEventListener("click", (e) => {
+        if (e.target.closest("input, .effect-check")) return;
+        slider.value = Number(slider.value) > 0 ? 0 : 1;
+        slider.dispatchEvent(new Event("input", { bubbles: true }));
+        setRangeFill(slider);
+      });
+    }
 
     dom.weightsContainer.appendChild(card);
   }
@@ -520,6 +606,14 @@ window.cauldronForm = {
   setComplementMode(on, result = null) {
     const { dom } = window.OPTIMIZER_CONFIG;
     const n = Number(dom.nDiploma.value);
+    // Its own search scores by the weights: "Todos" goes off and waits
+    const all = document.getElementById("allEffects");
+    if (on && all && all.checked) {
+      all.checked = false;
+      all.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    const allRow = document.getElementById("allEffectsRow");
+    if (allRow) allRow.inert = on;
     if (on && !complementMode) {
       checkedBeforeComplement = [...globalChecked];
       globalChecked = [];
@@ -759,6 +853,7 @@ function initOptimizer() {
     dom.boundsContainer.append(card);
   });
   initExactSearch();
+  initAllEffects();
   initWitchPointLimit();
   initEffectsAll();
 

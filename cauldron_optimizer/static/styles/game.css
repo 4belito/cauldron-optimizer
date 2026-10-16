@@ -1217,8 +1217,10 @@ button:disabled[data-tip] {
   }
 
   .effects-card .diploma-input,
+  .effects-card .all-effects-row,
   .effects-mode-switch {
     grid-column: 1;
+    grid-row: auto;
     justify-self: center;
   }
 
@@ -1401,6 +1403,146 @@ button:disabled[data-tip] {
 .depth-card.is-exact .weight-label {
   opacity: 0.45;
   filter: grayscale(0.7);
+}
+
+/* While "Todos" is on: no cap per effect, so the probability slider sits at 100
+   and its slider is dimmed, as the depth with "Óptima" */
+.cap-card.is-all input[type="range"],
+.cap-card.is-all .weight-label {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+/* "Todos" left of the diplomas: its switch (as "Completar efectos") and the goblets,
+   as the game's counter (goblet, then the number). The picture opens the
+   list (a transparent select over it, as the school); greyed while "Todos"
+   is off, and the whole row while "Completar efectos" is on */
+.all-effects-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.effects-card .all-effects-row {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+
+.all-effects-row .complement-switch {
+  margin: 0;
+}
+
+/* "Todos": a click on an effect's box flips its weight 0 <-> 1 */
+.weight-card.flip-weight {
+  cursor: pointer;
+}
+
+/* "Todos": the weight slider turns into a rigid two-position lever: a squarer
+   striped groove, all green when wanted, and a square gold block for knob */
+.weight-card.flip-weight input[type="range"]::-webkit-slider-runnable-track {
+  height: 0.7rem;
+  border-radius: 0.2rem;
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
+    linear-gradient(
+      to right,
+      var(--game-green-dark) 0%,
+      var(--game-green-highlight) var(--p),
+      #cdb98f var(--p),
+      #cdb98f 100%
+    );
+}
+
+.weight-card.flip-weight input[type="range"]::-moz-range-track {
+  height: 0.7rem;
+  border-radius: 0.2rem;
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
+    #cdb98f;
+}
+
+.weight-card.flip-weight input[type="range"]::-moz-range-progress {
+  height: 0.7rem;
+  border-radius: 0.2rem;
+  background:
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 4px, transparent 4px 8px),
+    linear-gradient(to right, var(--game-green-dark), var(--game-green-highlight));
+}
+
+.weight-card.flip-weight input[type="range"]::-webkit-slider-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: -0.2rem;
+  border: 2px solid #51200d;
+  border-radius: 0.2rem;
+  background: linear-gradient(#f3d27a, #b07d24);
+}
+
+.weight-card.flip-weight input[type="range"]::-moz-range-thumb {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid #51200d;
+  border-radius: 0.2rem;
+  background: linear-gradient(#f3d27a, #b07d24);
+}
+
+body.complement-on .all-effects-row {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+
+.rounds-pick {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.05rem 0.4rem 0.05rem 0.15rem;
+  border-radius: 0.4rem;
+  background: rgba(81, 32, 13, 0.85);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: filter 0.15s, opacity 0.15s;
+}
+
+.rounds-pick-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+  object-fit: contain;
+}
+
+.rounds-pick-value {
+  min-width: 0.6rem;
+  font-weight: 800;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.rounds-pick:hover,
+.rounds-pick:focus-within {
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(226, 184, 90, 0.9);
+}
+
+.all-effects-row:not(.is-all) .rounds-pick {
+  opacity: 0.55;
+  filter: grayscale(0.8);
+}
+
+.all-effects-row:not(.is-all) .rounds-pick:hover {
+  opacity: 0.85;
+}
+
+.rounds-pick-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 /* Witch Point limit: its own row above the other limits. Like them (value,

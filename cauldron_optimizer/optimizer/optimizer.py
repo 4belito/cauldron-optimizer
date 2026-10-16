@@ -78,6 +78,33 @@ def ingredient_witch_points(counts: Sequence[int], block: list[list[int]]) -> li
     return costs
 
 
+def rounds_probability(q: Sequence[float], n: int) -> float:
+    """Chance that n brews give min(m, n) different effects of the m wanted.
+
+    q: chance (0-1) of each wanted effect in one brew. A brew gives at most
+    one effect, and the brews are independent (derivation: all_effects.ipynb).
+    - m >= n: each brew gives a different wanted effect, any n of them:
+      n! * e_n(q), the sum of the products of every n chances
+    - m < n: all m come out at least once: n! [x^n] e^(r x) prod(e^(q_i x) - 1),
+      r = 1 - sum(q) (an unwanted effect or none); the exponential generating
+      function of the inclusion-exclusion sum
+    """
+    if len(q) >= n:
+        # e[j]: sum of the products of every j chances seen so far
+        e = [1.0] + [0.0] * n
+        for qi in q:
+            for j in range(n, 0, -1):
+                e[j] += qi * e[j - 1]
+        return math.factorial(n) * e[n]
+    r = max(0.0, 1.0 - sum(q))
+    # Coefficients of x^0..x^n; f: qi^j / j!
+    poly = [r**j / math.factorial(j) for j in range(n + 1)]
+    for qi in q:
+        f = [qi**j / math.factorial(j) for j in range(n + 1)]
+        poly = [sum(poly[a] * f[k - a] for a in range(k)) for k in range(n + 1)]
+    return math.factorial(n) * poly[n]
+
+
 class CauldronOptimizer:
     sum_ingredients = 25
     B_full: np.ndarray = np.asarray(B, dtype=float)
@@ -93,6 +120,7 @@ class CauldronOptimizer:
         prob_UB: int = 100,
         wp_max: int | None = None,
         wonder_level: int = 0,
+        n_rounds: int = 0,
         cache_max_size: int = 1_000_000,
     ):
         effect_weights = np.asarray(effect_weights, dtype=float)
@@ -122,6 +150,11 @@ class CauldronOptimizer:
         if s == 0:
             effect_weights = np.full(self.n_dipl, 1.0 / self.n_dipl, dtype=float)
         self.w = effect_weights / s
+        # Brews to get the wanted effects in (0: score by the weights instead):
+        # the score is then the chance (%) of getting min(m, n_rounds)
+        # different wanted effects (weight > 0) in that many brews
+        self.n_rounds = int(n_rounds)
+        self.wanted = np.flatnonzero(self.w > 0)
 
         # alpha upper bounds (reduced)
         self.alpha_UB = np.full(self.n_freeingr, int(alpha_UB), dtype=int)
@@ -372,22 +405,36 @@ class CauldronOptimizer:
         total = sum(alpha)
         """
         if total <= 0:
-            return 0.0
+            return self._search_value(np.zeros(self.n_dipl))
 
         # E = max(Sv, 0) * 1.1**Sb
         E = np.maximum(Sv, 0.0) * (1.1**Sb)
         E_sum = E.sum()
         if E_sum <= 0.0:
-            return 0.0
+            return self._search_value(np.zeros(self.n_dipl))
 
         probs = 20.0 * E / E_sum * np.sqrt(total)
-        probs = np.minimum(probs, self.prob_UB)
-        return float(probs @ self.w)
+        return self._search_value(probs)
 
     def _objective_fast(self, alpha: np.ndarray) -> float:
-        probs = self.effect_probabilities(alpha)
+        return self._search_value(self._effect_probabilities(alpha))
+
+    def score(self, probs: np.ndarray) -> float:
+        """Score of a recipe from its effect probabilities (%): the weighted
+        probability, or with n_rounds the chance (%) of getting the effects."""
         probs = np.minimum(probs, self.prob_UB)
-        return float(probs @ self.w)
+        if not self.n_rounds:
+            return float(probs @ self.w)
+        return 100.0 * rounds_probability(probs[self.wanted] / 100.0, self.n_rounds)
+
+    def _search_value(self, probs: np.ndarray) -> float:
+        """score, except that recipes with no chance at all (too few wanted
+        effects come out) rank in [-1, 0) by their weighted probability: the
+        local search still finds its way up from them."""
+        val = self.score(probs)
+        if self.n_rounds and val <= 0.0:
+            return float(np.minimum(probs, self.prob_UB) @ self.w) / 100.0 - 1.0
+        return val
 
     def _objective(self, alpha: np.ndarray) -> float:
         key = self._key(alpha)

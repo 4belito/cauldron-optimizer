@@ -989,6 +989,22 @@
     height: 2.2cqw;
   }
 
+  /* "Todos": a longer label ("Probabilidad") and a short value ("2.67%"):
+     the bar only as wide as its value, so the row stays on the wood strip */
+  .cw-stat.is-chance {
+    transform: translateX(1.5cqw);
+  }
+
+  .cw-stat.is-chance .cw-stat-bar {
+    min-width: 0;
+    padding-inline: 1.2cqw;
+  }
+
+  /* Room inside the bar for the seal, which hangs right of the value */
+  .cw-stat.is-chance .cw-stat-bar:has(.exact-seal) {
+    padding-right: 4cqw;
+  }
+
   /* Centered on the stone under the bottom shelf */
   .cw-actions {
     position: absolute;
@@ -1032,5 +1048,48 @@
     top: 87.6%;
     width: 22.7%;
     height: 10.4%;
+  }
+}
+
+/* "Todos": the goblets the chance is for, as the game's counter (goblet,
+   then the number); above the scroll, on the art's carved plaque when wide */
+.cw-goblets {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.1rem 0.45rem 0.1rem 0.15rem;
+  border-radius: 0.4rem;
+  background: rgba(30, 16, 7, 0.85);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.cw-goblets img {
+  width: 1.4rem;
+  height: 1.4rem;
+  object-fit: contain;
+}
+
+@media (min-width: 48rem) {
+  /* Centered on the plaque (78% to 88.7% of the art, 3.2% to 8.6%) */
+  .cw-goblets {
+    position: absolute;
+    left: 83.35%;
+    top: 5.9%;
+    transform: translate(-50%, -50%);
+    gap: 0.4cqw;
+    padding: 0.3cqw 0.8cqw 0.3cqw 0.4cqw;
+    border-radius: 0.6cqw;
+    font-size: 1.9cqw;
+  }
+
+  .cw-goblets img {
+    width: 2.6cqw;
+    height: 2.6cqw;
   }
 }

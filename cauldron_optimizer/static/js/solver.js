@@ -1,7 +1,9 @@
 // JavaScript port of CauldronOptimizer (cauldron_optimizer/optimizer/optimizer.py),
 // used by the long "complete effects" search, which runs in the browser.
 // Same model: E_i = max(V_i·alpha, 0) * 1.1^(B_i·alpha),
-// p_i = min(20 * E_i / sum(E) * sqrt(sum(alpha)), probUB), score = sum(w_i * p_i).
+// p_i = min(20 * E_i / sum(E) * sqrt(sum(alpha)), probUB), score = sum(w_i * p_i),
+// or with nRounds brews the chance (%) of getting min(m, nRounds) different
+// wanted effects (weight > 0), as rounds_probability in optimizer.py.
 // Excluded effects (V row zeroed in Python) add nothing to E or to the score, so
 // here they are simply left out: only the active effect rows are kept.
 // Optional Witch Point limit (wpMax): the recipe, bought in the cheapest order
@@ -15,6 +17,9 @@ const SUM_INGREDIENTS = 25;
 // of the budget on random starts, and units moved by each kick
 const EXPLORE_SHARE = 0.5;
 const ILS_KICK = 6;
+// n! for the rounds score (nRounds is at most a few dozen)
+const FACTORIAL = [1];
+for (let i = 1; i <= 30; i++) FACTORIAL.push(FACTORIAL[i - 1] * i);
 // cauldron-order.js: a global in the page and the workers, a module in Node
 // (only needed with a Witch Point limit)
 const cauldronOrder =
@@ -29,6 +34,7 @@ class CauldronSolver {
   // effects: indices of the active effects; weights: their weights (same order)
   constructor({
     B, V, effects, weights, premiumIngr = [], alphaUB = 25, probUB = 100, wpMax = null, wonderLevel = 0,
+    nRounds = 0,
   }) {
     this.nIngredients = B[0].length;
     const avoided = new Set(premiumIngr);
@@ -47,6 +53,18 @@ class CauldronSolver {
     this.probUB = probUB;
     this.Sv = new Float64Array(this.m);
     this.Sb = new Float64Array(this.m);
+    // Brews to get the wanted effects in (0: score by the weights), and the
+    // wanted effects (positions among the active ones), with scratch buffers
+    this.nRounds = nRounds;
+    this.wanted = [];
+    this.w.forEach((x, i) => {
+      if (x > 0) this.wanted.push(i);
+    });
+    this._q = new Float64Array(this.wanted.length);
+    this._e = new Float64Array(nRounds + 1);
+    this._poly = new Float64Array(nRounds + 1);
+    this._next = new Float64Array(nRounds + 1);
+    this._f = new Float64Array(nRounds + 1);
 
     // Witch Point limit (Infinity: none). wpBlock[r][c]: price of c copies of
     // one ingredient added right after r others
@@ -89,8 +107,43 @@ class CauldronSolver {
     return ok;
   }
 
+  // Chance that nRounds brews give min(m, nRounds) different wanted effects;
+  // q: chance (0-1) of each of the m wanted effects in one brew (same as
+  // rounds_probability in optimizer.py)
+  roundsProbability(q) {
+    const n = this.nRounds;
+    const m = q.length;
+    if (m >= n) {
+      // e[j]: sum of the products of every j chances seen so far
+      const e = this._e.fill(0);
+      e[0] = 1;
+      for (let i = 0; i < m; i++) for (let j = n; j > 0; j--) e[j] += q[i] * e[j - 1];
+      return FACTORIAL[n] * e[n];
+    }
+    // n! [x^n] e^(r x) prod(e^(q_i x) - 1), r = 1 - sum(q)
+    let r = 1;
+    for (let i = 0; i < m; i++) r -= q[i];
+    r = Math.max(r, 0);
+    let poly = this._poly;
+    let next = this._next;
+    const f = this._f; // q_i^j / j!
+    poly[0] = 1;
+    for (let j = 1; j <= n; j++) poly[j] = (poly[j - 1] * r) / j;
+    for (let i = 0; i < m; i++) {
+      f[0] = 1;
+      for (let j = 1; j <= n; j++) f[j] = (f[j - 1] * q[i]) / j;
+      for (let k = 0; k <= n; k++) {
+        let c = 0;
+        for (let a = 0; a < k; a++) c += poly[a] * f[k - a];
+        next[k] = c;
+      }
+      [poly, next] = [next, poly];
+    }
+    return FACTORIAL[n] * poly[n];
+  }
+
   objective(Sv, Sb, total) {
-    if (total <= 0) return 0;
+    if (total <= 0) return this.nRounds ? -1 : 0;
     const m = this.m;
     let eSum = 0;
     // reuse a scratch buffer for E
@@ -100,11 +153,17 @@ class CauldronSolver {
       E[i] = e;
       eSum += e;
     }
-    if (eSum <= 0) return 0;
+    if (eSum <= 0) return this.nRounds ? -1 : 0;
     const f = (20 * Math.sqrt(total)) / eSum;
     let val = 0;
     for (let i = 0; i < m; i++) val += this.w[i] * Math.min(E[i] * f, this.probUB);
-    return val;
+    if (!this.nRounds) return val;
+    const q = this._q;
+    for (let k = 0; k < q.length; k++) q[k] = Math.min(E[this.wanted[k]] * f, this.probUB) / 100;
+    const p = this.roundsProbability(q);
+    // No chance at all (too few wanted effects come out): rank in [-1, 0) by
+    // the weighted probability, so the local search still finds its way up
+    return p > 0 ? 100 * p : val / 100 - 1;
   }
 
   greedy(alpha) {

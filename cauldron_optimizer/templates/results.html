@@ -67,6 +67,15 @@
 
       <!-- RIGHT: effects scroll and score -->
       <div class="cw-side">
+        {# "Todos": the goblets the chance is for, on the carved plaque above
+           the scroll, as the game's counter #}
+        {% if n_rounds %}
+          <div class="cw-goblets" tabindex="0"
+               data-tip="{{ _('Probabilidad de conseguir %(k)s efectos deseados distintos en %(n)s cálices', k=n_got, n=n_rounds) }}">
+            <img src="{{ url_for('static', filename='ui/cauldron/goblet.png') }}" alt="{{ _('Cálices') }}">
+            <span>{{ n_rounds }}</span>
+          </div>
+        {% endif %}
         <div class="cw-scroll">
           {# As in the game: chance (the dice) first, then the effect #}
           <div class="cw-scroll-head">
@@ -96,11 +105,17 @@
           </div>
         </div>
 
-        <div class="cw-stat">
-          <div class="cw-stat-label">{{ _("Score") }}:</div>
+        <div class="cw-stat{{ ' is-chance' if n_rounds }}">
+          {# "Todos": the score is the chance of getting the wanted effects in the goblets #}
+          {% if n_rounds %}
+            <div class="cw-stat-label"
+                 data-tip="{{ _('Probabilidad de conseguir %(k)s efectos deseados distintos en %(n)s cálices', k=n_got, n=n_rounds) }}">{{ _("Probabilidad") }}:</div>
+          {% else %}
+            <div class="cw-stat-label">{{ _("Score") }}:</div>
+          {% endif %}
           <div class="cw-stat-bar">
             <span class="score-line">
-              <span class="cw-stat-value">{{ "%.2f"|format(score) }}</span>
+              <span class="cw-stat-value">{{ "%.2f"|format(score) }}{{ "%" if n_rounds }}</span>
               {% if exact %}
                 <!-- Every recipe was checked: a small gold seal, explained on hover -->
                 <span class="exact-seal" tabindex="0" role="img"

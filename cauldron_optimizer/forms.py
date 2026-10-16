@@ -15,6 +15,7 @@ from wtforms import (
 from wtforms.validators import (
     DataRequired,
     EqualTo,
+    InputRequired,
     Length,
     NumberRange,
     Optional,
@@ -23,6 +24,7 @@ from wtforms.validators import (
 
 from cauldron_optimizer.constants import (
     LANGUAGES,
+    MAX_ROUNDS,
     MAX_SERVER_NAME_LENGTH,
     MAX_STARTS,
     MIN_CHECKED_EFFECTS,
@@ -214,6 +216,26 @@ class SearchForm(FlaskForm):
             ),
         ],
         render_kw={"type": "number", "min": 1, "max": MAX_STARTS, "step": 1},
+    )
+    # "Todos": the recipe with the best chance of getting min(wanted,
+    # n_rounds) different wanted effects (weight 1) in n_rounds goblets
+    # (brews), instead of the weighted probability (off, the default). The
+    # page picks the goblets like the school's level and fills this hidden one
+    all_effects = BooleanField(default=False)
+    n_rounds = IntegerField(
+        validators=[
+            InputRequired(message=_l(N_("Debe elegir el número de cálices"))),
+            NumberRange(
+                min=1,
+                max=MAX_ROUNDS,
+                message=_l(
+                    N_("El número de cálices debe estar entre 1 y {}").format(
+                        MAX_ROUNDS
+                    )
+                ),
+            ),
+        ],
+        default=MAX_ROUNDS,
     )
     # Witch Points the recipe may cost; empty: no limit. The page shows its
     # own text field (accepts 12K, 1.2M) and fills this hidden one

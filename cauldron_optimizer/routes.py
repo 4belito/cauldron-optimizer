@@ -18,6 +18,7 @@ from cauldron_optimizer.constants import (
     INGREDIENT_NAMES,
     LANGUAGES,
     MAX_PREMIUM_INGREDIENTS,
+    MAX_ROUNDS,
     MAX_SERVER_NAME_LENGTH,
     MAX_SERVERS_PER_USER,
     MAX_STARTS,
@@ -95,6 +96,8 @@ def index():
         form.prob_UB.data = int(settings.max_effects)
         form.n_starts.data = int(settings.search_depth)
         form.exact_search.data = bool(settings.exact_search)
+        form.all_effects.data = bool(settings.all_effects)
+        form.n_rounds.data = int(settings.n_rounds)
         form.wp_max.data = settings.max_witch_points
         form.wonder_level.data = settings.wonder_level
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
@@ -110,6 +113,8 @@ def index():
             form.prob_UB.data = last["prob_ub"]
             form.n_starts.data = last["n_starts"]
             form.exact_search.data = last["exact"]
+            form.all_effects.data = last.get("all_effects", False)
+            form.n_rounds.data = last.get("n_rounds", settings.n_rounds)
             form.wp_max.data = last.get("wp_max")
             form.wonder_level.data = last.get("wonder_level", settings.wonder_level)
             form.effect_weights_json.data = json.dumps(last["effect_weights"])
@@ -137,6 +142,7 @@ def index():
             },
             avatars=AVATARS,
             avatar=settings.avatar,
+            max_rounds=MAX_ROUNDS,
         )
 
 
@@ -241,6 +247,8 @@ def add_server():
                 max_effects=current.max_effects,
                 search_depth=current.search_depth,
                 exact_search=current.exact_search,
+                all_effects=current.all_effects,
+                n_rounds=current.n_rounds,
                 max_witch_points=current.max_witch_points,
                 # Each world has its own school: a new one starts not built
                 wonder_level=None,
@@ -378,6 +386,8 @@ def select_world_integration():
                     max_effects=current.max_effects,
                     search_depth=current.search_depth,
                     exact_search=current.exact_search,
+                    all_effects=current.all_effects,
+                    n_rounds=current.n_rounds,
                     max_witch_points=current.max_witch_points,
                     # Each world has its own school: a new one starts not built
                     wonder_level=None,
@@ -549,6 +559,8 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         "prob_ub": int(form.prob_UB.data or 0),
         "n_starts": int(form.n_starts.data or 0),
         "exact": bool(form.exact_search.data),
+        "all_effects": bool(form.all_effects.data),
+        "n_rounds": int(form.n_rounds.data or 0),
         # None: no Witch Point limit
         "wp_max": form.wp_max.data,
         "wonder_level": int(form.wonder_level.data or 0),
@@ -576,6 +588,8 @@ def save_settings():
             server.max_effects = s["prob_ub"]
             server.search_depth = s["n_starts"]
             server.exact_search = s["exact"]
+            server.all_effects = s["all_effects"]
+            server.n_rounds = s["n_rounds"]
             server.max_witch_points = s["wp_max"]
             server.wonder_level = s["wonder_level"]
             server.updated_at = datetime.now(UTC)
@@ -752,15 +766,21 @@ def optimize():
     effect_weights = np.array(s["effect_weights"], dtype=np.float64)
     premium_ingr = s["premium_ingr"]
     n_starts = s["n_starts"]
+    # "Todos": a weight only says the effect is wanted (0 or 1), the score is
+    # the chance of getting them within the goblets, and there is no cap
+    rounds = s["n_rounds"] if s["all_effects"] else 0
+    if rounds:
+        effect_weights = (effect_weights > 0).astype(np.float64)
 
     opt = CauldronOptimizer(
         effect_weights=effect_weights,
         premium_ingr=premium_ingr,
         excluded_effects=s["excluded_effects"],
         alpha_UB=s["alpha_ub"],
-        prob_UB=s["prob_ub"],
+        prob_UB=100 if rounds else s["prob_ub"],
         wp_max=s["wp_max"],
         wonder_level=s["wonder_level"],
+        n_rounds=rounds,
     )
 
     # The browser normally searches (static/js/search.js) and sends its recipe;
@@ -771,16 +791,14 @@ def optimize():
     if browser is not None:
         alpha_best, duration_ms = browser
         exact = s["exact"] and request.form.get("recipe_exact") == "1"
-        probs = opt.effect_probabilities(alpha_best)
-        val_best = float(np.minimum(probs, opt.prob_UB) @ opt.w)
     else:
         start = time.perf_counter()
-        alpha_best, val_best = opt.multistart(n_starts)
+        alpha_best, _val = opt.multistart(n_starts)
         duration_ms = round((time.perf_counter() - start) * 1000)
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
-    score = float(val_best)
+    score = opt.score(opt.effect_probabilities(alpha_best))
     log_optimization_run(
-        s,
+        {**s, "n_rounds": rounds},
         alpha_matrix,
         score,
         duration_ms,
@@ -810,6 +828,10 @@ def optimize():
         "effects": filtered_effects,
         "score": score,
         "exact": exact,
+        # What the score is: the weighted probability (n_rounds 0) or the
+        # chance (%) of getting n_got different wanted effects in n_rounds brews
+        "n_rounds": rounds,
+        "n_got": min(len(opt.wanted), rounds),
         # Kept with the recipe: the form's selection can be reset meanwhile
         "premiums": premium_ingr,
         # The school's level the costs are priced with
@@ -827,6 +849,8 @@ def optimize():
             "prob_ub": s["prob_ub"],
             "n_starts": n_starts,
             "exact": s["exact"],
+            "all_effects": s["all_effects"],
+            "n_rounds": s["n_rounds"],
             "wp_max": s["wp_max"],
             "wonder_level": s["wonder_level"],
         }
@@ -873,6 +897,8 @@ def results():
         effects=last_results["effects"],
         score=last_results["score"],
         exact=last_results.get("exact", False),
+        n_rounds=last_results.get("n_rounds", 0),
+        n_got=last_results.get("n_got", 0),
         premiums=last_results.get("premiums", session.get("premium_ingredients", [])),
         max_ingredients=CauldronOptimizer.sum_ingredients,
     )

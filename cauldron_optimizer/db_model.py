@@ -134,6 +134,14 @@ class Server(Base):
     exact_search: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=True, server_default="true"
     )
+    # "Todos": score by the chance of getting the wanted effects within
+    # n_rounds goblets (brews) instead of by the weights; off by default
+    all_effects: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
+    )
+    n_rounds: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=5, server_default="5"
+    )
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 
@@ -193,6 +201,8 @@ class OptimizationRun(Base):
     searched_in: Mapped[str | None] = mapped_column(Text, nullable=True)
     # Witch Point limit of the search (None: no limit, or not recorded)
     max_witch_points: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # Brews the score counted (0: weighted probability; None: not recorded)
+    n_rounds: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
 
 class ComplementSearch(Base):
