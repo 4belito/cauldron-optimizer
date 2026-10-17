@@ -88,6 +88,9 @@ function run({ B, V, params, state }) {
   const {
     n, effects, weights, alpha_ub: alphaUB, prob_ub: probUB, depth, wp_max: wpMax, wonder_level: wonderLevel,
   } = params;
+  // "Todos en": scored by the chance of getting the wanted effects within
+  // nRounds goblets (searches saved before it have none: by the weights)
+  const nRounds = params.n_rounds || 0;
   const chosen = new Set(effects);
   const candidates = [];
   for (let i = 0; i < n; i++) if (!chosen.has(i)) candidates.push(i);
@@ -141,9 +144,12 @@ function run({ B, V, params, state }) {
       const avoid = avoidSets[avoidIdx];
       const solver = new CauldronSolver({
         B, V, effects: allEffects, weights: allWeights,
-        premiumIngr: avoid, alphaUB, probUB, wpMax, wonderLevel,
+        premiumIngr: avoid, alphaUB, probUB, wpMax, wonderLevel, nRounds,
       });
-      const { score, recipe } = solver.multistart(depth);
+      const found = solver.multistart(depth);
+      // With no chance at all the search ranks recipes below 0: that is 0%
+      const score = nRounds ? Math.max(0, found.score) : found.score;
+      const { recipe } = found;
       current.sum += score;
       // Older saved states have no sumsq/worst: they start from here
       current.sumsq = (current.sumsq || 0) + score * score;

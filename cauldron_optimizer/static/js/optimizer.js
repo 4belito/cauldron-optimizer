@@ -621,14 +621,6 @@ window.cauldronForm = {
   setComplementMode(on, result = null) {
     const { dom } = window.OPTIMIZER_CONFIG;
     const n = Number(dom.nDiploma.value);
-    // Its own search scores by the weights: "Todos" goes off and waits
-    const all = document.getElementById("allEffects");
-    if (on && all && all.checked) {
-      all.checked = false;
-      all.dispatchEvent(new Event("change", { bubbles: true }));
-    }
-    const allRow = document.getElementById("allEffectsRow");
-    if (allRow) allRow.inert = on;
     if (on && !complementMode) {
       checkedBeforeComplement = [...globalChecked];
       globalChecked = [];
@@ -669,6 +661,13 @@ window.cauldronForm = {
       globalWeights[e] = p.weights[k];
       globalChecked[e] = true;
     });
+    // "Todos en" first: switching it moves the cap, set right after (searches
+    // saved before it have none: off)
+    const all = window.cauldronAllEffects;
+    if (all) {
+      if (p.n_rounds) all.setRounds(p.n_rounds);
+      all.setOn(Boolean(p.n_rounds));
+    }
     [["alpha_UB", p.alpha_ub], ["prob_UB", p.prob_ub], ["n_starts", p.depth]].forEach(
       ([name, value]) => {
         const el = document.querySelector(`input[name='${name}']`);
@@ -676,6 +675,10 @@ window.cauldronForm = {
         el.dispatchEvent(new Event("input", { bubbles: true }));
       }
     );
+    // The school's level first: the limit is priced with it (searches saved
+    // before it have none: not built)
+    const wpLimit = window.cauldronWitchPoints;
+    if (wpLimit) wpLimit.setLevel(p.wonder_level ?? 0);
     // Searches saved before the Witch Point limit have none
     const wp = document.getElementById("wpMax");
     wp.value = p.wp_max ? String(p.wp_max) : "";

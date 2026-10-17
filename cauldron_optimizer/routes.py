@@ -637,6 +637,8 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         # Searches saved before the Witch Point limit have neither: no limit
         "wp_max": None if p.get("wp_max") is None else int(p["wp_max"]),
         "wonder_level": int(p.get("wonder_level") or 0),
+        # "Todos en" goblets; searches saved before it have none: 0, by the weights
+        "n_rounds": int(p.get("n_rounds") or 0),
     }
     ok = (
         MIN_CHECKED_EFFECTS <= n <= len(EFFECT_NAMES)
@@ -650,6 +652,7 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         and 1 <= params["depth"] <= MAX_STARTS
         and (params["wp_max"] is None or params["wp_max"] >= 1)
         and 0 <= params["wonder_level"] < len(WONDER_REDUCTION)
+        and 0 <= params["n_rounds"] <= MAX_ROUNDS
     )
     if not ok:
         raise ValueError

@@ -1454,7 +1454,7 @@ button:disabled[data-tip] {
 /* "Todos" left of the diplomas: its switch (as "Completar efectos") and the goblets,
    as the game's counter (goblet, then the number). The picture opens the
    list (a transparent select over it, as the school); greyed while "Todos"
-   is off, and the whole row while "Completar efectos" is on */
+   is off. "Completar efectos" locks it with the rest of the form */
 .all-effects-row {
   display: flex;
   align-items: center;
@@ -1545,11 +1545,6 @@ button:disabled[data-tip] {
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #a9774a, #6e4423);
   box-shadow: 0 0 0 2px #e2b85a;
-}
-
-body.complement-on .all-effects-row {
-  opacity: 0.45;
-  filter: grayscale(0.7);
 }
 
 .rounds-pick {

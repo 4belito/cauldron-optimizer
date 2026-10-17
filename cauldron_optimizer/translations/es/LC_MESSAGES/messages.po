@@ -728,11 +728,6 @@ msgstr ""
 msgid "Esta búsqueda necesita {total} búsquedas."
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:350
-#, python-brace-format
-msgid "Quedan unos {eta}."
-msgstr ""
-
 #: cauldron_optimizer/templates/index.html:351
 msgid "media"
 msgstr ""
@@ -1126,6 +1121,16 @@ msgstr ""
 
 #: cauldron_optimizer/templates/index.html:251
 msgid "Todos en"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:359
+#, python-brace-format
+msgid "Probabilidad media {avg}% · mejor {best}%"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:350
+#, python-brace-format
+msgid "Quedan {eta}."
 msgstr ""
 
 #~ msgid "No se encontró la configuracion del ususario"

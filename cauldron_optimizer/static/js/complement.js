@@ -77,6 +77,8 @@ function initComplement() {
       depth: val("n_starts"),
       wp_max: val("wp_max") || null, // empty: no limit
       wonder_level: val("wonder_level"),
+      // "Todos en": goblets of its objective (0: scored by the weights)
+      n_rounds: document.getElementById("allEffects")?.checked ? val("n_rounds") : 0,
     };
   }
 
@@ -96,8 +98,11 @@ function initComplement() {
   // nothing changes under the user's feet. To change them, turn the mode off.
   const lockedParts = () => [
     document.querySelector(".diploma-input"),
+    $("allEffectsRow"),
     $("weightsContainer"),
     $("boundsContainer"),
+    // Witch Point limit and school level: part of the search too
+    $("wpCard"),
   ];
 
   function setLocked(locked) {
@@ -160,6 +165,8 @@ function initComplement() {
       p.n, p.effects, p.weights.map((w) => Math.round(w * 100)), p.alpha_ub, p.prob_ub, p.depth,
       // Searches saved before the Witch Point limit have none
       p.wp_max ?? null, p.wp_max ? p.wonder_level ?? 0 : 0,
+      // ...nor before "Todos en": scored by the weights
+      p.n_rounds || 0,
     ]);
     return key(a) === key(b);
   };
@@ -359,7 +366,7 @@ function initComplement() {
           `<span class="recipe-row-name">${C.effectNames[e]}</span>`;
         list.appendChild(row);
       });
-    $("complementRecipeScore").textContent = fmt(T.scores, {
+    $("complementRecipeScore").textContent = fmt(params.n_rounds ? T.scoresChance : T.scores, {
       avg: entry.avg.toFixed(2),
       best: entry.best.toFixed(2),
     });
@@ -527,7 +534,7 @@ function initComplement() {
           `<span class="complement-rank">${rank + 1}</span>` +
           `<span class="complement-effects">${icons}</span>` +
           rangeBar(entry, lo, hi) +
-          `<span class="complement-score">${Number.isFinite(entry[sortBy]) ? entry[sortBy].toFixed(2) : "—"}</span>` +
+          `<span class="complement-score">${Number.isFinite(entry[sortBy]) ? entry[sortBy].toFixed(2) + (params.n_rounds ? "%" : "") : "—"}</span>` +
           `<button type="button" class="complement-recipe-btn" data-tip="${T.showRecipe}" aria-label="${T.showRecipe}">` +
           `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>` +
           `</button>`;

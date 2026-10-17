@@ -752,11 +752,6 @@ msgstr "{done} of {total} searches ({pct}%)"
 msgid "Esta búsqueda necesita {total} búsquedas."
 msgstr "This search needs {total} searches."
 
-#: cauldron_optimizer/templates/index.html:350
-#, python-brace-format
-msgid "Quedan unos {eta}."
-msgstr "About {eta} left."
-
 #: cauldron_optimizer/templates/index.html:351
 msgid "media"
 msgstr "average"
@@ -1181,6 +1176,16 @@ msgstr ""
 #: cauldron_optimizer/templates/index.html:251
 msgid "Todos en"
 msgstr "All in"
+
+#: cauldron_optimizer/templates/index.html:359
+#, python-brace-format
+msgid "Probabilidad media {avg}% · mejor {best}%"
+msgstr "Average chance {avg}% · best {best}%"
+
+#: cauldron_optimizer/templates/index.html:350
+#, python-brace-format
+msgid "Quedan {eta}."
+msgstr "{eta} left."
 
 #~ msgid "El nombre de usuario ya existe"
 #~ msgstr "That username already exists"
