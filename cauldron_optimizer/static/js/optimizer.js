@@ -583,17 +583,17 @@ function rebuildWeights() {
     });
     slider.replaceWith(sliderRow);
     sliderRow.append(check, slider);
-    // "Todos": a click anywhere on the box flips the weight 0 <-> 1 (the
-    // checkbox and the slider keep their own clicks)
-    if (binary) {
-      card.classList.add("flip-weight");
-      card.addEventListener("click", (e) => {
-        if (e.target.closest("input, .effect-check")) return;
-        slider.value = Number(slider.value) > 0 ? 0 : 1;
-        slider.dispatchEvent(new Event("input", { bubbles: true }));
-        setRangeFill(slider);
-      });
-    }
+    // A click anywhere on the box: weight 1 goes to 0, any other to 1 (the
+    // checkbox and the slider keep their own clicks). "Todos" also dresses
+    // the slider as a toggle (flip-weight)
+    card.classList.add("click-weight");
+    card.classList.toggle("flip-weight", binary);
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("input, .effect-check")) return;
+      slider.value = Number(slider.value) === 1 ? 0 : 1;
+      slider.dispatchEvent(new Event("input", { bubbles: true }));
+      setRangeFill(slider);
+    });
 
     dom.weightsContainer.appendChild(card);
   }

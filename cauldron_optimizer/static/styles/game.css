@@ -1484,8 +1484,8 @@ button:disabled[data-tip] {
   margin: 0;
 }
 
-/* "Todos": a click on an effect's box flips its weight 0 <-> 1 */
-.weight-card.flip-weight {
+/* A click on an effect's box sets its weight to 1, or back to 0 from 1 */
+.weight-card.click-weight {
   cursor: pointer;
 }
 
