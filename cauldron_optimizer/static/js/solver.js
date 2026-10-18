@@ -3,7 +3,8 @@
 // Same model: E_i = max(V_i·alpha, 0) * 1.1^(B_i·alpha),
 // p_i = min(20 * E_i / sum(E) * sqrt(sum(alpha)), probUB), score = sum(w_i * p_i),
 // or with nRounds brews the chance (%) of getting min(m, nRounds) different
-// (or at least minEffects)
+// (or at least minEffects), or with minEffects -1 ("Media") the expected
+// number of different wanted effects (a count, not a %)
 // wanted effects (weight > 0), as rounds_probability in optimizer.py.
 // Excluded effects (V row zeroed in Python) add nothing to E or to the score, so
 // here they are simply left out: only the active effect rows are kept.
@@ -70,6 +71,7 @@ class CauldronSolver {
     // (min(m, nRounds)); 0: all of those
     const most = Math.min(this.wanted.length, nRounds);
     this.atLeast = minEffects > 0 && minEffects < most ? minEffects : 0;
+    this.mean = nRounds > 0 && minEffects === -1;
     this._by = new Float64Array((this.atLeast + 1) * (nRounds + 1));
     this._t = new Float64Array(nRounds + 1);
     // Wanted effects the score asks for (k), for a cheap upper bound of it:
@@ -222,6 +224,16 @@ class CauldronSolver {
     for (let k = 0; k < q.length; k++) {
       q[k] = Math.min(E[this.wanted[k]] * f, this.probUB) / 100;
       s += q[k];
+    }
+    if (this.mean) {
+      // Expected number of different wanted effects: sum of 1 - (1 - q)^n
+      let count = 0;
+      for (let k = 0; k < q.length; k++) {
+        let miss = 1;
+        for (let j = 0; j < this.nRounds; j++) miss *= 1 - q[k];
+        count += 1 - miss;
+      }
+      return count > 0 ? count : val / 100 - 1;
     }
     if (this.pruneBelow > -Infinity) {
       // Upper bound: at least needK of the nRounds brews give a wanted effect

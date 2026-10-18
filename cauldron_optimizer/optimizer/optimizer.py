@@ -129,6 +129,18 @@ def rounds_probability(q: Sequence[float], n: int, k: int = 0) -> float:
     return math.factorial(n) * by[k][n]
 
 
+# min_effects for "Media": the expected number of different wanted effects
+MEAN_EFFECTS = -1
+
+
+def expected_effects(q: Sequence[float], n: int) -> float:
+    """Expected number of different effects of the m wanted that n brews give:
+    sum of 1 - (1 - q_i)^n, the chance of each coming out at least once
+    (linearity of expectation; derivation: all_effects.ipynb). It is also the
+    sum over k of the chance of at least k of them."""
+    return sum(1.0 - (1.0 - qi) ** n for qi in q)
+
+
 class CauldronOptimizer:
     sum_ingredients = 25
     B_full: np.ndarray = np.asarray(B, dtype=float)
@@ -179,7 +191,8 @@ class CauldronOptimizer:
         # the score is then the chance (%) of getting min(m, n_rounds)
         # different wanted effects (weight > 0) in that many brews
         self.n_rounds = int(n_rounds)
-        # ...or at least min_effects of them (0: as many as can be)
+        # ...or at least min_effects of them (0: as many as can be), or with
+        # MEAN_EFFECTS the expected number of different ones instead
         self.min_effects = int(min_effects)
         self.wanted = np.flatnonzero(self.w > 0)
 
@@ -448,10 +461,13 @@ class CauldronOptimizer:
 
     def score(self, probs: np.ndarray) -> float:
         """Score of a recipe from its effect probabilities (%): the weighted
-        probability, or with n_rounds the chance (%) of getting the effects."""
+        probability, or with n_rounds the chance (%) of getting the effects,
+        or their expected number (MEAN_EFFECTS: a count, not a %)."""
         probs = np.minimum(probs, self.prob_UB)
         if not self.n_rounds:
             return float(probs @ self.w)
+        if self.min_effects == MEAN_EFFECTS:
+            return expected_effects(probs[self.wanted] / 100.0, self.n_rounds)
         return 100.0 * rounds_probability(
             probs[self.wanted] / 100.0, self.n_rounds, self.min_effects
         )

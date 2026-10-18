@@ -35,6 +35,7 @@ from cauldron_optimizer.helpers import (
     login_required,
 )
 from cauldron_optimizer.optimizer.optimizer import (
+    MEAN_EFFECTS,
     WONDER_REDUCTION,
     CauldronOptimizer,
     ingredient_witch_points,
@@ -662,7 +663,7 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         and (params["wp_max"] is None or params["wp_max"] >= 1)
         and 0 <= params["wonder_level"] < len(WONDER_REDUCTION)
         and 0 <= params["n_rounds"] <= MAX_ROUNDS
-        and 0 <= params["min_effects"] <= MAX_ROUNDS
+        and -1 <= params["min_effects"] <= MAX_ROUNDS
     )
     if not ok:
         raise ValueError
@@ -813,12 +814,15 @@ def optimize():
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = opt.score(opt.effect_probabilities(alpha_best))
     # "Todos en": the chance of at least k of the wanted effects for every k,
-    # from 1 to all that can come out (shown on hovering the score)
+    # from 1 to all that can come out, and their expected number (the sum of
+    # those chances): shown on hovering the score's label
     chances: list[float] = []
+    most = 0
     if rounds:
         q = np.minimum(opt.effect_probabilities(alpha_best), 100.0)[opt.wanted] / 100
         most = min(len(q), rounds)
         chances = [100 * rounds_probability(q, rounds, k) for k in range(1, most + 1)]
+    mean = bool(rounds) and min_effects == MEAN_EFFECTS
     log_optimization_run(
         {**s, "n_rounds": rounds, "min_effects": min_effects},
         alpha_matrix,
@@ -854,7 +858,11 @@ def optimize():
         # chance (%) of getting at least n_got different wanted effects in
         # n_rounds brews (all of them that can be, or min_effects)
         "n_rounds": rounds,
-        "n_got": min(len(opt.wanted), rounds, min_effects or rounds),
+        "n_got": most if mean or not min_effects else min(most, min_effects),
+        # "Media": the score is the expected number of different wanted
+        # effects (of at most `most`), not a chance
+        "mean": mean,
+        "most": most,
         "chances": chances,
         # Kept with the recipe: the form's selection can be reset meanwhile
         "premiums": premium_ingr,
@@ -932,6 +940,8 @@ def results():
         n_rounds=last_results.get("n_rounds", 0),
         n_got=last_results.get("n_got", 0),
         chances=last_results.get("chances", []),
+        mean=last_results.get("mean", False),
+        most=last_results.get("most", 0),
         premiums=last_results.get("premiums", session.get("premium_ingredients", [])),
         max_ingredients=CauldronOptimizer.sum_ingredients,
     )

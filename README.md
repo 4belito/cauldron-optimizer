@@ -155,7 +155,7 @@ The values are only examples; send the player's own. All fields are optional:
 | `wp_max` | Witch Points the recipe may cost: a positive integer, or `null` for no limit. The useful range runs from the price of one ingredient (50 with the school not built, 32 at level 12) to the most expensive recipe, 25 units of one ingredient (about 4.5M not built, 2.9M at level 12) |
 | `goblets` | goblets (brews) for "All in", 1 to 5 |
 | `all_in` | `true`/`false`: the "All in" switch. On, the search looks for the best chance of getting all the wanted effects (weight > 0) within `goblets` brews, or as many as there are goblets when more effects are wanted; the weights become 0 or 1 and the per-effect probability cap does not apply |
-| `at_least` | with "All in": at least this many of the wanted effects instead of all of them, 0 (all) to 5. At or above min(`goblets`, wanted effects) it means all, so `applied.at_least` comes back as `0`. Applied after `all_in` |
+| `at_least` | with "All in": at least this many of the wanted effects instead of all of them, 0 (all) to 5. At or above min(`goblets`, wanted effects) it means all, so `applied.at_least` comes back as `0`. `"mean"` (or `-1`, the default for new worlds) maximizes the expected number of different wanted effects instead. Applied after `all_in` |
 | `save` | `true` to save after applying |
 
 `selected_effects` is applied after `n_diploma`, so the indexes refer to the
@@ -164,7 +164,8 @@ is checked against the new prices. A `wp_max` at or above the cost of the most e
 no limit, so `applied.wp_max` comes back as `null`. The page announces
 `cauldron:ready` with `version: 3` when it supports `wonder_level` and
 `wp_max`, `version: 4` for `selected_effects`, `version: 5` for `goblets`
-and `all_in`, and `version: 6` for `at_least`. Setting `goblets` alone leaves the switch as it is (in the page,
+and `all_in`, `version: 6` for `at_least`, and `version: 7` for
+`at_least: "mean"`. Setting `goblets` alone leaves the switch as it is (in the page,
 picking goblets also turns it on).
 
 Premium ingredient exclusions remain temporary and are never persisted, which

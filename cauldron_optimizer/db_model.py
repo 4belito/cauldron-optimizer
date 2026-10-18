@@ -142,9 +142,10 @@ class Server(Base):
     n_rounds: Mapped[int] = mapped_column(
         Integer, nullable=False, default=5, server_default="5"
     )
-    # ...or at least this many of the wanted effects (0: all that can be)
+    # ...or at least this many of the wanted effects (0: all that can be;
+    # -1, the default: "Media", their expected number)
     min_effects: Mapped[int] = mapped_column(
-        Integer, nullable=False, default=0, server_default="0"
+        Integer, nullable=False, default=-1, server_default="-1"
     )
 
     user: Mapped["User"] = relationship("User", back_populates="servers")

@@ -383,16 +383,22 @@ function initAllEffects() {
       return 0;
     }
   };
+  // ...and first, above a line, "Media" (-1, the default): the expected
+  // number of different wanted effects, whatever the maximum
+  const MEAN = -1;
   const showAtLeast = () => {
     const most = Math.min(Number(rounds.value), wantedCount());
     let k = Number(minInput.value) || 0;
-    if (k >= most) k = 0; // as many as can be: "Todos"
+    if (k !== MEAN && k >= most) k = 0; // as many as can be: "Todos"
     minInput.value = String(k);
-    const options = [new Option(kPick.dataset.all, "0")];
+    const line = new Option("──────", "");
+    line.disabled = true;
+    const options = [new Option(kPick.dataset.mean, String(MEAN)), line];
+    options.push(new Option(kPick.dataset.all, "0"));
     for (let i = 1; i < most; i++) options.push(new Option(String(i), String(i)));
     kSelect.replaceChildren(...options);
     kSelect.value = String(k);
-    kValue.textContent = k ? String(k) : kPick.dataset.all;
+    kValue.textContent = k === MEAN ? kPick.dataset.mean : k ? String(k) : kPick.dataset.all;
   };
   kSelect.addEventListener("change", () => {
     minInput.value = kSelect.value;
@@ -429,8 +435,8 @@ function initAllEffects() {
       update();
       showAtLeast();
     },
-    // At least k of the wanted effects (0: "Todos"); above the most that can
-    // come out it is "Todos" too. Returns the k kept
+    // At least k of the wanted effects (0: "Todos", -1: "Media"); above the
+    // most that can come out it is "Todos" too. Returns the k kept
     setMinEffects(k) {
       minInput.value = String(k);
       showAtLeast();

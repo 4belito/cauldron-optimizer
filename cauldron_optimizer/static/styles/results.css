@@ -995,6 +995,11 @@
     transform: translateX(1.5cqw);
   }
 
+  .cw-stat.is-chance .cw-stat-label,
+  .cw-stat.is-chance .cw-stat-value {
+    white-space: nowrap;
+  }
+
   .cw-stat.is-chance .cw-stat-bar {
     min-width: 0;
     padding-inline: 1.2cqw;

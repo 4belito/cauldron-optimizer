@@ -109,27 +109,43 @@
           {# "Todos": the score is the chance of getting the wanted effects in the goblets #}
           {% if n_rounds %}
             {# On hover: what the score is, and below it the chance of at least
-               k for every k with this recipe, the optimized one highlighted #}
+               k for every k with this recipe and their expected number (the
+               sum of those chances), the optimized one highlighted #}
             {% set rows = [] %}
             {% for chance in chances %}
               {% set k = loop.index %}
               {% if rows.append([
                    _("Todos (%(k)s)", k=k) if loop.last else _("Al menos %(k)s", k=k),
                    "%.2f"|format(chance) ~ "%",
-                   k == n_got,
+                   not mean and k == n_got,
                  ]) %}{% endif %}
             {% endfor %}
-            <div class="cw-stat-label" tabindex="0"
-                 data-tip="{{ _('Probabilidad de conseguir al menos %(k)s efectos deseados distintos en %(n)s cálices', k=n_got, n=n_rounds) }}"
-                 {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Probabilidad") }}:</div>
+            {% if chances %}
+              {% if rows.append([_("Media"), "%.2f"|format((chances|sum) / 100), mean]) %}{% endif %}
+            {% endif %}
+            {% if mean %}
+              <div class="cw-stat-label" tabindex="0"
+                   data-tip="{{ _('Número esperado de efectos deseados distintos en %(n)s cálices', n=n_rounds) }}"
+                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Media") }}:</div>
+            {% else %}
+              <div class="cw-stat-label" tabindex="0"
+                   data-tip="{{ _('Probabilidad de conseguir al menos %(k)s efectos deseados distintos en %(n)s cálices', k=n_got, n=n_rounds) }}"
+                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Probabilidad") }}:</div>
+            {% endif %}
           {% else %}
             <div class="cw-stat-label">{{ _("Score") }}:</div>
           {% endif %}
           <div class="cw-stat-bar">
             <span class="score-line">
-              {# Rounded to 2 decimals; the precise value on hover #}
-              <span class="cw-stat-value" tabindex="0"
-                    data-tip="{{ score|precise }}{{ '%' if n_rounds }}">{{ "%.2f"|format(score) }}{{ "%" if n_rounds }}</span>
+              {# Rounded to 2 decimals; the precise value on hover. "Media":
+                 a count, out of the most that can come out #}
+              {% if mean %}
+                <span class="cw-stat-value" tabindex="0"
+                      data-tip="{{ score|precise }}">{{ "%.2f"|format(score) }} / {{ most }}</span>
+              {% else %}
+                <span class="cw-stat-value" tabindex="0"
+                      data-tip="{{ score|precise }}{{ '%' if n_rounds }}">{{ "%.2f"|format(score) }}{{ "%" if n_rounds }}</span>
+              {% endif %}
               {% if exact %}
                 <!-- Every recipe was checked: a small gold seal, explained on hover -->
                 <span class="exact-seal" tabindex="0" role="img"

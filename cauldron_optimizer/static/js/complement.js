@@ -161,6 +161,9 @@ function initComplement() {
     render();
   }
 
+  // Scores are chances (%) with "Todos en", except "Media": a count
+  const isChance = () => Boolean(params && params.n_rounds && params.min_effects !== -1);
+
   // Same search settings? (weights compared to 2 decimals, as the sliders)
   const sameParams = (a, b) => {
     const key = (p) => JSON.stringify([
@@ -368,7 +371,7 @@ function initComplement() {
           `<span class="recipe-row-name">${C.effectNames[e]}</span>`;
         list.appendChild(row);
       });
-    $("complementRecipeScore").textContent = fmt(params.n_rounds ? T.scoresChance : T.scores, {
+    $("complementRecipeScore").textContent = fmt(isChance() ? T.scoresChance : T.scores, {
       avg: entry.avg.toFixed(2),
       best: entry.best.toFixed(2),
     });
@@ -536,7 +539,7 @@ function initComplement() {
           `<span class="complement-rank">${rank + 1}</span>` +
           `<span class="complement-effects">${icons}</span>` +
           rangeBar(entry, lo, hi) +
-          `<span class="complement-score">${Number.isFinite(entry[sortBy]) ? entry[sortBy].toFixed(2) + (params.n_rounds ? "%" : "") : "—"}</span>` +
+          `<span class="complement-score">${Number.isFinite(entry[sortBy]) ? entry[sortBy].toFixed(2) + (isChance() ? "%" : "") : "—"}</span>` +
           `<button type="button" class="complement-recipe-btn" data-tip="${T.showRecipe}" aria-label="${T.showRecipe}">` +
           `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l4.6 4.6-1.4 1.4-4.6-4.6A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>` +
           `</button>`;

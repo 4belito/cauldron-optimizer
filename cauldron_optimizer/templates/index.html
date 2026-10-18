@@ -99,8 +99,9 @@
          value="{{ '' if form.wonder_level.data is none else form.wonder_level.data }}">
   <!-- Goblets (brews) of "Todos", picked on the goblet (see initAllEffects in optimizer.js) -->
   <input type="hidden" name="n_rounds" id="nRounds" value="{{ form.n_rounds.data }}">
-  <!-- ...and how many of the wanted effects, at least (0: "Todos"), picked on the word -->
-  <input type="hidden" name="min_effects" id="minEffects" value="{{ form.min_effects.data or 0 }}">
+  <!-- ...and how many of the wanted effects, at least (0: "Todos"; -1, the default:
+       "Media", their expected number), picked on the word -->
+  <input type="hidden" name="min_effects" id="minEffects" value="{{ -1 if form.min_effects.data is none else form.min_effects.data }}">
   <!-- Diplomas + weights -->
   <fieldset class="card effects-card" data-saved>
     <legend class="card-legend">
@@ -116,13 +117,13 @@
         <div class="all-effects-row" id="allEffectsRow">
           <!-- A switch, as "Completar efectos": both are modes of this panel -->
           <label class="complement-switch" id="allEffectsCheck"
-                 data-tip="{{ _('Maximiza la probabilidad de conseguir los efectos deseados (todos, o al menos los que elijas) en los cálices elegidos. Cada efecto se desea o no: sin pesos intermedios.') }}">
+                 data-tip="{{ _('Optimiza los efectos deseados distintos que salen en los cálices elegidos: «Media» (por defecto) maximiza cuántos salen en promedio; un número o «Todos», la probabilidad de conseguir al menos esos. Cada efecto se desea o no: sin pesos intermedios.') }}">
             {{ form.all_effects(id="allEffects") }}
             <span class="complement-switch-track" aria-hidden="true"></span>
           </label>
           <!-- "Todos", or at least 1, 2...: up to min(goblets, wanted effects) -->
-          <label class="at-least-pick" id="atLeastPick" data-all="{{ _('Todos') }}"
-                 data-tip="{{ _('Mínimo de efectos deseados distintos que busca la optimización') }}">
+          <label class="at-least-pick" id="atLeastPick" data-all="{{ _('Todos') }}" data-mean="{{ _('Media') }}"
+                 data-tip="{{ _('Objetivo: «Media» maximiza el número medio de efectos deseados distintos en los cálices; un número o «Todos», la probabilidad de conseguir al menos esos.') }}">
             <span class="at-least-value" id="atLeastValue">{{ _("Todos") }}</span>
             <span class="at-least-caret" aria-hidden="true">▾</span>
             <select id="atLeastSelect" class="rounds-pick-select" aria-label="{{ _('Efectos deseados necesarios') }}"></select>
