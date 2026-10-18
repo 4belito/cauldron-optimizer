@@ -325,7 +325,24 @@ function initAllEffects() {
       setCap(savedCap);
     }
   };
+  // The weights before turning it on come back when it goes off, except
+  // those the user changed meanwhile (they keep their new 0 or 1)
+  let weightsBefore = null; // as they were
+  let weightsOn = null; // as they became (0 or 1)
+  const keepWeights = () => {
+    weightsBefore = [...globalWeights];
+    weightsOn = globalWeights.map((w) => (w > 0 ? 1 : 0));
+  };
+  const restoreWeights = () => {
+    if (!weightsBefore) return;
+    globalWeights = globalWeights.map((w, i) =>
+      i < weightsOn.length && w === weightsOn[i] ? weightsBefore[i] : w
+    );
+    weightsBefore = weightsOn = null;
+  };
   toggle.addEventListener("change", () => {
+    if (toggle.checked) keepWeights();
+    else restoreWeights();
     moveCap();
     update();
     rebuildWeights(); // 0 or 1 while on
@@ -342,6 +359,7 @@ function initAllEffects() {
     // Only the user moving it (as with "Óptima")
     if (e.isTrusted && toggle.checked) {
       toggle.checked = false;
+      restoreWeights();
       rebuildWeights();
     }
     update();
@@ -361,6 +379,10 @@ function initAllEffects() {
     setRounds(n) {
       rounds.value = String(n);
       update();
+    },
+    // New weights from outside (a saved search): nothing to bring back
+    forgetWeights() {
+      weightsBefore = weightsOn = null;
     },
   };
 }
@@ -662,9 +684,11 @@ window.cauldronForm = {
       globalChecked[e] = true;
     });
     // "Todos en" first: switching it moves the cap, set right after (searches
-    // saved before it have none: off)
+    // saved before it have none: off). The search's weights replace the
+    // form's, so it brings none back
     const all = window.cauldronAllEffects;
     if (all) {
+      all.forgetWeights();
       if (p.n_rounds) all.setRounds(p.n_rounds);
       all.setOn(Boolean(p.n_rounds));
     }
