@@ -1204,12 +1204,8 @@ msgid "sin construir"
 msgstr "not built"
 
 #: cauldron_optimizer/templates/index.html:125
-msgid ""
-"Mínimo de efectos deseados distintos: con 2, cuenta conseguir 2 o más. "
-"Con «Todos», solo conseguirlos todos."
-msgstr ""
-"Minimum of different wanted effects: with 2, getting 2 or more counts. "
-"With «All», only getting all of them."
+msgid "Mínimo de efectos deseados distintos que busca la optimización"
+msgstr "Minimum of different wanted effects the optimization aims for"
 
 #~ msgid "El nombre de usuario ya existe"
 #~ msgstr "That username already exists"

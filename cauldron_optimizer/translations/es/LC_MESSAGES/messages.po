@@ -1149,9 +1149,7 @@ msgid "sin construir"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:125
-msgid ""
-"Mínimo de efectos deseados distintos: con 2, cuenta conseguir 2 o más. "
-"Con «Todos», solo conseguirlos todos."
+msgid "Mínimo de efectos deseados distintos que busca la optimización"
 msgstr ""
 
 #~ msgid "No se encontró la configuracion del ususario"
