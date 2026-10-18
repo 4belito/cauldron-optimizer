@@ -126,6 +126,7 @@ def log_optimization_run(
                     search_depth=settings["n_starts"],
                     max_witch_points=settings["wp_max"],
                     n_rounds=settings["n_rounds"],
+                    min_effects=settings["min_effects"],
                     recipe=recipe,
                     score=score,
                     duration_ms=duration_ms,

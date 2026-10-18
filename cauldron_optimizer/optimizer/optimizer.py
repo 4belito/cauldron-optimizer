@@ -78,31 +78,55 @@ def ingredient_witch_points(counts: Sequence[int], block: list[list[int]]) -> li
     return costs
 
 
-def rounds_probability(q: Sequence[float], n: int) -> float:
-    """Chance that n brews give min(m, n) different effects of the m wanted.
+def rounds_probability(q: Sequence[float], n: int, k: int = 0) -> float:
+    """Chance that n brews give at least k different effects of the m wanted
+    (k = 0, or k >= min(m, n): as many as can be, min(m, n)).
 
     q: chance (0-1) of each wanted effect in one brew. A brew gives at most
     one effect, and the brews are independent (derivation: all_effects.ipynb).
-    - m >= n: each brew gives a different wanted effect, any n of them:
+    - m >= n, all: each brew gives a different wanted effect, any n of them:
       n! * e_n(q), the sum of the products of every n chances
-    - m < n: all m come out at least once: n! [x^n] e^(r x) prod(e^(q_i x) - 1),
-      r = 1 - sum(q) (an unwanted effect or none); the exponential generating
-      function of the inclusion-exclusion sum
+    - m < n, all: all m come out at least once:
+      n! [x^n] e^(r x) prod(e^(q_i x) - 1), r = 1 - sum(q) (an unwanted
+      effect or none); the exponential generating function of the
+      inclusion-exclusion sum
+    - k below that: n! [x^n] of the terms with at least k factors
+      (e^(q_i x) - 1) in e^(r x) prod(1 + (e^(q_i x) - 1)); both cases above
+      are this one with k = min(m, n)
     """
-    if len(q) >= n:
-        # e[j]: sum of the products of every j chances seen so far
-        e = [1.0] + [0.0] * n
+    m = len(q)
+    if k <= 0 or k >= min(m, n):
+        if m >= n:
+            # e[j]: sum of the products of every j chances seen so far
+            e = [1.0] + [0.0] * n
+            for qi in q:
+                for j in range(n, 0, -1):
+                    e[j] += qi * e[j - 1]
+            return math.factorial(n) * e[n]
+        r = max(0.0, 1.0 - sum(q))
+        # Coefficients of x^0..x^n; f: qi^j / j!
+        poly = [r**j / math.factorial(j) for j in range(n + 1)]
         for qi in q:
-            for j in range(n, 0, -1):
-                e[j] += qi * e[j - 1]
-        return math.factorial(n) * e[n]
+            f = [qi**j / math.factorial(j) for j in range(n + 1)]
+            poly = [sum(poly[a] * f[d - a] for a in range(d)) for d in range(n + 1)]
+        return math.factorial(n) * poly[n]
+
     r = max(0.0, 1.0 - sum(q))
-    # Coefficients of x^0..x^n; f: qi^j / j!
-    poly = [r**j / math.factorial(j) for j in range(n + 1)]
+    # by[j]: coefficients of x^0..x^n of the terms with j factors
+    # (e^(q_i x) - 1), the last one with k or more
+    by = [[0.0] * (n + 1) for _ in range(k + 1)]
+    by[0] = [r**d / math.factorial(d) for d in range(n + 1)]
     for qi in q:
-        f = [qi**j / math.factorial(j) for j in range(n + 1)]
-        poly = [sum(poly[a] * f[k - a] for a in range(k)) for k in range(n + 1)]
-    return math.factorial(n) * poly[n]
+        f = [0.0] + [qi**d / math.factorial(d) for d in range(1, n + 1)]
+
+        def times_f(p: list[float], f: list[float] = f) -> list[float]:
+            return [sum(p[a] * f[d - a] for a in range(d)) for d in range(n + 1)]
+
+        top = times_f([x + y for x, y in zip(by[k], by[k - 1], strict=True)])
+        by[k] = [x + y for x, y in zip(by[k], top, strict=True)]
+        for j in range(k - 1, 0, -1):
+            by[j] = [x + y for x, y in zip(by[j], times_f(by[j - 1]), strict=True)]
+    return math.factorial(n) * by[k][n]
 
 
 class CauldronOptimizer:
@@ -121,6 +145,7 @@ class CauldronOptimizer:
         wp_max: int | None = None,
         wonder_level: int = 0,
         n_rounds: int = 0,
+        min_effects: int = 0,
         cache_max_size: int = 1_000_000,
     ):
         effect_weights = np.asarray(effect_weights, dtype=float)
@@ -154,6 +179,8 @@ class CauldronOptimizer:
         # the score is then the chance (%) of getting min(m, n_rounds)
         # different wanted effects (weight > 0) in that many brews
         self.n_rounds = int(n_rounds)
+        # ...or at least min_effects of them (0: as many as can be)
+        self.min_effects = int(min_effects)
         self.wanted = np.flatnonzero(self.w > 0)
 
         # alpha upper bounds (reduced)
@@ -425,7 +452,9 @@ class CauldronOptimizer:
         probs = np.minimum(probs, self.prob_UB)
         if not self.n_rounds:
             return float(probs @ self.w)
-        return 100.0 * rounds_probability(probs[self.wanted] / 100.0, self.n_rounds)
+        return 100.0 * rounds_probability(
+            probs[self.wanted] / 100.0, self.n_rounds, self.min_effects
+        )
 
     def _search_value(self, probs: np.ndarray) -> float:
         """score, except that recipes with no chance at all (too few wanted

@@ -3,6 +3,7 @@
 // Same model: E_i = max(V_i·alpha, 0) * 1.1^(B_i·alpha),
 // p_i = min(20 * E_i / sum(E) * sqrt(sum(alpha)), probUB), score = sum(w_i * p_i),
 // or with nRounds brews the chance (%) of getting min(m, nRounds) different
+// (or at least minEffects)
 // wanted effects (weight > 0), as rounds_probability in optimizer.py.
 // Excluded effects (V row zeroed in Python) add nothing to E or to the score, so
 // here they are simply left out: only the active effect rows are kept.
@@ -34,7 +35,7 @@ class CauldronSolver {
   // effects: indices of the active effects; weights: their weights (same order)
   constructor({
     B, V, effects, weights, premiumIngr = [], alphaUB = 25, probUB = 100, wpMax = null, wonderLevel = 0,
-    nRounds = 0,
+    nRounds = 0, minEffects = 0,
   }) {
     this.nIngredients = B[0].length;
     const avoided = new Set(premiumIngr);
@@ -65,6 +66,12 @@ class CauldronSolver {
     this._poly = new Float64Array(nRounds + 1);
     this._next = new Float64Array(nRounds + 1);
     this._f = new Float64Array(nRounds + 1);
+    // "At least k" of the wanted effects, only below as many as can be
+    // (min(m, nRounds)); 0: all of those
+    const most = Math.min(this.wanted.length, nRounds);
+    this.atLeast = minEffects > 0 && minEffects < most ? minEffects : 0;
+    this._by = new Float64Array((this.atLeast + 1) * (nRounds + 1));
+    this._t = new Float64Array(nRounds + 1);
 
     // Witch Point limit (Infinity: none). wpBlock[r][c]: price of c copies of
     // one ingredient added right after r others
@@ -113,6 +120,7 @@ class CauldronSolver {
   roundsProbability(q) {
     const n = this.nRounds;
     const m = q.length;
+    if (this.atLeast) return this.atLeastProbability(q);
     if (m >= n) {
       // e[j]: sum of the products of every j chances seen so far
       const e = this._e.fill(0);
@@ -140,6 +148,45 @@ class CauldronSolver {
       [poly, next] = [next, poly];
     }
     return FACTORIAL[n] * poly[n];
+  }
+
+  // Chance that nRounds brews give at least atLeast different wanted effects
+  // (rounds_probability in optimizer.py, k below min(m, n)): n! [x^n] of the
+  // terms with at least k factors (e^(q_i x) - 1) in
+  // e^(r x) prod(1 + (e^(q_i x) - 1)). by[j]: coefficients of the terms with
+  // j factors, the last bucket k or more
+  atLeastProbability(q) {
+    const n = this.nRounds;
+    const k = this.atLeast;
+    const N1 = n + 1;
+    let r = 1;
+    for (let i = 0; i < q.length; i++) r -= q[i];
+    r = Math.max(r, 0);
+    const by = this._by.fill(0);
+    by[0] = 1;
+    for (let d = 1; d <= n; d++) by[d] = (by[d - 1] * r) / d;
+    const f = this._f; // e^(q_i x) - 1: q_i^d / d!, no constant term
+    const t = this._t;
+    for (let i = 0; i < q.length; i++) {
+      f[0] = 0;
+      let pw = 1;
+      for (let d = 1; d <= n; d++) {
+        pw = (pw * q[i]) / d;
+        f[d] = pw;
+      }
+      // From the top bucket down, so each reads the one below unchanged
+      for (let j = k; j >= 1; j--) {
+        const base = j * N1;
+        const prev = (j - 1) * N1;
+        for (let d = 0; d <= n; d++) t[d] = (j === k ? by[base + d] : 0) + by[prev + d];
+        for (let d = 1; d <= n; d++) {
+          let c = 0;
+          for (let a = 0; a < d; a++) c += t[a] * f[d - a];
+          by[base + d] += c;
+        }
+      }
+    }
+    return FACTORIAL[n] * by[k * N1 + n];
   }
 
   objective(Sv, Sb, total) {

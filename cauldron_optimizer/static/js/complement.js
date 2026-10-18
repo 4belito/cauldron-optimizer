@@ -79,6 +79,8 @@ function initComplement() {
       wonder_level: val("wonder_level"),
       // "Todos en": goblets of its objective (0: scored by the weights)
       n_rounds: document.getElementById("allEffects")?.checked ? val("n_rounds") : 0,
+      // ...at least this many of the wanted effects (0: all that can be)
+      min_effects: document.getElementById("allEffects")?.checked ? val("min_effects") : 0,
     };
   }
 
@@ -166,7 +168,7 @@ function initComplement() {
       // Searches saved before the Witch Point limit have none
       p.wp_max ?? null, p.wp_max ? p.wonder_level ?? 0 : 0,
       // ...nor before "Todos en": scored by the weights
-      p.n_rounds || 0,
+      p.n_rounds || 0, p.n_rounds ? p.min_effects || 0 : 0,
     ]);
     return key(a) === key(b);
   };

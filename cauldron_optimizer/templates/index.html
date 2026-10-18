@@ -99,6 +99,8 @@
          value="{{ '' if form.wonder_level.data is none else form.wonder_level.data }}">
   <!-- Goblets (brews) of "Todos", picked on the goblet (see initAllEffects in optimizer.js) -->
   <input type="hidden" name="n_rounds" id="nRounds" value="{{ form.n_rounds.data }}">
+  <!-- ...and how many of the wanted effects, at least (0: "Todos"), picked on the word -->
+  <input type="hidden" name="min_effects" id="minEffects" value="{{ form.min_effects.data or 0 }}">
   <!-- Diplomas + weights -->
   <fieldset class="card effects-card" data-saved>
     <legend class="card-legend">
@@ -114,11 +116,18 @@
         <div class="all-effects-row" id="allEffectsRow">
           <!-- A switch, as "Completar efectos": both are modes of this panel -->
           <label class="complement-switch" id="allEffectsCheck"
-                 data-tip="{{ _('Maximiza la probabilidad de conseguir TODOS los efectos deseados en los cálices elegidos. Cada efecto se desea o no: sin pesos intermedios.') }}">
+                 data-tip="{{ _('Maximiza la probabilidad de conseguir los efectos deseados (todos, o al menos los que elijas) en los cálices elegidos. Cada efecto se desea o no: sin pesos intermedios.') }}">
             {{ form.all_effects(id="allEffects") }}
             <span class="complement-switch-track" aria-hidden="true"></span>
-            <span class="effects-mode-text">{{ _("Todos en") }}</span>
           </label>
+          <!-- "Todos", or at least 1, 2...: up to min(goblets, wanted effects) -->
+          <label class="at-least-pick" id="atLeastPick" data-all="{{ _('Todos') }}"
+                 data-tip="{{ _('Cuántos de los efectos deseados necesitas: todos, o al menos 1, 2, 3...') }}">
+            <span class="at-least-value" id="atLeastValue">{{ _("Todos") }}</span>
+            <span class="at-least-caret" aria-hidden="true">▾</span>
+            <select id="atLeastSelect" class="rounds-pick-select" aria-label="{{ _('Efectos deseados necesarios') }}"></select>
+          </label>
+          <span class="effects-mode-text">{{ _("en") }}</span>
           <label class="rounds-pick" id="roundsPick"
                  data-tip="{{ _('Cálices: las veces que se prepara la poción con esta receta') }}">
             <img class="rounds-pick-icon" src="{{ url_for('static', filename='ui/cauldron/goblet.png') }}" alt="{{ _('Cálices') }}">

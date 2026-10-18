@@ -52,6 +52,8 @@ function initBrowserSearch() {
       alphaUB: val("alpha_UB"),
       probUB: nRounds ? 100 : val("prob_UB"),
       nRounds,
+      // ...at least this many of the wanted effects (0: all that can be)
+      minEffects: nRounds ? val("min_effects") : 0,
       depth: val("n_starts"),
       wpMax: wpMax > 0 ? wpMax : null, // empty: no limit
       wonderLevel: val("wonder_level"),

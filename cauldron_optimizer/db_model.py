@@ -142,6 +142,10 @@ class Server(Base):
     n_rounds: Mapped[int] = mapped_column(
         Integer, nullable=False, default=5, server_default="5"
     )
+    # ...or at least this many of the wanted effects (0: all that can be)
+    min_effects: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=0, server_default="0"
+    )
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 
@@ -203,6 +207,8 @@ class OptimizationRun(Base):
     max_witch_points: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # Brews the score counted (0: weighted probability; None: not recorded)
     n_rounds: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    # ...at least this many wanted effects (0: all that can be)
+    min_effects: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
 
 class ComplementSearch(Base):

@@ -354,6 +354,7 @@ function initAllEffects() {
       toggle.dispatchEvent(new Event("change", { bubbles: true }));
     }
     update();
+    showAtLeast(); // fewer goblets: a lower maximum
   });
   cap.addEventListener("input", (e) => {
     // Only the user moving it (as with "Óptima")
@@ -364,8 +365,55 @@ function initAllEffects() {
     }
     update();
   });
+  // "Todos", or at least k of the wanted effects, picked on the word: k up
+  // to the most that can come out, min(goblets, wanted effects); that one is
+  // "Todos". Read from the form's fields, so it also works before the
+  // sliders are built
+  const { form, weightsHidden, excludedHidden } = window.OPTIMIZER_CONFIG.dom;
+  const minInput = document.getElementById("minEffects");
+  const kPick = document.getElementById("atLeastPick");
+  const kSelect = document.getElementById("atLeastSelect");
+  const kValue = document.getElementById("atLeastValue");
+  const wantedCount = () => {
+    try {
+      const excluded = new Set(JSON.parse(excludedHidden.value || "[]"));
+      return JSON.parse(weightsHidden.value || "[]").filter((w, i) => w > 0 && !excluded.has(i))
+        .length;
+    } catch (e) {
+      return 0;
+    }
+  };
+  const showAtLeast = () => {
+    const most = Math.min(Number(rounds.value), wantedCount());
+    let k = Number(minInput.value) || 0;
+    if (k >= most) k = 0; // as many as can be: "Todos"
+    minInput.value = String(k);
+    const options = [new Option(kPick.dataset.all, "0")];
+    for (let i = 1; i < most; i++) options.push(new Option(String(i), String(i)));
+    kSelect.replaceChildren(...options);
+    kSelect.value = String(k);
+    kValue.textContent = k ? String(k) : kPick.dataset.all;
+  };
+  kSelect.addEventListener("change", () => {
+    minInput.value = kSelect.value;
+    if (!toggle.checked) {
+      toggle.checked = true;
+      toggle.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    showAtLeast();
+  });
+  // Goblets, weights, checked effects or diplomas changed: new maximum. Not
+  // the picker's own events: its "input" comes before its "change" and would
+  // put the old value back before the change reads the new one
+  const refreshAtLeast = (e) => {
+    if (e.target !== kSelect) showAtLeast();
+  };
+  form.addEventListener("input", refreshAtLeast);
+  form.addEventListener("change", refreshAtLeast);
+
   if (toggle.checked) moveCap();
   update();
+  showAtLeast();
 
   // Public hooks used by autofill.js: as if the player chose them here
   window.cauldronAllEffects = {
@@ -379,6 +427,14 @@ function initAllEffects() {
     setRounds(n) {
       rounds.value = String(n);
       update();
+      showAtLeast();
+    },
+    // At least k of the wanted effects (0: "Todos"); above the most that can
+    // come out it is "Todos" too. Returns the k kept
+    setMinEffects(k) {
+      minInput.value = String(k);
+      showAtLeast();
+      return Number(minInput.value);
     },
     // New weights from outside (a saved search): nothing to bring back
     forgetWeights() {
@@ -710,6 +766,8 @@ window.cauldronForm = {
     rebuildWeights();
     // Keeps the -/+ buttons in step with the new count
     dom.nDiploma.dispatchEvent(new Event("input"));
+    // At least k: after the weights, which set its maximum
+    if (all) all.setMinEffects(p.n_rounds ? p.min_effects || 0 : 0);
   },
   // The effects the user wants (checked), with their weights
   chosen() {

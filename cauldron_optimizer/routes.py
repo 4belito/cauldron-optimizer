@@ -98,6 +98,7 @@ def index():
         form.exact_search.data = bool(settings.exact_search)
         form.all_effects.data = bool(settings.all_effects)
         form.n_rounds.data = int(settings.n_rounds)
+        form.min_effects.data = int(settings.min_effects)
         form.wp_max.data = settings.max_witch_points
         form.wonder_level.data = settings.wonder_level
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
@@ -115,6 +116,7 @@ def index():
             form.exact_search.data = last["exact"]
             form.all_effects.data = last.get("all_effects", False)
             form.n_rounds.data = last.get("n_rounds", settings.n_rounds)
+            form.min_effects.data = last.get("min_effects", settings.min_effects)
             form.wp_max.data = last.get("wp_max")
             form.wonder_level.data = last.get("wonder_level", settings.wonder_level)
             form.effect_weights_json.data = json.dumps(last["effect_weights"])
@@ -249,6 +251,7 @@ def add_server():
                 exact_search=current.exact_search,
                 all_effects=current.all_effects,
                 n_rounds=current.n_rounds,
+                min_effects=current.min_effects,
                 max_witch_points=current.max_witch_points,
                 # Each world has its own school: a new one starts not built
                 wonder_level=None,
@@ -388,6 +391,7 @@ def select_world_integration():
                     exact_search=current.exact_search,
                     all_effects=current.all_effects,
                     n_rounds=current.n_rounds,
+                    min_effects=current.min_effects,
                     max_witch_points=current.max_witch_points,
                     # Each world has its own school: a new one starts not built
                     wonder_level=None,
@@ -561,6 +565,7 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         "exact": bool(form.exact_search.data),
         "all_effects": bool(form.all_effects.data),
         "n_rounds": int(form.n_rounds.data or 0),
+        "min_effects": int(form.min_effects.data or 0),
         # None: no Witch Point limit
         "wp_max": form.wp_max.data,
         "wonder_level": int(form.wonder_level.data or 0),
@@ -590,6 +595,7 @@ def save_settings():
             server.exact_search = s["exact"]
             server.all_effects = s["all_effects"]
             server.n_rounds = s["n_rounds"]
+            server.min_effects = s["min_effects"]
             server.max_witch_points = s["wp_max"]
             server.wonder_level = s["wonder_level"]
             server.updated_at = datetime.now(UTC)
@@ -639,6 +645,8 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         "wonder_level": int(p.get("wonder_level") or 0),
         # "Todos en" goblets; searches saved before it have none: 0, by the weights
         "n_rounds": int(p.get("n_rounds") or 0),
+        # ...and at least this many wanted effects (0, or none saved: all)
+        "min_effects": int(p.get("min_effects") or 0),
     }
     ok = (
         MIN_CHECKED_EFFECTS <= n <= len(EFFECT_NAMES)
@@ -653,6 +661,7 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         and (params["wp_max"] is None or params["wp_max"] >= 1)
         and 0 <= params["wonder_level"] < len(WONDER_REDUCTION)
         and 0 <= params["n_rounds"] <= MAX_ROUNDS
+        and 0 <= params["min_effects"] <= MAX_ROUNDS
     )
     if not ok:
         raise ValueError
@@ -772,6 +781,7 @@ def optimize():
     # "Todos": a weight only says the effect is wanted (0 or 1), the score is
     # the chance of getting them within the goblets, and there is no cap
     rounds = s["n_rounds"] if s["all_effects"] else 0
+    min_effects = s["min_effects"] if rounds else 0
     if rounds:
         effect_weights = (effect_weights > 0).astype(np.float64)
 
@@ -784,6 +794,7 @@ def optimize():
         wp_max=s["wp_max"],
         wonder_level=s["wonder_level"],
         n_rounds=rounds,
+        min_effects=min_effects,
     )
 
     # The browser normally searches (static/js/search.js) and sends its recipe;
@@ -801,7 +812,7 @@ def optimize():
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = opt.score(opt.effect_probabilities(alpha_best))
     log_optimization_run(
-        {**s, "n_rounds": rounds},
+        {**s, "n_rounds": rounds, "min_effects": min_effects},
         alpha_matrix,
         score,
         duration_ms,
@@ -832,9 +843,10 @@ def optimize():
         "score": score,
         "exact": exact,
         # What the score is: the weighted probability (n_rounds 0) or the
-        # chance (%) of getting n_got different wanted effects in n_rounds brews
+        # chance (%) of getting at least n_got different wanted effects in
+        # n_rounds brews (all of them that can be, or min_effects)
         "n_rounds": rounds,
-        "n_got": min(len(opt.wanted), rounds),
+        "n_got": min(len(opt.wanted), rounds, min_effects or rounds),
         # Kept with the recipe: the form's selection can be reset meanwhile
         "premiums": premium_ingr,
         # The school's level the costs are priced with
@@ -854,6 +866,7 @@ def optimize():
             "exact": s["exact"],
             "all_effects": s["all_effects"],
             "n_rounds": s["n_rounds"],
+            "min_effects": s["min_effects"],
             "wp_max": s["wp_max"],
             "wonder_level": s["wonder_level"],
         }

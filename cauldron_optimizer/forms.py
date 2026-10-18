@@ -237,6 +237,23 @@ class SearchForm(FlaskForm):
         ],
         default=MAX_ROUNDS,
     )
+    # ...or at least this many of them (0: "Todos", as many as can be),
+    # picked on the word "Todos" like the goblets
+    min_effects = IntegerField(
+        validators=[
+            Optional(),
+            NumberRange(
+                min=0,
+                max=MAX_ROUNDS,
+                message=_l(
+                    N_("El mínimo de efectos debe estar entre 0 y {}").format(
+                        MAX_ROUNDS
+                    )
+                ),
+            ),
+        ],
+        default=0,
+    )
     # Witch Points the recipe may cost; empty: no limit. The page shows its
     # own text field (accepts 12K, 1.2M) and fills this hidden one
     wp_max = IntegerField(

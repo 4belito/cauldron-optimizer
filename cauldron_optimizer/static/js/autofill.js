@@ -27,6 +27,9 @@
 //   all_in        boolean; the "Todos en" / "All in" switch: the best chance
 //                 of getting all the wanted effects within the goblets (the
 //                 weights become 0 or 1). Applied after selected_effects
+//   at_least      integer, 0..5: at least this many of the wanted effects
+//                 instead of all (0: all). At or above min(goblets, wanted
+//                 effects) it means all, so `applied` gets 0
 //   save           boolean; save settings after applying the values
 
 // A content script may also select (or create) a world by name:
@@ -49,7 +52,7 @@ function complementActive() {
 
 const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
 
-const AUTOFILL_VERSION = 5;
+const AUTOFILL_VERSION = 6;
 const N_INGREDIENTS = 12;
 
 function applyAutofill(data) {
@@ -155,6 +158,17 @@ function applyAutofill(data) {
       result.applied.all_in = data.all_in;
     } else {
       result.errors.push("all_in must be a boolean");
+    }
+  }
+
+  if (data.at_least !== undefined) {
+    const k = data.at_least;
+    if (!all) {
+      result.errors.push("at_least is not available");
+    } else if (Number.isInteger(k) && k >= 0 && k <= all.maxRounds) {
+      result.applied.at_least = all.setMinEffects(k);
+    } else {
+      result.errors.push(`at_least must be an integer from 0 to ${all.maxRounds}`);
     }
   }
 
