@@ -1033,6 +1033,23 @@ button:disabled[data-tip] {
   font-variant-numeric: tabular-nums;
 }
 
+/* Text and table together: the table below, after a thin line */
+.game-tip-text {
+  margin: 0;
+}
+
+.game-tip-text + .game-tip-rows {
+  margin-top: 0.35rem;
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(201, 164, 79, 0.4);
+}
+
+/* The highlighted row (e.g. the "at least k" the search optimized) */
+.game-tip-rows .is-current {
+  font-weight: 800;
+  color: #f3d27a;
+}
+
 /* Ranking order: Mean / Minimum / Maximum */
 .complement-sort {
   display: flex;

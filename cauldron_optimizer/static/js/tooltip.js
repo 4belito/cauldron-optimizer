@@ -1,6 +1,8 @@
 // Game-styled help tooltips: any element with data-tip shows its text when
 // hovered or focused. With data-tip-rows (JSON [[name, value], ...]) it shows
-// a two-column table instead: names left, values right. One shared bubble, placed above the element (or below
+// a two-column table: names left, values right (below the data-tip text when
+// it has both); a row with a third item true ([name, value, true]) is
+// highlighted. One shared bubble, placed above the element (or below
 // when there is no room), kept inside the screen.
 
 function initTooltips() {
@@ -15,11 +17,12 @@ function initTooltips() {
   function rowsList(rows) {
     const dl = document.createElement("dl");
     dl.className = "game-tip-rows";
-    rows.forEach(([name, value]) => {
+    rows.forEach(([name, value, current]) => {
       const dt = document.createElement("dt");
       const dd = document.createElement("dd");
       dt.textContent = name;
       dd.textContent = value;
+      if (current) dt.className = dd.className = "is-current";
       dl.append(dt, dd);
     });
     return dl;
@@ -28,8 +31,18 @@ function initTooltips() {
   function show(el) {
     if (!el.dataset.tip && !el.dataset.tipRows) return hide();
     current = el;
-    if (el.dataset.tipRows) tip.replaceChildren(rowsList(JSON.parse(el.dataset.tipRows)));
-    else tip.textContent = el.dataset.tip;
+    if (el.dataset.tipRows) {
+      const parts = [rowsList(JSON.parse(el.dataset.tipRows))];
+      if (el.dataset.tip) {
+        const text = document.createElement("p");
+        text.className = "game-tip-text";
+        text.textContent = el.dataset.tip;
+        parts.unshift(text);
+      }
+      tip.replaceChildren(...parts);
+    } else {
+      tip.textContent = el.dataset.tip;
+    }
     tip.hidden = false;
     const r = el.getBoundingClientRect();
     const t = tip.getBoundingClientRect();

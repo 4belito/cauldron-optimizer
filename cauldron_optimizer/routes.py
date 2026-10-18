@@ -38,6 +38,7 @@ from cauldron_optimizer.optimizer.optimizer import (
     WONDER_REDUCTION,
     CauldronOptimizer,
     ingredient_witch_points,
+    rounds_probability,
     wp_block_table,
 )
 
@@ -811,6 +812,13 @@ def optimize():
         duration_ms = round((time.perf_counter() - start) * 1000)
     alpha_matrix = alpha_best.reshape(3, 4).astype(int).tolist()
     score = opt.score(opt.effect_probabilities(alpha_best))
+    # "Todos en": the chance of at least k of the wanted effects for every k,
+    # from 1 to all that can come out (shown on hovering the score)
+    chances: list[float] = []
+    if rounds:
+        q = np.minimum(opt.effect_probabilities(alpha_best), 100.0)[opt.wanted] / 100
+        most = min(len(q), rounds)
+        chances = [100 * rounds_probability(q, rounds, k) for k in range(1, most + 1)]
     log_optimization_run(
         {**s, "n_rounds": rounds, "min_effects": min_effects},
         alpha_matrix,
@@ -847,6 +855,7 @@ def optimize():
         # n_rounds brews (all of them that can be, or min_effects)
         "n_rounds": rounds,
         "n_got": min(len(opt.wanted), rounds, min_effects or rounds),
+        "chances": chances,
         # Kept with the recipe: the form's selection can be reset meanwhile
         "premiums": premium_ingr,
         # The school's level the costs are priced with
@@ -885,6 +894,13 @@ def format_amount(n: int) -> str:
     return str(n)
 
 
+@app.template_filter("precise")
+def format_precise(x: float) -> str:
+    """A score with all the decimals that matter (up to 12, no trailing
+    zeros): shown on hover, where "100.00" may be 99.999999769."""
+    return f"{x:.12f}".rstrip("0").rstrip(".")
+
+
 @app.route("/results")
 @login_required
 def results():
@@ -915,6 +931,7 @@ def results():
         exact=last_results.get("exact", False),
         n_rounds=last_results.get("n_rounds", 0),
         n_got=last_results.get("n_got", 0),
+        chances=last_results.get("chances", []),
         premiums=last_results.get("premiums", session.get("premium_ingredients", [])),
         max_ingredients=CauldronOptimizer.sum_ingredients,
     )

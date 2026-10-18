@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-18 15:10-0400\n"
+"POT-Creation-Date: 2026-10-18 16:06-0400\n"
 "PO-Revision-Date: 2025-12-24 13:27-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr ""
 
-#: cauldron_optimizer/__init__.py:63 cauldron_optimizer/routes.py:263
-#: cauldron_optimizer/routes.py:290 cauldron_optimizer/routes.py:317
-#: cauldron_optimizer/routes.py:334 cauldron_optimizer/routes.py:414
-#: cauldron_optimizer/routes.py:603 cauldron_optimizer/routes.py:722
-#: cauldron_optimizer/routes.py:737
+#: cauldron_optimizer/__init__.py:63 cauldron_optimizer/routes.py:264
+#: cauldron_optimizer/routes.py:291 cauldron_optimizer/routes.py:318
+#: cauldron_optimizer/routes.py:335 cauldron_optimizer/routes.py:415
+#: cauldron_optimizer/routes.py:604 cauldron_optimizer/routes.py:723
+#: cauldron_optimizer/routes.py:738
 msgid "Error de base de datos"
 msgstr ""
 
@@ -216,8 +216,8 @@ msgstr ""
 msgid "Las contraseñas no coinciden"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:129 cauldron_optimizer/routes.py:222
-#: cauldron_optimizer/routes.py:275
+#: cauldron_optimizer/forms.py:129 cauldron_optimizer/routes.py:223
+#: cauldron_optimizer/routes.py:276
 msgid "Avatar no válido"
 msgstr ""
 
@@ -342,54 +342,54 @@ msgstr ""
 msgid "Formulario inválido"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:186 cauldron_optimizer/routes.py:211
-#: cauldron_optimizer/routes.py:213
+#: cauldron_optimizer/routes.py:187 cauldron_optimizer/routes.py:212
+#: cauldron_optimizer/routes.py:214
 #: cauldron_optimizer/templates/register.html:52
 #, python-format
 msgid "Mundo %(n)s"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:197
+#: cauldron_optimizer/routes.py:198
 #, python-format
 msgid "El nombre del mundo debe tener entre 1 y %(n)s caracteres"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:203
+#: cauldron_optimizer/routes.py:204
 msgid "Ya tienes un mundo con ese nombre"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:231 cauldron_optimizer/routes.py:373
+#: cauldron_optimizer/routes.py:232 cauldron_optimizer/routes.py:374
 #, python-format
 msgid "Puedes tener como máximo %(n)s mundos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:305 cauldron_optimizer/routes.py:330
-#: cauldron_optimizer/routes.py:366
+#: cauldron_optimizer/routes.py:306 cauldron_optimizer/routes.py:331
+#: cauldron_optimizer/routes.py:367
 msgid "Mundo no válido"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:310 cauldron_optimizer/templates/index.html:73
+#: cauldron_optimizer/routes.py:311 cauldron_optimizer/templates/index.html:73
 msgid "No puedes eliminar tu único mundo"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:452
+#: cauldron_optimizer/routes.py:453
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:519
+#: cauldron_optimizer/routes.py:520
 msgid "El nombre de usuario ya está en uso"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:545
+#: cauldron_optimizer/routes.py:546
 msgid "Ingredientes premium no válidos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:550
+#: cauldron_optimizer/routes.py:551
 #, python-format
 msgid "Elige exactamente %(n)s ingredientes para evitar"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:691 cauldron_optimizer/routes.py:706
+#: cauldron_optimizer/routes.py:692 cauldron_optimizer/routes.py:707
 msgid "Datos no válidos"
 msgstr ""
 
@@ -529,6 +529,10 @@ msgstr ""
 #: cauldron_optimizer/templates/index.html:124
 #: cauldron_optimizer/templates/index.html:126
 msgid "Todos"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:125
+msgid "Mínimo de efectos deseados distintos que busca la optimización"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:128
@@ -995,7 +999,7 @@ msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:46
 #: cauldron_optimizer/templates/results.html:14
-#: cauldron_optimizer/templates/results.html:152
+#: cauldron_optimizer/templates/results.html:170
 msgid "Volver"
 msgstr ""
 
@@ -1037,13 +1041,13 @@ msgid ""
 msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:121
-#: cauldron_optimizer/templates/results.html:140
+#: cauldron_optimizer/templates/results.html:158
 msgid "Costes"
 msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:124
 #: cauldron_optimizer/templates/results.html:45
-#: cauldron_optimizer/templates/results.html:143
+#: cauldron_optimizer/templates/results.html:161
 msgid "Puntos de hechicería"
 msgstr ""
 
@@ -1126,17 +1130,27 @@ msgstr ""
 msgid "Score"
 msgstr "Puntuación"
 
-#: cauldron_optimizer/templates/results.html:122
+#: cauldron_optimizer/templates/results.html:126
+#, python-format
+msgid "Todos (%(k)s)"
+msgstr ""
+
+#: cauldron_optimizer/templates/results.html:126
+#, python-format
+msgid "Al menos %(k)s"
+msgstr ""
+
+#: cauldron_optimizer/templates/results.html:140
 msgid "Óptimo garantizado"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:123
+#: cauldron_optimizer/templates/results.html:141
 msgid ""
 "Óptimo garantizado: se comprobaron todas las recetas posibles, no existe "
 "ninguna mejor con estos ajustes"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:139
+#: cauldron_optimizer/templates/results.html:157
 #, python-format
 msgid ""
 "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus"
@@ -1144,12 +1158,8 @@ msgid ""
 "con el descuento de la Escuela de hechicería valoriana: %(discount)s"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:139
+#: cauldron_optimizer/templates/results.html:157
 msgid "sin construir"
-msgstr ""
-
-#: cauldron_optimizer/templates/index.html:125
-msgid "Mínimo de efectos deseados distintos que busca la optimización"
 msgstr ""
 
 #~ msgid "No se encontró la configuracion del ususario"

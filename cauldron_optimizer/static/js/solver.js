@@ -72,6 +72,18 @@ class CauldronSolver {
     this.atLeast = minEffects > 0 && minEffects < most ? minEffects : 0;
     this._by = new Float64Array((this.atLeast + 1) * (nRounds + 1));
     this._t = new Float64Array(nRounds + 1);
+    // Wanted effects the score asks for (k), for a cheap upper bound of it:
+    // k different wanted effects need at least k brews with a wanted effect,
+    // so the score is at most P(Binomial(nRounds, s) >= k), s = sum of their
+    // chances. The exact search skips the full formula for recipes whose
+    // bound cannot beat its best one (pruneBelow; -Infinity: never)
+    this.needK = this.atLeast || most;
+    this.binom = Array.from({ length: nRounds + 1 }, (_, j) => {
+      let c = 1;
+      for (let i = 1; i <= j; i++) c = (c * (nRounds - j + i)) / i;
+      return c;
+    });
+    this.pruneBelow = -Infinity;
 
     // Witch Point limit (Infinity: none). wpBlock[r][c]: price of c copies of
     // one ingredient added right after r others
@@ -206,7 +218,34 @@ class CauldronSolver {
     for (let i = 0; i < m; i++) val += this.w[i] * Math.min(E[i] * f, this.probUB);
     if (!this.nRounds) return val;
     const q = this._q;
-    for (let k = 0; k < q.length; k++) q[k] = Math.min(E[this.wanted[k]] * f, this.probUB) / 100;
+    let s = 0;
+    for (let k = 0; k < q.length; k++) {
+      q[k] = Math.min(E[this.wanted[k]] * f, this.probUB) / 100;
+      s += q[k];
+    }
+    if (this.pruneBelow > -Infinity) {
+      // Upper bound: at least needK of the nRounds brews give a wanted effect
+      const n = this.nRounds;
+      s = Math.min(s, 1);
+      // Sum over j >= needK of C(n, j) s^j (1 - s)^(n - j), from j = n down
+      // (powers by multiplying, no Math.pow)
+      const r = 1 - s;
+      let sj = 1;
+      for (let j = 0; j < this.needK; j++) sj *= s; // s^needK
+      let bound = 0;
+      let rj = 1; // (1 - s)^(n - j)
+      const terms = this._terms || (this._terms = new Float64Array(n + 1));
+      for (let j = this.needK; j <= n; j++) {
+        terms[j] = sj;
+        sj *= s;
+      }
+      for (let j = n; j >= this.needK; j--) {
+        bound += this.binom[j] * terms[j] * rj;
+        rj *= r;
+      }
+      // Cannot beat the best one (margin for rounding): no need for the rest
+      if (100 * bound + 1e-9 <= this.pruneBelow) return 100 * bound;
+    }
     const p = this.roundsProbability(q);
     // No chance at all (too few wanted effects come out): rank in [-1, 0) by
     // the weighted probability, so the local search still finds its way up
@@ -381,6 +420,7 @@ class CauldronSolver {
 
     function visit(j, total) {
       if (j === n) {
+        self.pruneBelow = bestVal; // recipes that cannot beat it are cut short
         const val = self.objective(Sv, Sb, total);
         if (val > bestVal + 1e-12) {
           bestVal = val;
@@ -411,6 +451,7 @@ class CauldronSolver {
     }
 
     if (n > 0) visit(0, 0);
+    this.pruneBelow = -Infinity; // other searches use the full score
     const recipe = new Array(this.nIngredients).fill(0);
     this.freeIdx.forEach((j, r) => {
       recipe[j] = bestAlpha[r];
