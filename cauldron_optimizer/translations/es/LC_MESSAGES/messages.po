@@ -531,10 +531,6 @@ msgstr ""
 msgid "Todos"
 msgstr ""
 
-#: cauldron_optimizer/templates/index.html:125
-msgid "Cuántos de los efectos deseados necesitas: todos, o al menos 1, 2, 3..."
-msgstr ""
-
 #: cauldron_optimizer/templates/index.html:128
 msgid "Efectos deseados necesarios"
 msgstr ""
@@ -1150,6 +1146,12 @@ msgstr ""
 
 #: cauldron_optimizer/templates/results.html:139
 msgid "sin construir"
+msgstr ""
+
+#: cauldron_optimizer/templates/index.html:125
+msgid ""
+"Mínimo de efectos deseados distintos: con 2, cuenta conseguir 2 o más. "
+"Con «Todos», solo conseguirlos todos."
 msgstr ""
 
 #~ msgid "No se encontró la configuracion del ususario"

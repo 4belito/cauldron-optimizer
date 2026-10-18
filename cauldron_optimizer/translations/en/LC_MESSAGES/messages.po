@@ -545,12 +545,6 @@ msgstr ""
 msgid "Todos"
 msgstr "All"
 
-#: cauldron_optimizer/templates/index.html:125
-msgid "Cuántos de los efectos deseados necesitas: todos, o al menos 1, 2, 3..."
-msgstr ""
-"How many of the wanted effects you need: all of them, or at least 1, 2, "
-"3..."
-
 #: cauldron_optimizer/templates/index.html:128
 msgid "Efectos deseados necesarios"
 msgstr "Wanted effects needed"
@@ -1208,6 +1202,14 @@ msgstr ""
 #: cauldron_optimizer/templates/results.html:139
 msgid "sin construir"
 msgstr "not built"
+
+#: cauldron_optimizer/templates/index.html:125
+msgid ""
+"Mínimo de efectos deseados distintos: con 2, cuenta conseguir 2 o más. "
+"Con «Todos», solo conseguirlos todos."
+msgstr ""
+"Minimum of different wanted effects: with 2, getting 2 or more counts. "
+"With «All», only getting all of them."
 
 #~ msgid "El nombre de usuario ya existe"
 #~ msgstr "That username already exists"
