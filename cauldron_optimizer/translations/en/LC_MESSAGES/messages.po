@@ -594,6 +594,10 @@ msgstr ""
 msgid "Complete effects"
 msgstr "Complete effects"
 
+#: cauldron_optimizer/templates/index.html
+msgid "Plegar o desplegar"
+msgstr "Fold or unfold"
+
 #: cauldron_optimizer/templates/index.html:167
 #, python-brace-format
 msgid "Marca al menos {min} efectos"

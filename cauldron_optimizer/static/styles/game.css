@@ -1194,10 +1194,86 @@ button:disabled[data-tip] {
   column-gap: 0.9rem;
 }
 
+/* The world's form never wider than the bar, at any screen size: the list
+   takes the room left beside the avatar and the label (up to 18rem) and
+   shrinks with it, cutting a long name with "…" rather than overflowing */
+.server-bar .server-select-form {
+  flex: 0 1 auto;
+  max-width: 100%;
+}
+
 .server-bar .server-select {
-  width: auto;
-  min-width: 12rem;
-  max-width: min(18rem, 100%);
+  flex: 1 1 auto;
+  width: 12rem;
+  min-width: 0;
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The cards fold by their title (see initCardFolds in optimizer.js), on any
+   screen. A chevron in the card's top right corner, level with the title's
+   first line (out of the title's flow: it takes no room), turned up while
+   folded; folded, only the title shows */
+.optimizer fieldset.card > legend.card-legend {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  /* the title, still centred, wraps before reaching the chevron */
+  padding-inline: 1.6rem;
+}
+
+.card-fold {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 0.75rem;
+  right: -0.75rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.card-fold svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: none;
+  stroke: #51200d;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.22s ease-in-out;
+}
+
+.card-fold:hover svg {
+  stroke: #7a3a17;
+}
+
+.card.is-folded .card-fold svg {
+  transform: rotate(-180deg);
+}
+
+.card-fold:focus-visible {
+  outline: 2px solid #7a5a3a;
+  outline-offset: 2px;
+  border-radius: 0.4rem;
+}
+
+.optimizer fieldset.card.is-folded {
+  padding-bottom: 0.6rem;
+}
+
+.optimizer fieldset.card.is-folded > .card-body {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-fold svg {
+    transition: none;
+  }
 }
 
 /* "Complete effects" switch in the diploma row: the stepper stays centred

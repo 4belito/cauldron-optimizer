@@ -288,6 +288,7 @@
 <script>
   // Inject Flask data for optimizer.js
   window.OPTIMIZER_CONFIG = {
+    foldLabel: {{ _("Plegar o desplegar") | tojson }},
     defaultWeights: JSON.parse({{ form.effect_weights_json.data | tojson }}),
     defaultExcluded: JSON.parse({{ form.excluded_effects_json.data | tojson }}),
     effectNames: [
@@ -318,7 +319,7 @@
 </script>
 <!-- Witch Point prices, also used by the solver (solver.js) -->
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=92"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=94"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {

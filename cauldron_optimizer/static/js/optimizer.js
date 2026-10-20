@@ -253,6 +253,69 @@ function initEffectsAll() {
   });
 }
 
+// Each card folds and unfolds by its title (a chevron in its corner), so the
+// panels already set can be put away and not changed by accident while
+// scrolling. Remembered per card in the browser
+function initCardFolds() {
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const label = window.OPTIMIZER_CONFIG.foldLabel;
+
+  document.querySelectorAll(".optimizer fieldset.card").forEach((card) => {
+    const legend = card.querySelector(":scope > legend");
+    const body = card.querySelector(":scope > .card-body");
+    if (!legend || !body) return;
+    const name = [...card.classList].find((c) => c.endsWith("-card") && c !== "card");
+    const key = `cardFolded:${name}`;
+    body.id ||= `${name}-body`;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "card-fold";
+    btn.setAttribute("aria-controls", body.id);
+    btn.setAttribute("aria-label", label);
+    btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    legend.append(btn);
+
+    let folded = false;
+    try {
+      folded = localStorage.getItem(key) === "1";
+    } catch (e) {}
+
+    function apply() {
+      card.classList.toggle("is-folded", folded);
+      btn.setAttribute("aria-expanded", String(!folded));
+    }
+
+    // The body's height slides between 0 and its own
+    function slide(from, to, done) {
+      if (still.matches || !body.animate) return done();
+      body.style.overflow = "hidden";
+      const anim = body.animate([{ height: `${from}px` }, { height: `${to}px` }], {
+        duration: 220,
+        easing: "ease-in-out",
+      });
+      anim.onfinish = anim.oncancel = () => {
+        body.style.overflow = "";
+        done();
+      };
+    }
+
+    legend.addEventListener("click", () => {
+      folded = !folded;
+      try {
+        localStorage.setItem(key, folded ? "1" : "");
+      } catch (e) {}
+      if (folded) {
+        slide(body.offsetHeight, 0, apply);
+      } else {
+        apply();
+        slide(0, body.offsetHeight, () => {});
+      }
+    });
+    apply();
+  });
+}
+
 // "Óptima" checks every recipe: the limit of the search depth. Its checkmark
 // sits at the top of the depth card; while on, the depth reads "∞" and its
 // slider is dimmed. Moving the slider turns it off (one or the other).
@@ -962,6 +1025,7 @@ function initOptimizer() {
   initAllEffects();
   initWitchPointLimit();
   initEffectsAll();
+  initCardFolds();
 
   rebuildWeights();
 
