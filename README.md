@@ -39,7 +39,23 @@ Given:
 - constraints (e.g., ingredient limits, premium ingredients excluded),
 - a fixed total ingredient budget,
 
-The optimizer returns a recipe vector $\alpha$ (integer ingredient counts) that maximizes the weighted expected outcome of the desired effects.
+The optimizer returns a recipe vector $\alpha$ (integer ingredient counts) that maximizes the chosen objective:
+- **Weighted score** (default): the weighted expected outcome of the desired effects.
+- **"All in" over goblets**: with $n$ goblets (brews, 1–5), the effects are only wanted or not
+  (weights 0/1) and the objective is either
+  - **"Media"** (the default): the expected number of *different* wanted effects obtained in the $n$ goblets, or
+  - **"At least $k$" / "Todos"**: the probability of getting at least $k$ different wanted effects
+    (all of them, up to $\min(n, \text{wanted})$, with "Todos").
+
+Other features:
+- **Witch Point limit** and the level of the *Escuela de hechicería valoriana* (which lowers the prices).
+- **"Complete effects" mode**: given fewer than 10 weighted effects, a long background search tries
+  every set of complementary effects (with all 495 combinations of 4 avoided ingredients) and ranks
+  them; progress is saved per world, so it can be resumed later or from another device.
+- **Worlds**: each account keeps several worlds (servers), each with its own saved settings and avatar.
+- **Foldable panels**: each settings card folds by its title, so panels already set can be put
+  away and not changed by accident while scrolling (remembered per browser).
+- Spanish and English interface.
 
 
 
@@ -69,25 +85,47 @@ where:
 
 The optimizer uses $F(\alpha)$ as the objective and enforces probability caps and ingredient constraints.
 
+### Goblet objectives
+
+With $n$ goblets, let $q_i = \hat{E}_i(\alpha)/100$ be the chance of wanted effect $i$ in one brew
+(the per-effect cap does not apply here). Then:
+
+```math
+\text{Media}(\alpha) = \sum_{i \in \text{wanted}} \left(1 - (1 - q_i)^{n}\right)
+```
+
+and the probability of getting at least $k$ different wanted effects is computed exactly as
+$n!\,[x^n]$ of the terms with at least $k$ factors $(e^{q_i x} - 1)$ in
+$e^{r x}\prod_i\left(1 + (e^{q_i x} - 1)\right)$, with $r = 1 - \sum_i q_i$
+(see `rounds_probability` and `expected_effects` in `optimizer.py`). The mean has a closed
+form and is about as cheap as the weighted score; "at least $k$" is the costlier objective.
+
 
 
 ## Optimization method
 
-The optimization problem is discrete, constrained, and non-linear (due to the max, exponent, normalization, and square-root terms). The backend solves it using:
-* Greedy local search (steepest ascent)
-* Optional swap moves to escape local optima
-* Multi-start initialization to improve solution quality
-* Efficient incremental objective updates using precomputed matrix columns (V[:, j], B[:, j])
-* Objective caching for repeated evaluations
+The optimization problem is discrete, constrained, and non-linear (due to the max, exponent,
+normalization, and square-root terms). Two searches are available:
 
-See: CauldronOptimizer.greedy() and CauldronOptimizer.multistart().
+* **Normal search: iterated local search.** Steepest-ascent hill climbing over integer recipes
+  (moves: add one unit, or move one unit between ingredients) with efficient incremental updates
+  from precomputed matrix columns and objective caching. Half of the budget climbs from independent
+  random starts; the other half "kicks" the best recipe (6 random units moved) and climbs again,
+  keeping improvements. The budget is the *search depth* setting on the page.
+* **"Óptima": exact search.** Enumerates every recipe within the bounds (about 12–14 million with
+  4 ingredients avoided, 1–2 s in the browser) and guarantees the optimum. For "at least $k$",
+  a cheap binomial upper bound skips the full formula for recipes that cannot beat the best one.
+
+Both run in the browser (`static/js/solver.js`, in Web Workers), with the Python implementation
+(`CauldronOptimizer.greedy()` and `CauldronOptimizer.multistart()`) as the server-side fallback.
 
 
 ## Tech stack
-* Python + NumPy (core optimization engine)
-* Flask (web backend)
+* Python + NumPy (reference optimization engine, server fallback)
+* JavaScript + Web Workers (in-browser search and "Complete effects" search)
+* Flask (web backend), Flask-Babel (Spanish/English)
 * PostgreSQL (Neon)
-* Hosted deployment (Render)
+* Hosted deployment (Vercel)
 
 
 ## Local setup
@@ -186,7 +224,12 @@ Failed results include a stable `code` next to the readable `errors`:
 
 ## Notebook (explanation and examples)
 
-A Jupyter notebook (`optimizer/solver.ipynb`) is included with a step-by-step explanation
-of the scoring model and example local usage of the optimizer. The notebook is
-intended for documentation and experimentation; the production system runs as a
-deployed web application.
+Jupyter notebooks at the repository root document the model:
+- `solver.ipynb`: step-by-step explanation of the scoring model and example local usage of the optimizer.
+- `formula.ipynb`: the scoring formula, with tests.
+- `all_effects.ipynb`: derivation of the goblet objectives: the probability of getting all
+  (or at least $k$) desired effects, by inclusion–exclusion, and the expected number of different
+  desired effects.
+
+The notebooks are intended for documentation and experimentation; the production
+system runs as a deployed web application.
