@@ -312,7 +312,12 @@ body.avatar-open {
   cursor: pointer;
 }
 
+/* Lifted a little: the shadow below the letters made them look low on the
+   button */
 .avatar-btn span {
+  display: inline-block;
+  line-height: 1;
+  transform: translateY(-0.12rem);
   font-family: "Trebuchet MS", "Arial Black", sans-serif;
   font-size: 1.15rem;
   font-weight: 800;

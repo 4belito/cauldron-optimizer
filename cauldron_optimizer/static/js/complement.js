@@ -403,7 +403,7 @@ function initComplement() {
 
   // Stats of a combination over its 495 ingredient sets (tooltip.js table)
   function statsRows(entry) {
-    const v = (x) => (Number.isFinite(x) ? x.toFixed(2) : "—");
+    const v = (x) => (Number.isFinite(x) ? x.toFixed(4) : "—");
     return JSON.stringify([
       [T.statMin, v(entry.worst)],
       [T.statMax, v(entry.best)],
@@ -440,7 +440,7 @@ function initComplement() {
     // Applying the best result: only when stopped or finished
     const hasResult = !running && !!s && s.top.length > 0;
     applyBtn.disabled = !hasResult;
-    // Running: Detener. Stopped: Continuar. Finished: Cerrar
+    // Running: Pausar. Paused: Continuar. Finished: Cerrar
     const finished = !!s && s.done >= s.total;
     stopLabel.textContent = running ? T.stop : finished || !s ? T.close : T.resume;
     stopBtn.dataset.tip = running ? T.stopTip : finished || !s ? "" : T.resumeTip;

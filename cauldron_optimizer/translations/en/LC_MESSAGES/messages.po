@@ -766,13 +766,13 @@ msgstr "Progress saved: press Continue whenever you want."
 
 #: cauldron_optimizer/templates/index.html:351
 #: cauldron_optimizer/templates/index.html:473
-msgid "Detener"
-msgstr "Stop"
+msgid "Pausar"
+msgstr "Pause"
 
 #: cauldron_optimizer/templates/index.html:352
 #: cauldron_optimizer/templates/index.html:472
-msgid "Detiene la búsqueda y guarda el progreso para continuarla después"
-msgstr "Stops the search and saves the progress to continue it later"
+msgid "Pausa la búsqueda y guarda el progreso para continuarla después"
+msgstr "Pauses the search and saves the progress to continue it later"
 
 #: cauldron_optimizer/templates/index.html:354
 #: cauldron_optimizer/templates/index.html:511

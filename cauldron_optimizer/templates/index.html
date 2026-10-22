@@ -349,8 +349,8 @@
       paused: {{ _("En pausa") | tojson }},
       done: {{ _("Búsqueda terminada") | tojson }},
       saved: {{ _("Progreso guardado: pulsa Continuar cuando quieras.") | tojson }},
-      stop: {{ _("Detener") | tojson }},
-      stopTip: {{ _("Detiene la búsqueda y guarda el progreso para continuarla después") | tojson }},
+      stop: {{ _("Pausar") | tojson }},
+      stopTip: {{ _("Pausa la búsqueda y guarda el progreso para continuarla después") | tojson }},
       close: {{ _("Cerrar") | tojson }},
       resume: {{ _("Continuar") | tojson }},
       resumeTip: {{ _("Continúa la búsqueda desde donde se detuvo") | tojson }},
@@ -376,7 +376,7 @@
 <script src="{{ url_for('static', filename='js/solver.js') }}"></script>
 <!-- "Buscar receta" searches in the browser (falls back to the server) -->
 <script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/complement.js') }}?v=6"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}?v=8"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script>
   window.CAULDRON_INTEGRATION = {
@@ -470,8 +470,8 @@
         </button>
         <!-- Running: stops and saves. Stopped: continues. Finished: closes -->
         <button type="button" class="avatar-btn avatar-btn-cancel" id="complementStop"
-                data-tip="{{ _('Detiene la búsqueda y guarda el progreso para continuarla después') }}">
-          <span>{{ _("Detener") }}</span>
+                data-tip="{{ _('Pausa la búsqueda y guarda el progreso para continuarla después') }}">
+          <span>{{ _("Pausar") }}</span>
         </button>
       </div>
     </div>
