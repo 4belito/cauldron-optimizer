@@ -43,8 +43,8 @@ The optimizer returns a recipe vector $\alpha$ (integer ingredient counts) that 
 - **Weighted score** (default): the weighted expected outcome of the desired effects.
 - **"All in" over goblets**: with $n$ goblets (brews, 1–5), the effects are only wanted or not
   (weights 0/1) and the objective is either
-  - **"Media"** (the default): the expected number of *different* wanted effects obtained in the $n$ goblets, or
-  - **"At least $k$" / "Todos"**: the probability of getting at least $k$ different wanted effects
+  - **"Most"** ("Máximo", the default): the most *different* wanted effects on average, i.e. their expected number in the $n$ goblets (shown in the results as "Expected effects"), or
+  - **"≥ $k$" / "All"** ("Todos"): the probability of getting at least $k$ different wanted effects
     (all of them, up to $\min(n, \text{wanted})$, with "Todos").
 
 Other features:
@@ -91,7 +91,7 @@ With $n$ goblets, let $q_i = \hat{E}_i(\alpha)/100$ be the chance of wanted effe
 (the per-effect cap does not apply here). Then:
 
 ```math
-\text{Media}(\alpha) = \sum_{i \in \text{wanted}} \left(1 - (1 - q_i)^{n}\right)
+\text{Most}(\alpha) = \sum_{i \in \text{wanted}} \left(1 - (1 - q_i)^{n}\right)
 ```
 
 and the probability of getting at least $k$ different wanted effects is computed exactly as

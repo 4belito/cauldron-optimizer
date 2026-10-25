@@ -1044,7 +1044,9 @@ button:disabled[data-tip] {
   border-top: 1px solid rgba(201, 164, 79, 0.4);
 }
 
-/* The highlighted row (e.g. the "at least k" the search optimized) */
+/* The highlighted row (e.g. the "at least k" the search optimized), and the
+   text above that describes it */
+.game-tip-text.is-current,
 .game-tip-rows .is-current {
   font-weight: 800;
   color: #f3d27a;

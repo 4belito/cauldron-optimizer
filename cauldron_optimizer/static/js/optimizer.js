@@ -446,7 +446,7 @@ function initAllEffects() {
       return 0;
     }
   };
-  // ...and first, above a line, "Media" (-1, the default): the expected
+  // ...and first, above a line, "Máximo" (-1, the default): the expected
   // number of different wanted effects, whatever the maximum
   const MEAN = -1;
   const showAtLeast = () => {
@@ -458,10 +458,11 @@ function initAllEffects() {
     line.disabled = true;
     const options = [new Option(kPick.dataset.mean, String(MEAN)), line];
     options.push(new Option(kPick.dataset.all, "0"));
-    for (let i = 1; i < most; i++) options.push(new Option(String(i), String(i)));
+    // "≥ 3": at least 3 of the wanted effects
+    for (let i = 1; i < most; i++) options.push(new Option(`≥ ${i}`, String(i)));
     kSelect.replaceChildren(...options);
     kSelect.value = String(k);
-    kValue.textContent = k === MEAN ? kPick.dataset.mean : k ? String(k) : kPick.dataset.all;
+    kValue.textContent = k === MEAN ? kPick.dataset.mean : k ? `≥ ${k}` : kPick.dataset.all;
   };
   kSelect.addEventListener("change", () => {
     minInput.value = kSelect.value;

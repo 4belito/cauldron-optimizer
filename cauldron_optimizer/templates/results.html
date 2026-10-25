@@ -105,7 +105,7 @@
           </div>
         </div>
 
-        <div class="cw-stat{{ ' is-chance' if n_rounds }}">
+        <div class="cw-stat{{ ' is-chance' if n_rounds }}{{ ' is-prob' if n_rounds and not mean }}">
           {# "Todos": the score is the chance of getting the wanted effects in the goblets #}
           {% if n_rounds %}
             {# On hover: what the score is, and below it the chance of at least
@@ -114,34 +114,38 @@
             {% set rows = [] %}
             {% for chance in chances %}
               {% set k = loop.index %}
+              {# Same names as the score's label: "Probabilidad (≥ 3)" #}
               {% if rows.append([
-                   _("Todos (%(k)s)", k=k) if loop.last else _("Al menos %(k)s", k=k),
+                   _("Probabilidad") ~ " (" ~ (_("todos") if loop.last else "≥ %s"|format(k)) ~ ")",
                    "%.2f"|format(chance) ~ "%",
                    not mean and k == n_got,
                  ]) %}{% endif %}
             {% endfor %}
             {% if chances %}
-              {% if rows.append([_("Media"), "%.2f"|format((chances|sum) / 100), mean]) %}{% endif %}
+              {% if rows.append([_("Efectos esperados"), "%.2f"|format((chances|sum) / 100), mean]) %}{% endif %}
             {% endif %}
             {% if mean %}
-              <div class="cw-stat-label" tabindex="0"
-                   data-tip="{{ _('Número esperado de efectos deseados distintos en %(n)s cálices', n=n_rounds) }}"
-                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Media") }}:</div>
+              {# Two words, one per line: "Efectos / esperados" #}
+              <div class="cw-stat-label is-stacked" tabindex="0"
+                   data-tip="{{ _('Efectos deseados distintos que conseguirás de media en %(n)s cálices', n=n_rounds) }}"
+                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Efectos esperados") }}:</div>
             {% else %}
+              {# What the % is, then the goal as picked on the form:
+                 "Probabilidad (≥ 3):" or "Probabilidad (todos):" #}
               <div class="cw-stat-label" tabindex="0"
-                   data-tip="{{ _('Probabilidad de conseguir al menos %(k)s efectos deseados distintos en %(n)s cálices', k=n_got, n=n_rounds) }}"
-                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Probabilidad") }}:</div>
+                   data-tip="{{ ngettext('Probabilidad de conseguir al menos %(num)s efecto deseado distinto en %(n)s cálices', 'Probabilidad de conseguir al menos %(num)s efectos deseados distintos en %(n)s cálices', n_got, n=n_rounds) }}"
+                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Probabilidad") }} ({{ _("todos") if most and n_got >= most else "≥ %s"|format(n_got) }}):</div>
             {% endif %}
           {% else %}
             <div class="cw-stat-label">{{ _("Score") }}:</div>
           {% endif %}
           <div class="cw-stat-bar">
             <span class="score-line">
-              {# Rounded to 2 decimals; the precise value on hover. "Media":
-                 a count, out of the most that can come out #}
+              {# Rounded to 2 decimals; the precise value on hover. Expected
+                 effects ("Máximo" goal): a count #}
               {% if mean %}
                 <span class="cw-stat-value" tabindex="0"
-                      data-tip="{{ score|precise }}">{{ "%.2f"|format(score) }} / {{ most }}</span>
+                      data-tip="{{ score|precise }}">{{ "%.2f"|format(score) }}</span>
               {% else %}
                 <span class="cw-stat-value" tabindex="0"
                       data-tip="{{ score|precise }}{{ '%' if n_rounds }}">{{ "%.2f"|format(score) }}{{ "%" if n_rounds }}</span>

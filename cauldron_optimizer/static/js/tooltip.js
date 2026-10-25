@@ -32,10 +32,13 @@ function initTooltips() {
     if (!el.dataset.tip && !el.dataset.tipRows) return hide();
     current = el;
     if (el.dataset.tipRows) {
-      const parts = [rowsList(JSON.parse(el.dataset.tipRows))];
+      const rows = JSON.parse(el.dataset.tipRows);
+      const parts = [rowsList(rows)];
       if (el.dataset.tip) {
         const text = document.createElement("p");
         text.className = "game-tip-text";
+        // The text describes the highlighted row: same color, to link them
+        if (rows.some((row) => row[2])) text.classList.add("is-current");
         text.textContent = el.dataset.tip;
         parts.unshift(text);
       }

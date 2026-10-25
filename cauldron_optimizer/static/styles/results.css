@@ -973,6 +973,17 @@
     font-size: 2cqw;
   }
 
+  /* "Efectos esperados": one word per line, smaller, so it does not crowd
+     the costs scroll on the left */
+  .cw-stat-label.is-stacked {
+    width: min-content;
+    font-size: 1.55cqw;
+    line-height: 1.1;
+    /* Both lines centered on each other, the block centered on the bar */
+    text-align: center;
+    align-self: center;
+  }
+
   .cw-stat-bar {
     min-width: 40%;
     margin-inline: 1cqw;
@@ -995,9 +1006,29 @@
     transform: translateX(1.5cqw);
   }
 
+  /* "Probabilidad (≥ 3):", the longest label: a bit further right, away
+     from the costs scroll */
+  .cw-stat.is-prob {
+    transform: translateX(1.2cqw);
+    /* ...with the score close to its label */
+    gap: 0.2cqw;
+  }
+
   .cw-stat.is-chance .cw-stat-label,
   .cw-stat.is-chance .cw-stat-value {
     white-space: nowrap;
+  }
+
+  /* "Probabilidad (≥ 3):" is long: a bit smaller, so it stays clear of
+     the costs scroll on the left */
+  .cw-stat.is-chance .cw-stat-label:not(.is-stacked) {
+    font-size: 1.65cqw;
+  }
+
+  /* ...but the two-line label ("Efectos / esperados") does wrap: as narrow
+     as its longest word */
+  .cw-stat.is-chance .cw-stat-label.is-stacked {
+    white-space: normal;
   }
 
   .cw-stat.is-chance .cw-stat-bar {
@@ -1008,6 +1039,12 @@
   /* Room inside the bar for the seal, which hangs right of the value */
   .cw-stat.is-chance .cw-stat-bar:has(.exact-seal) {
     padding-right: 4cqw;
+  }
+
+  /* "Probabilidad (≥ 3):": less room before the value (after the rules
+     above, which it overrides) */
+  .cw-stat.is-prob .cw-stat-bar {
+    padding-left: 0.8cqw;
   }
 
   /* Centered on the stone under the bottom shelf */
