@@ -1266,6 +1266,7 @@ button:disabled[data-tip] {
 
 .optimizer fieldset.card.is-folded {
   padding-bottom: 0.6rem;
+  background-color: #efe2c2;
 }
 
 .optimizer fieldset.card.is-folded > .card-body {
