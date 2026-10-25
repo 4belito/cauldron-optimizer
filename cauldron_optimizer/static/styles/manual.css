@@ -347,6 +347,29 @@
     display: flex;
     min-height: 11rem;
   }
+
+  /* One column: below the ingredients their order, then the recipe's
+     cost, the cauldron and the effects */
+  .cw-wp .cw-wp-plate { order: 0; }
+  .cw-wp .cw-shelves-panel { order: 1; }
+  .cw-wp .fx-mode-switch { order: 2; }
+  .cw-wp .cw-costs { order: 3; }
+  .cw-wp .cw-cauldron { order: 4; }
+  .cw-wp .cw-side { order: 5; }
+
+  /* The ribbon stays on one line ("Receta · orden óptimo"): shorter
+     ornaments, so it never grows over the first row of domes */
+  .cw-wp .cw-ribbon span {
+    white-space: nowrap;
+  }
+
+  .cw-wp .cw-ribbon span::before {
+    content: "\2726\2002";
+  }
+
+  .cw-wp .cw-ribbon span::after {
+    content: "\2002\2726";
+  }
 }
 
 /* ---- Witch Points plate (top left in the game) ---- */
