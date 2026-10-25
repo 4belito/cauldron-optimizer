@@ -9,14 +9,8 @@
 // Escuela de hechicería valoriana wonder's discount for the chosen level (WONDER_REDUCTION). Each base
 // shows the price of the next copy, as in the game; the Witch Points plate
 // (top left) turns the cost red when it is not enough.
-// The cost is that of the cheapest order, which is adding the ingredients from
-// the largest amount to the smallest, each one's copies together (checked
-// against cauldronBuyOrder's exact search on 9000 random recipes). So that it
-// matches the game's, the recipe keeps that order: no ingredient may have more
-// units than one added before it (ties are fine), and each one's units go in a
-// row, so only the last one started can still grow. Premium ones do not count,
-// as they do not change the Witch Point prices. A change that breaks it is not
-// made, and a window explains why.
+// The optimal-order mode validates the cheapest sequence; free mode allows
+// experimentation with any sequence while showing the minimum possible cost.
 
 (() => {
   const C = window.FORMULA_CONFIG;
@@ -25,22 +19,24 @@
   const effectBtns = [...document.querySelectorAll(".fx-effect")];
   const allBox = document.getElementById("fxEffectsAll");
   const wpInput = document.getElementById("fxWp");
+  const optimalMode = document.getElementById("fxOptimalMode");
+  const freeMode = document.getElementById("fxFreeMode");
   const orderNote = document.getElementById("fxOrderNote");
   const ORDER_MUTE_KEY = "formula.orderNoteMuted";
+  const root = document.querySelector(".formula-page");
   const wonderSelect = document.getElementById("fxWonder");
   const WONDER_LEVEL_KEY = "formula.wonderLevel";
   const WONDER_DISCOUNT_KEY = "formula.wonderDiscount";
   const EFFECTS_KEY = "manual.selectedEffects";
 
-  // The accepted amounts; the plates show them, a typed value is checked first
+  // Current amounts; the plates mirror these values
   const amounts = counts.map(() => 0);
   const amount = (i) => amounts[i];
   const total = () => amounts.reduce((s, a) => s + a, 0);
   const isPremium = (i) => jars[i].classList.contains("premium");
 
-  // Ingredients in the order they were added, so the last one can be taken out
-  // as in the game. Kept in step with the amounts: a raised amount adds copies
-  // at the end, a lowered one removes that ingredient's latest copies.
+  // Track additions both for removing the last ingredient and validating the
+  // sequence in optimal-order mode.
   let added = [];
   function syncAdded() {
     counts.forEach((_, i) => {
@@ -151,17 +147,19 @@
       jar.querySelector(".cw-base-price").textContent = formatAmount(price);
     });
 
-    // Cost, with the cheapest order on hover
+    // Prices always show the cheapest valid order, also while using free mode.
     const recipe = Object.fromEntries(alpha.map((a, i) => [i, a]));
     const premium = jars.filter((_, i) => premiumNow[i]).map((j) => j.dataset.ingredient);
     const costEl = document.getElementById("fxCost");
     const wpEl = document.getElementById("fxCostWp");
+    root.classList.toggle("is-free-mode", freeMode.checked);
     try {
       const r = cauldronBuyOrder(recipe, { premium, reduction, ingredientsMax: C.maxIngredients });
       wpEl.textContent = formatAmount(r.witchPoints);
       document.getElementById("fxCostDia").textContent = r.diamonds;
       document.getElementById("fxCostDiaItem").hidden = !r.diamonds;
       // As in the game: green when the Witch Points are enough, red when not
+      // (the same in both modes: the mode never changes the Witch Points)
       const have = parseWp(wpInput.value);
       costEl.classList.toggle("short", r.witchPoints > have);
       costEl.classList.toggle("enough", r.witchPoints <= have);
@@ -170,7 +168,6 @@
     }
   }
 
-  // Ingredients in the order they were first added (the order the cost assumes)
   function firstOrder(next) {
     const order = [...new Set(added)].filter((i) => next[i] > 0);
     next.forEach((a, i) => {
@@ -179,9 +176,6 @@
     return order;
   }
 
-  // Why new amounts break the order, or null. Premium ones are left out.
-  // grown: the ingredient being raised, which must be the last one started
-  // (each one's units go in a row) or a new one
   function orderProblem(next, premium = isPremium, grown = null) {
     const name = (i) => C.ingredientNames[i];
     if (grown !== null && !premium(grown)) {
@@ -207,22 +201,6 @@
     return null;
   }
 
-  // Apply new amounts, or, if they break the order, keep the old ones and say why
-  // changed: the ingredient the change was on, shaken when the window is muted
-  function tryAmounts(next, premium, grown = null, changed = grown) {
-    const problem = orderProblem(next, premium, grown);
-    if (problem) {
-      if (orderNoteMuted()) refuse(changed);
-      else showOrderNote(problem);
-      update();
-      return false;
-    }
-    next.forEach((a, i) => (amounts[i] = a));
-    update();
-    return true;
-  }
-
-  // "No volver a mostrar": remembered in this browser only
   function orderNoteMuted() {
     try {
       return localStorage.getItem(ORDER_MUTE_KEY) === "1";
@@ -231,26 +209,14 @@
     }
   }
 
-  // A refused change with the window muted: the ingredient shakes
   function refuse(i) {
     if (i === null || i === undefined) return;
     const jar = jars[i];
     jar.classList.remove("fx-refused");
-    void jar.offsetWidth; // restart the animation
+    void jar.offsetWidth;
     jar.classList.add("fx-refused");
   }
 
-  // The window: what was not allowed, and the recipe in order
-  function showOrderNote(why) {
-    document.getElementById("fxOrderNoteMute").checked = false;
-    document.getElementById("fxOrderNoteWhy").textContent = why;
-    renderOrderExample();
-    orderNote.hidden = false;
-    document.body.classList.add("avatar-open");
-    document.getElementById("fxOrderNoteOk").focus();
-  }
-
-  // The current recipe in the order it was added (premium ones marked)
   function renderOrderExample() {
     document.getElementById("fxOrderExample").replaceChildren(
       ...firstOrder(amounts).map((i) => {
@@ -268,7 +234,30 @@
     );
   }
 
-  // Entendido or the header's X; with the tick box, not shown again
+  function showOrderNote(why) {
+    document.getElementById("fxOrderNoteMute").checked = false;
+    document.getElementById("fxOrderNoteWhy").textContent = why;
+    renderOrderExample();
+    orderNote.hidden = false;
+    document.body.classList.add("avatar-open");
+    document.getElementById("fxOrderNoteOk").focus();
+  }
+
+  function tryAmounts(next, premium, grown = null, changed = grown) {
+    if (!freeMode.checked) {
+      const problem = orderProblem(next, premium, grown);
+      if (problem) {
+        if (orderNoteMuted()) refuse(changed);
+        else showOrderNote(problem);
+        update();
+        return false;
+      }
+    }
+    next.forEach((a, i) => (amounts[i] = a));
+    update();
+    return true;
+  }
+
   orderNote.querySelectorAll("[data-order-ok]").forEach((btn) =>
     btn.addEventListener("click", () => {
       orderNote.hidden = true;
@@ -281,6 +270,25 @@
     })
   );
   jars.forEach((jar) => jar.addEventListener("animationend", () => jar.classList.remove("fx-refused")));
+
+  function setMode(isFree) {
+    freeMode.checked = isFree;
+    optimalMode.checked = !isFree;
+    root.classList.toggle("is-free-mode", isFree);
+    if (!isFree) {
+      added = [];
+      [...amounts.keys()]
+        .filter((i) => amounts[i] > 0)
+        .sort((a, b) => amounts[b] - amounts[a] || a - b)
+        .forEach((i) => {
+          for (let n = 0; n < amounts[i]; n++) added.push(i);
+        });
+    }
+    update();
+  }
+
+  optimalMode.addEventListener("change", () => setMode(false));
+  freeMode.addEventListener("change", () => setMode(true));
 
   // Witch Points as typed (175K, 1.2M) and as the game shows them (cauldron-order.js)
   const parseWp = parseWitchPoints;
@@ -348,7 +356,7 @@
     update();
   });
 
-  // Set an ingredient's amount, within the cauldron's limit and the order
+  // Set an ingredient's amount, within the cauldron's total limit
   function setAmount(i, value) {
     const room = C.maxIngredients - (total() - amount(i));
     const next = [...amounts];
@@ -369,7 +377,7 @@
       if (counts[i].value !== "") setAmount(i, Number(counts[i].value));
     });
     counts[i].addEventListener("change", () => setAmount(i, Number(counts[i].value)));
-    // Premium off brings it back into the order: only if it fits
+    // Premium ingredients are excluded from Witch Point order checks.
     jar.querySelector(".fx-premium").addEventListener("click", (e) => {
       const btn = e.currentTarget;
       const on = !isPremium(i);

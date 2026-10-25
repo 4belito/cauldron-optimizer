@@ -24,6 +24,119 @@
   color: var(--game-green-dark);
 }
 
+/* "Modo de edición": a dark wood plate like the results' score box, with
+   the label and two parchment pills, the active one green (as the
+   complete search's Mín / Media / Máx) */
+.fx-mode-switch {
+  /* Title on its own row, the two pills side by side below it */
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem 0.4rem;
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto 0.75rem;
+  padding: 0.35rem 0.7rem 0.45rem;
+  border: 2px solid #120a04;
+  border-radius: 0.8rem;
+  background: linear-gradient(#2a221c, #1e1814);
+  box-shadow: inset 0 0 0.8rem rgba(0, 0, 0, 0.7), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Floated: a plain grid item instead of sitting on the border; across both
+   columns, a centered title above the pills */
+.fx-mode-switch legend {
+  float: left;
+  grid-column: 1 / -1;
+  width: auto;
+  margin: 0;
+  text-align: center;
+  padding: 0;
+  color: #e6c99a;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.fx-mode-switch label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.fx-mode-switch input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+
+.fx-mode-switch label span {
+  display: block;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid #b89a63;
+  border-radius: 1rem;
+  background: linear-gradient(#f6ead0, #ead7ad);
+  color: #51200d;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: filter 0.15s;
+}
+
+.fx-mode-switch label:hover input:not(:checked) + span {
+  filter: brightness(1.06);
+}
+
+.fx-mode-switch input:checked + span {
+  border-color: var(--game-green-edge);
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+}
+
+.fx-mode-switch input:focus-visible + span {
+  outline: 2px solid #f3d27a;
+  outline-offset: 2px;
+}
+
+/* ---- Optimal order (the default): the user should notice which mode is
+   on. The ribbon adds "· orden óptimo" in amber and the shelves get an
+   amber glow; both go away in the free order ---- */
+/* A small green badge in the ribbon, like the game's labels */
+.fx-order-tag {
+  display: inline-block;
+  margin-left: 0.5em;
+  padding: 0.1em 0.65em 0.15em;
+  border: 1px solid #d9b458;
+  border-radius: 1em;
+  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 0.7em;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
+  vertical-align: 0.15em;
+}
+
+.formula-page.is-free-mode .fx-order-tag {
+  display: none;
+}
+
+.formula-page:not(.is-free-mode) .cw-shelves {
+  border-radius: 0.8rem;
+  box-shadow: 0 0 0 2px rgba(243, 190, 90, 0.85), 0 0 1.1rem rgba(240, 160, 50, 0.55);
+  transition: box-shadow 0.2s;
+}
+
 /* ---- Escuela de hechicería valoriana (wonder): its picture opens the level list (a transparent
    select over it); the level on a badge, the discount below ---- */
 .fx-wonder {
@@ -299,53 +412,13 @@
   color: #5a4128;
 }
 
-.cw-costs-label span::before {
-  content: "\2500\2500\2726\2003";
-  color: #a78a60;
-}
-
-.cw-costs-label span::after {
-  content: "\2003\2726\2500\2500";
-  color: #a78a60;
-}
-
-.cw-costs-values {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.cw-costs-item {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-weight: 700;
-  font-size: 1.25rem;
-  font-variant-numeric: tabular-nums;
-  color: #4a2e16;
-}
-
-.cw-costs-item img {
-  width: 1.6rem;
-  height: 1.6rem;
-  object-fit: contain;
-}
-
-/* The once-only window on the cost's order: this recipe, largest amount
-   first, as a numbered list of ingredients */
-/* "No volver a mostrar", with the game's tick box */
-.order-mute {
-  align-self: flex-start;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: -0.3rem;
-  font-size: 0.9rem;
+.cw-costs-note {
+  font-size: 0.75rem;
+  font-weight: 600;
   color: #5a4128;
-  cursor: pointer;
 }
 
-/* A refused change with the window muted: the ingredient shakes */
+/* The order dialog is used only in optimal-order mode. */
 .cw-wp .fx-jar.fx-refused {
   animation: fx-refused 0.4s ease-in-out;
 }
@@ -362,6 +435,17 @@
     outline: 2px solid #b3261e;
     outline-offset: 2px;
   }
+}
+
+.order-mute {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: -0.3rem;
+  font-size: 0.9rem;
+  color: #5a4128;
+  cursor: pointer;
 }
 
 .order-why {
@@ -418,6 +502,38 @@
   font-variant-numeric: tabular-nums;
 }
 
+.cw-costs-label span::before {
+  content: "\2500\2500\2726\2003";
+  color: #a78a60;
+}
+
+.cw-costs-label span::after {
+  content: "\2003\2726\2500\2500";
+  color: #a78a60;
+}
+
+.cw-costs-values {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cw-costs-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  color: #4a2e16;
+}
+
+.cw-costs-item img {
+  width: 1.6rem;
+  height: 1.6rem;
+  object-fit: contain;
+}
+
 /* As in the game: green when the Witch Points are enough, red when not */
 .cw-costs.enough #fxCostWp {
   color: #4f7a12;
@@ -436,6 +552,29 @@
   .cw-wp .cw-body {
     aspect-ratio: 1742 / 1084;
     background-image: url("/static/ui/cauldron/background_cauldron_wp.png");
+  }
+
+  /* On the stone under the bottom shelf, as the results' buttons, left of
+     the Costes scroll */
+  .cw-wp .fx-mode-switch {
+    position: absolute;
+    left: 23.4%;
+    top: 88%;
+    z-index: 3;
+    gap: 0.55cqw 0.75cqw;
+    margin: 0;
+    padding: 0.6cqw 1.2cqw 0.75cqw;
+    border-width: 0.18cqw;
+    transform: translate(-50%, -50%);
+  }
+
+  .cw-wp .fx-mode-switch legend {
+    font-size: 1.55cqw;
+  }
+
+  .cw-wp .fx-mode-switch label span {
+    padding: 0.38cqw 1.35cqw;
+    font-size: 1.5cqw;
   }
 
   /* On the dark plate at the top of the shelves: icon | value */
@@ -536,6 +675,11 @@
     font-weight: 800;
     color: #4a2e16;
     text-shadow: 0 1px 0 rgba(255, 244, 220, 0.7);
+  }
+
+  .cw-costs-note {
+    font-size: 1.1cqw;
+    line-height: 1;
   }
 
   .cw-costs-values {

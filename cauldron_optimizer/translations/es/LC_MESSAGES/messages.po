@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-25 02:12-0400\n"
+"POT-Creation-Date: 2026-10-25 13:45-0400\n"
 "PO-Revision-Date: 2025-12-24 13:27-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -457,7 +457,7 @@ msgid "Mundos"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:3
-#: cauldron_optimizer/templates/manual.html:61
+#: cauldron_optimizer/templates/manual.html:62
 #: cauldron_optimizer/templates/results.html:21
 msgid "Receta"
 msgstr ""
@@ -665,12 +665,12 @@ msgid "Nivel de la Escuela de hechicería valoriana"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:255
-#: cauldron_optimizer/templates/manual.html:191
+#: cauldron_optimizer/templates/manual.html:199
 msgid "Sin construir"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:255
-#: cauldron_optimizer/templates/manual.html:192
+#: cauldron_optimizer/templates/manual.html:200
 #, python-brace-format
 msgid "Nivel {n}"
 msgstr ""
@@ -1013,7 +1013,7 @@ msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:46
 #: cauldron_optimizer/templates/results.html:14
-#: cauldron_optimizer/templates/results.html:185
+#: cauldron_optimizer/templates/results.html:186
 msgid "Volver"
 msgstr ""
 
@@ -1025,80 +1025,119 @@ msgstr ""
 msgid "Tus puntos de hechicería"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:69
+#: cauldron_optimizer/templates/manual.html:62
+msgid "orden óptimo"
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:70
 #, python-format
 msgid "Añadir %(name)s"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:77
+#: cauldron_optimizer/templates/manual.html:78
 msgid "Premium: se paga con diamantes"
 msgstr ""
 
+#: cauldron_optimizer/templates/manual.html:92
+msgid ""
+"El orden en que añades los ingredientes cambia lo que cuesta la receta en"
+" puntos de hechicería. Elige cómo quieres añadirlos."
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:93
+msgid "Orden de ingredientes"
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:94
+msgid ""
+"Los ingredientes normales se añaden de mayor a menor cantidad, cada uno "
+"de una vez: el orden más barato, el que usa el optimizador."
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:96
+msgctxt "orden"
+msgid "Óptimo"
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:98
+msgid ""
+"Añade los ingredientes en el orden que quieras, para probar cualquier "
+"secuencia. No se comprueba el orden; el coste mostrado sigue siendo el "
+"mínimo."
+msgstr ""
+
 #: cauldron_optimizer/templates/manual.html:100
+msgctxt "orden"
+msgid "Libre"
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:116
 msgid "Quitar el último ingrediente"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:102
+#: cauldron_optimizer/templates/manual.html:118
 msgid "Vaciar el caldero"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:112
+#: cauldron_optimizer/templates/manual.html:128
 #: cauldron_optimizer/templates/results.html:84
 msgid "Efectos"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:120
+#: cauldron_optimizer/templates/manual.html:136
 msgid ""
 "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus"
 " ingredientes (y los diamantes de los premium), con el descuento de la "
-"maravilla. Supone que los añades de mayor a menor cantidad."
+"maravilla."
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:121
-#: cauldron_optimizer/templates/results.html:173
+#: cauldron_optimizer/templates/manual.html:137
+#: cauldron_optimizer/templates/results.html:174
 msgid "Costes"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:124
+#: cauldron_optimizer/templates/manual.html:138
+msgid "Coste mínimo (orden óptimo)"
+msgstr ""
+
+#: cauldron_optimizer/templates/manual.html:141
 #: cauldron_optimizer/templates/results.html:45
-#: cauldron_optimizer/templates/results.html:176
+#: cauldron_optimizer/templates/results.html:177
 msgid "Puntos de hechicería"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:128
+#: cauldron_optimizer/templates/manual.html:145
 msgid "diamantes"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:150
+#: cauldron_optimizer/templates/manual.html:161
 msgid "Orden: de mayor a menor cantidad"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:151
-#: cauldron_optimizer/templates/manual.html:172
+#: cauldron_optimizer/templates/manual.html:162
+#: cauldron_optimizer/templates/manual.html:180
 msgid "Entendido"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:156
+#: cauldron_optimizer/templates/manual.html:167
 msgid ""
-"Los ingredientes van de mayor a menor cantidad, en el orden en que los "
-"añades: ninguno puede tener más unidades que uno añadido antes (empatar "
-"sí), y cada uno se añade de una vez, todas sus unidades seguidas. Es el "
-"orden más barato, y así el coste coincide con el del juego, donde el "
-"orden cambia el coste."
+"En el modo de orden óptimo, los ingredientes normales se añaden de mayor "
+"a menor cantidad, cada uno de una vez. Cambia al modo libre para "
+"experimentar con cualquier secuencia."
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:168
+#: cauldron_optimizer/templates/manual.html:176
 msgid "No volver a mostrar"
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:193
+#: cauldron_optimizer/templates/manual.html:201
 #, python-brace-format
 msgid ""
 "No se pueden añadir más unidades de {name}: después ya añadiste {later}. "
 "Cada ingrediente se añade de una vez."
 msgstr ""
 
-#: cauldron_optimizer/templates/manual.html:194
+#: cauldron_optimizer/templates/manual.html:202
 #, python-brace-format
 msgid ""
 "{later} no puede tener {n}: sería más que {earlier} ({m}), que se añadió "
@@ -1135,27 +1174,27 @@ msgstr ""
 msgid "Sin peso"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:118
-#, python-format
-msgid "Todos (%(k)s)"
+#: cauldron_optimizer/templates/results.html:119
+#: cauldron_optimizer/templates/results.html:137
+msgid "Probabilidad"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:118
-#, python-format
-msgid "Al menos %(k)s"
+#: cauldron_optimizer/templates/results.html:119
+#: cauldron_optimizer/templates/results.html:137
+msgid "todos"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:124
-#: cauldron_optimizer/templates/results.html:130
+#: cauldron_optimizer/templates/results.html:125
+#: cauldron_optimizer/templates/results.html:131
 msgid "Efectos esperados"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:129
+#: cauldron_optimizer/templates/results.html:130
 #, python-format
 msgid "Efectos deseados distintos que conseguirás de media en %(n)s cálices"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:135
+#: cauldron_optimizer/templates/results.html:136
 #, python-format
 msgid ""
 "Probabilidad de conseguir al menos %(num)s efecto deseado distinto en "
@@ -1166,29 +1205,21 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: cauldron_optimizer/templates/results.html:136
-msgid "Probabilidad"
-msgstr ""
-
-#: cauldron_optimizer/templates/results.html:136
-msgid "todos"
-msgstr ""
-
-#: cauldron_optimizer/templates/results.html:139
+#: cauldron_optimizer/templates/results.html:140
 msgid "Score"
 msgstr "Puntuación"
 
-#: cauldron_optimizer/templates/results.html:155
+#: cauldron_optimizer/templates/results.html:156
 msgid "Óptimo garantizado"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:156
+#: cauldron_optimizer/templates/results.html:157
 msgid ""
 "Óptimo garantizado: se comprobaron todas las recetas posibles, no existe "
 "ninguna mejor con estos ajustes"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:172
+#: cauldron_optimizer/templates/results.html:173
 #, python-format
 msgid ""
 "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus"
@@ -1196,7 +1227,7 @@ msgid ""
 "con el descuento de la Escuela de hechicería valoriana: %(discount)s"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:172
+#: cauldron_optimizer/templates/results.html:173
 msgid "sin construir"
 msgstr ""
 
@@ -1284,5 +1315,98 @@ msgstr ""
 #~ " los cálices; un número o «Todos»,"
 #~ " la probabilidad de conseguir al "
 #~ "menos esos."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Lo que cuesta elaborar esta receta: "
+#~ "los puntos de hechicería de todos "
+#~ "sus ingredientes (y los diamantes de "
+#~ "los premium), con el descuento de "
+#~ "la maravilla. Supone que los añades "
+#~ "de mayor a menor cantidad."
+#~ msgstr ""
+
+#~ msgid "Orden: de mayor a menor cantidad"
+#~ msgstr ""
+
+#~ msgid "Entendido"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Los ingredientes van de mayor a "
+#~ "menor cantidad, en el orden en que"
+#~ " los añades: ninguno puede tener más"
+#~ " unidades que uno añadido antes "
+#~ "(empatar sí), y cada uno se añade"
+#~ " de una vez, todas sus unidades "
+#~ "seguidas. Es el orden más barato, "
+#~ "y así el coste coincide con el "
+#~ "del juego, donde el orden cambia "
+#~ "el coste."
+#~ msgstr ""
+
+#~ msgid "No volver a mostrar"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "No se pueden añadir más unidades "
+#~ "de {name}: después ya añadiste {later}."
+#~ " Cada ingrediente se añade de una "
+#~ "vez."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "{later} no puede tener {n}: sería "
+#~ "más que {earlier} ({m}), que se "
+#~ "añadió antes."
+#~ msgstr ""
+
+#~ msgid "Todos (%(k)s)"
+#~ msgstr ""
+
+#~ msgid "Al menos %(k)s"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Lo que cuesta elaborar esta receta: "
+#~ "los puntos de hechicería de todos "
+#~ "sus ingredientes (y los diamantes de "
+#~ "los premium), con el descuento de "
+#~ "la maravilla. Puedes cambiar las dosis"
+#~ " en cualquier orden; el coste supone"
+#~ " el orden de elaboración más barato."
+#~ msgstr ""
+
+#~ msgid "Edición libre · coste mínimo"
+#~ msgstr ""
+
+#~ msgid "Modo de edición"
+#~ msgstr ""
+
+#~ msgid "Orden óptimo"
+#~ msgstr ""
+
+#~ msgid "Modo libre"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Los ingredientes normales se añaden de"
+#~ " mayor a menor cantidad, cada uno "
+#~ "de una vez: el orden más barato,"
+#~ " el que usa el optimizador. El "
+#~ "coste se compara con tus puntos de"
+#~ " hechicería."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Añade los ingredientes en el orden "
+#~ "que quieras, para probar cualquier "
+#~ "secuencia. No se comprueba el orden "
+#~ "ni si te llegan los puntos de "
+#~ "hechicería; el coste mostrado sigue "
+#~ "siendo el mínimo."
+#~ msgstr ""
+
+#~ msgid "orden libre"
 #~ msgstr ""
 

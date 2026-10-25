@@ -1264,9 +1264,15 @@ button:disabled[data-tip] {
   border-radius: 0.4rem;
 }
 
+/* Folded: the parchment keeps its curled bottom edge (no flat fill behind
+   it), and the corner branches stop at the card's bottom instead of
+   hanging below a short card */
 .optimizer fieldset.card.is-folded {
-  padding-bottom: 0.6rem;
-  background-color: #efe2c2;
+  padding-bottom: 1.6rem;
+}
+
+.optimizer fieldset.card.is-folded::before {
+  height: min(7rem, calc(100% + 1rem));
 }
 
 .optimizer fieldset.card.is-folded > .card-body {

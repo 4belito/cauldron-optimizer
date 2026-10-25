@@ -49,7 +49,7 @@
     <div class="cw-body">
 
       <!-- Top left, as in the game: the player's Witch Points (editable) -->
-      <label class="cw-wp-plate" data-tip="{{ _('Tus puntos de hechicería: el coste se ve en rojo si no te llegan') }}">
+      <label class="cw-wp-plate" id="fxWpPlate" data-tip="{{ _('Tus puntos de hechicería: el coste se ve en rojo si no te llegan') }}">
         <img class="cw-wp-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="">
         <input id="fxWp" class="cw-wp-input" type="text" inputmode="decimal" autocomplete="off"
                value="0" aria-label="{{ _('Tus puntos de hechicería') }}">
@@ -58,7 +58,8 @@
       <!-- LEFT: ingredient shelves. Click a dome to add one (right click
            removes one), type the amount, or click the base for premium -->
       <div class="cw-shelves-panel">
-        <div class="cw-ribbon"><span>{{ _("Receta") }}</span></div>
+        {# In the optimal order the title says so: "Receta · orden óptimo" #}
+        <div class="cw-ribbon"><span>{{ _("Receta") }}<em class="fx-order-tag">{{ _("orden óptimo") }}</em></span></div>
         <div class="cw-shelves">
           {% for row in range(3) %}
             <div class="cw-shelf">
@@ -84,6 +85,21 @@
           {% endfor %}
         </div>
       </div>
+
+      {# How the ingredients go in: the cheapest order, or any order. On
+         hover: the box explains why the order matters, each option itself #}
+      <fieldset class="fx-mode-switch"
+                data-tip="{{ _('El orden en que añades los ingredientes cambia lo que cuesta la receta en puntos de hechicería. Elige cómo quieres añadirlos.') }}">
+        <legend>{{ _("Orden de ingredientes") }}</legend>
+        <label data-tip="{{ _('Los ingredientes normales se añaden de mayor a menor cantidad, cada uno de una vez: el orden más barato, el que usa el optimizador.') }}">
+          <input type="radio" name="recipeMode" id="fxOptimalMode" value="optimal" checked>
+          <span>{{ pgettext("orden", "Óptimo") }}</span>
+        </label>
+        <label data-tip="{{ _('Añade los ingredientes en el orden que quieras, para probar cualquier secuencia. No se comprueba el orden; el coste mostrado sigue siendo el mínimo.') }}">
+          <input type="radio" name="recipeMode" id="fxFreeMode" value="free">
+          <span>{{ pgettext("orden", "Libre") }}</span>
+        </label>
+      </fieldset>
 
       <!-- CENTER: the cauldron, filled with the recipe's share of the maximum.
            As in the game: the last ingredient added, with a button to take it
@@ -117,10 +133,11 @@
 
       <!-- Under the tube, as in the game: the recipe's cost -->
       <div class="cw-costs" id="fxCost" tabindex="0"
-           data-tip="{{ _('Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus ingredientes (y los diamantes de los premium), con el descuento de la maravilla. Supone que los añades de mayor a menor cantidad.') }}">
+           data-tip="{{ _('Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus ingredientes (y los diamantes de los premium), con el descuento de la maravilla.') }}">
         <div class="cw-costs-label"><span>{{ _("Costes") }}</span></div>
+        <small class="cw-costs-note" id="fxCostsNote">{{ _("Coste mínimo (orden óptimo)") }}</small>
         <div class="cw-costs-values">
-          <span class="cw-costs-item">
+          <span class="cw-costs-item" id="fxCostWpItem">
             <img src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="{{ _('Puntos de hechicería') }}">
             <span id="fxCostWp">0</span>
           </span>
@@ -137,12 +154,6 @@
 
 </div>
 
-<!-- Shown when a change would break the cost's order (an ingredient with more
-     units than one added before it, or more units of one already left
-     behind): the change is not made, and this says why. In the game the order
-     changes the cost, so otherwise it would not match. A game window that only
-     closes by acknowledging it (Entendido, or the header's X, which does the
-     same); the Costes tooltip keeps the information -->
 <div id="fxOrderNote" class="avatar-overlay" hidden>
   <div class="avatar-window delete-window order-window" role="alertdialog" aria-modal="true"
        aria-labelledby="fxOrderNoteTitle" aria-describedby="fxOrderNoteText">
@@ -153,12 +164,9 @@
     <div class="avatar-body delete-body">
       <p id="fxOrderNoteWhy" class="delete-text order-why"></p>
       <p id="fxOrderNoteText" class="delete-text">
-        {{ _("Los ingredientes van de mayor a menor cantidad, en el orden en que los añades: ninguno puede tener más unidades que uno añadido antes (empatar sí), y cada uno se añade de una vez, todas sus unidades seguidas. Es el orden más barato, y así el coste coincide con el del juego, donde el orden cambia el coste.") }}
+        {{ _("En el modo de orden óptimo, los ingredientes normales se añaden de mayor a menor cantidad, cada uno de una vez. Cambia al modo libre para experimentar con cualquier secuencia.") }}
       </p>
-      <!-- The recipe as it is, in the order it was added (formula.js) -->
       <ol class="order-example" id="fxOrderExample"></ol>
-      <!-- Game tick box: if ticked on closing, refused changes only shake the
-           ingredient from then on (remembered in this browser) -->
       <label class="order-mute">
         <span class="effect-check">
           <input type="checkbox" id="fxOrderNoteMute">
