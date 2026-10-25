@@ -142,7 +142,8 @@
     <p class="section-note">
       Every account, most recently seen first. Country, device and last seen come
       from page views; language is the account's saved one (else the page's).
-      Views and runs are in the selected period; "all" is all-time runs.
+      Views, runs (recipe searches) and complete (complete-effects searches
+      started) are in the selected period; "all" is all-time.
     </p>
     <div class="card">
       {% if users %}
@@ -150,6 +151,7 @@
         <tr><th>Username</th><th>Country</th><th>Language</th><th>Device</th>
           <th class="num">Worlds</th><th>Active world</th>
           <th class="num">Views</th><th class="num">Runs</th><th class="num">All</th>
+          <th class="num">Complete</th><th class="num">All</th>
           <th>First seen</th><th>Last seen</th></tr>
         {% for u in users %}
         <tr>
@@ -162,6 +164,8 @@
           <td class="num">{{ u.views }}</td>
           <td class="num">{{ u.runs }}</td>
           <td class="num muted">{{ u.runs_total }}</td>
+          <td class="num">{{ u.complete }}</td>
+          <td class="num muted">{{ u.complete_total }}</td>
           <td class="muted">{{ u.first_seen.strftime("%Y-%m-%d") if u.first_seen else "—" }}</td>
           <td>{{ u.last_seen.strftime("%Y-%m-%d %H:%M") if u.last_seen else "never" }}</td>
         </tr>
@@ -179,6 +183,9 @@
         ("Optimizer runs", usage.runs),
         ("Users who ran", usage.users),
         ("Runs / user", "%.1f" | format(usage.runs_per_user)),
+        ("Complete searches started", complete.started),
+        ("Complete searches finished", complete.finished),
+        ("Users who completed", complete.users),
         ("Registered users", accounts.users),
         ("Bot hits / 5xx", traffic.bots ~ " / " ~ traffic.errors),
       ] %}
@@ -191,6 +198,8 @@
     <div class="grid">
       <div class="card span-2"><h3>Page views per day</h3>{{ daily_chart(traffic.daily, traffic.daily_max) }}</div>
       <div class="card span-2"><h3>Optimizer runs per day</h3>{{ daily_chart(usage.daily, usage.daily_max, "alt") }}</div>
+      <div class="card span-2"><h3>Complete-effects searches started per day</h3>{{ daily_chart(complete.daily, complete.daily_max, "alt") }}</div>
+      <div class="card span-2"><h3>Hours to finish a complete search</h3>{{ bars(complete.hours_to_finish, cls="alt") }}<p class="note">From start to finish, pauses included.</p></div>
 
       <div class="card span-2">
         <h3>Pages</h3>

@@ -11,7 +11,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from cauldron_optimizer import app
-from cauldron_optimizer.analytics import log_optimization_run
+from cauldron_optimizer.analytics import log_complement_run, log_optimization_run
 from cauldron_optimizer.constants import (
     AVATARS,
     EFFECT_NAMES,
@@ -722,6 +722,27 @@ def complement_save():
             saved.updated_at = datetime.now(UTC)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
+    log_complement_run(state.get("run_id"), params, done, total)
+    return {"ok": True}
+
+
+@app.route("/complement/started", methods=["POST"])
+@login_required
+def complement_started():
+    """A search started or was continued in the browser, for the stats
+    (called via fetch; the search itself is not saved here)"""
+    data = request.get_json(silent=True)
+    try:
+        if not isinstance(data, dict):
+            raise ValueError
+        body = cast(dict[str, Any], data)
+        params = clean_complement_params(body.get("params"))
+        done, total = int(body["done"]), int(body["total"])
+        if not 0 <= done <= total:
+            raise ValueError
+    except (ValueError, KeyError, TypeError):
+        return {"ok": False, "error": _("Datos no válidos")}, 400
+    log_complement_run(body.get("run_id"), params, done, total, started=True)
     return {"ok": True}
 
 

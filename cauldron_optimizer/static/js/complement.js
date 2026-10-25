@@ -229,12 +229,17 @@ function initComplement() {
       done: 0,
       total: totalRuns(p),
     };
+    // Id of this search for the stats; searches saved before it get one now
+    const runId = state.run_id || newRunId();
+    state.run_id = runId;
+    logStarted();
     msgEl.textContent = "";
     openWindow(win);
     worker = new Worker(C.urls.worker);
     runStart = { time: Date.now(), done: state.done };
     worker.onmessage = (e) => {
-      state = e.data.state;
+      // The worker does not know the id: keep it in the state we save
+      state = { ...e.data.state, run_id: runId };
       const secs = (Date.now() - runStart.time) / 1000;
       if (secs > 2) rate = (state.done - runStart.done) / secs;
       if (e.data.type === "done") {
@@ -278,6 +283,30 @@ function initComplement() {
       msgEl.textContent = err.message;
     }
     render();
+  }
+
+  function newRunId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 12);
+  }
+
+  // Tell the server a search started or was continued (stats only: a
+  // failure here never stops the search)
+  function logStarted() {
+    fetch(C.urls.started, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-CSRFToken": csrf(),
+      },
+      body: JSON.stringify({
+        run_id: state.run_id,
+        params,
+        done: state.done,
+        total: state.total,
+      }),
+    }).catch(() => {});
   }
 
   async function clearSaved() {

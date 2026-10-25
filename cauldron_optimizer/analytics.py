@@ -20,6 +20,7 @@ from cauldron_optimizer import app
 from cauldron_optimizer.constants import EFFECT_NAMES, INGREDIENT_NAMES
 from cauldron_optimizer.database import db_session
 from cauldron_optimizer.db_model import (
+    ComplementRun,
     ComplementSearch,
     OptimizationRun,
     PageView,
@@ -137,6 +138,49 @@ def log_optimization_run(
             )
     except Exception:
         log.exception("Could not log optimization run")
+
+
+# The browser makes the ids (crypto.randomUUID); anything else is not ours
+RUN_ID_RE = re.compile(r"^[A-Za-z0-9-]{8,64}$")
+
+
+def log_complement_run(
+    run_id: Any,
+    params: dict[str, Any],
+    done: int,
+    total: int,
+    started: bool = False,
+) -> None:
+    """Record a "complete effects" search: when it starts or is continued
+    (started=True) and each time its progress is saved."""
+    if not isinstance(run_id, str) or not RUN_ID_RE.match(run_id):
+        return
+    try:
+        with db_session() as db_sa:
+            now = datetime.now(UTC)
+            run = db_sa.get(ComplementRun, run_id)
+            if run is None:
+                account = db_sa.get(UserSettings, session["user_id"])
+                run = ComplementRun(
+                    id=run_id,
+                    user_id=session["user_id"],
+                    server_number=account.active_server if account else None,
+                    started_at=now,
+                    n_diplomas=params["n"],
+                    n_effects=len(params["effects"]),
+                    n_rounds=params["n_rounds"],
+                    resumes=0,
+                )
+                db_sa.add(run)
+            elif started:
+                run.resumes += 1
+            run.done = done
+            run.total = total
+            run.updated_at = now
+            if done >= total and run.finished_at is None:
+                run.finished_at = now
+    except Exception:
+        log.exception("Could not log complement run")
 
 
 # ---------------------------------------------------------------------------
@@ -345,6 +389,28 @@ def usage_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
     }
 
 
+def complement_run_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
+    """Complete-effects searches started in the period."""
+    runs = db_sa.scalars(
+        select(ComplementRun).where(ComplementRun.started_at >= since)
+    ).all()
+    finished = [r for r in runs if r.finished_at is not None]
+    daily = Counter(r.started_at.date() for r in runs)
+    return {
+        "started": len(runs),
+        "finished": len(finished),
+        "users": len({r.user_id for r in runs}),
+        "daily": sorted(daily.items()),
+        "daily_max": max(daily.values(), default=1),
+        # Wall-clock time from start to finish, pauses included
+        "hours_to_finish": histogram(
+            round((aware(r.finished_at) - aware(r.started_at)).total_seconds() / 3600)
+            for r in finished
+            if r.finished_at
+        ),
+    }
+
+
 def account_stats(db_sa: Session) -> dict[str, Any]:
     """Snapshot of all accounts and their saved settings (not limited by period)."""
     usernames = dict(db_sa.execute(select(User.id, User.username)).tuples().all())
@@ -417,6 +483,8 @@ def user_stats(db_sa: Session, since: datetime) -> list[dict[str, Any]]:
             "views": 0,
             "runs": 0,
             "runs_total": 0,
+            "complete": 0,
+            "complete_total": 0,
         }
 
     world_names = {
@@ -460,6 +528,16 @@ def user_stats(db_sa: Session, since: datetime) -> list[dict[str, Any]]:
         if aware(created_at) >= since:
             row["runs"] += 1
 
+    for user_id, started_at in db_sa.execute(
+        select(ComplementRun.user_id, ComplementRun.started_at)
+    ):
+        if user_id not in rows:
+            continue
+        row = rows[user_id]
+        row["complete_total"] += 1
+        if aware(started_at) >= since:
+            row["complete"] += 1
+
     for user_id, row in rows.items():
         row["language"] = row["language"] or page_language.get(user_id)
         row["device"] = row["devices"].most_common(1)[0][0] if row["devices"] else None
@@ -495,6 +573,7 @@ def stats():
             periods=STATS_PERIODS,
             traffic=traffic_stats(db_sa, since),
             usage=usage_stats(db_sa, since),
+            complete=complement_run_stats(db_sa, since),
             accounts=account_stats(db_sa),
             users=user_stats(db_sa, since),
         )

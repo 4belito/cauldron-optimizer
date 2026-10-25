@@ -212,6 +212,38 @@ class OptimizationRun(Base):
     min_effects: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
 
+class ComplementRun(Base):
+    """One "complete effects" search, for the stats page.
+
+    The search runs in the browser, which gives it a random id: it is logged
+    when it starts (or is continued) and each time its progress is saved.
+    """
+
+    __tablename__ = "complement_runs"
+
+    id: Mapped[str] = mapped_column(Text, primary_key=True)
+    user_id: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
+    server_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    started_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=False, server_default=func.now()
+    )
+    # None until every combination has been tried
+    finished_at: Mapped[datetime | None] = mapped_column(
+        TIMESTAMP(timezone=True), nullable=True
+    )
+    n_diplomas: Mapped[int] = mapped_column(Integer, nullable=False)
+    n_effects: Mapped[int] = mapped_column(Integer, nullable=False)
+    # "Todos en" goblets (0: scored by the weights)
+    n_rounds: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+    done: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    total: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    # Times it was continued after a stop
+    resumes: Mapped[int] = mapped_column(Integer, nullable=False, server_default="0")
+
+
 class ComplementSearch(Base):
     """Saved progress of a "complete effects" search, one per world.
 
