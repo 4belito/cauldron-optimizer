@@ -1275,6 +1275,16 @@ button:disabled[data-tip] {
   height: min(7rem, calc(100% + 1rem));
 }
 
+/* Phones (Safari): a folded card is too short for its 9-slice frame, which
+   Safari then drops, leaving only the title. The same parchment as a plain
+   background instead, stretched to the card */
+@media (max-width: 47.99rem) {
+  .optimizer fieldset.card.is-folded {
+    border-image: none;
+    background: url("/static/error/popup_body_.png") center / 100% 100% no-repeat;
+  }
+}
+
 .optimizer fieldset.card.is-folded > .card-body {
   display: none;
 }
