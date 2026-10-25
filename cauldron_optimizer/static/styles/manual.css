@@ -108,23 +108,20 @@
 /* ---- Optimal order (the default): the user should notice which mode is
    on. The ribbon adds "· orden óptimo" in amber and the shelves get an
    amber glow; both go away in the free order ---- */
-/* A small green badge in the ribbon, like the game's labels */
+/* Plain text in the ribbon, the same color as "Receta": "Receta · orden óptimo" */
 .fx-order-tag {
-  display: inline-block;
-  margin-left: 0.5em;
-  padding: 0.1em 0.65em 0.15em;
-  border: 1px solid #d9b458;
-  border-radius: 1em;
-  background: linear-gradient(var(--game-green-highlight), var(--game-green-dark));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 1px 2px rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 0.7em;
+  margin-left: 0.35em;
+  color: inherit;
+  font-size: 0.85em;
+  font-style: italic;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 245, 220, 0.8);
+}
+
+.fx-order-tag::before {
+  content: "· ";
+  color: #a78a60;
   font-style: normal;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.55);
-  vertical-align: 0.15em;
 }
 
 .formula-page.is-free-mode .fx-order-tag {
