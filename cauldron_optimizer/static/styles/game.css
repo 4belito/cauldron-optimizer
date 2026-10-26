@@ -75,6 +75,25 @@ nav .navbar-brand .elvenar-title {
   }
 }
 
+/* Phones: the name, as big as the screen allows, always on one line. With
+   tighter letters it is ~14.6 times its font size wide, and gets the screen
+   width minus the header's edges and the icon (~9.75rem); with the menu
+   button beside it (logged out), ~3.5rem less */
+@media (max-width: 47.98rem) {
+  .main-navbar .navbar-brand {
+    gap: 0.4rem;
+  }
+
+  nav .navbar-brand .elvenar-title {
+    letter-spacing: 0.02em;
+    font-size: min(1.15rem, calc((100vw - 9.75rem) / 14.6));
+  }
+
+  .main-navbar:has(.navbar-toggler-icon) .navbar-brand .elvenar-title {
+    font-size: min(1.15rem, calc((100vw - 13.25rem) / 14.6));
+  }
+}
+
 /* ---- Cards: parchment that keeps its curled edge, framed by the game's
    elf branches on the top corners and its leafy ornament on top ---- */
 fieldset.card {
