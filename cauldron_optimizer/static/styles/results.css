@@ -729,6 +729,21 @@
   .cw-cauldron {
     display: none;
   }
+
+  /* The ribbon in the flow, above the shelves, so it never covers the first
+     row of domes (its height changes with the text, e.g. "· orden óptimo") */
+  .cw-shelves-panel {
+    padding-top: 0.75rem;
+  }
+
+  .cw-ribbon {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: auto;
+    margin: 0 0.35rem 0.3rem;
+  }
 }
 
 @media (max-width: 30rem) {
