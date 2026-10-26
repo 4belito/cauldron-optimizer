@@ -342,7 +342,7 @@
 
 /* Narrow screens hide the cauldron on the results page; here it holds the
    controls, so it stays */
-@media (max-width: 47.5rem) {
+@media (max-width: 39.98rem) {
   .cw-wp .cw-cauldron {
     display: flex;
     min-height: 11rem;
@@ -606,7 +606,7 @@
    scroll (background_cauldron_wp.png, 1742 x 1084). Positions in % of the
    art, sizes in cqw, as in results.css.
    ========================= */
-@media (min-width: 48rem) {
+@media (min-width: 40rem) {
   .cw-wp .cw-body {
     aspect-ratio: 1742 / 1084;
     background-image: url("/static/ui/cauldron/background_cauldron_wp.png");

@@ -721,7 +721,7 @@
 }
 
 /* Narrow screens: shelves, then effects; the cauldron is decoration only */
-@media (max-width: 47.5rem) {
+@media (max-width: 39.98rem) {
   .cw-body {
     grid-template-columns: 1fr;
   }
@@ -775,7 +775,7 @@
    where the game shows it. Positions are in % of the art (852 x 525) and
    sizes in cqw, so everything scales with the window.
    ========================= */
-@media (min-width: 48rem) {
+@media (min-width: 40rem) {
   .cw-body {
     position: relative;
     display: block;
@@ -1102,7 +1102,7 @@
 
 /* Wide screens: the recipe's cost on the art's scroll under the tube, and
    the cauldron raised above it */
-@media (min-width: 48rem) {
+@media (min-width: 40rem) {
   /* Centered in the tube (47.7% to 63.8% of the art), feet in the flames
      just above the Costes scroll (86.6%) */
   .cw-results .cw-cauldron {
@@ -1156,7 +1156,7 @@
 
 /* The whole label on one centred row, text, counter and colon on the same
    middle line */
-@media (max-width: 47.98rem) {
+@media (max-width: 39.98rem) {
   .cw-stat.is-chance .cw-stat-label {
     display: flex;
     align-items: center;
@@ -1194,20 +1194,20 @@
   object-fit: contain;
 }
 
-@media (max-width: 47.98rem) {
+@media (max-width: 39.98rem) {
   .cw-goblets {
     display: none;
   }
 }
 
 /* Wide screens: the goblets stay on the carved plaque above the scroll */
-@media (min-width: 48rem) {
+@media (min-width: 40rem) {
   .cw-stat-goblets {
     display: none;
   }
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 40rem) {
   /* Centered on the plaque (78% to 88.7% of the art, 3.2% to 8.6%) */
   .cw-goblets {
     position: absolute;
@@ -1223,5 +1223,15 @@
   .cw-goblets img {
     width: 2.6cqw;
     height: 2.6cqw;
+  }
+}
+
+/* Landscape phones and small tablets (40rem to 62rem wide): Bootstrap would
+   keep the page at 540px or 720px; the cauldron windows (results, manual
+   recipe) take the whole width
+   instead, so the side-by-side art is as big as the screen allows */
+@media (min-width: 40rem) and (max-width: 61.98rem) {
+  main.container:has(.cw-window) {
+    max-width: none;
   }
 }
