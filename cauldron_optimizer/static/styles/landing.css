@@ -10,6 +10,7 @@
 
 .landing-card {
   padding: 1.5rem clamp(1.25rem, 4vw, 2.5rem);
+  padding-bottom: 2.75rem; /* clear the card's curled bottom edge */
 }
 
 .landing h1,
@@ -75,7 +76,13 @@
   background: #1f1713;
   border-radius: 0.875rem;
   overflow: hidden;
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.5);
+  /* Thin gold edge and a soft warm glow, to set it apart from the
+     dark page background */
+  border: 1px solid rgba(240, 210, 122, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(58, 26, 8, 0.6),
+    0 0 1.1rem rgba(240, 190, 90, 0.18),
+    0 0.4rem 1.2rem rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
 }
@@ -105,38 +112,59 @@
   width: 8%;
 }
 
+/* Features: one row of three equal tiles per group */
+.landing .landing-group {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7a4a1c;
+  margin: 1.25rem 0 0.6rem;
+}
+
+.landing .landing-group:first-of-type {
+  margin-top: 0.25rem;
+}
+
 .landing-features {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: 0.5rem 1.75rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
 }
 
-.landing-features p,
+.landing-features li {
+  background: rgba(255, 248, 225, 0.45);
+  border: 1px solid rgba(120, 90, 40, 0.28);
+  border-radius: 0.6rem;
+  padding: 0.75rem 0.9rem;
+}
+
+.landing-features h4 {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+  color: #51200d;
+}
+
+.landing-features p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 48rem) {
+  .landing-features {
+    grid-template-columns: 1fr;
+  }
+}
+
 .landing-steps {
   margin-bottom: 0.5rem;
 }
 
 .landing-steps li {
   margin-bottom: 0.4rem;
-}
-
-.landing-video {
-  width: min(100%, 40rem);
-  aspect-ratio: 16 / 9;
-  margin: 0 auto 1.25rem;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.4);
-}
-
-.landing-video iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
 }
 
 .landing-steps > li {

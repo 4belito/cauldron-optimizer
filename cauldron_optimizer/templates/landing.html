@@ -24,13 +24,21 @@
 {% endblock %}
 
 {% block main %}
+{% set elvenassist_url = "https://chromewebstore.google.com/detail/kikdpnpfhakidgkojboebobjlknflilc" %}
+{% set elvenassist %}<a href="{{ elvenassist_url }}" target="_blank" rel="noopener">ElvenAssist</a>{% endset %}
+{# Announcement of the game update that lets players turn effects off #}
+{# Same announcement in the Spanish and in the English channel #}
+{% set selector_url = "https://discord.com/channels/1136205917306753035/1144206431059456100/1521118504781086720"
+     if get_locale()|string == "es" else
+     "https://discord.com/channels/1136205917306753035/1136309287434584135/1521110087937032223" %}
+{% set selector %}<a href="{{ selector_url }}" target="_blank" rel="noopener">{{ _("Selector de efectos de pociones") }}</a>{% endset %}
 <div class="landing">
 
   <section class="card landing-card landing-hero">
     <h1>{{ _("Optimizador del Caldero de Elvenar") }}</h1>
     <p class="landing-lead">
       {{ _("Elige los efectos del Caldero que quieres, ajusta tus límites y objetivos, y el optimizador calcula la mejor receta de ingredientes: más efectos deseados, más probabilidad de conseguirlos o el mejor resultado según tus prioridades. Gratis y compatible con %(elvenassist)s.")
-        | format(elvenassist='<a href="https://chromewebstore.google.com/detail/kikdpnpfhakidgkojboebobjlknflilc" target="_blank" rel="noopener">ElvenAssist</a>') | safe }}
+        | format(elvenassist=elvenassist) | safe }}
     </p>
     <div class="landing-actions">
       <a class="game-btn game-btn-main" href="{{ url_for('register') }}">
@@ -88,57 +96,55 @@
 
   <section class="card landing-card">
     <h2>{{ _("Qué puedes hacer") }}</h2>
+    <h3 class="landing-group">{{ _("Ajusta la app a tu juego") }}</h3>
     <ul class="landing-features">
       <li>
-        <h3>{{ _("Elegir los efectos como en el juego") }}</h3>
-        <p>{{ _("Desde la actualización del Selector de efectos de pociones (junio de 2026), el juego te deja desactivar los efectos que no necesitas, manteniendo al menos 10 activos. Aquí los eliges de la misma forma y das a cada uno un peso según lo que te importe.") }}</p>
+        <h4>{{ _("Efectos como en el juego") }}</h4>
+        <p>{{ _("Activa los mismos efectos que en el %(selector)s del juego (junio de 2026) y dale a cada uno un peso.") | format(selector=selector) | safe }}</p>
       </li>
       <li>
-        <h3>{{ _("Completar efectos") }}</h3>
-        <p>{{ _("¿Tienes menos de los 10 efectos que pide el juego? Una búsqueda extra completa el resto con los que mejor encajan.") }}</p>
+        <h4>{{ _("Evitar ingredientes premium") }}</h4>
+        <p>{{ _("Elige los ingredientes premium del juego que quieres evitar y la receta se calcula sin ellos.") }}</p>
       </li>
       <li>
-        <h3>{{ _("Evitar ingredientes premium") }}</h3>
-        <p>{{ _("Elige qué ingredientes premium del juego quieres evitar y la receta se calcula sin ellos.") }}</p>
+        <h4>{{ _("Integración con %(elvenassist)s") | format(elvenassist=elvenassist) | safe }}</h4>
+        <p>{{ _("Abre el caldero en el juego y los diplomas, ingredientes premium, efectos, nivel de la Escuela y puntos de hechicería se rellenan solos.") }}</p>
+      </li>
+    </ul>
+    <h3 class="landing-group">{{ _("Busca la mejor receta") }}</h3>
+    <ul class="landing-features">
+      <li>
+        <h4>{{ _("Elige tu objetivo") }}</h4>
+        <p>{{ _("Suma ponderada según tus pesos o, con cálices (1–5), el mayor número medio de efectos distintos o la mejor probabilidad de al menos k.") }}</p>
       </li>
       <li>
-        <h3>{{ _("Límite de puntos de hechicería") }}</h3>
-        <p>{{ _("Limita el coste de la receta directamente en puntos de hechicería, con el descuento de tu Escuela de hechicería valoriana.") }}</p>
+        <h4>{{ _("Límite de puntos de hechicería") }}</h4>
+        <p>{{ _("Limita el coste de la receta en puntos de hechicería, con el descuento de tu Escuela de hechicería valoriana.") }}</p>
       </li>
       <li>
-        <h3>{{ _("Búsqueda óptima") }}</h3>
-        <p>{{ _("Prueba todas las combinaciones, así que siempre encuentra la mejor receta.") }}</p>
+        <h4>{{ _("Búsqueda óptima") }}</h4>
+        <p>{{ _("Prueba todas las combinaciones posibles, así que siempre encuentra la mejor receta, en uno o dos segundos.") }}</p>
+      </li>
+    </ul>
+    <h3 class="landing-group">{{ _("Herramientas extra") }}</h3>
+    <ul class="landing-features">
+      <li>
+        <h4>{{ _("Completar efectos") }}</h4>
+        <p>{{ _("¿Quieres menos de los 10 efectos que pide el juego? Una búsqueda extra encuentra los que mejor los completan.") }}</p>
       </li>
       <li>
-        <h3>{{ _("Objetivos por cálices") }}</h3>
-        <p>{{ _("Elige tus cálices (1–5) y maximiza el número medio de efectos deseados distintos o la probabilidad de conseguir al menos k. Los resultados muestran la probabilidad para cada k.") }}</p>
+        <h4>{{ _("Modo manual") }}</h4>
+        <p>{{ _("Crea una receta a mano y mira al momento sus probabilidades y su coste.") }}</p>
       </li>
       <li>
-        <h3>{{ _("Integración con ElvenAssist") }}</h3>
-        <p>
-          {{ _("Deja el optimizador abierto y abre el caldero en el juego: diplomas, ingredientes premium, efectos elegidos, nivel de la Escuela de hechicería valoriana y puntos de hechicería se rellenan solos.") }}
-          <a href="https://chromewebstore.google.com/detail/kikdpnpfhakidgkojboebobjlknflilc" target="_blank" rel="noopener">{{ _("Consigue ElvenAssist (Chrome Web Store)") }}</a>
-        </p>
-      </li>
-      <li>
-        <h3>{{ _("Modo manual") }}</h3>
-        <p>{{ _("Crea una receta a mano y mira sus probabilidades y su coste.") }}</p>
-      </li>
-      <li>
-        <h3>{{ _("Varios mundos") }}</h3>
-        <p>{{ _("Guarda varios mundos en tu cuenta, cada uno con su propia configuración.") }}</p>
+        <h4>{{ _("Varios mundos") }}</h4>
+        <p>{{ _("Guarda varios mundos en tu cuenta, cada uno con su propio nombre, avatar y configuración.") }}</p>
       </li>
     </ul>
   </section>
 
   <section class="card landing-card">
     <h2>{{ _("Cómo funciona") }}</h2>
-    <div class="landing-video">
-      <iframe src="https://www.youtube-nocookie.com/embed/hMw3CE8PuMs"
-              title="{{ _('Tutorial en vídeo del Optimizador del Caldero') }}"
-              loading="lazy" allowfullscreen
-              allow="encrypted-media; picture-in-picture"></iframe>
-    </div>
     <ol class="landing-steps">
       <li>
         <strong>{{ _("Crea una cuenta gratis") }}</strong>
@@ -148,11 +154,11 @@
         <strong>{{ _("Ajusta la app a tu juego (calibración)") }}</strong>
         <ol type="a">
           <li>{{ _("Elige los mismos 4 ingredientes premium que tienes en el juego.") }}</li>
-          <li>{{ _("Pon tu número de diplomas: lo ves en el árbol de investigación del juego.") }}</li>
-          <li>{{ _("Marca como efectos deseados los mismos que tienes activados en el juego (Selector de efectos de pociones, actualización de junio de 2026).") }}</li>
+          <li>{{ _("Pon tu número de diplomas: cuéntalos en el árbol de investigación. Es también tu número de efectos, que ves al elaborar una poción.") }}</li>
+          <li>{{ _("Marca como efectos deseados los mismos que tienes activados en el juego (%(selector)s, actualización de junio de 2026). Están en la ventana de la fase de estudio, tras elaborar: la casilla de cada efecto lo activa o desactiva (por defecto, todos activos).") | format(selector=selector) | safe }}</li>
         </ol>
         <p class="landing-note">
-          {{ _("Con la extensión ElvenAssist esto se rellena solo al abrir el caldero en el juego.") }}
+          {{ _("Con la extensión %(elvenassist)s esto se rellena solo al abrir el caldero en el juego.") | format(elvenassist=elvenassist) | safe }}
         </p>
       </li>
       <li>
@@ -178,19 +184,6 @@
         {{ _("y obtén la receta recomendada con la probabilidad de cada efecto.") }}
       </li>
     </ol>
-  </section>
-
-  <section class="card landing-card">
-    <h2>{{ _("Preguntas frecuentes") }}</h2>
-    <h3>{{ _("¿Es gratis?") }}</h3>
-    <p>{{ _("Sí. Solo necesitas una cuenta para guardar tu configuración de cada mundo.") }}</p>
-    <h3>{{ _("¿Está en español e inglés?") }}</h3>
-    <p>{{ _("Sí, puedes cambiar el idioma en cualquier momento desde el menú.") }}</p>
-    <h3>{{ _("¿Es una herramienta oficial de Elvenar?") }}</h3>
-    <p>
-      {{ _("No. Es un proyecto creado por un jugador, sin afiliación oficial con Elvenar ni con InnoGames.") }}
-      <a href="{{ url_for('contact') }}">{{ _("Contacto") }}</a>
-    </p>
   </section>
 
 </div>
