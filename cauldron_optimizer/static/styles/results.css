@@ -206,6 +206,22 @@
   color: #f2e2c4;
   text-shadow: 0 1px 2px #000;
 }
+
+/* Phones: the title on one line ("Receta optimizada"), with less room
+   around it and a font that shrinks with the screen if it must */
+@media (max-width: 30rem) {
+  .cw-titlebar {
+    padding-inline: 2.7rem;
+  }
+
+  .cw-title {
+    padding-inline: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: min(1.2rem, calc((100vw - 11.75rem) / 9.2));
+  }
+}
 /* The game's orange X button: back to the form */
 .cw-close {
   position: absolute;

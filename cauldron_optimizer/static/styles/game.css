@@ -75,10 +75,22 @@ nav .navbar-brand .elvenar-title {
   }
 }
 
-/* Phones: the name, as big as the screen allows, always on one line. With
-   tighter letters it is ~14.6 times its font size wide, and gets the screen
-   width minus the header's edges and the icon (~9.75rem); with the menu
-   button beside it (logged out), ~3.5rem less */
+/* Phones: the name, as big as the screen allows, always on one line. It gets
+   the screen width minus the header's edges and the icon (~9.75rem; with the
+   menu button beside it, logged out, ~3.5rem less), divided by how many
+   times its font size the name is wide with tighter letters: "Optimizador
+   del Caldero" ~14.6, "Cauldron Optimizer" ~11.7. The shorter English name
+   may also grow a bit more */
+:root {
+  --title-em: 14.6;
+  --title-max: 1.15rem;
+}
+
+html[lang^="en"] {
+  --title-em: 11.7;
+  --title-max: 1.4rem;
+}
+
 @media (max-width: 47.98rem) {
   .main-navbar .navbar-brand {
     gap: 0.4rem;
@@ -86,11 +98,11 @@ nav .navbar-brand .elvenar-title {
 
   nav .navbar-brand .elvenar-title {
     letter-spacing: 0.02em;
-    font-size: min(1.15rem, calc((100vw - 9.75rem) / 14.6));
+    font-size: min(var(--title-max), calc((100vw - 9.75rem) / var(--title-em)));
   }
 
   .main-navbar:has(.navbar-toggler-icon) .navbar-brand .elvenar-title {
-    font-size: min(1.15rem, calc((100vw - 13.25rem) / 14.6));
+    font-size: min(var(--title-max), calc((100vw - 13.25rem) / var(--title-em)));
   }
 }
 
