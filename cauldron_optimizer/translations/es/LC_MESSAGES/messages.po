@@ -1045,17 +1045,6 @@ msgstr ""
 msgid "Ajusta la app a tu juego"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:98
-msgid "Efectos como en el juego"
-msgstr ""
-
-#: cauldron_optimizer/templates/landing.html:99
-#, python-format
-msgid ""
-"Activa los mismos efectos que en el %(selector)s del juego (junio de "
-"2026) y dale a cada uno un peso."
-msgstr ""
-
 #: cauldron_optimizer/templates/landing.html:103
 msgid ""
 "Elige los ingredientes premium del juego que quieres evitar y la receta "
@@ -1099,12 +1088,6 @@ msgstr ""
 
 #: cauldron_optimizer/templates/landing.html:121
 msgid "Búsqueda óptima"
-msgstr ""
-
-#: cauldron_optimizer/templates/landing.html:122
-msgid ""
-"Prueba todas las combinaciones posibles, así que siempre encuentra la "
-"mejor receta, en uno o dos segundos."
 msgstr ""
 
 #: cauldron_optimizer/templates/landing.html:125
@@ -1492,6 +1475,23 @@ msgid ""
 "(%(selector)s, actualización de junio de 2026). Están en la ventana de la"
 " fase de estudio, tras elaborar: la casilla de cada efecto lo activa o "
 "desactiva (por defecto, todos activos)."
+msgstr ""
+
+#: cauldron_optimizer/templates/landing.html:99
+#, python-format
+msgid ""
+"Pon tus diplomas y luego activa los mismos efectos que en el %(selector)s"
+" del juego (junio de 2026), cada uno con su peso."
+msgstr ""
+
+#: cauldron_optimizer/templates/landing.html:98
+msgid "Diplomas y efectos"
+msgstr ""
+
+#: cauldron_optimizer/templates/landing.html:122
+msgid ""
+"Prueba todas las combinaciones y encuentra la mejor receta en uno o dos "
+"segundos. Si prefieres rapidez, hace una búsqueda inteligente más corta."
 msgstr ""
 
 #~ msgid "No se encontró la configuracion del ususario"

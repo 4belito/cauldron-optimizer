@@ -99,45 +99,74 @@
     <h3 class="landing-group">{{ _("Ajusta la app a tu juego") }}</h3>
     <ul class="landing-features">
       <li>
-        <h4>{{ _("Efectos como en el juego") }}</h4>
-        <p>{{ _("Activa los mismos efectos que en el %(selector)s del juego (junio de 2026) y dale a cada uno un peso.") | format(selector=selector) | safe }}</p>
+        <h4>
+          <img class="landing-icon" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+          <span>{{ _("Diplomas y efectos") }}</span>
+        </h4>
+        <p>{{ _("Pon tus diplomas y luego activa los mismos efectos que en el %(selector)s del juego (junio de 2026), cada uno con su peso.") | format(selector=selector) | safe }}</p>
       </li>
       <li>
-        <h4>{{ _("Evitar ingredientes premium") }}</h4>
+        <h4>
+          <img class="landing-icon" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
+          <span>{{ _("Evitar ingredientes premium") }}</span>
+        </h4>
         <p>{{ _("Elige los ingredientes premium del juego que quieres evitar y la receta se calcula sin ellos.") }}</p>
       </li>
       <li>
-        <h4>{{ _("Integración con %(elvenassist)s") | format(elvenassist=elvenassist) | safe }}</h4>
+        <h4>
+          {# Icon repeats the link next to it: hidden from screen readers and tabbing #}
+          <a href="{{ elvenassist_url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img
+             class="landing-icon" src="{{ url_for('static', filename='seo/elvenassist.png') }}" alt=""></a>
+          <span>{{ _("Integración con %(elvenassist)s") | format(elvenassist=elvenassist) | safe }}</span>
+        </h4>
         <p>{{ _("Abre el caldero en el juego y los diplomas, ingredientes premium, efectos, nivel de la Escuela y puntos de hechicería se rellenan solos.") }}</p>
       </li>
     </ul>
     <h3 class="landing-group">{{ _("Busca la mejor receta") }}</h3>
     <ul class="landing-features">
       <li>
-        <h4>{{ _("Elige tu objetivo") }}</h4>
+        <h4>
+          <img class="landing-icon" src="{{ url_for('static', filename='ui/cauldron/goblet.png') }}" alt="">
+          <span>{{ _("Elige tu objetivo") }}</span>
+        </h4>
         <p>{{ _("Suma ponderada según tus pesos o, con cálices (1–5), el mayor número medio de efectos distintos o la mejor probabilidad de al menos k.") }}</p>
       </li>
       <li>
-        <h4>{{ _("Límite de puntos de hechicería") }}</h4>
+        <h4>
+          <img class="landing-icon" src="{{ url_for('static', filename='ui/cauldron/witch_points.png') }}" alt="">
+          <span>{{ _("Límite de puntos de hechicería") }}</span>
+        </h4>
         <p>{{ _("Limita el coste de la receta en puntos de hechicería, con el descuento de tu Escuela de hechicería valoriana.") }}</p>
       </li>
       <li>
-        <h4>{{ _("Búsqueda óptima") }}</h4>
-        <p>{{ _("Prueba todas las combinaciones posibles, así que siempre encuentra la mejor receta, en uno o dos segundos.") }}</p>
+        <h4>
+          <span class="landing-icon landing-icon-text" aria-hidden="true">∞</span>
+          <span>{{ _("Búsqueda óptima") }}</span>
+        </h4>
+        <p>{{ _("Prueba todas las combinaciones y encuentra la mejor receta en uno o dos segundos. Si prefieres rapidez, hace una búsqueda inteligente más corta.") }}</p>
       </li>
     </ul>
     <h3 class="landing-group">{{ _("Herramientas extra") }}</h3>
     <ul class="landing-features">
       <li>
-        <h4>{{ _("Completar efectos") }}</h4>
+        <h4>
+          <img class="landing-icon" src="{{ url_for('static', filename='ui/plus_normal.png') }}" alt="">
+          <span>{{ _("Completar efectos") }}</span>
+        </h4>
         <p>{{ _("¿Quieres menos de los 10 efectos que pide el juego? Una búsqueda extra encuentra los que mejor los completan.") }}</p>
       </li>
       <li>
-        <h4>{{ _("Modo manual") }}</h4>
+        <h4>
+          <img class="landing-icon" src="{{ url_for('static', filename='ui/cauldron_icon.png') }}" alt="">
+          <span>{{ _("Modo manual") }}</span>
+        </h4>
         <p>{{ _("Crea una receta a mano y mira al momento sus probabilidades y su coste.") }}</p>
       </li>
       <li>
-        <h4>{{ _("Varios mundos") }}</h4>
+        <h4>
+          <img class="landing-icon landing-icon-round" src="{{ url_for('static', filename='potrait.png') }}" alt="">
+          <span>{{ _("Varios mundos") }}</span>
+        </h4>
         <p>{{ _("Guarda varios mundos en tu cuenta, cada uno con su propio nombre, avatar y configuración.") }}</p>
       </li>
     </ul>

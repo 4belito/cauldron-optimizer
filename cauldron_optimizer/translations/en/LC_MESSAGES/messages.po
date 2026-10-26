@@ -1095,19 +1095,6 @@ msgstr "What you can do"
 msgid "Ajusta la app a tu juego"
 msgstr "Match your game"
 
-#: cauldron_optimizer/templates/landing.html:98
-msgid "Efectos como en el juego"
-msgstr "Effects like in the game"
-
-#: cauldron_optimizer/templates/landing.html:99
-#, python-format
-msgid ""
-"Activa los mismos efectos que en el %(selector)s del juego (junio de "
-"2026) y dale a cada uno un peso."
-msgstr ""
-"Turn on the same effects as in the game's %(selector)s (June 2026) and "
-"give each one a weight."
-
 #: cauldron_optimizer/templates/landing.html:103
 msgid ""
 "Elige los ingredientes premium del juego que quieres evitar y la receta "
@@ -1160,14 +1147,6 @@ msgstr ""
 #: cauldron_optimizer/templates/landing.html:121
 msgid "Búsqueda óptima"
 msgstr "Optimal search"
-
-#: cauldron_optimizer/templates/landing.html:122
-msgid ""
-"Prueba todas las combinaciones posibles, así que siempre encuentra la "
-"mejor receta, en uno o dos segundos."
-msgstr ""
-"It tries every possible combination, so it always finds the best recipe, "
-"in a second or two."
 
 #: cauldron_optimizer/templates/landing.html:125
 msgid "Herramientas extra"
@@ -1605,6 +1584,27 @@ msgstr ""
 "(%(selector)s, June 2026 update). They're in the study-phase window "
 "(“Upgrade Effects”) after brewing: each effect's checkbox turns it on or "
 "off (all on by default)."
+
+#: cauldron_optimizer/templates/landing.html:99
+#, python-format
+msgid ""
+"Pon tus diplomas y luego activa los mismos efectos que en el %(selector)s"
+" del juego (junio de 2026), cada uno con su peso."
+msgstr ""
+"Set your diplomas, then turn on the same effects as in the game's "
+"%(selector)s (June 2026), each with its weight."
+
+#: cauldron_optimizer/templates/landing.html:98
+msgid "Diplomas y efectos"
+msgstr "Diplomas and effects"
+
+#: cauldron_optimizer/templates/landing.html:122
+msgid ""
+"Prueba todas las combinaciones y encuentra la mejor receta en uno o dos "
+"segundos. Si prefieres rapidez, hace una búsqueda inteligente más corta."
+msgstr ""
+"Tries every combination and finds the best recipe in a second or two. If "
+"you prefer speed, it runs a shorter smart search."
 
 #~ msgid "El nombre de usuario ya existe"
 #~ msgstr "That username already exists"
