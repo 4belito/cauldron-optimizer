@@ -38,5 +38,5 @@ def select_locale():
     if browser_lang:
         return browser_lang
 
-    # 4) Fallback final: español
-    return "es"
+    # 4) Fallback: English (Spanish only for browsers that ask for it)
+    return "en"

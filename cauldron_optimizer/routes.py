@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 from flask import Response, abort, redirect, render_template, request, session, url_for
+from flask_babel import get_locale
 from flask_babel import gettext as _
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -157,7 +158,7 @@ def index():
         form.wonder_level.data = settings.wonder_level
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
         form.excluded_effects_json.data = json.dumps(settings.excluded_effects or [])
-        form.language.data = session.get("lang", "es")
+        form.language.data = str(get_locale())
         # Back from the results: the form shows the settings of that search
         # (maybe unsaved), not the saved ones. Only for the world it ran on
         last = session.get("last_search")
@@ -216,7 +217,7 @@ def get_active_server(db_sa: Session, user_id: int) -> tuple[UserSettings, Serve
 
     account = db_sa.get(UserSettings, user_id)
     if account is None:
-        account = UserSettings(user_id=user_id, language=session.get("lang", "es"))
+        account = UserSettings(user_id=user_id, language=str(get_locale()))
         db_sa.add(account)
         db_sa.flush()
 
@@ -547,7 +548,7 @@ def register():
                 db_sa.add(
                     UserSettings(
                         user=new_user,
-                        language=session.get("lang", "es"),
+                        language=str(get_locale()),
                     )
                 )
                 avatar = form.avatar.data or None
