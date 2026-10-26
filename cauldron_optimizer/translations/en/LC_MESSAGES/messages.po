@@ -1160,12 +1160,12 @@ msgstr "diamonds"
 
 #: cauldron_optimizer/templates/manual.html:161
 msgid "Orden: de mayor a menor cantidad"
-msgstr ""
+msgstr "Order: largest amount first"
 
 #: cauldron_optimizer/templates/manual.html:162
 #: cauldron_optimizer/templates/manual.html:180
 msgid "Entendido"
-msgstr ""
+msgstr "Got it"
 
 #: cauldron_optimizer/templates/manual.html:167
 msgid ""
@@ -1179,7 +1179,7 @@ msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:176
 msgid "No volver a mostrar"
-msgstr ""
+msgstr "Don't show again"
 
 #: cauldron_optimizer/templates/manual.html:201
 #, python-brace-format
@@ -1187,6 +1187,8 @@ msgid ""
 "No se pueden añadir más unidades de {name}: después ya añadiste {later}. "
 "Cada ingrediente se añade de una vez."
 msgstr ""
+"You cannot add more units of {name}: you already added {later} after it. "
+"Each ingredient is added in one go."
 
 #: cauldron_optimizer/templates/manual.html:202
 #, python-brace-format
@@ -1194,6 +1196,8 @@ msgid ""
 "{later} no puede tener {n}: sería más que {earlier} ({m}), que se añadió "
 "antes."
 msgstr ""
+"{later} cannot have {n}: that would be more than {earlier} ({m}), which "
+"was added before."
 
 #: cauldron_optimizer/templates/register.html:14
 #: cauldron_optimizer/templates/register.html:22
