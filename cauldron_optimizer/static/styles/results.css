@@ -1117,6 +1117,65 @@
   object-fit: contain;
 }
 
+/* Phones: the goblets go in the score's label ("Efectos esperados en
+   [goblet] 5:"), as the same dark counter; not above the effects */
+.cw-stat-goblets {
+  white-space: nowrap;
+}
+
+/* The whole label on one centred row, text, counter and colon on the same
+   middle line */
+@media (max-width: 47.98rem) {
+  .cw-stat.is-chance .cw-stat-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 0;
+  }
+
+  .cw-stat-goblets {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: 0.3rem;
+  }
+}
+
+/* The number first, then the goblet: "5 [goblet]" */
+.cw-stat-goblets-chip {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 0.15rem;
+  /* No box of its own: it is already on the score's dark panel. The label's
+     own color, only bolder: context for the score, which stays the one
+     highlighted value */
+  color: inherit;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cw-stat-goblets-chip img {
+  width: 1.2rem;
+  height: 1.2rem;
+  object-fit: contain;
+}
+
+@media (max-width: 47.98rem) {
+  .cw-goblets {
+    display: none;
+  }
+}
+
+/* Wide screens: the goblets stay on the carved plaque above the scroll */
+@media (min-width: 48rem) {
+  .cw-stat-goblets {
+    display: none;
+  }
+}
+
 @media (min-width: 48rem) {
   /* Centered on the plaque (78% to 88.7% of the art, 3.2% to 8.6%) */
   .cw-goblets {

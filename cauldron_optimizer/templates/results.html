@@ -125,16 +125,17 @@
               {% if rows.append([_("Efectos esperados"), "%.2f"|format((chances|sum) / 100), mean]) %}{% endif %}
             {% endif %}
             {% if mean %}
-              {# Two words, one per line: "Efectos / esperados" #}
+              {# Two words, one per line: "Efectos / esperados". Phones: the goblets
+                 in the label, "Efectos esperados en [goblet] 5:" (see results.css) #}
               <div class="cw-stat-label is-stacked" tabindex="0"
                    data-tip="{{ _('Efectos deseados distintos que conseguirás de media en %(n)s cálices', n=n_rounds) }}"
-                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Efectos esperados") }}:</div>
+                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Efectos esperados") }}{% if n_rounds %}<span class="cw-stat-goblets"> {{ _("en") }} <span class="cw-stat-goblets-chip"><img src="{{ url_for('static', filename='ui/cauldron/goblet.png') }}" alt="{{ _('Cálices') }}">{{ n_rounds }}</span></span>{% endif %}:</div>
             {% else %}
               {# What the % is, then the goal as picked on the form:
                  "Probabilidad (≥ 3):" or "Probabilidad (todos):" #}
               <div class="cw-stat-label" tabindex="0"
                    data-tip="{{ ngettext('Probabilidad de conseguir al menos %(num)s efecto deseado distinto en %(n)s cálices', 'Probabilidad de conseguir al menos %(num)s efectos deseados distintos en %(n)s cálices', n_got, n=n_rounds) }}"
-                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Probabilidad") }} ({{ _("todos") if most and n_got >= most else "≥ %s"|format(n_got) }}):</div>
+                   {% if rows %}data-tip-rows='{{ rows|tojson }}'{% endif %}>{{ _("Probabilidad") }} ({{ _("todos") if most and n_got >= most else "≥ %s"|format(n_got) }}){% if n_rounds %}<span class="cw-stat-goblets"> {{ _("en") }} <span class="cw-stat-goblets-chip"><img src="{{ url_for('static', filename='ui/cauldron/goblet.png') }}" alt="{{ _('Cálices') }}">{{ n_rounds }}</span></span>{% endif %}:</div>
             {% endif %}
           {% else %}
             <div class="cw-stat-label">{{ _("Score") }}:</div>
