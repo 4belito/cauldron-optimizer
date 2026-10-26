@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-25 13:45-0400\n"
+"POT-Creation-Date: 2026-10-26 00:37-0400\n"
 "PO-Revision-Date: 2025-12-24 13:27-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: cauldron_optimizer/__init__.py:47
+#: cauldron_optimizer/__init__.py:56
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr ""
 
-#: cauldron_optimizer/__init__.py:63 cauldron_optimizer/routes.py:265
+#: cauldron_optimizer/__init__.py:72 cauldron_optimizer/routes.py:265
 #: cauldron_optimizer/routes.py:292 cauldron_optimizer/routes.py:319
 #: cauldron_optimizer/routes.py:336 cauldron_optimizer/routes.py:416
 #: cauldron_optimizer/routes.py:605 cauldron_optimizer/routes.py:724
@@ -176,6 +176,17 @@ msgstr ""
 
 #: cauldron_optimizer/constants.py:55
 msgid "Nox"
+msgstr ""
+
+#: cauldron_optimizer/constants.py:75
+#, python-brace-format
+msgid ""
+"La selección de efectos (las casillas) es nueva y todavía está en "
+"pruebas. Si notas algún problema, avísame desde {contact}."
+msgstr ""
+
+#: cauldron_optimizer/constants.py:79
+msgid "Beta"
 msgstr ""
 
 #: cauldron_optimizer/forms.py:49 cauldron_optimizer/forms.py:61
@@ -550,6 +561,8 @@ msgid "Efectos deseados necesarios"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:131
+#: cauldron_optimizer/templates/results.html:132
+#: cauldron_optimizer/templates/results.html:138
 msgid "en"
 msgstr ""
 
@@ -559,6 +572,8 @@ msgstr ""
 
 #: cauldron_optimizer/templates/index.html:134
 #: cauldron_optimizer/templates/results.html:75
+#: cauldron_optimizer/templates/results.html:132
+#: cauldron_optimizer/templates/results.html:138
 msgid "Cálices"
 msgstr ""
 
@@ -939,56 +954,44 @@ msgstr ""
 msgid "Caldero"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:29
-msgid "Beta"
-msgstr ""
-
-#: cauldron_optimizer/templates/layout.html:31
-msgid "La selección de efectos (las casillas) es nueva y todavía está en pruebas."
-msgstr ""
-
-#: cauldron_optimizer/templates/layout.html:32
-msgid "Si notas algún problema, avísame desde"
-msgstr ""
-
-#: cauldron_optimizer/templates/layout.html:33
-#: cauldron_optimizer/templates/layout.html:118
+#: cauldron_optimizer/templates/layout.html:30
+#: cauldron_optimizer/templates/layout.html:119
 msgid "Contacto"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:63
+#: cauldron_optimizer/templates/layout.html:64
 msgid "Optimizador del Caldero"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:76
+#: cauldron_optimizer/templates/layout.html:77
 msgid "Mostrar menú"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:94
+#: cauldron_optimizer/templates/layout.html:95
 msgid "Mostrar navegación"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:114
+#: cauldron_optimizer/templates/layout.html:115
 msgid "Modo manual"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:123
+#: cauldron_optimizer/templates/layout.html:124
 msgid "Tutorial"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:153
-#: cauldron_optimizer/templates/layout.html:167
+#: cauldron_optimizer/templates/layout.html:154
+#: cauldron_optimizer/templates/layout.html:168
 msgid "Cerrar sesión"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:174
+#: cauldron_optimizer/templates/layout.html:175
 #: cauldron_optimizer/templates/login.html:29
 #: cauldron_optimizer/templates/register.html:4
 #: cauldron_optimizer/templates/register.html:46
 msgid "Crear cuenta"
 msgstr ""
 
-#: cauldron_optimizer/templates/layout.html:177
+#: cauldron_optimizer/templates/layout.html:178
 #: cauldron_optimizer/templates/login.html:4
 #: cauldron_optimizer/templates/login.html:25
 msgid "Iniciar sesión"
@@ -1013,7 +1016,7 @@ msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:46
 #: cauldron_optimizer/templates/results.html:14
-#: cauldron_optimizer/templates/results.html:186
+#: cauldron_optimizer/templates/results.html:187
 msgid "Volver"
 msgstr ""
 
@@ -1092,7 +1095,7 @@ msgid ""
 msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:137
-#: cauldron_optimizer/templates/results.html:174
+#: cauldron_optimizer/templates/results.html:175
 msgid "Costes"
 msgstr ""
 
@@ -1102,7 +1105,7 @@ msgstr ""
 
 #: cauldron_optimizer/templates/manual.html:141
 #: cauldron_optimizer/templates/results.html:45
-#: cauldron_optimizer/templates/results.html:177
+#: cauldron_optimizer/templates/results.html:178
 msgid "Puntos de hechicería"
 msgstr ""
 
@@ -1175,26 +1178,26 @@ msgid "Sin peso"
 msgstr ""
 
 #: cauldron_optimizer/templates/results.html:119
-#: cauldron_optimizer/templates/results.html:137
+#: cauldron_optimizer/templates/results.html:138
 msgid "Probabilidad"
 msgstr ""
 
 #: cauldron_optimizer/templates/results.html:119
-#: cauldron_optimizer/templates/results.html:137
+#: cauldron_optimizer/templates/results.html:138
 msgid "todos"
 msgstr ""
 
 #: cauldron_optimizer/templates/results.html:125
-#: cauldron_optimizer/templates/results.html:131
+#: cauldron_optimizer/templates/results.html:132
 msgid "Efectos esperados"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:130
+#: cauldron_optimizer/templates/results.html:131
 #, python-format
 msgid "Efectos deseados distintos que conseguirás de media en %(n)s cálices"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:136
+#: cauldron_optimizer/templates/results.html:137
 #, python-format
 msgid ""
 "Probabilidad de conseguir al menos %(num)s efecto deseado distinto en "
@@ -1205,21 +1208,21 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: cauldron_optimizer/templates/results.html:140
+#: cauldron_optimizer/templates/results.html:141
 msgid "Score"
 msgstr "Puntuación"
 
-#: cauldron_optimizer/templates/results.html:156
+#: cauldron_optimizer/templates/results.html:157
 msgid "Óptimo garantizado"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:157
+#: cauldron_optimizer/templates/results.html:158
 msgid ""
 "Óptimo garantizado: se comprobaron todas las recetas posibles, no existe "
 "ninguna mejor con estos ajustes"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:173
+#: cauldron_optimizer/templates/results.html:174
 #, python-format
 msgid ""
 "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus"
@@ -1227,7 +1230,7 @@ msgid ""
 "con el descuento de la Escuela de hechicería valoriana: %(discount)s"
 msgstr ""
 
-#: cauldron_optimizer/templates/results.html:173
+#: cauldron_optimizer/templates/results.html:174
 msgid "sin construir"
 msgstr ""
 
@@ -1408,5 +1411,14 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "orden libre"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "La selección de efectos (las casillas)"
+#~ " es nueva y todavía está en "
+#~ "pruebas."
+#~ msgstr ""
+
+#~ msgid "Si notas algún problema, avísame desde"
 #~ msgstr ""
 

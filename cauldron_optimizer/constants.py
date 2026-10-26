@@ -66,8 +66,19 @@ MAX_PREMIUM_INGREDIENTS = 4
 # Maximum number of servers (game worlds) per user
 MAX_SERVERS_PER_USER = 10
 MAX_SERVER_NAME_LENGTH = 24
-# Show the "under test" banner for the effect selection checkboxes (set False to hide)
-SHOW_EFFECT_SELECTION_BETA_BANNER = True
+# Announcement banner shown above the header to logged-in users. Empty ("")
+# shows no banner. Wrap the text in N_() so it is translated, and add it to
+# the catalogs (pybabel extract/update). "{contact}" becomes a link to the
+# Contact page. Each different text can be closed once per browser: a new
+# announcement shows again even if the previous one was closed.
+
+## Ex: _(
+#     "La selección de efectos (las casillas) es nueva y todavía está en "
+#     "pruebas. Si notas algún problema, avísame desde {contact}."
+# )
+ANNOUNCEMENT = N_("")
+# Small tag before the text ("Beta", "Nuevo"...); empty for none
+ANNOUNCEMENT_TAG = N_("Beta")
 
 # Usernames allowed to see the admin pages (/stats)
 ADMIN_USERNAMES = {"4bel"}

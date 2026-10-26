@@ -1,3 +1,4 @@
+import hashlib
 from datetime import timedelta
 
 from flask import Flask, request, session, url_for
@@ -8,8 +9,9 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from cauldron_optimizer.config import get_secret_key, select_locale
 from cauldron_optimizer.constants import (
+    ANNOUNCEMENT,
+    ANNOUNCEMENT_TAG,
     MAX_SERVER_NAME_LENGTH,
-    SHOW_EFFECT_SELECTION_BETA_BANNER,
 )
 from cauldron_optimizer.helpers import avatar_url, error, is_admin
 
@@ -27,13 +29,20 @@ csrf = CSRFProtect(app)
 babel = Babel(app, locale_selector=select_locale)
 
 
+@app.template_filter("hash_text")
+def hash_text(text: str) -> str:
+    """Short stable id of a text (e.g. to remember a closed announcement)."""
+    return hashlib.sha1(text.encode()).hexdigest()[:10]
+
+
 @app.context_processor
 def inject_i18n():
     """Make translation functions available in templates."""
     return {
         "_": _,
         "get_locale": get_locale,
-        "show_beta_banner": SHOW_EFFECT_SELECTION_BETA_BANNER,
+        "announcement": ANNOUNCEMENT,
+        "announcement_tag": ANNOUNCEMENT_TAG,
         "is_admin": is_admin,
         "avatar_url": avatar_url,
         "max_server_name": MAX_SERVER_NAME_LENGTH,
