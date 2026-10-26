@@ -348,14 +348,52 @@
     min-height: 11rem;
   }
 
-  /* One column: below the ingredients their order, then the recipe's
-     cost, the cauldron and the effects */
-  .cw-wp .cw-wp-plate { order: 0; }
-  .cw-wp .cw-shelves-panel { order: 1; }
-  .cw-wp .fx-mode-switch { order: 2; }
-  .cw-wp .cw-costs { order: 3; }
-  .cw-wp .cw-cauldron { order: 4; }
-  .cw-wp .cw-side { order: 5; }
+  /* One column, compact: the ingredients, then one panel with the cauldron
+     (right) and the ingredient order on its background (left), the cost
+     and the effects */
+  .cw-wp .cw-wp-plate { grid-row: 1; }
+  .cw-wp .cw-shelves-panel { grid-row: 2; }
+  .cw-wp .cw-cauldron,
+  .cw-wp .fx-mode-switch { grid-row: 3; grid-column: 1; }
+  .cw-wp .cw-costs { grid-row: 4; }
+  .cw-wp .cw-side { grid-row: 5; }
+
+  /* The left part of the panel is kept for the ingredient order, so the pot
+     is centred in the rest and the two never overlap */
+  .cw-wp .cw-cauldron {
+    min-height: 9.5rem;
+    /* A wide panel: only slightly rounded corners, not the tall tube's arch */
+    border-radius: 0.8rem;
+    align-items: center;
+    padding-left: 11rem;
+    padding-right: 0.5rem;
+  }
+
+  .cw-wp .cw-pot {
+    width: min(8rem, 100%);
+  }
+
+  /* On the cauldron's background, left: title, then one pill above the other */
+  .cw-wp .fx-mode-switch {
+    z-index: 2;
+    grid-template-columns: auto;
+    justify-items: stretch;
+    align-self: center;
+    justify-self: start;
+    gap: 0.4rem;
+    width: 9.5rem;
+    margin: 0 0 0 0.75rem;
+    padding: 0.5rem 0.6rem 0.6rem;
+  }
+
+  .cw-wp .fx-mode-switch legend {
+    font-size: 0.8rem;
+  }
+
+  .cw-wp .fx-mode-switch label span {
+    padding-block: 0.3rem;
+    text-align: center;
+  }
 
   /* The ribbon stays on one line ("Receta · orden óptimo"): shorter
      ornaments, so it never grows over the first row of domes */
