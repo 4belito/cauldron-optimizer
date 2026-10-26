@@ -91,7 +91,7 @@ html[lang^="en"] {
   --title-max: 1.4rem;
 }
 
-@media (max-width: 47.98rem) {
+@media (max-width: 61.98rem) {
   .main-navbar .navbar-brand {
     gap: 0.4rem;
   }

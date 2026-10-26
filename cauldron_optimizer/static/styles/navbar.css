@@ -76,7 +76,7 @@ nav .navbar-brand .elvenar-title {
 }
 
 /* Mobile navbar */
-@media (max-width: 47.999rem){
+@media (max-width: 61.999rem){
   .main-navbar{
     position: relative;
   }
