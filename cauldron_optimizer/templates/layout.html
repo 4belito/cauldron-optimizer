@@ -13,7 +13,15 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=190">
+    {# The app's stylesheets, linked one by one so the browser downloads them
+       in parallel (an @import chain loads them one after another). Bump
+       css_version after changing any of them: browsers keep them for a year #}
+    {% set css_version = 191 %}
+    {% for sheet in ["base", "navbar", "cards", "forms", "buttons", "modals",
+                     "avatar", "optimizer", "ingredients", "results", "manual",
+                     "pages", "contact", "game", "landing"] %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/' ~ sheet ~ '.css') }}?v={{ css_version }}">
+    {% endfor %}
 
     <title>{% block full_title %}{{ _("Caldero") }}: {% block title %}{% endblock %}{% endblock %}</title>
 

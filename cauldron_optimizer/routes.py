@@ -67,9 +67,32 @@ def set_lang(lang: str):
     return redirect(referrer or url_for("index"))
 
 
+# Browser cache time of static files without a ?v= version (images, fonts)
+STATIC_MAX_AGE = 7 * 24 * 3600
+
+
 @app.after_request
 def after_request(response: Response) -> Response:
-    """Force browsers and CDNs to re-validate everything."""
+    """Set how long browsers and Vercel's CDN may keep each response.
+
+    Pages are never stored (they depend on the session). Static files are:
+    - with ?v= (versioned): kept a year, a new version changes the URL
+    - .js/.css without ?v=: checked with the server on each use (a short
+      "not modified" answer when unchanged), so a deploy is seen at once
+    - other files (images, fonts): kept a week
+    Vercel's CDN may keep any static file: it is emptied on every deploy.
+    """
+    if request.endpoint == "static":
+        if request.args.get("v"):
+            browser = "public, max-age=31536000, immutable"
+        elif request.path.endswith((".js", ".css")):
+            browser = "no-cache"
+        else:
+            browser = f"public, max-age={STATIC_MAX_AGE}"
+        response.headers["Cache-Control"] = browser
+        response.headers["CDN-Cache-Control"] = "public, max-age=31536000"
+        return response
+
     response.headers["Cache-Control"] = (
         "no-store, no-cache, must-revalidate, max-age=0, private"
     )
