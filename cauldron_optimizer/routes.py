@@ -23,6 +23,7 @@ from cauldron_optimizer.constants import (
     MAX_SERVERS_PER_USER,
     MAX_STARTS,
     MIN_CHECKED_EFFECTS,
+    SITE_URL,
 )
 from cauldron_optimizer.database import db_session
 from cauldron_optimizer.db_model import ComplementSearch, Server, User, UserSettings
@@ -76,13 +77,64 @@ def after_request(response: Response) -> Response:
     return response
 
 
-# constants.py
-@app.route("/")
+# Pages search engines may index; each one exists in every language
+PUBLIC_PAGES = ["index", "contact"]
+
+
+@app.route("/robots.txt")
+def robots_txt() -> Response:
+    """Tell search engines what to crawl: the public pages, not the app."""
+    private = [
+        "/lang/",
+        "/home",
+        "/logout",
+        "/optimize",
+        "/results",
+        "/manual",
+        "/formula",
+        "/servers/",
+        "/settings/",
+        "/complement/",
+        "/integration/",
+        "/stats",
+    ]
+    lines = ["User-agent: *", "Allow: /"]
+    lines += [f"Disallow: {path}" for path in private]
+    lines += ["", f"Sitemap: {SITE_URL}/sitemap.xml", ""]
+    return Response("\n".join(lines), mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml() -> Response:
+    """List the public pages in each language, linked to each other."""
+    urls = []
+    for endpoint in PUBLIC_PAGES:
+        base = SITE_URL + url_for(endpoint)
+        hreflangs = [(lang, lang) for lang in LANGUAGES] + [("x-default", "en")]
+        alternates = "".join(
+            f'<xhtml:link rel="alternate" hreflang="{tag}" href="{base}?lang={lang}"/>'
+            for tag, lang in hreflangs
+        )
+        for lang in LANGUAGES:
+            urls.append(f"<url><loc>{base}?lang={lang}</loc>{alternates}</url>")
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+        'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        + "\n".join(urls)
+        + "\n</urlset>\n"
+    )
+    return Response(xml, mimetype="application/xml")
+
+
 @app.route("/home")
-@login_required
+@app.route("/")  # registered first: url_for("index") gives "/"
 def index():
-    """Show recipe input form"""
-    user_id = session["user_id"]
+    """Show the recipe input form, or the public presentation page to
+    visitors not logged in (also what search engines see)"""
+    user_id = session.get("user_id")
+    if user_id is None:
+        return render_template("landing.html")
     with db_session() as db_sa:
         account, settings = get_active_server(db_sa, user_id)
 

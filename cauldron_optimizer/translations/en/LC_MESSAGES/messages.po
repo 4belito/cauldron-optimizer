@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-26 00:37-0400\n"
+"POT-Creation-Date: 2026-10-26 04:26-0400\n"
 "PO-Revision-Date: 2025-12-22 02:20-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -18,176 +18,167 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: cauldron_optimizer/__init__.py:56
+#: cauldron_optimizer/__init__.py:70
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr "Session expired. Reload the page and try again."
 
-#: cauldron_optimizer/__init__.py:72 cauldron_optimizer/routes.py:265
-#: cauldron_optimizer/routes.py:292 cauldron_optimizer/routes.py:319
-#: cauldron_optimizer/routes.py:336 cauldron_optimizer/routes.py:416
-#: cauldron_optimizer/routes.py:605 cauldron_optimizer/routes.py:724
-#: cauldron_optimizer/routes.py:760
+#: cauldron_optimizer/__init__.py:86 cauldron_optimizer/routes.py:317
+#: cauldron_optimizer/routes.py:344 cauldron_optimizer/routes.py:371
+#: cauldron_optimizer/routes.py:388 cauldron_optimizer/routes.py:468
+#: cauldron_optimizer/routes.py:657 cauldron_optimizer/routes.py:776
+#: cauldron_optimizer/routes.py:812
 msgid "Error de base de datos"
 msgstr "Database error"
 
-#: cauldron_optimizer/constants.py:16
+#: cauldron_optimizer/constants.py:25
 msgid "Espora Ígnea"
 msgstr "Fiery Spore"
 
-#: cauldron_optimizer/constants.py:17
+#: cauldron_optimizer/constants.py:26
 msgid "Escarabanuez"
 msgstr "Scarab Nut"
 
-#: cauldron_optimizer/constants.py:18
+#: cauldron_optimizer/constants.py:27
 msgid "Cáscaron de Maná"
 msgstr "Mana Shell"
 
-#: cauldron_optimizer/constants.py:19
+#: cauldron_optimizer/constants.py:28
 msgid "Iris Volador"
 msgstr "Flying Iris"
 
-#: cauldron_optimizer/constants.py:20
+#: cauldron_optimizer/constants.py:29
 msgid "Huevo de Medusa"
 msgstr "Jellyfish Egg"
 
-#: cauldron_optimizer/constants.py:21
+#: cauldron_optimizer/constants.py:30
 msgid "Lima de Oruga"
 msgstr "Caterpillar Fruit"
 
-#: cauldron_optimizer/constants.py:22
+#: cauldron_optimizer/constants.py:31
 msgid "Flor de Hierba Mora"
 msgstr "Nightshade Flower"
 
-#: cauldron_optimizer/constants.py:23
+#: cauldron_optimizer/constants.py:32
 msgid "Lenguas Burlonas"
 msgstr "Mocking Tongues"
 
-#: cauldron_optimizer/constants.py:24
+#: cauldron_optimizer/constants.py:33
 msgid "Brote Ocular"
 msgstr "Ocular Bud"
 
-#: cauldron_optimizer/constants.py:25
+#: cauldron_optimizer/constants.py:34
 msgid "Hoja de Agricabello"
 msgstr "Agricabello Leaf"
 
-#: cauldron_optimizer/constants.py:26
+#: cauldron_optimizer/constants.py:35
 msgid "Capullo de Nube de Algodón"
 msgstr "Cotton Cloud Cocoon"
 
-#: cauldron_optimizer/constants.py:27
+#: cauldron_optimizer/constants.py:36
 msgid "Trufa Orejera"
 msgstr "Ear Truffle"
 
-#: cauldron_optimizer/constants.py:31
+#: cauldron_optimizer/constants.py:40
 msgid "Monedas"
 msgstr "Coins"
 
-#: cauldron_optimizer/constants.py:32
+#: cauldron_optimizer/constants.py:41
 msgid "Provisiones"
 msgstr "Supplies"
 
-#: cauldron_optimizer/constants.py:33
+#: cauldron_optimizer/constants.py:42
 msgid "Cuartel Fuerza"
 msgstr "Barracks Strength"
 
-#: cauldron_optimizer/constants.py:34
+#: cauldron_optimizer/constants.py:43
 msgid "Ordinarios Básicos"
 msgstr "Basic Goods"
 
-#: cauldron_optimizer/constants.py:35
+#: cauldron_optimizer/constants.py:44
 msgid "Ordinarios Refinados"
 msgstr "Refined Goods"
 
-#: cauldron_optimizer/constants.py:36
+#: cauldron_optimizer/constants.py:45
 msgid "Ordinarios Preciosos"
 msgstr "Precious Goods"
 
-#: cauldron_optimizer/constants.py:37
+#: cauldron_optimizer/constants.py:46
 msgid "Entrenamiento Fuerza"
 msgstr "Training Strength"
 
-#: cauldron_optimizer/constants.py:38
+#: cauldron_optimizer/constants.py:47
 msgid "Portal"
 msgstr "Portal"
 
-#: cauldron_optimizer/constants.py:39
+#: cauldron_optimizer/constants.py:48
 msgid "Orcos"
 msgstr "Orcs"
 
-#: cauldron_optimizer/constants.py:40
+#: cauldron_optimizer/constants.py:49
 msgid "Maná"
 msgstr "Mana"
 
-#: cauldron_optimizer/constants.py:41
+#: cauldron_optimizer/constants.py:50
 msgid "Mercenarios Fuerza"
 msgstr "Mercenary Strength"
 
-#: cauldron_optimizer/constants.py:42
+#: cauldron_optimizer/constants.py:51
 msgid "Semillas"
 msgstr "Seeds"
 
-#: cauldron_optimizer/constants.py:43
+#: cauldron_optimizer/constants.py:52
 msgid "Sensitivos Básicos"
 msgstr "Basic Sentient Goods"
 
-#: cauldron_optimizer/constants.py:44
+#: cauldron_optimizer/constants.py:53
 msgid "Sensitivos Refinados"
 msgstr "Refined Sentient Goods"
 
-#: cauldron_optimizer/constants.py:45
+#: cauldron_optimizer/constants.py:54
 msgid "Sensitivos Preciosos"
 msgstr "Precious Sentient Goods"
 
-#: cauldron_optimizer/constants.py:46
+#: cauldron_optimizer/constants.py:55
 msgid "Entrenamiento Salud"
 msgstr "Training Health"
 
-#: cauldron_optimizer/constants.py:47
+#: cauldron_optimizer/constants.py:56
 msgid "Mercenarios Salud"
 msgstr "Mercenary Health"
 
-#: cauldron_optimizer/constants.py:48
+#: cauldron_optimizer/constants.py:57
 msgid "Unurium"
 msgstr "Unurium"
 
-#: cauldron_optimizer/constants.py:49
+#: cauldron_optimizer/constants.py:58
 msgid "Ascendidos Básicos"
 msgstr "Basic Ascended Goods"
 
-#: cauldron_optimizer/constants.py:50
+#: cauldron_optimizer/constants.py:59
 msgid "Ascendidos Refinados"
 msgstr "Refined Ascended Goods"
 
-#: cauldron_optimizer/constants.py:51
+#: cauldron_optimizer/constants.py:60
 msgid "Ascendidos Preciosos"
 msgstr "Precious Ascended Goods"
 
-#: cauldron_optimizer/constants.py:52
+#: cauldron_optimizer/constants.py:61
 msgid "Cuartel Salud"
 msgstr "Barracks Health"
 
-#: cauldron_optimizer/constants.py:53
+#: cauldron_optimizer/constants.py:62
 msgid "Trabajo Comunitario"
 msgstr "Community Work"
 
-#: cauldron_optimizer/constants.py:54
+#: cauldron_optimizer/constants.py:63
 msgid "Productos en Conserva"
 msgstr "Canned Goods"
 
-#: cauldron_optimizer/constants.py:55
+#: cauldron_optimizer/constants.py:64
 msgid "Nox"
 msgstr "Nox"
 
-#: cauldron_optimizer/constants.py:75
-#, python-brace-format
-msgid ""
-"La selección de efectos (las casillas) es nueva y todavía está en "
-"pruebas. Si notas algún problema, avísame desde {contact}."
-msgstr ""
-"Effect selection (the checkboxes) is new and still being tested. If you "
-"notice any problem, please let me know via {contact}."
-
-#: cauldron_optimizer/constants.py:79
+#: cauldron_optimizer/constants.py:90
 msgid "Beta"
 msgstr "Beta"
 
@@ -229,8 +220,8 @@ msgstr "You must confirm your password"
 msgid "Las contraseñas no coinciden"
 msgstr "Passwords do not match"
 
-#: cauldron_optimizer/forms.py:129 cauldron_optimizer/routes.py:224
-#: cauldron_optimizer/routes.py:277
+#: cauldron_optimizer/forms.py:129 cauldron_optimizer/routes.py:276
+#: cauldron_optimizer/routes.py:329
 msgid "Avatar no válido"
 msgstr "Invalid avatar"
 
@@ -355,55 +346,55 @@ msgstr "Session expired or invalid form. Please reload the page and try again."
 msgid "Formulario inválido"
 msgstr "Invalid form"
 
-#: cauldron_optimizer/routes.py:188 cauldron_optimizer/routes.py:213
-#: cauldron_optimizer/routes.py:215
-#: cauldron_optimizer/templates/register.html:52
+#: cauldron_optimizer/routes.py:240 cauldron_optimizer/routes.py:265
+#: cauldron_optimizer/routes.py:267
+#: cauldron_optimizer/templates/register.html:53
 #, python-format
 msgid "Mundo %(n)s"
 msgstr "World %(n)s"
 
-#: cauldron_optimizer/routes.py:199
+#: cauldron_optimizer/routes.py:251
 #, python-format
 msgid "El nombre del mundo debe tener entre 1 y %(n)s caracteres"
 msgstr "The world name must be between 1 and %(n)s characters"
 
-#: cauldron_optimizer/routes.py:205
+#: cauldron_optimizer/routes.py:257
 msgid "Ya tienes un mundo con ese nombre"
 msgstr "You already have a world with that name"
 
-#: cauldron_optimizer/routes.py:233 cauldron_optimizer/routes.py:375
+#: cauldron_optimizer/routes.py:285 cauldron_optimizer/routes.py:427
 #, python-format
 msgid "Puedes tener como máximo %(n)s mundos"
 msgstr "You can have at most %(n)s worlds"
 
-#: cauldron_optimizer/routes.py:307 cauldron_optimizer/routes.py:332
-#: cauldron_optimizer/routes.py:368
+#: cauldron_optimizer/routes.py:359 cauldron_optimizer/routes.py:384
+#: cauldron_optimizer/routes.py:420
 msgid "Mundo no válido"
 msgstr "Invalid world"
 
-#: cauldron_optimizer/routes.py:312 cauldron_optimizer/templates/index.html:73
+#: cauldron_optimizer/routes.py:364 cauldron_optimizer/templates/index.html:73
 msgid "No puedes eliminar tu único mundo"
 msgstr "You can't delete your only world"
 
-#: cauldron_optimizer/routes.py:454
+#: cauldron_optimizer/routes.py:506
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr "Incorrect username or password"
 
-#: cauldron_optimizer/routes.py:521
+#: cauldron_optimizer/routes.py:573
 msgid "El nombre de usuario ya está en uso"
 msgstr "That username is already taken"
 
-#: cauldron_optimizer/routes.py:547
+#: cauldron_optimizer/routes.py:599
 msgid "Ingredientes premium no válidos"
 msgstr "Invalid premium ingredients"
 
-#: cauldron_optimizer/routes.py:552
+#: cauldron_optimizer/routes.py:604
 #, python-format
 msgid "Elige exactamente %(n)s ingredientes para evitar"
 msgstr "Choose exactly %(n)s ingredients to avoid"
 
-#: cauldron_optimizer/routes.py:693 cauldron_optimizer/routes.py:708
-#: cauldron_optimizer/routes.py:744
+#: cauldron_optimizer/routes.py:745 cauldron_optimizer/routes.py:760
+#: cauldron_optimizer/routes.py:796
 msgid "Datos no válidos"
 msgstr "Invalid data"
 
@@ -418,7 +409,7 @@ msgstr "Profile"
 #: cauldron_optimizer/templates/index.html:501
 #: cauldron_optimizer/templates/index.html:528
 #: cauldron_optimizer/templates/index.html:536
-#: cauldron_optimizer/templates/layout.html:35
+#: cauldron_optimizer/templates/layout.html:60
 msgid "Cerrar"
 msgstr "Close"
 
@@ -439,13 +430,26 @@ msgstr "Cancel"
 msgid "Guardar"
 msgstr "Save"
 
+#: cauldron_optimizer/templates/contact.html:3
+#: cauldron_optimizer/templates/landing.html:192
+#: cauldron_optimizer/templates/layout.html:55
+#: cauldron_optimizer/templates/layout.html:144
+msgid "Contacto"
+msgstr "Contact"
+
+#: cauldron_optimizer/templates/contact.html:3
+#: cauldron_optimizer/templates/landing.html:12
+#: cauldron_optimizer/templates/landing.html:30
+msgid "Optimizador del Caldero de Elvenar"
+msgstr "Elvenar Cauldron Optimizer"
+
 # ###################
 # Contact page
-#: cauldron_optimizer/templates/contact.html:4
+#: cauldron_optimizer/templates/contact.html:6
 msgid "Contact"
 msgstr "Contact"
 
-#: cauldron_optimizer/templates/contact.html:17
+#: cauldron_optimizer/templates/contact.html:19
 #, python-format
 msgid ""
 "Esta página es un %(project)s y no tiene afiliación oficial con Elvenar "
@@ -454,11 +458,11 @@ msgstr ""
 "This page is a %(project)s and has no official affiliation with Elvenar "
 "or InnoGames."
 
-#: cauldron_optimizer/templates/contact.html:18
+#: cauldron_optimizer/templates/contact.html:20
 msgid "proyecto creado por 4bel"
 msgstr "project created by 4bel"
 
-#: cauldron_optimizer/templates/contact.html:23
+#: cauldron_optimizer/templates/contact.html:25
 msgid ""
 "Si tienes dudas en cómo usar el optimizador, o sugerencias para "
 "mejorarlo, puedes contactarme directamente en el juego, por Discord o vía"
@@ -468,19 +472,19 @@ msgstr ""
 "improving it, you can contact me directly in the game, via Discord, or by"
 " email."
 
-#: cauldron_optimizer/templates/contact.html:27
+#: cauldron_optimizer/templates/contact.html:29
 msgid "En juego"
 msgstr "In game"
 
-#: cauldron_optimizer/templates/contact.html:28
+#: cauldron_optimizer/templates/contact.html:30
 msgid "Mundos"
 msgstr "Worlds"
 
 # ###################
 # Index / Optimizer
 #: cauldron_optimizer/templates/index.html:3
-#: cauldron_optimizer/templates/manual.html:62
-#: cauldron_optimizer/templates/results.html:21
+#: cauldron_optimizer/templates/manual.html:63
+#: cauldron_optimizer/templates/results.html:22
 msgid "Receta"
 msgstr "Recipe"
 
@@ -581,8 +585,8 @@ msgid "Efectos deseados necesarios"
 msgstr "Wanted effects needed"
 
 #: cauldron_optimizer/templates/index.html:131
-#: cauldron_optimizer/templates/results.html:132
-#: cauldron_optimizer/templates/results.html:138
+#: cauldron_optimizer/templates/results.html:133
+#: cauldron_optimizer/templates/results.html:139
 msgid "en"
 msgstr "in"
 
@@ -591,9 +595,9 @@ msgid "Cálices: las veces que se prepara la poción con esta receta"
 msgstr "Goblets: how many times the potion is brewed with this recipe"
 
 #: cauldron_optimizer/templates/index.html:134
-#: cauldron_optimizer/templates/results.html:75
-#: cauldron_optimizer/templates/results.html:132
-#: cauldron_optimizer/templates/results.html:138
+#: cauldron_optimizer/templates/results.html:76
+#: cauldron_optimizer/templates/results.html:133
+#: cauldron_optimizer/templates/results.html:139
 msgid "Cálices"
 msgstr "Goblets"
 
@@ -647,16 +651,18 @@ msgstr "Give a weight to at least one checked effect"
 
 #: cauldron_optimizer/templates/index.html:171
 #: cauldron_optimizer/templates/index.html:172
-#: cauldron_optimizer/templates/manual.html:16
 #: cauldron_optimizer/templates/manual.html:17
+#: cauldron_optimizer/templates/manual.html:18
 msgid "Marcar o desmarcar todos los efectos"
 msgstr "Check or uncheck all effects"
 
 #: cauldron_optimizer/templates/index.html:187
+#: cauldron_optimizer/templates/landing.html:101
 msgid "Evitar ingredientes premium"
 msgstr "Avoid premium ingredients"
 
 #: cauldron_optimizer/templates/index.html:188
+#: cauldron_optimizer/templates/landing.html:97
 msgid "Completar efectos"
 msgstr "Complete effects"
 
@@ -695,27 +701,27 @@ msgstr ""
 "limit."
 
 #: cauldron_optimizer/templates/index.html:250
-#: cauldron_optimizer/templates/manual.html:35
+#: cauldron_optimizer/templates/manual.html:36
 msgid "Escuela de hechicería valoriana: su nivel rebaja los puntos de hechicería"
 msgstr "Valorian School of Sorcery: its level lowers the Witch Points"
 
 #: cauldron_optimizer/templates/index.html:251
-#: cauldron_optimizer/templates/manual.html:36
+#: cauldron_optimizer/templates/manual.html:37
 msgid "Escuela de hechicería valoriana"
 msgstr "Valorian School of Sorcery"
 
 #: cauldron_optimizer/templates/index.html:254
-#: cauldron_optimizer/templates/manual.html:39
+#: cauldron_optimizer/templates/manual.html:40
 msgid "Nivel de la Escuela de hechicería valoriana"
 msgstr "Valorian School of Sorcery level"
 
 #: cauldron_optimizer/templates/index.html:255
-#: cauldron_optimizer/templates/manual.html:199
+#: cauldron_optimizer/templates/manual.html:200
 msgid "Sin construir"
 msgstr "Not built"
 
 #: cauldron_optimizer/templates/index.html:255
-#: cauldron_optimizer/templates/manual.html:200
+#: cauldron_optimizer/templates/manual.html:201
 #, python-brace-format
 msgid "Nivel {n}"
 msgstr "Level {n}"
@@ -987,66 +993,377 @@ msgstr "New search"
 msgid "Mejor receta"
 msgstr "Best recipe"
 
+#: cauldron_optimizer/templates/landing.html:5
+msgid "Optimizador del Caldero de Elvenar: recetas y efectos"
+msgstr "Elvenar Cauldron Optimizer: Recipes and Effects"
+
+#: cauldron_optimizer/templates/landing.html:14
+#: cauldron_optimizer/templates/layout.html:22
+msgid ""
+"Optimizador gratuito del Caldero de Elvenar: elige los efectos que "
+"quieres y calcula la receta de ingredientes que más probabilidades te da "
+"de conseguirlos, sin pasarte de tus puntos de hechicería."
+msgstr ""
+"Free Elvenar Cauldron optimizer: pick the effects you want and get the "
+"ingredient recipe with the best chance of getting them, within your Witch"
+" Points."
+
+#: cauldron_optimizer/templates/landing.html:32
+#, python-format
+msgid ""
+"Elige los efectos del Caldero que quieres, ajusta tus límites y "
+"objetivos, y el optimizador calcula la mejor receta de ingredientes: más "
+"efectos deseados, más probabilidad de conseguirlos o el mejor resultado "
+"según tus prioridades. Gratis y compatible con %(elvenassist)s."
+msgstr ""
+"Choose the Cauldron effects you want, set your limits and goals, and the "
+"optimizer works out the best ingredient recipe: more wanted effects, a "
+"better chance of getting them, or the best outcome by your own "
+"priorities. Free, and works with %(elvenassist)s."
+
+#: cauldron_optimizer/templates/landing.html:37
+msgid "Crear cuenta gratis"
+msgstr "Create a free account"
+
+#: cauldron_optimizer/templates/landing.html:40
+msgid "¿Ya tienes cuenta?"
+msgstr "Already have an account?"
+
+#: cauldron_optimizer/templates/landing.html:41
+#: cauldron_optimizer/templates/layout.html:203
+#: cauldron_optimizer/templates/login.html:5
+#: cauldron_optimizer/templates/login.html:26
+msgid "Iniciar sesión"
+msgstr "Log in"
+
+#: cauldron_optimizer/templates/landing.html:49
+msgid ""
+"Configura tus efectos deseados, los ingredientes premium a evitar y tus "
+"límites"
+msgstr ""
+"Set up your desired effects, the premium ingredients to avoid and your "
+"limits"
+
+#: cauldron_optimizer/templates/landing.html:50
+msgid ""
+"Objetivo «Máximo»: el mayor número medio de efectos deseados distintos en"
+" tus cálices"
+msgstr ""
+"“Most” goal: the highest average number of different wanted effects "
+"across your goblets"
+
+#: cauldron_optimizer/templates/landing.html:51
+msgid ""
+"En el Caldero del juego, la receta da las mismas probabilidades y el "
+"mismo coste que calcula el optimizador"
+msgstr ""
+"In the game's Cauldron, the recipe gives the same chances and cost the "
+"optimizer calculates"
+
+#: cauldron_optimizer/templates/landing.html:52
+msgid "La receta optimizada, con la probabilidad de cada efecto y su coste"
+msgstr "The optimized recipe, with the chance of each effect and its cost"
+
+#: cauldron_optimizer/templates/landing.html:53
+msgid ""
+"Completar efectos: si tienes menos de 10, busca los que mejor completan "
+"los tuyos hasta llegar a los 10 mínimos del juego"
+msgstr ""
+"Complete effects: with fewer than 10, find the ones that best fill yours "
+"up to the game's minimum of 10"
+
+#: cauldron_optimizer/templates/landing.html:54
+msgid "Cada mundo con su propio nombre, avatar y configuración"
+msgstr "Each world with its own name, avatar and settings"
+
+#: cauldron_optimizer/templates/landing.html:74
+msgid "Anterior"
+msgstr "Previous"
+
+#: cauldron_optimizer/templates/landing.html:78
+msgid "Siguiente"
+msgstr "Next"
+
+#: cauldron_optimizer/templates/landing.html:90
+msgid "Qué puedes hacer"
+msgstr "What you can do"
+
+#: cauldron_optimizer/templates/landing.html:93
+msgid "Elegir los efectos como en el juego"
+msgstr "Pick effects like in the game"
+
+#: cauldron_optimizer/templates/landing.html:94
+msgid ""
+"Desde la actualización del Selector de efectos de pociones (junio de "
+"2026), el juego te deja desactivar los efectos que no necesitas, "
+"manteniendo al menos 10 activos. Aquí los eliges de la misma forma y das "
+"a cada uno un peso según lo que te importe."
+msgstr ""
+"Since the Potion Effects Selector update (June 2026), the game lets you "
+"turn off the effects you don't need, keeping at least 10 active. Here you"
+" pick them the same way and give each one a weight for how much it "
+"matters to you."
+
+#: cauldron_optimizer/templates/landing.html:98
+msgid ""
+"¿Tienes menos de los 10 efectos que pide el juego? Una búsqueda extra "
+"completa el resto con los que mejor encajan."
+msgstr ""
+"Have fewer than the 10 effects the game requires? An extra search fills "
+"in the rest with the ones that fit best."
+
+#: cauldron_optimizer/templates/landing.html:102
+msgid ""
+"Elige qué ingredientes premium del juego quieres evitar y la receta se "
+"calcula sin ellos."
+msgstr ""
+"Choose the game's premium ingredients you want to avoid, and the recipe "
+"is worked out without them."
+
+#: cauldron_optimizer/templates/landing.html:105
+msgid "Límite de puntos de hechicería"
+msgstr "Witch Point limit"
+
+#: cauldron_optimizer/templates/landing.html:106
+msgid ""
+"Limita el coste de la receta directamente en puntos de hechicería, con el"
+" descuento de tu Escuela de hechicería valoriana."
+msgstr ""
+"Cap the recipe cost directly in Witch Points, with the discount from your"
+" Valorian School of Sorcery."
+
+#: cauldron_optimizer/templates/landing.html:109
+msgid "Búsqueda óptima"
+msgstr "Optimal search"
+
+#: cauldron_optimizer/templates/landing.html:110
+msgid "Prueba todas las combinaciones, así que siempre encuentra la mejor receta."
+msgstr "It tries every combination, so it always finds the best recipe."
+
+#: cauldron_optimizer/templates/landing.html:113
+msgid "Objetivos por cálices"
+msgstr "Goblet goals"
+
+#: cauldron_optimizer/templates/landing.html:114
+msgid ""
+"Elige tus cálices (1–5) y maximiza el número medio de efectos deseados "
+"distintos o la probabilidad de conseguir al menos k. Los resultados "
+"muestran la probabilidad para cada k."
+msgstr ""
+"Choose your goblets (1–5) and maximize the average number of different "
+"wanted effects, or the chance of getting at least k of them. The results "
+"show the probability for every k."
+
+#: cauldron_optimizer/templates/landing.html:117
+msgid "Integración con ElvenAssist"
+msgstr "ElvenAssist integration"
+
+#: cauldron_optimizer/templates/landing.html:119
+msgid ""
+"Deja el optimizador abierto y abre el caldero en el juego: diplomas, "
+"ingredientes premium, efectos elegidos, nivel de la Escuela de hechicería"
+" valoriana y puntos de hechicería se rellenan solos."
+msgstr ""
+"Keep the optimizer open and open the cauldron in the game: diplomas, "
+"premium ingredients, selected effects, Valorian School of Sorcery level "
+"and Witch Points fill in automatically."
+
+#: cauldron_optimizer/templates/landing.html:120
+msgid "Consigue ElvenAssist (Chrome Web Store)"
+msgstr "Get ElvenAssist (Chrome Web Store)"
+
+#: cauldron_optimizer/templates/landing.html:124
+#: cauldron_optimizer/templates/layout.html:140
+msgid "Modo manual"
+msgstr "Manual mode"
+
+#: cauldron_optimizer/templates/landing.html:125
+msgid "Crea una receta a mano y mira sus probabilidades y su coste."
+msgstr "Build a recipe by hand and see its probabilities and cost."
+
+#: cauldron_optimizer/templates/landing.html:128
+msgid "Varios mundos"
+msgstr "Several worlds"
+
+#: cauldron_optimizer/templates/landing.html:129
+msgid "Guarda varios mundos en tu cuenta, cada uno con su propia configuración."
+msgstr "Keep several worlds in one account, each with its own settings."
+
+#: cauldron_optimizer/templates/landing.html:135
+msgid "Cómo funciona"
+msgstr "How it works"
+
+#: cauldron_optimizer/templates/landing.html:138
+msgid "Tutorial en vídeo del Optimizador del Caldero"
+msgstr "Cauldron Optimizer video tutorial"
+
+#: cauldron_optimizer/templates/landing.html:144
+msgid "Crea una cuenta gratis"
+msgstr "Create a free account"
+
+#: cauldron_optimizer/templates/landing.html:145
+msgid "y añade tus mundos: cada uno guarda su propia configuración."
+msgstr "and add your worlds: each one keeps its own settings."
+
+#: cauldron_optimizer/templates/landing.html:148
+msgid "Ajusta la app a tu juego (calibración)"
+msgstr "Match the app to your game (calibration)"
+
+#: cauldron_optimizer/templates/landing.html:150
+msgid "Elige los mismos 4 ingredientes premium que tienes en el juego."
+msgstr "Choose the same 4 premium ingredients you have in the game."
+
+#: cauldron_optimizer/templates/landing.html:151
+msgid "Pon tu número de diplomas: lo ves en el árbol de investigación del juego."
+msgstr "Enter your number of diplomas: you can see it in the game's research tree."
+
+#: cauldron_optimizer/templates/landing.html:152
+msgid ""
+"Marca como efectos deseados los mismos que tienes activados en el juego "
+"(Selector de efectos de pociones, actualización de junio de 2026)."
+msgstr ""
+"Check as desired effects the same ones you have turned on in the game "
+"(Potion Effects Selector, June 2026 update)."
+
+#: cauldron_optimizer/templates/landing.html:155
+msgid ""
+"Con la extensión ElvenAssist esto se rellena solo al abrir el caldero en "
+"el juego."
+msgstr ""
+"With the ElvenAssist extension, all this fills in by itself when you open"
+" the cauldron in the game."
+
+#: cauldron_optimizer/templates/landing.html:159
+msgid "Personaliza la búsqueda"
+msgstr "Customize the search"
+
+#: cauldron_optimizer/templates/landing.html:162
+msgid "Límites:"
+msgstr "Limits:"
+
+#: cauldron_optimizer/templates/landing.html:163
+msgid ""
+"máximo de puntos de hechicería (con el nivel de tu Escuela de hechicería "
+"valoriana), cantidad máxima por ingrediente, probabilidad máxima por "
+"efecto y profundidad de búsqueda («Óptima» prueba todas las "
+"combinaciones)."
+msgstr ""
+"max Witch Points (with your Valorian School of Sorcery level), max "
+"quantity per ingredient, max probability per effect and search depth "
+"(“Optimal” tries every combination)."
+
+#: cauldron_optimizer/templates/landing.html:166
+msgid "Objetivo:"
+msgstr "Goal:"
+
+#: cauldron_optimizer/templates/landing.html:168
+msgid "Suma ponderada: el mejor resultado según el peso que das a cada efecto."
+msgstr ""
+"Weighted sum: the best outcome according to the weight you give each "
+"effect."
+
+#: cauldron_optimizer/templates/landing.html:169
+msgid ""
+"«Máximo»: el mayor número medio de efectos deseados distintos en tus "
+"cálices (1–5)."
+msgstr ""
+"“Most”: the highest average number of different wanted effects across "
+"your goblets (1–5)."
+
+#: cauldron_optimizer/templates/landing.html:170
+msgid "«≥ k»: la mayor probabilidad de conseguir al menos k efectos deseados."
+msgstr "“≥ k”: the best chance of getting at least k wanted effects."
+
+#: cauldron_optimizer/templates/landing.html:171
+msgid "«Todos»: la mayor probabilidad de conseguirlos todos."
+msgstr "“All”: the best chance of getting all of them."
+
+#: cauldron_optimizer/templates/landing.html:177
+msgid "Pulsa «Buscar receta»"
+msgstr "Press “Find Recipe”"
+
+#: cauldron_optimizer/templates/landing.html:178
+msgid "y obtén la receta recomendada con la probabilidad de cada efecto."
+msgstr "and get the recommended recipe with the chance of each effect."
+
+#: cauldron_optimizer/templates/landing.html:184
+msgid "Preguntas frecuentes"
+msgstr "Frequently asked questions"
+
+#: cauldron_optimizer/templates/landing.html:185
+msgid "¿Es gratis?"
+msgstr "Is it free?"
+
+#: cauldron_optimizer/templates/landing.html:186
+msgid "Sí. Solo necesitas una cuenta para guardar tu configuración de cada mundo."
+msgstr "Yes. You only need an account to save your settings for each world."
+
+#: cauldron_optimizer/templates/landing.html:187
+msgid "¿Está en español e inglés?"
+msgstr "Is it in Spanish and English?"
+
+#: cauldron_optimizer/templates/landing.html:188
+msgid "Sí, puedes cambiar el idioma en cualquier momento desde el menú."
+msgstr "Yes, you can switch the language at any time from the menu."
+
+#: cauldron_optimizer/templates/landing.html:189
+msgid "¿Es una herramienta oficial de Elvenar?"
+msgstr "Is it an official Elvenar tool?"
+
+#: cauldron_optimizer/templates/landing.html:191
+msgid ""
+"No. Es un proyecto creado por un jugador, sin afiliación oficial con "
+"Elvenar ni con InnoGames."
+msgstr ""
+"No. It's a project made by a player, with no official affiliation with "
+"Elvenar or InnoGames."
+
 # ###################
 # Layout / UI
 #: cauldron_optimizer/templates/layout.html:18
 msgid "Caldero"
 msgstr "Cauldron"
 
-#: cauldron_optimizer/templates/layout.html:30
-#: cauldron_optimizer/templates/layout.html:119
-msgid "Contacto"
-msgstr "Contact"
-
-#: cauldron_optimizer/templates/layout.html:64
+#: cauldron_optimizer/templates/layout.html:36
+#: cauldron_optimizer/templates/layout.html:89
 msgid "Optimizador del Caldero"
 msgstr "Cauldron Optimizer"
 
-#: cauldron_optimizer/templates/layout.html:77
+#: cauldron_optimizer/templates/layout.html:102
 msgid "Mostrar menú"
 msgstr "Show menu"
 
-#: cauldron_optimizer/templates/layout.html:95
+#: cauldron_optimizer/templates/layout.html:120
 msgid "Mostrar navegación"
 msgstr "Toggle navigation"
 
-#: cauldron_optimizer/templates/layout.html:115
-msgid "Modo manual"
-msgstr "Manual mode"
-
-#: cauldron_optimizer/templates/layout.html:124
+#: cauldron_optimizer/templates/layout.html:149
 msgid "Tutorial"
 msgstr "Tutorial"
 
-#: cauldron_optimizer/templates/layout.html:154
-#: cauldron_optimizer/templates/layout.html:168
+#: cauldron_optimizer/templates/layout.html:179
+#: cauldron_optimizer/templates/layout.html:193
 msgid "Cerrar sesión"
 msgstr "Log out"
 
-#: cauldron_optimizer/templates/layout.html:175
-#: cauldron_optimizer/templates/login.html:29
-#: cauldron_optimizer/templates/register.html:4
-#: cauldron_optimizer/templates/register.html:46
+#: cauldron_optimizer/templates/layout.html:200
+#: cauldron_optimizer/templates/login.html:30
+#: cauldron_optimizer/templates/register.html:5
+#: cauldron_optimizer/templates/register.html:47
 msgid "Crear cuenta"
 msgstr "Register"
 
-#: cauldron_optimizer/templates/layout.html:178
-#: cauldron_optimizer/templates/login.html:4
-#: cauldron_optimizer/templates/login.html:25
-msgid "Iniciar sesión"
-msgstr "Log in"
-
-#: cauldron_optimizer/templates/manual.html:4
-#: cauldron_optimizer/templates/manual.html:45
+#: cauldron_optimizer/templates/manual.html:5
+#: cauldron_optimizer/templates/manual.html:46
 msgid "Receta manual"
 msgstr "Manual recipe"
 
-#: cauldron_optimizer/templates/manual.html:31
+#: cauldron_optimizer/templates/manual.html:32
 #, python-brace-format
 msgid "{n} efectos en juego"
 msgstr "{n} effects in play"
 
-#: cauldron_optimizer/templates/manual.html:32
+#: cauldron_optimizer/templates/manual.html:33
 msgid ""
 "Marca los mismos efectos que tienes marcados en el caldero del juego: los"
 " que elegiste entre los que te dan tus diplomas. Solo esos pueden salir, "
@@ -1056,34 +1373,34 @@ msgstr ""
 "you chose among those your diplomas give you. Only those can come out, "
 "and the chances depend on them."
 
-#: cauldron_optimizer/templates/manual.html:46
-#: cauldron_optimizer/templates/results.html:14
-#: cauldron_optimizer/templates/results.html:187
+#: cauldron_optimizer/templates/manual.html:47
+#: cauldron_optimizer/templates/results.html:15
+#: cauldron_optimizer/templates/results.html:188
 msgid "Volver"
 msgstr "Back"
 
-#: cauldron_optimizer/templates/manual.html:52
+#: cauldron_optimizer/templates/manual.html:53
 msgid "Tus puntos de hechicería: el coste se ve en rojo si no te llegan"
 msgstr "Your Witch Points: the cost turns red when they are not enough"
 
-#: cauldron_optimizer/templates/manual.html:55
+#: cauldron_optimizer/templates/manual.html:56
 msgid "Tus puntos de hechicería"
 msgstr "Your Witch Points"
 
-#: cauldron_optimizer/templates/manual.html:62
+#: cauldron_optimizer/templates/manual.html:63
 msgid "orden óptimo"
 msgstr "optimal order"
 
-#: cauldron_optimizer/templates/manual.html:70
+#: cauldron_optimizer/templates/manual.html:71
 #, python-format
 msgid "Añadir %(name)s"
 msgstr "Add %(name)s"
 
-#: cauldron_optimizer/templates/manual.html:78
+#: cauldron_optimizer/templates/manual.html:79
 msgid "Premium: se paga con diamantes"
 msgstr "Premium: paid with diamonds"
 
-#: cauldron_optimizer/templates/manual.html:92
+#: cauldron_optimizer/templates/manual.html:93
 msgid ""
 "El orden en que añades los ingredientes cambia lo que cuesta la receta en"
 " puntos de hechicería. Elige cómo quieres añadirlos."
@@ -1091,11 +1408,11 @@ msgstr ""
 "The order in which you add the ingredients changes what the recipe costs "
 "in Witch Points. Choose how you want to add them."
 
-#: cauldron_optimizer/templates/manual.html:93
+#: cauldron_optimizer/templates/manual.html:94
 msgid "Orden de ingredientes"
 msgstr "Ingredient order"
 
-#: cauldron_optimizer/templates/manual.html:94
+#: cauldron_optimizer/templates/manual.html:95
 msgid ""
 "Los ingredientes normales se añaden de mayor a menor cantidad, cada uno "
 "de una vez: el orden más barato, el que usa el optimizador."
@@ -1103,12 +1420,12 @@ msgstr ""
 "Normal ingredients go in from the largest to the smallest amount, each "
 "one all at once: the cheapest order, the one the optimizer uses."
 
-#: cauldron_optimizer/templates/manual.html:96
+#: cauldron_optimizer/templates/manual.html:97
 msgctxt "orden"
 msgid "Óptimo"
 msgstr "Optimal"
 
-#: cauldron_optimizer/templates/manual.html:98
+#: cauldron_optimizer/templates/manual.html:99
 msgid ""
 "Añade los ingredientes en el orden que quieras, para probar cualquier "
 "secuencia. No se comprueba el orden; el coste mostrado sigue siendo el "
@@ -1117,25 +1434,25 @@ msgstr ""
 "Add the ingredients in any order you like, to try any sequence. The order"
 " is not checked; the cost shown is still the minimum."
 
-#: cauldron_optimizer/templates/manual.html:100
+#: cauldron_optimizer/templates/manual.html:101
 msgctxt "orden"
 msgid "Libre"
 msgstr "Free"
 
-#: cauldron_optimizer/templates/manual.html:116
+#: cauldron_optimizer/templates/manual.html:117
 msgid "Quitar el último ingrediente"
 msgstr "Remove the last ingredient"
 
-#: cauldron_optimizer/templates/manual.html:118
+#: cauldron_optimizer/templates/manual.html:119
 msgid "Vaciar el caldero"
 msgstr "Empty the cauldron"
 
-#: cauldron_optimizer/templates/manual.html:128
-#: cauldron_optimizer/templates/results.html:84
+#: cauldron_optimizer/templates/manual.html:129
+#: cauldron_optimizer/templates/results.html:85
 msgid "Efectos"
 msgstr "Effects"
 
-#: cauldron_optimizer/templates/manual.html:136
+#: cauldron_optimizer/templates/manual.html:137
 msgid ""
 "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus"
 " ingredientes (y los diamantes de los premium), con el descuento de la "
@@ -1144,35 +1461,35 @@ msgstr ""
 "What brewing this recipe costs: Witch Points for all its ingredients (and"
 " diamonds for premium ones), with the wonder's discount."
 
-#: cauldron_optimizer/templates/manual.html:137
-#: cauldron_optimizer/templates/results.html:175
+#: cauldron_optimizer/templates/manual.html:138
+#: cauldron_optimizer/templates/results.html:176
 msgid "Costes"
 msgstr "Costs"
 
-#: cauldron_optimizer/templates/manual.html:138
+#: cauldron_optimizer/templates/manual.html:139
 msgid "Coste mínimo (orden óptimo)"
 msgstr "Minimum cost (optimal order)"
 
-#: cauldron_optimizer/templates/manual.html:141
-#: cauldron_optimizer/templates/results.html:45
-#: cauldron_optimizer/templates/results.html:178
+#: cauldron_optimizer/templates/manual.html:142
+#: cauldron_optimizer/templates/results.html:46
+#: cauldron_optimizer/templates/results.html:179
 msgid "Puntos de hechicería"
 msgstr "Witch Points"
 
-#: cauldron_optimizer/templates/manual.html:145
+#: cauldron_optimizer/templates/manual.html:146
 msgid "diamantes"
 msgstr "diamonds"
 
-#: cauldron_optimizer/templates/manual.html:161
+#: cauldron_optimizer/templates/manual.html:162
 msgid "Orden: de mayor a menor cantidad"
 msgstr "Order: largest amount first"
 
-#: cauldron_optimizer/templates/manual.html:162
-#: cauldron_optimizer/templates/manual.html:180
+#: cauldron_optimizer/templates/manual.html:163
+#: cauldron_optimizer/templates/manual.html:181
 msgid "Entendido"
 msgstr "Got it"
 
-#: cauldron_optimizer/templates/manual.html:167
+#: cauldron_optimizer/templates/manual.html:168
 msgid ""
 "En el modo de orden óptimo, los ingredientes normales se añaden de mayor "
 "a menor cantidad, cada uno de una vez. Cambia al modo libre para "
@@ -1182,11 +1499,11 @@ msgstr ""
 "to smallest, each in one batch. Switch to free mode to experiment with "
 "any sequence."
 
-#: cauldron_optimizer/templates/manual.html:176
+#: cauldron_optimizer/templates/manual.html:177
 msgid "No volver a mostrar"
 msgstr "Don't show again"
 
-#: cauldron_optimizer/templates/manual.html:201
+#: cauldron_optimizer/templates/manual.html:202
 #, python-brace-format
 msgid ""
 "No se pueden añadir más unidades de {name}: después ya añadiste {later}. "
@@ -1195,7 +1512,7 @@ msgstr ""
 "You cannot add more units of {name}: you already added {later} after it. "
 "Each ingredient is added in one go."
 
-#: cauldron_optimizer/templates/manual.html:202
+#: cauldron_optimizer/templates/manual.html:203
 #, python-brace-format
 msgid ""
 "{later} no puede tener {n}: sería más que {earlier} ({m}), que se añadió "
@@ -1204,59 +1521,59 @@ msgstr ""
 "{later} cannot have {n}: that would be more than {earlier} ({m}), which "
 "was added before."
 
-#: cauldron_optimizer/templates/register.html:14
-#: cauldron_optimizer/templates/register.html:22
+#: cauldron_optimizer/templates/register.html:15
+#: cauldron_optimizer/templates/register.html:23
 msgid "Elige tu avatar"
 msgstr "Choose your avatar"
 
 # ###################
 # Results
-#: cauldron_optimizer/templates/results.html:4
-#: cauldron_optimizer/templates/results.html:13
+#: cauldron_optimizer/templates/results.html:5
+#: cauldron_optimizer/templates/results.html:14
 msgid "Receta optimizada"
 msgstr "Optimized recipe"
 
-#: cauldron_optimizer/templates/results.html:41
+#: cauldron_optimizer/templates/results.html:42
 msgid "Puntos de hechicería de este ingrediente: todas sus unidades"
 msgstr "Witch Points of this ingredient: all its units"
 
-#: cauldron_optimizer/templates/results.html:74
+#: cauldron_optimizer/templates/results.html:75
 #, python-format
 msgid ""
 "Probabilidad de conseguir al menos %(k)s efectos deseados distintos en "
 "%(n)s cálices"
 msgstr "Chance of getting at least %(k)s different wanted effects in %(n)s goblets"
 
-#: cauldron_optimizer/templates/results.html:93
+#: cauldron_optimizer/templates/results.html:94
 #, python-format
 msgid "Peso: %(w)s"
 msgstr "Weight: %(w)s"
 
-#: cauldron_optimizer/templates/results.html:93
+#: cauldron_optimizer/templates/results.html:94
 msgid "Sin peso"
 msgstr "No weight"
 
-#: cauldron_optimizer/templates/results.html:119
-#: cauldron_optimizer/templates/results.html:138
+#: cauldron_optimizer/templates/results.html:120
+#: cauldron_optimizer/templates/results.html:139
 msgid "Probabilidad"
 msgstr "Probability"
 
-#: cauldron_optimizer/templates/results.html:119
-#: cauldron_optimizer/templates/results.html:138
+#: cauldron_optimizer/templates/results.html:120
+#: cauldron_optimizer/templates/results.html:139
 msgid "todos"
 msgstr "all"
 
-#: cauldron_optimizer/templates/results.html:125
-#: cauldron_optimizer/templates/results.html:132
+#: cauldron_optimizer/templates/results.html:126
+#: cauldron_optimizer/templates/results.html:133
 msgid "Efectos esperados"
 msgstr "Expected effects"
 
-#: cauldron_optimizer/templates/results.html:131
+#: cauldron_optimizer/templates/results.html:132
 #, python-format
 msgid "Efectos deseados distintos que conseguirás de media en %(n)s cálices"
 msgstr "Different wanted effects you will get on average in %(n)s goblets"
 
-#: cauldron_optimizer/templates/results.html:137
+#: cauldron_optimizer/templates/results.html:138
 #, python-format
 msgid ""
 "Probabilidad de conseguir al menos %(num)s efecto deseado distinto en "
@@ -1271,15 +1588,15 @@ msgstr[1] ""
 "Probability of getting at least %(num)s different wanted effects in %(n)s"
 " goblets"
 
-#: cauldron_optimizer/templates/results.html:141
+#: cauldron_optimizer/templates/results.html:142
 msgid "Score"
 msgstr "Score"
 
-#: cauldron_optimizer/templates/results.html:157
+#: cauldron_optimizer/templates/results.html:158
 msgid "Óptimo garantizado"
 msgstr "Guaranteed optimum"
 
-#: cauldron_optimizer/templates/results.html:158
+#: cauldron_optimizer/templates/results.html:159
 msgid ""
 "Óptimo garantizado: se comprobaron todas las recetas posibles, no existe "
 "ninguna mejor con estos ajustes"
@@ -1287,7 +1604,7 @@ msgstr ""
 "Guaranteed optimum: every possible recipe was checked, none is better "
 "with these settings"
 
-#: cauldron_optimizer/templates/results.html:174
+#: cauldron_optimizer/templates/results.html:175
 #, python-format
 msgid ""
 "Lo que cuesta elaborar esta receta: los puntos de hechicería de todos sus"
@@ -1298,7 +1615,7 @@ msgstr ""
 "added from the largest amount to the smallest (the cheapest order), with "
 "the Valorian School of Sorcery discount: %(discount)s"
 
-#: cauldron_optimizer/templates/results.html:174
+#: cauldron_optimizer/templates/results.html:175
 msgid "sin construir"
 msgstr "not built"
 
@@ -1526,4 +1843,62 @@ msgstr "not built"
 
 #~ msgid "Si notas algún problema, avísame desde"
 #~ msgstr "If you notice any problem, please let me know via"
+
+#~ msgid ""
+#~ "La selección de efectos (las casillas)"
+#~ " es nueva y todavía está en "
+#~ "pruebas. Si notas algún problema, "
+#~ "avísame desde {contact}."
+#~ msgstr ""
+#~ "Effect selection (the checkboxes) is new"
+#~ " and still being tested. If you "
+#~ "notice any problem, please let me "
+#~ "know via {contact}."
+
+#~ msgid "Controlar el coste"
+#~ msgstr "Control the cost"
+
+#~ msgid ""
+#~ "Para varios cálices, busca la receta "
+#~ "con más efectos distintos de media "
+#~ "o con la mayor probabilidad de "
+#~ "conseguir al menos los que necesitas."
+#~ msgstr ""
+#~ "For several goblets, find the recipe "
+#~ "with the most different effects on "
+#~ "average, or the best chance of "
+#~ "getting at least the ones you "
+#~ "need."
+
+#~ msgid ""
+#~ "Si eliges menos de 10 efectos, una"
+#~ " búsqueda larga prueba todas las "
+#~ "combinaciones de efectos complementarios y "
+#~ "te las ordena."
+#~ msgstr ""
+#~ "If you pick fewer than 10 effects,"
+#~ " a long search tries every set "
+#~ "of complementary effects and ranks them"
+#~ " for you."
+
+#~ msgid "Ver el tutorial en vídeo"
+#~ msgstr "Watch the video tutorial"
+
+#~ msgid ""
+#~ "Elige los efectos deseados, los "
+#~ "ingredientes premium a evitar y tus "
+#~ "límites."
+#~ msgstr ""
+#~ "Choose the desired effects, the premium"
+#~ " ingredients to avoid and your "
+#~ "limits."
+
+#~ msgid ""
+#~ "Pantalla del optimizador: ingredientes premium"
+#~ " a evitar, límites de búsqueda y "
+#~ "efectos deseados con sus pesos"
+#~ msgstr ""
+#~ "Optimizer screen: premium ingredients to "
+#~ "avoid, search limits and desired effects"
+#~ " with their weights"
 

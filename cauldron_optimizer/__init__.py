@@ -11,7 +11,10 @@ from cauldron_optimizer.config import get_secret_key, select_locale
 from cauldron_optimizer.constants import (
     ANNOUNCEMENT,
     ANNOUNCEMENT_TAG,
+    GOOGLE_SITE_VERIFICATION,
+    LANGUAGES,
     MAX_SERVER_NAME_LENGTH,
+    SITE_URL,
 )
 from cauldron_optimizer.helpers import avatar_url, error, is_admin
 
@@ -47,7 +50,18 @@ def inject_i18n():
         "avatar_url": avatar_url,
         "max_server_name": MAX_SERVER_NAME_LENGTH,
         "user_avatar_url": lambda: avatar_url(session.get("avatar")),
+        "site_url": SITE_URL,
+        "google_site_verification": GOOGLE_SITE_VERIFICATION,
+        "page_url": page_url,
+        "languages": LANGUAGES,
     }
+
+
+def page_url(lang: str | None = None) -> str:
+    """Absolute URL of the current page, optionally for one language
+    (?lang=xx is how a language is picked by link, see select_locale)."""
+    url = SITE_URL + request.path
+    return f"{url}?lang={lang}" if lang else url
 
 
 @app.errorhandler(CSRFError)

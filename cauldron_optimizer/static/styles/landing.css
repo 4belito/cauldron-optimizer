@@ -1,0 +1,159 @@
+/* =========================
+   Landing Page (public "/")
+   ========================= */
+.landing {
+  width: min(100%, 60rem);
+  margin-inline: auto;
+  text-align: left;
+  color: #3b1d0c;
+}
+
+.landing-card {
+  padding: 1.5rem clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.landing h1,
+.landing h2 {
+  font-family: "Cinzel", "Trajan Pro", Georgia, serif;
+  font-weight: 700;
+  color: #51200d;
+  text-align: center;
+}
+
+.landing h1 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.landing h2 {
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  margin-bottom: 1rem;
+}
+
+.landing h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0.75rem 0 0.25rem;
+  color: #51200d;
+}
+
+.landing a:not(.game-btn) {
+  color: #2b5ea5;
+}
+
+.landing-lead {
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  text-align: center;
+  max-width: 44rem;
+  margin: 0.75rem auto 1.25rem;
+}
+
+.landing-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-login {
+  margin: 0;
+  text-align: center;
+}
+
+.landing-shot {
+  margin: 0 auto 1.5rem;
+}
+
+/* Slides are <figure>s: drop only their bottom margin. Bootstrap's
+   margin-right: -100% must stay, it keeps the slides side by side */
+.landing-shot .carousel-item {
+  margin-bottom: 0;
+}
+
+/* Same box for every screenshot, so the slides don't change height */
+.landing-shot-frame {
+  aspect-ratio: 1600 / 1128;
+  background: #1f1713;
+  border-radius: 0.875rem;
+  overflow: hidden;
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+}
+
+.landing-shot-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.landing-shot figcaption {
+  margin-top: 0.6rem;
+  padding-bottom: 1.75rem; /* room for the dots */
+  text-align: center;
+  color: #f0d27a;
+  text-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.8);
+}
+
+.landing-shot .carousel-indicators {
+  margin-bottom: 0;
+}
+
+/* Arrows only over the picture, not the caption */
+.landing-shot .carousel-control-prev,
+.landing-shot .carousel-control-next {
+  bottom: 4rem;
+  width: 8%;
+}
+
+.landing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.5rem 1.75rem;
+}
+
+.landing-features p,
+.landing-steps {
+  margin-bottom: 0.5rem;
+}
+
+.landing-steps li {
+  margin-bottom: 0.4rem;
+}
+
+.landing-video {
+  width: min(100%, 40rem);
+  aspect-ratio: 16 / 9;
+  margin: 0 auto 1.25rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.4);
+}
+
+.landing-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.landing-steps > li {
+  margin-bottom: 0.9rem;
+}
+
+.landing-steps ol,
+.landing-steps ul {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+.landing-steps li li {
+  margin-bottom: 0.25rem;
+}
+
+.landing-note {
+  margin: 0.4rem 0 0;
+  font-style: italic;
+}

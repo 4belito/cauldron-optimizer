@@ -13,9 +13,34 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=177">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}?v=181">
 
-    <title>{{ _("Caldero") }}: {% block title %}{% endblock %}</title>
+    <title>{% block full_title %}{{ _("Caldero") }}: {% block title %}{% endblock %}{% endblock %}</title>
+
+    {# --- Search engines and link previews --- #}
+    {% set seo_lang = get_locale()|string %}
+    {% set seo_description %}{% block description %}{{ _("Optimizador gratuito del Caldero de Elvenar: elige los efectos que quieres y calcula la receta de ingredientes que más probabilidades te da de conseguirlos, sin pasarte de tus puntos de hechicería.") }}{% endblock %}{% endset %}
+    <meta name="description" content="{{ seo_description|trim }}">
+    {% block robots %}{% endblock %}
+    {% if google_site_verification %}
+    <meta name="google-site-verification" content="{{ google_site_verification }}">
+    {% endif %}
+    {# Each language of a page has its own address (?lang=xx); the canonical
+       one is the language shown #}
+    <link rel="canonical" href="{{ page_url(seo_lang) }}">
+    {% for lang in languages %}
+    <link rel="alternate" hreflang="{{ lang }}" href="{{ page_url(lang) }}">
+    {% endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ page_url('en') }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ _('Optimizador del Caldero') }}">
+    <meta property="og:title" content="{{ self.full_title()|trim }}">
+    <meta property="og:description" content="{{ seo_description|trim }}">
+    <meta property="og:url" content="{{ page_url(seo_lang) }}">
+    <meta property="og:image" content="{{ site_url }}{{ url_for('static', filename='seo/og-image.jpg') }}">
+    <meta property="og:locale" content="{{ 'es_ES' if seo_lang == 'es' else 'en_US' }}">
+    <meta name="twitter:card" content="summary_large_image">
+    {% block head_extra %}{% endblock %}
   </head>
   <body class="{% block body_class %}
     {% if session.get('user_id') %}

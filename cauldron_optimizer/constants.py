@@ -1,9 +1,18 @@
 """Constants for the Cauldron optimizer."""
 
 import json
+import os
 from pathlib import Path
 
 LANGUAGES = ["es", "en"]
+
+# Public address of the site, used for canonical links, the sitemap and
+# social previews (set SITE_URL to change it, e.g. for a custom domain)
+SITE_URL = os.environ.get("SITE_URL", "https://cauldron-optimizer.vercel.app").rstrip(
+    "/"
+)
+# Google Search Console HTML-tag verification code (empty: no tag)
+GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "")
 
 
 # Babel extraction marker: extracted, but does NOT translate at definition time.
