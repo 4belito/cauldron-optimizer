@@ -1367,7 +1367,14 @@ button:disabled[data-tip] {
   text-align: left;
 }
 
-@media (max-width: 37.5rem) {
+/* The effects panel's width (not the screen's) decides: the row wraps
+   whenever the panel is too narrow for it, on portrait phones but also on
+   landscape phones and narrow desktop columns */
+.effects-card > .card-body {
+  container: effects-panel / inline-size;
+}
+
+@container effects-panel (max-width: 40rem) {
   /* A wrapping row: the modes share the first line (each on its own line
      only if the screen is too narrow), the stepper takes the next one */
   .effects-card .diploma-row {
@@ -1643,8 +1650,8 @@ button:disabled[data-tip] {
   white-space: nowrap;
 }
 
-/* Phones: above the stepper, left of "Completar efectos" (diploma row) */
-@media (max-width: 37.5rem) {
+/* Narrow panel: above the stepper, left of "Completar efectos" (diploma row) */
+@container effects-panel (max-width: 40rem) {
   .effects-card .all-effects-row {
     gap: 0.2rem;
     padding: 0.15rem 0.2rem 0.15rem 0.1rem;
