@@ -27,7 +27,7 @@
 
     {# --- Search engines and link previews --- #}
     {% set seo_lang = get_locale()|string %}
-    {% set seo_description %}{% block description %}{{ _("Optimizador gratuito del Caldero de Elvenar: elige los efectos que quieres y calcula la receta de ingredientes que más probabilidades te da de conseguirlos, sin pasarte de tus puntos de hechicería.") }}{% endblock %}{% endset %}
+    {% set seo_description %}{% block description %}{{ _("Optimizador gratis de recetas del Caldero de Elvenar: elige tus efectos y obtén la receta de ingredientes óptima, sin pasarte de tus puntos de hechicería.") }}{% endblock %}{% endset %}
     <meta name="description" content="{{ seo_description|trim }}">
     {% block robots %}{% endblock %}
     {% if google_site_verification %}

@@ -2,7 +2,7 @@
 {# Public presentation page: what visitors not logged in, and search engines,
    see at "/". Logged-in users get the optimizer form (index.html) instead #}
 
-{% block full_title %}{{ _("Optimizador del Caldero de Elvenar: recetas y efectos") }}{% endblock %}
+{% block full_title %}{{ _("Optimizador del Caldero de Elvenar: la mejor receta de ingredientes") }}{% endblock %}
 
 {% block head_extra %}
 <script type="application/ld+json">
@@ -11,7 +11,9 @@
   "@type": "WebApplication",
   "name": _("Optimizador del Caldero de Elvenar"),
   "url": site_url ~ "/",
-  "description": _("Optimizador gratuito del Caldero de Elvenar: elige los efectos que quieres y calcula la receta de ingredientes que más probabilidades te da de conseguirlos, sin pasarte de tus puntos de hechicería."),
+  "alternateName": [_("Calculadora de recetas del Caldero de Elvenar"), "Elvenar Cauldron Optimizer"],
+  "description": _("Optimizador gratis de recetas del Caldero de Elvenar: elige tus efectos y obtén la receta de ingredientes óptima, sin pasarte de tus puntos de hechicería."),
+  "keywords": _("Elvenar, caldero, receta, ingredientes, efectos, pociones, optimizador, optimización, probabilidad, puntos de hechicería"),
   "applicationCategory": "GameApplication",
   "operatingSystem": "Web",
   "inLanguage": ["es", "en"],
@@ -180,7 +182,8 @@
   </section>
 
   <section class="card landing-card">
-    <h2>{{ _("Cómo funciona") }}</h2>
+    <h2>{{ _("Cómo optimizar tu receta del Caldero") }}</h2>
+    <p>{{ _("No hay una única mejor receta del Caldero: depende de los efectos que quieres, tus diplomas, los ingredientes premium que evitas y tus puntos de hechicería. Con la app ajustada a tu juego, la receta da en el juego las mismas probabilidades y el mismo coste que calcula el optimizador.") }}</p>
     <ol class="landing-steps">
       <li>
         <strong>{{ _("Crea una cuenta gratis") }}</strong>

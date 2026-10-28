@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-28 02:47-0400\n"
+"POT-Creation-Date: 2026-10-28 13:26-0400\n"
 "PO-Revision-Date: 2025-12-22 02:20-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -438,7 +438,7 @@ msgstr "Contact"
 
 #: cauldron_optimizer/templates/contact.html:3
 #: cauldron_optimizer/templates/landing.html:12
-#: cauldron_optimizer/templates/landing.html:38
+#: cauldron_optimizer/templates/landing.html:40
 msgid "Optimizador del Caldero de Elvenar"
 msgstr "Elvenar Cauldron Optimizer"
 
@@ -656,12 +656,12 @@ msgid "Marcar o desmarcar todos los efectos"
 msgstr "Check or uncheck all effects"
 
 #: cauldron_optimizer/templates/index.html:187
-#: cauldron_optimizer/templates/landing.html:119
+#: cauldron_optimizer/templates/landing.html:120
 msgid "Evitar ingredientes premium"
 msgstr "Avoid premium ingredients"
 
 #: cauldron_optimizer/templates/index.html:188
-#: cauldron_optimizer/templates/landing.html:162
+#: cauldron_optimizer/templates/landing.html:163
 msgid "Completar efectos"
 msgstr "Complete effects"
 
@@ -993,44 +993,60 @@ msgid "Mejor receta"
 msgstr "Best recipe"
 
 #: cauldron_optimizer/templates/landing.html:5
-msgid "Optimizador del Caldero de Elvenar: recetas y efectos"
-msgstr "Elvenar Cauldron Optimizer: Recipes and Effects"
+msgid "Optimizador del Caldero de Elvenar: la mejor receta de ingredientes"
+msgstr "Elvenar Cauldron Optimizer: Best Ingredient Recipe for Effects"
 
 #: cauldron_optimizer/templates/landing.html:14
+msgid "Calculadora de recetas del Caldero de Elvenar"
+msgstr "Elvenar Cauldron Recipe Calculator"
+
+#: cauldron_optimizer/templates/landing.html:15
 #: cauldron_optimizer/templates/layout.html:30
 msgid ""
-"Optimizador gratuito del Caldero de Elvenar: elige los efectos que "
-"quieres y calcula la receta de ingredientes que más probabilidades te da "
-"de conseguirlos, sin pasarte de tus puntos de hechicería."
+"Optimizador gratis de recetas del Caldero de Elvenar: elige tus efectos y"
+" obtén la receta de ingredientes óptima, sin pasarte de tus puntos de "
+"hechicería."
 msgstr ""
-"Free Elvenar Cauldron optimizer: pick the effects you want and get the "
-"ingredient recipe with the best chance of getting them, within your Witch"
-" Points."
+"Free Elvenar Cauldron recipe optimizer: choose the potion effects you "
+"want and get the optimal ingredient recipe to brew them, within your "
+"Witch Points."
 
-#: cauldron_optimizer/templates/landing.html:34
+#: cauldron_optimizer/templates/landing.html:16
+msgid ""
+"Elvenar, caldero, receta, ingredientes, efectos, pociones, optimizador, "
+"optimización, probabilidad, puntos de hechicería"
+msgstr ""
+"Elvenar, cauldron, recipe, ingredients, effects, potions, optimizer, "
+"optimization, probability, Witch Points"
+
+#: cauldron_optimizer/templates/landing.html:36
 msgid "Selector de efectos de pociones"
 msgstr "Potion Effects Selector"
 
-#: cauldron_optimizer/templates/landing.html:40
-msgid "Elige los efectos del Caldero que quieres, ajusta tus límites y objetivos, y el optimizador calcula la mejor receta de ingredientes."
-msgstr "Choose the Cauldron effects you want, set your limits and goals, and the optimizer works out the best ingredient recipe."
+#: cauldron_optimizer/templates/landing.html:42
+msgid ""
+"Elige los efectos del Caldero que quieres, ajusta tus límites y "
+"objetivos, y el optimizador calcula la mejor receta de ingredientes."
+msgstr ""
+"Choose the Cauldron effects you want, set your limits and goals, and the "
+"optimizer works out the best ingredient recipe."
 
-#: cauldron_optimizer/templates/landing.html:45
+#: cauldron_optimizer/templates/landing.html:46
 msgid "Crear cuenta gratis"
 msgstr "Create a free account"
 
-#: cauldron_optimizer/templates/landing.html:48
+#: cauldron_optimizer/templates/landing.html:49
 msgid "¿Ya tienes cuenta?"
 msgstr "Already have an account?"
 
-#: cauldron_optimizer/templates/landing.html:49
+#: cauldron_optimizer/templates/landing.html:50
 #: cauldron_optimizer/templates/layout.html:211
 #: cauldron_optimizer/templates/login.html:5
 #: cauldron_optimizer/templates/login.html:26
 msgid "Iniciar sesión"
 msgstr "Log in"
 
-#: cauldron_optimizer/templates/landing.html:57
+#: cauldron_optimizer/templates/landing.html:58
 msgid ""
 "Configura tus efectos deseados, los ingredientes premium a evitar y tus "
 "límites"
@@ -1038,7 +1054,7 @@ msgstr ""
 "Set up your desired effects, the premium ingredients to avoid and your "
 "limits"
 
-#: cauldron_optimizer/templates/landing.html:58
+#: cauldron_optimizer/templates/landing.html:59
 msgid ""
 "Objetivo por cálices: máxima probabilidad de al menos k efectos, o máxima"
 " cantidad de efectos en tus cálices"
@@ -1046,11 +1062,11 @@ msgstr ""
 "Goblets goal: the best chance of at least k effects, or the most effects "
 "in your goblets"
 
-#: cauldron_optimizer/templates/landing.html:59
+#: cauldron_optimizer/templates/landing.html:60
 msgid "La receta optimizada, con la probabilidad de cada efecto y su coste"
 msgstr "The optimized recipe, with the chance of each effect and its cost"
 
-#: cauldron_optimizer/templates/landing.html:60
+#: cauldron_optimizer/templates/landing.html:61
 msgid ""
 "En el Caldero del juego, la receta da las mismas probabilidades y el "
 "mismo coste que calcula el optimizador"
@@ -1058,39 +1074,43 @@ msgstr ""
 "In the game's Cauldron, the recipe gives the same chances and cost the "
 "optimizer calculates"
 
-#: cauldron_optimizer/templates/landing.html:61
+#: cauldron_optimizer/templates/landing.html:62
 msgid "Con un poco de suerte, conseguirás los efectos que quieres"
 msgstr "With a bit of luck, you'll get the effects you want"
 
-#: cauldron_optimizer/templates/landing.html:62
-msgid "¿Quieres menos de 10 efectos? El juego obliga a elegir al menos 10: la app encuentra los mejores para completar"
-msgstr "Want fewer than 10 effects? The game makes you pick at least 10, so the app finds the best ones to fill the rest"
-
 #: cauldron_optimizer/templates/landing.html:63
+msgid ""
+"¿Quieres menos de 10 efectos? El juego obliga a elegir al menos 10: la "
+"app encuentra los mejores para completar"
+msgstr ""
+"Want fewer than 10 effects? The game makes you pick at least 10, so the "
+"app finds the best ones to fill the rest"
+
+#: cauldron_optimizer/templates/landing.html:64
 msgid "Cada mundo con su propio nombre, avatar y configuración"
 msgstr "Each world with its own name, avatar and settings"
 
-#: cauldron_optimizer/templates/landing.html:90
+#: cauldron_optimizer/templates/landing.html:91
 msgid "Anterior"
 msgstr "Previous"
 
-#: cauldron_optimizer/templates/landing.html:94
+#: cauldron_optimizer/templates/landing.html:95
 msgid "Siguiente"
 msgstr "Next"
 
-#: cauldron_optimizer/templates/landing.html:106
+#: cauldron_optimizer/templates/landing.html:107
 msgid "Qué puedes hacer"
 msgstr "What you can do"
 
-#: cauldron_optimizer/templates/landing.html:107
+#: cauldron_optimizer/templates/landing.html:108
 msgid "Ajusta la app a tu juego"
 msgstr "Match your game"
 
-#: cauldron_optimizer/templates/landing.html:112
+#: cauldron_optimizer/templates/landing.html:113
 msgid "Diplomas y efectos"
 msgstr "Diplomas and effects"
 
-#: cauldron_optimizer/templates/landing.html:114
+#: cauldron_optimizer/templates/landing.html:115
 #, python-format
 msgid ""
 "Pon tus diplomas y luego activa los mismos efectos que en el %(selector)s"
@@ -1099,7 +1119,7 @@ msgstr ""
 "Set your diplomas, then turn on the same effects as in the game's "
 "%(selector)s (June 2026), each with its weight."
 
-#: cauldron_optimizer/templates/landing.html:121
+#: cauldron_optimizer/templates/landing.html:122
 msgid ""
 "Elige los ingredientes premium del juego que quieres evitar y la receta "
 "se calcula sin ellos."
@@ -1107,12 +1127,12 @@ msgstr ""
 "Choose the game's premium ingredients you want to avoid, and the recipe "
 "is worked out without them."
 
-#: cauldron_optimizer/templates/landing.html:128
+#: cauldron_optimizer/templates/landing.html:129
 #, python-format
 msgid "Integración con %(elvenassist)s"
 msgstr "%(elvenassist)s integration"
 
-#: cauldron_optimizer/templates/landing.html:130
+#: cauldron_optimizer/templates/landing.html:131
 msgid ""
 "Abre el caldero en el juego y los diplomas, ingredientes premium, "
 "efectos, nivel de la Escuela y puntos de hechicería se rellenan solos."
@@ -1120,15 +1140,15 @@ msgstr ""
 "Open the cauldron in the game and your diplomas, premium ingredients, "
 "effects, School level and Witch Points fill in by themselves."
 
-#: cauldron_optimizer/templates/landing.html:133
+#: cauldron_optimizer/templates/landing.html:134
 msgid "Busca la mejor receta"
 msgstr "Find the best recipe"
 
-#: cauldron_optimizer/templates/landing.html:138
+#: cauldron_optimizer/templates/landing.html:139
 msgid "Elige tu objetivo"
 msgstr "Choose your goal"
 
-#: cauldron_optimizer/templates/landing.html:140
+#: cauldron_optimizer/templates/landing.html:141
 msgid ""
 "Suma ponderada según tus pesos o, con cálices (1–5), el mayor número "
 "medio de efectos distintos o la mejor probabilidad de al menos k."
@@ -1136,11 +1156,11 @@ msgstr ""
 "A weighted sum of your weights or, with goblets (1–5), the most different"
 " effects on average or the best chance of at least k."
 
-#: cauldron_optimizer/templates/landing.html:145
+#: cauldron_optimizer/templates/landing.html:146
 msgid "Límite de puntos de hechicería"
 msgstr "Witch Point limit"
 
-#: cauldron_optimizer/templates/landing.html:147
+#: cauldron_optimizer/templates/landing.html:148
 msgid ""
 "Limita el coste de la receta en puntos de hechicería, con el descuento de"
 " tu Escuela de hechicería valoriana."
@@ -1148,11 +1168,11 @@ msgstr ""
 "Cap the recipe cost in Witch Points, with the discount from your Valorian"
 " School of Sorcery."
 
-#: cauldron_optimizer/templates/landing.html:152
+#: cauldron_optimizer/templates/landing.html:153
 msgid "Búsqueda óptima"
 msgstr "Optimal search"
 
-#: cauldron_optimizer/templates/landing.html:154
+#: cauldron_optimizer/templates/landing.html:155
 msgid ""
 "Prueba todas las combinaciones y encuentra la mejor receta en uno o dos "
 "segundos. Si prefieres rapidez, hace una búsqueda inteligente más corta."
@@ -1160,11 +1180,11 @@ msgstr ""
 "Tries every combination and finds the best recipe in a second or two. If "
 "you prefer speed, it runs a shorter smart search."
 
-#: cauldron_optimizer/templates/landing.html:157
+#: cauldron_optimizer/templates/landing.html:158
 msgid "Herramientas extra"
 msgstr "Extra tools"
 
-#: cauldron_optimizer/templates/landing.html:164
+#: cauldron_optimizer/templates/landing.html:165
 msgid ""
 "¿Quieres menos de los 10 efectos que pide el juego? Una búsqueda extra "
 "encuentra los que mejor los completan."
@@ -1172,20 +1192,20 @@ msgstr ""
 "Want fewer than the 10 effects the game requires? An extra search finds "
 "the ones that best complete them."
 
-#: cauldron_optimizer/templates/landing.html:169
+#: cauldron_optimizer/templates/landing.html:170
 #: cauldron_optimizer/templates/layout.html:148
 msgid "Modo manual"
 msgstr "Manual mode"
 
-#: cauldron_optimizer/templates/landing.html:171
+#: cauldron_optimizer/templates/landing.html:172
 msgid "Crea una receta a mano y mira al momento sus probabilidades y su coste."
 msgstr "Build a recipe by hand and instantly see its probabilities and cost."
 
-#: cauldron_optimizer/templates/landing.html:176
+#: cauldron_optimizer/templates/landing.html:177
 msgid "Varios mundos"
 msgstr "Several worlds"
 
-#: cauldron_optimizer/templates/landing.html:178
+#: cauldron_optimizer/templates/landing.html:179
 msgid ""
 "Guarda varios mundos en tu cuenta, cada uno con su propio nombre, avatar "
 "y configuración."
@@ -1193,27 +1213,31 @@ msgstr ""
 "Keep several worlds in one account, each with its own name, avatar and "
 "settings."
 
-#: cauldron_optimizer/templates/landing.html:184
-msgid "Cómo funciona"
-msgstr "How it works"
+#: cauldron_optimizer/templates/landing.html:185
+msgid "Cómo optimizar tu receta del Caldero"
+msgstr "How to optimize your Cauldron recipe"
 
-#: cauldron_optimizer/templates/landing.html:187
+#: cauldron_optimizer/templates/landing.html:186
+msgid "No hay una única mejor receta del Caldero: depende de los efectos que quieres, tus diplomas, los ingredientes premium que evitas y tus puntos de hechicería. Con la app ajustada a tu juego, la receta da en el juego las mismas probabilidades y el mismo coste que calcula el optimizador."
+msgstr "There is no single best Cauldron recipe: it depends on the effects you want, your diplomas, the premium ingredients you avoid and your Witch Points. With the app set up like your game, the recipe gives in the game the same chances and cost the optimizer calculates."
+
+#: cauldron_optimizer/templates/landing.html:189
 msgid "Crea una cuenta gratis"
 msgstr "Create a free account"
 
-#: cauldron_optimizer/templates/landing.html:188
+#: cauldron_optimizer/templates/landing.html:190
 msgid "y añade tus mundos: cada uno guarda su propia configuración."
 msgstr "and add your worlds: each one keeps its own settings."
 
-#: cauldron_optimizer/templates/landing.html:191
+#: cauldron_optimizer/templates/landing.html:193
 msgid "Ajusta la app a tu juego (calibración)"
 msgstr "Match the app to your game (calibration)"
 
-#: cauldron_optimizer/templates/landing.html:193
+#: cauldron_optimizer/templates/landing.html:195
 msgid "Elige los mismos 4 ingredientes premium que tienes en el juego."
 msgstr "Choose the same 4 premium ingredients you have in the game."
 
-#: cauldron_optimizer/templates/landing.html:194
+#: cauldron_optimizer/templates/landing.html:196
 msgid ""
 "Pon tu número de diplomas: cuéntalos en el árbol de investigación. Es "
 "también tu número de efectos, que ves al elaborar una poción."
@@ -1221,7 +1245,7 @@ msgstr ""
 "Enter your number of diplomas: count them in the research tree. It's also"
 " your number of effects, which you see when you brew a potion."
 
-#: cauldron_optimizer/templates/landing.html:195
+#: cauldron_optimizer/templates/landing.html:197
 #, python-format
 msgid ""
 "Marca como efectos deseados los mismos que tienes activados en el juego "
@@ -1234,7 +1258,7 @@ msgstr ""
 "(“Upgrade Effects”) after brewing: each effect's checkbox turns it on or "
 "off (all on by default)."
 
-#: cauldron_optimizer/templates/landing.html:198
+#: cauldron_optimizer/templates/landing.html:200
 #, python-format
 msgid ""
 "Con la extensión %(elvenassist)s esto se rellena solo al abrir el caldero"
@@ -1243,15 +1267,15 @@ msgstr ""
 "With the %(elvenassist)s extension, all this fills in by itself when you "
 "open the cauldron in the game."
 
-#: cauldron_optimizer/templates/landing.html:202
+#: cauldron_optimizer/templates/landing.html:204
 msgid "Personaliza la búsqueda"
 msgstr "Customize the search"
 
-#: cauldron_optimizer/templates/landing.html:205
+#: cauldron_optimizer/templates/landing.html:207
 msgid "Límites:"
 msgstr "Limits:"
 
-#: cauldron_optimizer/templates/landing.html:206
+#: cauldron_optimizer/templates/landing.html:208
 msgid ""
 "máximo de puntos de hechicería (con el nivel de tu Escuela de hechicería "
 "valoriana), cantidad máxima por ingrediente, probabilidad máxima por "
@@ -1262,17 +1286,17 @@ msgstr ""
 "quantity per ingredient, max probability per effect and search depth "
 "(“Optimal” tries every combination)."
 
-#: cauldron_optimizer/templates/landing.html:209
+#: cauldron_optimizer/templates/landing.html:211
 msgid "Objetivo:"
 msgstr "Goal:"
 
-#: cauldron_optimizer/templates/landing.html:211
+#: cauldron_optimizer/templates/landing.html:213
 msgid "Suma ponderada: el mejor resultado según el peso que das a cada efecto."
 msgstr ""
 "Weighted sum: the best outcome according to the weight you give each "
 "effect."
 
-#: cauldron_optimizer/templates/landing.html:212
+#: cauldron_optimizer/templates/landing.html:214
 msgid ""
 "«Máximo»: el mayor número medio de efectos deseados distintos en tus "
 "cálices (1–5)."
@@ -1280,19 +1304,19 @@ msgstr ""
 "“Most”: the highest average number of different wanted effects across "
 "your goblets (1–5)."
 
-#: cauldron_optimizer/templates/landing.html:213
+#: cauldron_optimizer/templates/landing.html:215
 msgid "«≥ k»: la mayor probabilidad de conseguir al menos k efectos deseados."
 msgstr "“≥ k”: the best chance of getting at least k wanted effects."
 
-#: cauldron_optimizer/templates/landing.html:214
+#: cauldron_optimizer/templates/landing.html:216
 msgid "«Todos»: la mayor probabilidad de conseguirlos todos."
 msgstr "“All”: the best chance of getting all of them."
 
-#: cauldron_optimizer/templates/landing.html:220
+#: cauldron_optimizer/templates/landing.html:222
 msgid "Pulsa «Buscar receta»"
 msgstr "Press “Find Recipe”"
 
-#: cauldron_optimizer/templates/landing.html:221
+#: cauldron_optimizer/templates/landing.html:223
 msgid "y obtén la receta recomendada con la probabilidad de cada efecto."
 msgstr "and get the recommended recipe with the chance of each effect."
 
@@ -1596,357 +1620,4 @@ msgstr ""
 #: cauldron_optimizer/templates/results.html:175
 msgid "sin construir"
 msgstr "not built"
-
-#~ msgid "El nombre de usuario ya existe"
-#~ msgstr "That username already exists"
-
-# ###################
-# Backend errors / labels
-#~ msgid "No se encontró la configuracion del ususario"
-#~ msgstr "User settings not found"
-
-#~ msgid "Puedes evitar como máximo %(n)s ingredientes"
-#~ msgstr "You can avoid at most %(n)s ingredients"
-
-#~ msgid "Número de mundos:"
-#~ msgstr "Number of worlds:"
-
-#~ msgid "El número de mundos debe estar entre 1 y %(n)s"
-#~ msgstr "The number of worlds must be between 1 and %(n)s"
-
-#~ msgid "Guardar configuración del mundo %(n)s"
-#~ msgstr "Save settings for world %(n)s"
-
-#~ msgid "Cambiar avatar"
-#~ msgstr "Change avatar"
-
-#~ msgid "Cambiar avatar del mundo %(n)s"
-#~ msgstr "Change avatar for world %(n)s"
-
-#~ msgid "Nuevo mundo"
-#~ msgstr "New world"
-
-#~ msgid "Cambiar avatar del mundo %(name)s"
-#~ msgstr "Change the avatar of %(name)s"
-
-#~ msgid "Cambiar nombre y avatar"
-#~ msgstr "Change name and avatar"
-
-#~ msgid "Descarta los cambios y vuelve a la configuración guardada"
-#~ msgstr "Discard changes and go back to the saved settings"
-
-#~ msgid "Detiene la búsqueda; puedes continuarla después"
-#~ msgstr "Stops the search; you can continue it later"
-
-#~ msgid "Guarda el progreso en este mundo para continuar otro día"
-#~ msgstr "Saves the progress in this world to continue another day"
-
-#~ msgid "Progreso guardado"
-#~ msgstr "Progress saved"
-
-#~ msgid ""
-#~ "Ya tienes una búsqueda en este "
-#~ "mundo con otros parámetros. Si empiezas"
-#~ " una nueva, se perderá su progreso."
-#~ msgstr ""
-#~ "You already have a search in this"
-#~ " world with other settings. If you"
-#~ " start a new one, its progress "
-#~ "will be lost."
-
-#~ msgid "Empezar"
-#~ msgstr "Start"
-
-#~ msgid "Búsqueda guardada al {pct}%: pulsa Completar para continuar."
-#~ msgstr "Search saved at {pct}%: press Complete to continue."
-
-#~ msgid "Búsqueda terminada: pulsa Completar para ver los resultados."
-#~ msgstr "Search finished: press Complete to see the results."
-
-#~ msgid "Restaurar"
-#~ msgstr "Restore"
-
-#~ msgid "Vuelve a los valores de la búsqueda guardada y la continúa"
-#~ msgstr "Go back to the saved search's values and continue it"
-
-#~ msgid "Marca en el panel los 10 efectos del mejor resultado"
-#~ msgstr "Check the 10 effects of the best result on the panel"
-
-#~ msgid "Marca los 10 efectos del mejor resultado y los guarda en este mundo"
-#~ msgstr "Check the 10 effects of the best result and save them in this world"
-
-#~ msgid ""
-#~ "Tienes otra búsqueda guardada ({pct}%). "
-#~ "Completar te deja restaurarla o empezar"
-#~ " esta ({total} búsquedas)."
-#~ msgstr ""
-#~ "You have another saved search ({pct}%)."
-#~ " Complete lets you restore it or "
-#~ "start this one ({total} searches)."
-
-#~ msgid ""
-#~ "Media {avg} ± {std} · peor {worst}"
-#~ " · mejor {best} (sobre las 495 "
-#~ "combinaciones de ingredientes)"
-#~ msgstr ""
-#~ "Average {avg} ± {std} · worst "
-#~ "{worst} · best {best} (over the "
-#~ "495 ingredient combinations)"
-
-#~ msgid "(sobre las 495 combinaciones de ingredientes)"
-#~ msgstr "(over the 495 ingredient combinations)"
-
-#~ msgid "Mín"
-#~ msgstr "Min"
-
-#~ msgid "Máx"
-#~ msgstr "Max"
-
-#~ msgid "Probando"
-#~ msgstr "Testing"
-
-#~ msgid "Quedan unos {eta}"
-#~ msgstr "About {eta} left"
-
-#~ msgid "Error"
-#~ msgstr "Error"
-
-#~ msgid "Borra la búsqueda guardada para elegir otros efectos, pesos o límites"
-#~ msgstr "Delete the saved search to choose different effects, weights, or limits"
-
-#~ msgid ""
-#~ "Se borrará la búsqueda de este "
-#~ "mundo con su progreso y resultados. "
-#~ "Después podrás elegir otros efectos, "
-#~ "pesos y límites."
-#~ msgstr ""
-#~ "This world's search, including its "
-#~ "progress and results, will be deleted."
-#~ " You can then choose different "
-#~ "effects, weights, or limits."
-
-#~ msgid "Borrar"
-#~ msgstr "Delete"
-
-#~ msgid ""
-#~ "Elige {missing} ingredientes más para "
-#~ "evitar ({n} de 4), como en el "
-#~ "juego."
-#~ msgstr "Choose {missing} more ingredients to avoid ({n} of 4), as in the game."
-
-#~ msgid "Elige 1 ingrediente más para evitar (3 de 4), como en el juego."
-#~ msgstr "Choose 1 more ingredient to avoid (3 of 4), as in the game."
-
-#~ msgid "4 de 4 ingredientes evitados."
-#~ msgstr "4 of 4 ingredients avoided."
-
-#~ msgid "Diplomas:"
-#~ msgstr "Diplomas:"
-
-#~ msgid "Elaborar"
-#~ msgstr "Brew"
-
-#~ msgid "Probabilidad"
-#~ msgstr "Probability"
-
-#~ msgid "Orden: de mayor a menor cantidad"
-#~ msgstr "Order: largest amount first"
-
-#~ msgid "Entendido"
-#~ msgstr "Got it"
-
-#~ msgid ""
-#~ "Los ingredientes van de mayor a "
-#~ "menor cantidad, en el orden en que"
-#~ " los añades: ninguno puede tener más"
-#~ " unidades que uno añadido antes "
-#~ "(empatar sí), y cada uno se añade"
-#~ " de una vez, todas sus unidades "
-#~ "seguidas. Es el orden más barato, "
-#~ "y así el coste coincide con el "
-#~ "del juego, donde el orden cambia "
-#~ "el coste."
-#~ msgstr ""
-#~ "Ingredients go from the largest amount"
-#~ " to the smallest, in the order "
-#~ "you add them: none may have more"
-#~ " units than one added before it "
-#~ "(ties are fine), and each one is"
-#~ " added in one go, all its units"
-#~ " in a row. It is the cheapest"
-#~ " order, and that way the cost "
-#~ "matches the game's, where the order "
-#~ "changes the cost."
-
-#~ msgid "No volver a mostrar"
-#~ msgstr "Don't show again"
-
-#~ msgid ""
-#~ "No se pueden añadir más unidades "
-#~ "de {name}: después ya añadiste {later}."
-#~ " Cada ingrediente se añade de una "
-#~ "vez."
-#~ msgstr ""
-#~ "You cannot add more units of "
-#~ "{name}: you already added {later} after"
-#~ " it. Each ingredient is added in "
-#~ "one go."
-
-#~ msgid ""
-#~ "{later} no puede tener {n}: sería "
-#~ "más que {earlier} ({m}), que se "
-#~ "añadió antes."
-#~ msgstr ""
-#~ "{later} cannot have {n}: that would "
-#~ "be more than {earlier} ({m}), which "
-#~ "was added before."
-
-#~ msgid "Todos (%(k)s)"
-#~ msgstr "All (%(k)s)"
-
-#~ msgid "Al menos %(k)s"
-#~ msgstr "At least %(k)s"
-
-#~ msgid "Edición libre · coste mínimo"
-#~ msgstr "Free editing · cheapest order"
-
-#~ msgid "Modo de edición"
-#~ msgstr "Editing mode"
-
-#~ msgid "Orden óptimo"
-#~ msgstr "Optimal order"
-
-#~ msgid "orden libre"
-#~ msgstr "free order"
-
-#~ msgid "Si notas algún problema, avísame desde"
-#~ msgstr "If you notice any problem, please let me know via"
-
-#~ msgid ""
-#~ "La selección de efectos (las casillas)"
-#~ " es nueva y todavía está en "
-#~ "pruebas. Si notas algún problema, "
-#~ "avísame desde {contact}."
-#~ msgstr ""
-#~ "Effect selection (the checkboxes) is new"
-#~ " and still being tested. If you "
-#~ "notice any problem, please let me "
-#~ "know via {contact}."
-
-#~ msgid "Controlar el coste"
-#~ msgstr "Control the cost"
-
-#~ msgid ""
-#~ "Para varios cálices, busca la receta "
-#~ "con más efectos distintos de media "
-#~ "o con la mayor probabilidad de "
-#~ "conseguir al menos los que necesitas."
-#~ msgstr ""
-#~ "For several goblets, find the recipe "
-#~ "with the most different effects on "
-#~ "average, or the best chance of "
-#~ "getting at least the ones you "
-#~ "need."
-
-#~ msgid ""
-#~ "Si eliges menos de 10 efectos, una"
-#~ " búsqueda larga prueba todas las "
-#~ "combinaciones de efectos complementarios y "
-#~ "te las ordena."
-#~ msgstr ""
-#~ "If you pick fewer than 10 effects,"
-#~ " a long search tries every set "
-#~ "of complementary effects and ranks them"
-#~ " for you."
-
-#~ msgid "Ver el tutorial en vídeo"
-#~ msgstr "Watch the video tutorial"
-
-#~ msgid ""
-#~ "Elige los efectos deseados, los "
-#~ "ingredientes premium a evitar y tus "
-#~ "límites."
-#~ msgstr ""
-#~ "Choose the desired effects, the premium"
-#~ " ingredients to avoid and your "
-#~ "limits."
-
-#~ msgid ""
-#~ "Pantalla del optimizador: ingredientes premium"
-#~ " a evitar, límites de búsqueda y "
-#~ "efectos deseados con sus pesos"
-#~ msgstr ""
-#~ "Optimizer screen: premium ingredients to "
-#~ "avoid, search limits and desired effects"
-#~ " with their weights"
-
-#~ msgid "Tutorial en vídeo del Optimizador del Caldero"
-#~ msgstr "Cauldron Optimizer video tutorial"
-
-#~ msgid "Preguntas frecuentes"
-#~ msgstr "Frequently asked questions"
-
-#~ msgid "¿Es gratis?"
-#~ msgstr "Is it free?"
-
-#~ msgid ""
-#~ "Sí. Solo necesitas una cuenta para "
-#~ "guardar tu configuración de cada mundo."
-#~ msgstr "Yes. You only need an account to save your settings for each world."
-
-#~ msgid "¿Está en español e inglés?"
-#~ msgstr "Is it in Spanish and English?"
-
-#~ msgid "Sí, puedes cambiar el idioma en cualquier momento desde el menú."
-#~ msgstr "Yes, you can switch the language at any time from the menu."
-
-#~ msgid "¿Es una herramienta oficial de Elvenar?"
-#~ msgstr "Is it an official Elvenar tool?"
-
-#~ msgid ""
-#~ "No. Es un proyecto creado por un"
-#~ " jugador, sin afiliación oficial con "
-#~ "Elvenar ni con InnoGames."
-#~ msgstr ""
-#~ "No. It's a project made by a "
-#~ "player, with no official affiliation "
-#~ "with Elvenar or InnoGames."
-
-#~ msgid ""
-#~ "Desde la actualización del Selector de"
-#~ " efectos de pociones (junio de 2026),"
-#~ " el juego te deja desactivar los "
-#~ "efectos que no necesitas, manteniendo al"
-#~ " menos 10 activos. Aquí los eliges"
-#~ " de la misma forma y das a "
-#~ "cada uno un peso según lo que "
-#~ "te importe."
-#~ msgstr ""
-#~ "Since the Potion Effects Selector update"
-#~ " (June 2026), the game lets you "
-#~ "turn off the effects you don't "
-#~ "need, keeping at least 10 active. "
-#~ "Here you pick them the same way"
-#~ " and give each one a weight for"
-#~ " how much it matters to you."
-
-#~ msgid "Objetivos por cálices"
-#~ msgstr "Goblet goals"
-
-#~ msgid ""
-#~ "Elige tus cálices (1–5) y maximiza "
-#~ "el número medio de efectos deseados "
-#~ "distintos o la probabilidad de conseguir"
-#~ " al menos k. Los resultados muestran"
-#~ " la probabilidad para cada k."
-#~ msgstr ""
-#~ "Choose your goblets (1–5) and maximize"
-#~ " the average number of different "
-#~ "wanted effects, or the chance of "
-#~ "getting at least k of them. The"
-#~ " results show the probability for "
-#~ "every k."
-
-#~ msgid "Consigue ElvenAssist (Chrome Web Store)"
-#~ msgstr "Get ElvenAssist (Chrome Web Store)"
 
