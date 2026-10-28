@@ -55,9 +55,10 @@
   {% set shot_lang = "es" if get_locale()|string == "es" else "en" %}
   {% set shots = [
     ("recipe", _("Configura tus efectos deseados, los ingredientes premium a evitar y tus límites")),
-    ("goal_most", _("Objetivo «Máximo»: el mayor número medio de efectos deseados distintos en tus cálices")),
+    ("goal_most", _("Objetivo por cálices: máxima probabilidad de al menos k efectos, o máxima cantidad de efectos en tus cálices")),
     ("results", _("La receta optimizada, con la probabilidad de cada efecto y su coste")),
     ("game", _("En el Caldero del juego, la receta da las mismas probabilidades y el mismo coste que calcula el optimizador")),
+    ("effects", _("Con un poco de suerte, conseguirás los efectos que quieres")),
     ("complete", _("Completar efectos: si tienes menos de 10, busca los que mejor completan los tuyos hasta llegar a los 10 mínimos del juego")),
     ("worlds", _("Cada mundo con su propio nombre, avatar y configuración")),
   ] %}
@@ -66,10 +67,17 @@
       {% for name, caption in shots %}
       <figure class="carousel-item {{ 'active' if loop.first }}">
         <div class="landing-shot-frame">
-          {# The game screenshot is the same in both languages #}
-          {% set file = name if name == "game" else name ~ "_" ~ shot_lang %}
+          {# The game screenshots are the same in both languages #}
+          {% set file = name if name in ("game", "effects") else name ~ "_" ~ shot_lang %}
+          {% if name == "effects" %}
+          {# Served straight from docs/effects.png #}
+          {% set img = docs_image_url("effects.png") %}
+          <img src="{{ img.src }}"
+               width="{{ img.width }}" height="{{ img.height }}"
+          {% else %}
           <img src="{{ url_for('static', filename='seo/shots/' ~ file ~ '.jpg') }}"
                width="1600" height="{{ {'results': 891, 'game': 1121}.get(name, 1128) }}"
+          {% endif %}
                {% if not loop.first %}loading="lazy"{% endif %}
                alt="{{ caption }}">
         </div>

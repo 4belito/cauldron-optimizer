@@ -1,10 +1,20 @@
 import json
 import time
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
-from flask import Response, abort, redirect, render_template, request, session, url_for
+from flask import (
+    Response,
+    abort,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    session,
+    url_for,
+)
 from flask_babel import get_locale
 from flask_babel import gettext as _
 from sqlalchemy import select
@@ -82,7 +92,7 @@ def after_request(response: Response) -> Response:
     - other files (images, fonts): kept a week
     Vercel's CDN may keep any static file: it is emptied on every deploy.
     """
-    if request.endpoint == "static":
+    if request.endpoint in ("static", "docs_image"):
         if request.args.get("v"):
             browser = "public, max-age=31536000, immutable"
         elif request.path.endswith((".js", ".css")):
@@ -99,6 +109,33 @@ def after_request(response: Response) -> Response:
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+
+# Images in the project's docs/ folder the pages show
+DOCS_DIR = Path(app.root_path).parent / "docs"
+DOCS_IMAGES = {"effects.png"}
+
+
+@app.template_global()
+def docs_image_url(name: str) -> dict[str, Any]:
+    """URL and size of a docs/ image (a PNG). The URL has the file's change
+    time as ?v=, so browsers fetch it again when the file changes."""
+    path = DOCS_DIR / name
+    with path.open("rb") as f:
+        header = f.read(24)  # the PNG header has the width and height
+    return {
+        "src": url_for("docs_image", name=name, v=int(path.stat().st_mtime)),
+        "width": int.from_bytes(header[16:20], "big"),
+        "height": int.from_bytes(header[20:24], "big"),
+    }
+
+
+@app.route("/docs/<name>")
+def docs_image(name: str) -> Response:
+    """Serve an image from docs/ (only those in DOCS_IMAGES)."""
+    if name not in DOCS_IMAGES:
+        abort(404)
+    return send_from_directory(DOCS_DIR, name)
 
 
 # Pages search engines may index; each one exists in every language
