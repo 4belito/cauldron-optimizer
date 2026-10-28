@@ -5,7 +5,7 @@ import re
 import secrets
 import time
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
 from urllib.parse import urlparse
@@ -29,6 +29,7 @@ from cauldron_optimizer.db_model import (
     UserSettings,
 )
 from cauldron_optimizer.helpers import admin_required
+from cauldron_optimizer.optimizer.optimizer import MEAN_EFFECTS
 
 log = logging.getLogger(__name__)
 
@@ -340,18 +341,37 @@ def usage_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
             return "not recorded"
         return "optimal solution" if run.exact_search else "search depth"
 
-    modes = []
-    for name, _n, _pct in counted(mode(r) for r in runs):
-        mode_durations = [r.duration_ms for r in runs if mode(r) == name]
-        modes.append(
-            {
-                "name": name,
-                "runs": len(mode_durations),
-                "pct": 100 * len(mode_durations) / n_runs,
-                "avg_ms": sum(mode_durations) / (len(mode_durations) or 1),
-                "p95_ms": percentile(mode_durations, 0.95),
-            }
-        )
+    # Optimization goal, recorded since n_rounds/min_effects were logged
+    def goal(run: OptimizationRun) -> str:
+        if run.n_rounds is None:
+            return "not recorded"
+        if run.n_rounds == 0:
+            return "weighted probability"
+        if run.min_effects is None:
+            return "goblets (target not recorded)"
+        if run.min_effects == MEAN_EFFECTS:
+            return "most (expected number)"
+        if run.min_effects == 0:
+            return "all effects"
+        return f"at least {run.min_effects} effects"
+
+    def timed_rows(key: Callable[[OptimizationRun], str]) -> list[dict[str, Any]]:
+        """Runs, share and duration per value of key, most common first."""
+        rows = []
+        for name, _n, _pct in counted(key(r) for r in runs):
+            durations_ = [r.duration_ms for r in runs if key(r) == name]
+            rows.append(
+                {
+                    "name": name,
+                    "runs": len(durations_),
+                    "pct": 100 * len(durations_) / n_runs,
+                    "avg_ms": sum(durations_) / (len(durations_) or 1),
+                    "p95_ms": percentile(durations_, 0.95),
+                }
+            )
+        return rows
+
+    modes = timed_rows(mode)
     exact_runs = [r for r in runs if r.exact_search]
 
     return {
@@ -373,6 +393,8 @@ def usage_stats(db_sa: Session, since: datetime) -> dict[str, Any]:
             (r.max_witch_points for r in runs), "no limit / not recorded"
         ),
         "modes": modes,
+        "goals": timed_rows(goal),
+        "goblets": histogram(r.n_rounds for r in runs if r.n_rounds),
         "proven_optimum": counted(
             "proven optimum" if r.exact else "not proven" for r in exact_runs
         ),

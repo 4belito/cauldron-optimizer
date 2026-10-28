@@ -250,6 +250,23 @@
         <p class="note">"Not recorded" are runs from before the search mode was logged.</p>
         {% else %}<p class="empty">No data yet.</p>{% endif %}
       </div>
+      <div class="card span-2">
+        <h3>Goal</h3>
+        {% if usage.goals %}
+        <div class="table-wrap"><table>
+          <tr><th>Goal</th><th class="num">Runs</th><th class="num">%</th>
+            <th class="num">Avg s</th><th class="num">p95 s</th></tr>
+          {% for m in usage.goals %}
+          <tr><td>{{ m.name }}</td><td class="num">{{ m.runs }}</td>
+            <td class="num">{{ "%.0f" | format(m.pct) }}%</td>
+            <td class="num">{{ "%.1f" | format(m.avg_ms / 1000) }}</td>
+            <td class="num">{{ "%.1f" | format(m.p95_ms / 1000) }}</td></tr>
+          {% endfor %}
+        </table></div>
+        <p class="note">Weighted probability, or the chance of getting the wanted effects in some goblets. "Not recorded" are runs from before the goal was logged.</p>
+        {% else %}<p class="empty">No data yet.</p>{% endif %}
+      </div>
+      <div class="card"><h3>Goblets</h3>{{ bars(usage.goblets, cls="alt") }}<p class="note">Runs with a goblets goal.</p></div>
       <div class="card">
         <h3>Optimal-solution runs</h3>{{ bars(usage.proven_optimum, cls="alt") }}
         <p class="note">Not proven: the browser search did not finish checking every recipe.</p>
