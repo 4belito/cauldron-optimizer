@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-28 02:18-0400\n"
+"POT-Creation-Date: 2026-10-28 02:47-0400\n"
 "PO-Revision-Date: 2025-12-24 13:27-0600\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: es\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "Sesión expirada. Recarga la página e inténtalo de nuevo."
 msgstr ""
 
-#: cauldron_optimizer/__init__.py:86 cauldron_optimizer/routes.py:341
-#: cauldron_optimizer/routes.py:368 cauldron_optimizer/routes.py:395
-#: cauldron_optimizer/routes.py:412 cauldron_optimizer/routes.py:492
-#: cauldron_optimizer/routes.py:681 cauldron_optimizer/routes.py:800
-#: cauldron_optimizer/routes.py:836
+#: cauldron_optimizer/__init__.py:86 cauldron_optimizer/routes.py:378
+#: cauldron_optimizer/routes.py:405 cauldron_optimizer/routes.py:432
+#: cauldron_optimizer/routes.py:449 cauldron_optimizer/routes.py:529
+#: cauldron_optimizer/routes.py:718 cauldron_optimizer/routes.py:837
+#: cauldron_optimizer/routes.py:873
 msgid "Error de base de datos"
 msgstr ""
 
@@ -220,8 +220,8 @@ msgstr ""
 msgid "Las contraseñas no coinciden"
 msgstr ""
 
-#: cauldron_optimizer/forms.py:129 cauldron_optimizer/routes.py:300
-#: cauldron_optimizer/routes.py:353
+#: cauldron_optimizer/forms.py:129 cauldron_optimizer/routes.py:337
+#: cauldron_optimizer/routes.py:390
 msgid "Avatar no válido"
 msgstr ""
 
@@ -346,55 +346,55 @@ msgstr ""
 msgid "Formulario inválido"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:264 cauldron_optimizer/routes.py:289
-#: cauldron_optimizer/routes.py:291
+#: cauldron_optimizer/routes.py:301 cauldron_optimizer/routes.py:326
+#: cauldron_optimizer/routes.py:328
 #: cauldron_optimizer/templates/register.html:53
 #, python-format
 msgid "Mundo %(n)s"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:275
+#: cauldron_optimizer/routes.py:312
 #, python-format
 msgid "El nombre del mundo debe tener entre 1 y %(n)s caracteres"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:281
+#: cauldron_optimizer/routes.py:318
 msgid "Ya tienes un mundo con ese nombre"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:309 cauldron_optimizer/routes.py:451
+#: cauldron_optimizer/routes.py:346 cauldron_optimizer/routes.py:488
 #, python-format
 msgid "Puedes tener como máximo %(n)s mundos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:383 cauldron_optimizer/routes.py:408
-#: cauldron_optimizer/routes.py:444
+#: cauldron_optimizer/routes.py:420 cauldron_optimizer/routes.py:445
+#: cauldron_optimizer/routes.py:481
 msgid "Mundo no válido"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:388 cauldron_optimizer/templates/index.html:73
+#: cauldron_optimizer/routes.py:425 cauldron_optimizer/templates/index.html:73
 msgid "No puedes eliminar tu único mundo"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:530
+#: cauldron_optimizer/routes.py:567
 msgid "nombre de usuario o contraseña incorrectos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:597
+#: cauldron_optimizer/routes.py:634
 msgid "El nombre de usuario ya está en uso"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:623
+#: cauldron_optimizer/routes.py:660
 msgid "Ingredientes premium no válidos"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:628
+#: cauldron_optimizer/routes.py:665
 #, python-format
 msgid "Elige exactamente %(n)s ingredientes para evitar"
 msgstr ""
 
-#: cauldron_optimizer/routes.py:769 cauldron_optimizer/routes.py:784
-#: cauldron_optimizer/routes.py:820
+#: cauldron_optimizer/routes.py:806 cauldron_optimizer/routes.py:821
+#: cauldron_optimizer/routes.py:857
 msgid "Datos no válidos"
 msgstr ""
 
@@ -635,12 +635,12 @@ msgid "Marcar o desmarcar todos los efectos"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:187
-#: cauldron_optimizer/templates/landing.html:112
+#: cauldron_optimizer/templates/landing.html:119
 msgid "Evitar ingredientes premium"
 msgstr ""
 
 #: cauldron_optimizer/templates/index.html:188
-#: cauldron_optimizer/templates/landing.html:155
+#: cauldron_optimizer/templates/landing.html:162
 msgid "Completar efectos"
 msgstr ""
 
@@ -1004,7 +1004,9 @@ msgid ""
 msgstr ""
 
 #: cauldron_optimizer/templates/landing.html:58
-msgid "Objetivo por cálices: máxima probabilidad de al menos k efectos deseados, o máximo valor esperado"
+msgid ""
+"Objetivo por cálices: máxima probabilidad de al menos k efectos, o máxima"
+" cantidad de efectos en tus cálices"
 msgstr ""
 
 #: cauldron_optimizer/templates/landing.html:59
@@ -1012,13 +1014,13 @@ msgid "La receta optimizada, con la probabilidad de cada efecto y su coste"
 msgstr ""
 
 #: cauldron_optimizer/templates/landing.html:60
-msgid "Con un poco de suerte, conseguirás los efectos que quieres"
-msgstr ""
-
-#: cauldron_optimizer/templates/landing.html:61
 msgid ""
 "En el Caldero del juego, la receta da las mismas probabilidades y el "
 "mismo coste que calcula el optimizador"
+msgstr ""
+
+#: cauldron_optimizer/templates/landing.html:61
+msgid "Con un poco de suerte, conseguirás los efectos que quieres"
 msgstr ""
 
 #: cauldron_optimizer/templates/landing.html:62
@@ -1031,140 +1033,140 @@ msgstr ""
 msgid "Cada mundo con su propio nombre, avatar y configuración"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:83
+#: cauldron_optimizer/templates/landing.html:90
 msgid "Anterior"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:87
+#: cauldron_optimizer/templates/landing.html:94
 msgid "Siguiente"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:99
+#: cauldron_optimizer/templates/landing.html:106
 msgid "Qué puedes hacer"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:100
+#: cauldron_optimizer/templates/landing.html:107
 msgid "Ajusta la app a tu juego"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:105
+#: cauldron_optimizer/templates/landing.html:112
 msgid "Diplomas y efectos"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:107
+#: cauldron_optimizer/templates/landing.html:114
 #, python-format
 msgid ""
 "Pon tus diplomas y luego activa los mismos efectos que en el %(selector)s"
 " del juego (junio de 2026), cada uno con su peso."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:114
+#: cauldron_optimizer/templates/landing.html:121
 msgid ""
 "Elige los ingredientes premium del juego que quieres evitar y la receta "
 "se calcula sin ellos."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:121
+#: cauldron_optimizer/templates/landing.html:128
 #, python-format
 msgid "Integración con %(elvenassist)s"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:123
+#: cauldron_optimizer/templates/landing.html:130
 msgid ""
 "Abre el caldero en el juego y los diplomas, ingredientes premium, "
 "efectos, nivel de la Escuela y puntos de hechicería se rellenan solos."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:126
+#: cauldron_optimizer/templates/landing.html:133
 msgid "Busca la mejor receta"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:131
+#: cauldron_optimizer/templates/landing.html:138
 msgid "Elige tu objetivo"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:133
+#: cauldron_optimizer/templates/landing.html:140
 msgid ""
 "Suma ponderada según tus pesos o, con cálices (1–5), el mayor número "
 "medio de efectos distintos o la mejor probabilidad de al menos k."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:138
+#: cauldron_optimizer/templates/landing.html:145
 msgid "Límite de puntos de hechicería"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:140
+#: cauldron_optimizer/templates/landing.html:147
 msgid ""
 "Limita el coste de la receta en puntos de hechicería, con el descuento de"
 " tu Escuela de hechicería valoriana."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:145
+#: cauldron_optimizer/templates/landing.html:152
 msgid "Búsqueda óptima"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:147
+#: cauldron_optimizer/templates/landing.html:154
 msgid ""
 "Prueba todas las combinaciones y encuentra la mejor receta en uno o dos "
 "segundos. Si prefieres rapidez, hace una búsqueda inteligente más corta."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:150
+#: cauldron_optimizer/templates/landing.html:157
 msgid "Herramientas extra"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:157
+#: cauldron_optimizer/templates/landing.html:164
 msgid ""
 "¿Quieres menos de los 10 efectos que pide el juego? Una búsqueda extra "
 "encuentra los que mejor los completan."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:162
+#: cauldron_optimizer/templates/landing.html:169
 #: cauldron_optimizer/templates/layout.html:148
 msgid "Modo manual"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:164
+#: cauldron_optimizer/templates/landing.html:171
 msgid "Crea una receta a mano y mira al momento sus probabilidades y su coste."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:169
+#: cauldron_optimizer/templates/landing.html:176
 msgid "Varios mundos"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:171
+#: cauldron_optimizer/templates/landing.html:178
 msgid ""
 "Guarda varios mundos en tu cuenta, cada uno con su propio nombre, avatar "
 "y configuración."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:177
+#: cauldron_optimizer/templates/landing.html:184
 msgid "Cómo funciona"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:180
+#: cauldron_optimizer/templates/landing.html:187
 msgid "Crea una cuenta gratis"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:181
+#: cauldron_optimizer/templates/landing.html:188
 msgid "y añade tus mundos: cada uno guarda su propia configuración."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:184
+#: cauldron_optimizer/templates/landing.html:191
 msgid "Ajusta la app a tu juego (calibración)"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:186
+#: cauldron_optimizer/templates/landing.html:193
 msgid "Elige los mismos 4 ingredientes premium que tienes en el juego."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:187
+#: cauldron_optimizer/templates/landing.html:194
 msgid ""
 "Pon tu número de diplomas: cuéntalos en el árbol de investigación. Es "
 "también tu número de efectos, que ves al elaborar una poción."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:188
+#: cauldron_optimizer/templates/landing.html:195
 #, python-format
 msgid ""
 "Marca como efectos deseados los mismos que tienes activados en el juego "
@@ -1173,22 +1175,22 @@ msgid ""
 "desactiva (por defecto, todos activos)."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:191
+#: cauldron_optimizer/templates/landing.html:198
 #, python-format
 msgid ""
 "Con la extensión %(elvenassist)s esto se rellena solo al abrir el caldero"
 " en el juego."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:195
+#: cauldron_optimizer/templates/landing.html:202
 msgid "Personaliza la búsqueda"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:198
+#: cauldron_optimizer/templates/landing.html:205
 msgid "Límites:"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:199
+#: cauldron_optimizer/templates/landing.html:206
 msgid ""
 "máximo de puntos de hechicería (con el nivel de tu Escuela de hechicería "
 "valoriana), cantidad máxima por ingrediente, probabilidad máxima por "
@@ -1196,33 +1198,33 @@ msgid ""
 "combinaciones)."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:202
+#: cauldron_optimizer/templates/landing.html:209
 msgid "Objetivo:"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:204
+#: cauldron_optimizer/templates/landing.html:211
 msgid "Suma ponderada: el mejor resultado según el peso que das a cada efecto."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:205
+#: cauldron_optimizer/templates/landing.html:212
 msgid ""
 "«Máximo»: el mayor número medio de efectos deseados distintos en tus "
 "cálices (1–5)."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:206
+#: cauldron_optimizer/templates/landing.html:213
 msgid "«≥ k»: la mayor probabilidad de conseguir al menos k efectos deseados."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:207
+#: cauldron_optimizer/templates/landing.html:214
 msgid "«Todos»: la mayor probabilidad de conseguirlos todos."
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:213
+#: cauldron_optimizer/templates/landing.html:220
 msgid "Pulsa «Buscar receta»"
 msgstr ""
 
-#: cauldron_optimizer/templates/landing.html:214
+#: cauldron_optimizer/templates/landing.html:221
 msgid "y obtén la receta recomendada con la probabilidad de cada efecto."
 msgstr ""
 
@@ -1859,5 +1861,11 @@ msgstr ""
 #~ msgid ""
 #~ "Guarda varios mundos en tu cuenta, "
 #~ "cada uno con su propia configuración."
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Objetivo por cálices: máxima probabilidad "
+#~ "de al menos k efectos deseados, o"
+#~ " máximo valor esperado"
 #~ msgstr ""
 
