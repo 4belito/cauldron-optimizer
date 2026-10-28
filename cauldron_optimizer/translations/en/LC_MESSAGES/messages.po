@@ -1012,17 +1012,8 @@ msgid "Selector de efectos de pociones"
 msgstr "Potion Effects Selector"
 
 #: cauldron_optimizer/templates/landing.html:40
-#, python-format
-msgid ""
-"Elige los efectos del Caldero que quieres, ajusta tus límites y "
-"objetivos, y el optimizador calcula la mejor receta de ingredientes: más "
-"efectos deseados, más probabilidad de conseguirlos o el mejor resultado "
-"según tus prioridades. Gratis y compatible con %(elvenassist)s."
-msgstr ""
-"Choose the Cauldron effects you want, set your limits and goals, and the "
-"optimizer works out the best ingredient recipe: more wanted effects, a "
-"better chance of getting them, or the best outcome by your own "
-"priorities. Free, and works with %(elvenassist)s."
+msgid "Elige los efectos del Caldero que quieres, ajusta tus límites y objetivos, y el optimizador calcula la mejor receta de ingredientes."
+msgstr "Choose the Cauldron effects you want, set your limits and goals, and the optimizer works out the best ingredient recipe."
 
 #: cauldron_optimizer/templates/landing.html:45
 msgid "Crear cuenta gratis"
