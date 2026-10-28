@@ -1063,12 +1063,8 @@ msgid "Con un poco de suerte, conseguirás los efectos que quieres"
 msgstr "With a bit of luck, you'll get the effects you want"
 
 #: cauldron_optimizer/templates/landing.html:62
-msgid ""
-"Completar efectos: si tienes menos de 10, busca los que mejor completan "
-"los tuyos hasta llegar a los 10 mínimos del juego"
-msgstr ""
-"Complete effects: with fewer than 10, find the ones that best fill yours "
-"up to the game's minimum of 10"
+msgid "¿Quieres menos de 10 efectos? El juego obliga a elegir al menos 10: la app encuentra los mejores para completar"
+msgstr "Want fewer than 10 effects? The game makes you pick at least 10, so the app finds the best ones to fill the rest"
 
 #: cauldron_optimizer/templates/landing.html:63
 msgid "Cada mundo con su propio nombre, avatar y configuración"
