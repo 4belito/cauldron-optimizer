@@ -475,50 +475,29 @@ def select_server():
 @app.route("/integration/world/select", methods=["POST"])
 @login_required
 def select_world_integration():
-    """Select the world of a city for the page's postMessage API.
+    """The world ElvenAssist fills, for the page's postMessage API.
 
-    A world of that name is selected. Otherwise (with create) no world is
-    made: the active one is used, renamed to the city only if the player
-    never named it (no name, or "Mundo N" / "World N" as suggested); a name
-    the player chose stays.
+    Always the active world: it never switches to another one and never
+    makes one. It takes the city's name only if the player never named it
+    (no name, or "Mundo N" / "World N" as suggested); a name the player
+    chose stays. A name that cannot be used (e.g. another world has it)
+    leaves it as it is: the data is filled all the same.
     """
-    create = request.form.get("create") == "1"
     raw_name = request.form.get("name")
 
     try:
         with db_session() as db_sa:
             account, current = get_active_server(db_sa, session["user_id"])
-            servers = current.user.servers
-            normalized_name = " ".join((raw_name or "").split())
-            target = next(
-                (
-                    server
-                    for server in servers
-                    if server_label(server).casefold() == normalized_name.casefold()
-                ),
-                None,
-            )
+            target = current
             renamed = False
-
-            if target is None:
-                # code: stable, for the extension; error: for the player
-                if not create:
-                    return {
-                        "ok": False,
-                        "code": "not_found",
-                        "error": _("Mundo no válido"),
-                    }, 404
-                target = current
-                if has_default_name(current):
-                    try:
-                        current.name = clean_server_name(raw_name, servers, current)
-                    except ValueError as e:
-                        return {
-                            "ok": False,
-                            "code": "invalid_name",
-                            "error": str(e),
-                        }, 400
+            if has_default_name(current):
+                try:
+                    current.name = clean_server_name(
+                        raw_name, current.user.servers, current
+                    )
                     renamed = True
+                except ValueError:
+                    pass
 
             # Renamed: the page reloads too, to show the new name
             changed = account.active_server != target.server_number or renamed

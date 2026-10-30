@@ -36,14 +36,14 @@
 //                 the expected number of different wanted effects instead
 //   save           boolean; save settings after applying the values
 
-// A content script may also select (or create) a world by name:
+// A content script also sends the city's name before the data:
 //   window.postMessage({ type: "cauldron:selectWorld",
 //                        name: "EA-Balrogville-en3", create: true },
 //                      window.location.origin)
-// With create and no world of that name, no world is made: the active one
-// is used, renamed to that name only if the player never named it (no
+// The data always fills the active world: no other world is selected and
+// none is made. It takes that name only if the player never named it (no
 // name, or "Mundo 1" / "World 1" as suggested; result: renamed). A name the
-// player chose stays: the data fills that world as it is.
+// player chose stays.
 //
 // Each panel of the page has an ElvenAssist switch (saved per world, as
 // soon as it is clicked). With
@@ -64,7 +64,6 @@
 //
 // Failed results carry a stable `code` (besides the readable `errors`):
 //   complement_mode  "Completar efectos" is on: nothing is changed
-//   not_found        no world with that name (and create was not true)
 //   invalid_name     empty or too long name
 //   invalid_data     wrong fields (see errors)
 //   network, db_error, save_failed
