@@ -43,9 +43,12 @@
 // With create and no world of that name, no world is made: the active one
 // is used, renamed to that name only if the player never named it (no
 // name, or "Mundo 1" / "World 1" as suggested; result: renamed). A name the
-// player chose stays: the data fills that world as it is.
+// player chose stays: the data fills that world as it is. With the world
+// bar's ElvenAssist switch off, the active world is always the one (never
+// another, never renamed).
 //
-// Each panel of the page has an ElvenAssist switch (saved per world). With
+// Each panel of the page has an ElvenAssist switch (saved per world, as
+// soon as it is clicked). With
 // it off, that panel's fields are skipped: the result lists them in
 // `blocked` (ok stays true). Panels: diplomas and effects (n_diploma,
 // selected_effects, goblets, all_in, at_least), premium ingredients
@@ -277,6 +280,22 @@ async function selectWorld(data) {
   // Switching reloads the page: not while the mode shows a search (a running
   // search would also stop the reload with a "leave page?" dialog)
   if (complementActive()) return selectWorldError("complement_mode", COMPLEMENT_ERROR);
+
+  // World switch off (optimizer.js): no other world, no new name. The
+  // active world is the one, as it is (its panels' switches still apply)
+  const ea = window.cauldronElvenAssist;
+  if (ea && !ea.allows("world")) {
+    const select = document.getElementById("serverSelect");
+    const option = select && select.selectedOptions[0];
+    return {
+      ok: true,
+      created: false,
+      renamed: false,
+      reloading: false,
+      errors: [],
+      world: option ? { name: option.textContent.trim(), number: Number(option.value) } : undefined,
+    };
+  }
 
   const url = window.CAULDRON_INTEGRATION?.selectWorldUrl;
   if (!url) return selectWorldError("invalid_data", "world selection is not available");

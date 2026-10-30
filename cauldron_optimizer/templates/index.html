@@ -321,6 +321,9 @@
       icon: {{ url_for('static', filename='seo/elvenassist.png') | tojson }},
       on: {{ _("ElvenAssist rellena este panel con los datos del juego. Pulsa para bloquearlo.") | tojson }},
       off: {{ _("ElvenAssist no rellena este panel. Pulsa para permitirlo.") | tojson }},
+      worldOn: {{ _("ElvenAssist elige el mundo de tu ciudad (y pone su nombre a un mundo sin nombre). Pulsa para bloquearlo.") | tojson }},
+      worldOff: {{ _("ElvenAssist no cambia de mundo ni le cambia el nombre: rellena este. Pulsa para permitirlo.") | tojson }},
+      saveUrl: {{ url_for('save_elvenassist') | tojson }},
     },
     defaultWeights: JSON.parse({{ form.effect_weights_json.data | tojson }}),
     defaultExcluded: JSON.parse({{ form.excluded_effects_json.data | tojson }}),
@@ -352,7 +355,7 @@
 </script>
 <!-- Witch Point prices, also used by the solver (solver.js) -->
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=100"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=101"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -423,7 +426,7 @@
     selectWorldUrl: {{ url_for('select_world_integration') | tojson }},
   };
 </script>
-<script src="{{ url_for('static', filename='js/autofill.js') }}?v=9"></script>
+<script src="{{ url_for('static', filename='js/autofill.js') }}?v=10"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 

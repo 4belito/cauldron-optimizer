@@ -1326,6 +1326,12 @@ button:disabled[data-tip] {
   filter: grayscale(1) brightness(1.08);
 }
 
+/* The world bar's: in line, after the world's name */
+.ea-switch.ea-switch-world {
+  position: static;
+  flex: 0 0 auto;
+}
+
 .ea-switch:focus-visible {
   outline: 2px solid #7a5a3a;
   outline-offset: 2px;

@@ -711,9 +711,16 @@ function initWitchPointLimit() {
 }
 
 // ElvenAssist on each panel: a switch in its title (the extension's icon).
-// Off: autofill.js leaves that panel as it is. Saved per world (eaOff, the
-// panels off)
-const ELVENASSIST_CARDS = { effects: "effects-card", premium: "premium-card", limits: "bounds-card" };
+// Off: autofill.js leaves that panel as it is. One more on the world bar:
+// off, ElvenAssist neither picks nor renames the world. Saved per world
+// (eaOff, the ones off) as soon as one is clicked: the extension reloads
+// the page when it changes the world, which must not undo them
+const ELVENASSIST_CARDS = {
+  world: ".server-select-form",
+  effects: "fieldset.effects-card > legend",
+  premium: "fieldset.premium-card > legend",
+  limits: "fieldset.bounds-card > legend",
+};
 
 function elvenAssistOff() {
   try {
@@ -733,32 +740,53 @@ function initElvenAssistSwitches() {
   const cfg = window.OPTIMIZER_CONFIG.elvenAssist;
   const hidden = document.getElementById("eaOff");
   if (!cfg || !hidden) return;
-  Object.entries(ELVENASSIST_CARDS).forEach(([panel, cls]) => {
-    const legend = document.querySelector(`.optimizer fieldset.${cls} > legend`);
-    if (!legend) return;
+  const buttons = [];
+  const showAll = () => buttons.forEach((show) => show());
+  const store = async (value) => {
+    const body = new FormData();
+    body.append("elvenassist_off_json", value);
+    body.append("csrf_token", document.querySelector("input[name='csrf_token']").value);
+    const resp = await fetch(cfg.saveUrl, { method: "POST", body, headers: { Accept: "application/json" } });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
+  };
+  Object.entries(ELVENASSIST_CARDS).forEach(([panel, selector]) => {
+    const host = document.querySelector(`.optimizer-page ${selector}`);
+    if (!host) return;
+    const isWorld = panel === "world";
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "ea-switch";
+    btn.className = "ea-switch" + (isWorld ? " ea-switch-world" : "");
     btn.innerHTML = `<img src="${cfg.icon}" alt="">`;
     const show = () => {
       const on = elvenAssistAllows(panel);
+      const tip = isWorld ? (on ? cfg.worldOn : cfg.worldOff) : on ? cfg.on : cfg.off;
       btn.classList.toggle("is-off", !on);
       btn.setAttribute("aria-pressed", String(on));
-      btn.setAttribute("aria-label", on ? cfg.on : cfg.off);
-      btn.dataset.tip = on ? cfg.on : cfg.off;
+      btn.setAttribute("aria-label", tip);
+      btn.dataset.tip = tip;
     };
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", async (e) => {
       e.stopPropagation();
+      const before = hidden.value;
       const off = new Set(elvenAssistOff());
       if (off.has(panel)) off.delete(panel);
       else off.add(panel);
       hidden.value = JSON.stringify(Object.keys(ELVENASSIST_CARDS).filter((p) => off.has(p)));
       show();
-      setUnsaved(true);
       // The Witch Point slider ends at the world's Witch Points only with it on
       if (panel === "limits" && window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
+      try {
+        await store(hidden.value);
+      } catch (err) {
+        // Not saved: back as it was
+        hidden.value = before;
+        showAll();
+        if (panel === "limits" && window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
+      }
     });
-    legend.append(btn);
+    host.append(btn);
+    buttons.push(show);
     show();
   });
 }
