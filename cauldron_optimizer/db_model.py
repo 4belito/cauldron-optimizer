@@ -151,6 +151,14 @@ class Server(Base):
     n_premium: Mapped[int] = mapped_column(
         Integer, nullable=False, default=4, server_default="4"
     )
+    # Panels ElvenAssist may not fill ("effects", "premium", "limits"); empty:
+    # it fills them all
+    elvenassist_off: Mapped[list[str]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    # The world's Witch Points as ElvenAssist last sent them (the Witch Point
+    # slider ends there); None: not known
+    owned_witch_points: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 

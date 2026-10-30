@@ -22,8 +22,9 @@
 //                 unchecked and lose their weight (applied after n_diploma)
 //   wonder_level  integer, 0..35: level of the Escuela de hechicería
 //                 valoriana (0: not built); sets the Witch Point prices
-//   wp_max        Witch Points the recipe may cost: integer >= 1, or null for
-//                 no limit (applied after wonder_level; at or above the
+//   wp_max        the world's Witch Points: the recipe may cost at most that
+//                 (the limit) and the slider ends there. Integer >= 1, or
+//                 null for not known: no limit (applied after wonder_level; at or above the
 //                 dearest recipe it means no limit, so `applied` gets null)
 //   goblets       integer, 1..5: goblets (brews) for "Todos en" / "All in"
 //   all_in        boolean; the "Todos en" / "All in" switch: the best chance
@@ -40,6 +41,12 @@
 //                        name: "EA-Balrogville-en3", create: true },
 //                      window.location.origin)
 //
+// Each panel of the page has an ElvenAssist switch (saved per world). With
+// it off, that panel's fields are skipped: the result lists them in
+// `blocked` (ok stays true). Panels: diplomas and effects (n_diploma,
+// selected_effects, goblets, all_in, at_least), premium ingredients
+// (premium_ingr), limits (wonder_level, wp_max).
+//
 // Failed results carry a stable `code` (besides the readable `errors`):
 //   complement_mode  "Completar efectos" is on: nothing is changed
 //   not_found        no world with that name (and create was not true)
@@ -55,8 +62,21 @@ function complementActive() {
 
 const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
 
-const AUTOFILL_VERSION = 7;
+const AUTOFILL_VERSION = 8;
 const N_INGREDIENTS = 12;
+
+// The panel each field fills: with its ElvenAssist switch off (optimizer.js,
+// saved per world) the field is skipped and listed in `blocked`, not an error
+const FIELD_PANELS = {
+  n_diploma: "effects",
+  selected_effects: "effects",
+  goblets: "effects",
+  all_in: "effects",
+  at_least: "effects",
+  premium_ingr: "premium",
+  wonder_level: "limits",
+  wp_max: "limits",
+};
 
 function applyAutofill(data) {
   const { dom, effectNames } = window.OPTIMIZER_CONFIG;
@@ -67,6 +87,17 @@ function applyAutofill(data) {
   if (complementActive()) {
     return { ok: false, code: "complement_mode", applied: {}, errors: [COMPLEMENT_ERROR] };
   }
+
+  // Fields of panels the user closed to ElvenAssist are left out
+  const ea = window.cauldronElvenAssist;
+  result.blocked = [];
+  data = { ...data };
+  Object.entries(FIELD_PANELS).forEach(([field, panel]) => {
+    if (data[field] !== undefined && ea && !ea.allows(panel)) {
+      delete data[field];
+      result.blocked.push(field);
+    }
+  });
 
   if (data.save !== undefined && typeof data.save !== "boolean") {
     result.errors.push("save must be a boolean");
@@ -138,7 +169,8 @@ function applyAutofill(data) {
     if (!wp) {
       result.errors.push("wp_max is not available");
     } else if (v === null || (Number.isInteger(v) && v >= 1)) {
-      result.applied.wp_max = wp.setLimit(v);
+      // The world's Witch Points: the limit and the slider's end
+      result.applied.wp_max = wp.setOwned(v);
     } else {
       result.errors.push("wp_max must be a positive integer or null");
     }

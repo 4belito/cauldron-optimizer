@@ -95,6 +95,11 @@
   <!-- Witch Point limit as a number (empty: none), from the text field of its
        card, and the wonder level it is priced with (see optimizer.js) -->
   <input type="hidden" name="wp_max" id="wpMax" value="{{ form.wp_max.data or '' }}">
+  <!-- The world's Witch Points as ElvenAssist sent them (the slider ends
+       there; empty: not known) and the panels ElvenAssist may not fill
+       (initElvenAssistSwitches in optimizer.js); both saved per world -->
+  <input type="hidden" name="wp_owned" id="wpOwned" value="{{ form.wp_owned.data or '' }}">
+  {{ form.elvenassist_off_json(type="hidden", id="eaOff") }}
   <input type="hidden" name="wonder_level" id="wonderLevel"
          value="{{ '' if form.wonder_level.data is none else form.wonder_level.data }}">
   <!-- Goblets (brews) of "Todos", picked on the goblet (see initAllEffects in optimizer.js) -->
@@ -312,6 +317,11 @@
   // Inject Flask data for optimizer.js
   window.OPTIMIZER_CONFIG = {
     foldLabel: {{ _("Plegar o desplegar") | tojson }},
+    elvenAssist: {
+      icon: {{ url_for('static', filename='seo/elvenassist.png') | tojson }},
+      on: {{ _("ElvenAssist rellena este panel con los datos del juego. Pulsa para bloquearlo.") | tojson }},
+      off: {{ _("ElvenAssist no rellena este panel. Pulsa para permitirlo.") | tojson }},
+    },
     defaultWeights: JSON.parse({{ form.effect_weights_json.data | tojson }}),
     defaultExcluded: JSON.parse({{ form.excluded_effects_json.data | tojson }}),
     effectNames: [
@@ -342,7 +352,7 @@
 </script>
 <!-- Witch Point prices, also used by the solver (solver.js) -->
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=99"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=100"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -413,7 +423,7 @@
     selectWorldUrl: {{ url_for('select_world_integration') | tojson }},
   };
 </script>
-<script src="{{ url_for('static', filename='js/autofill.js') }}?v=7"></script>
+<script src="{{ url_for('static', filename='js/autofill.js') }}?v=8"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 

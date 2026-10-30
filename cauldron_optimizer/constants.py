@@ -66,6 +66,9 @@ EFFECT_NAMES = [
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
 MAX_STARTS = 1000
+# Panels ElvenAssist can fill, each with its own on/off (saved per world):
+# diplomas and effects, premium ingredients, Witch Point limit and school
+ELVENASSIST_PANELS = ("effects", "premium", "limits")
 # "Todos" mode: goblets (brews) the wanted effects must come out in
 MAX_ROUNDS = 5
 # With this many or fewer effects checked, they cannot be unchecked (as in the game)

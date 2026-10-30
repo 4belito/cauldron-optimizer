@@ -588,13 +588,24 @@ function initWitchPointLimit() {
   level = Math.min(Math.max(Math.trunc(level) || 0, 0), WONDER_REDUCTION.length - 1);
   saveLevel();
 
-  // Cheapest single ingredient and dearest recipe at the current level
+  // The world's Witch Points as ElvenAssist sent them, while its switch on
+  // this panel is on; null: not known (or not used)
+  const ownedInput = document.getElementById("wpOwned");
+  const owned = () => {
+    const v = Number(ownedInput && ownedInput.value);
+    return v > 0 && elvenAssistAllows("limits") ? v : null;
+  };
+  // Cheapest single ingredient and dearest recipe at the current level. With
+  // fewer Witch Points than the dearest recipe, the slider ends at them: its
+  // end is then that limit (capped), not "no limit"
   const bounds = () => {
     const reduction = WONDER_REDUCTION[level];
-    return {
-      min: cauldronPrice(1, 1, { reduction }),
-      max: cauldronBuyOrder({ one: 25 }, { reduction }).witchPoints,
-    };
+    const min = cauldronPrice(1, 1, { reduction });
+    const dearest = cauldronBuyOrder({ one: 25 }, { reduction }).witchPoints;
+    const cap = owned();
+    return cap && cap < dearest
+      ? { min, max: Math.max(min, cap), capped: true }
+      : { min, max: dearest, capped: false };
   };
   const limit = () => Number(hidden.value) || Infinity;
   const toPos = (v, { min, max }) =>
@@ -616,10 +627,13 @@ function initWitchPointLimit() {
     setRangeFill(range);
     if (document.activeElement !== text) text.value = formatWitchPoints(v);
   }
-  // From the price of one ingredient up; the maximum or more: no limit
+  // From the price of one ingredient up; the maximum or more: no limit (or,
+  // capped by the world's Witch Points, those)
   function setLimit(v) {
     const b = bounds();
-    hidden.value = v >= b.max ? "" : String(Math.max(b.min, Math.round(v)));
+    hidden.value = v >= b.max
+      ? b.capped ? String(b.max) : ""
+      : String(Math.max(b.min, Math.round(v)));
     render();
   }
 
@@ -681,7 +695,72 @@ function initWitchPointLimit() {
       setLimit(v == null ? Infinity : v);
       return hidden.value === "" ? null : Number(hidden.value);
     },
+    // The world's Witch Points (ElvenAssist): the slider ends there and the
+    // limit is set to them (null: not known, the slider back to no limit).
+    // Returns the limit kept (null: none)
+    setOwned(v) {
+      ownedInput.value = v == null ? "" : String(v);
+      setLimit(v == null ? Infinity : v);
+      return hidden.value === "" ? null : Number(hidden.value);
+    },
+    // After ElvenAssist is switched on or off on this panel
+    refresh() {
+      setLimit(limit());
+    },
   };
+}
+
+// ElvenAssist on each panel: a switch in its title (the extension's icon).
+// Off: autofill.js leaves that panel as it is. Saved per world (eaOff, the
+// panels off)
+const ELVENASSIST_CARDS = { effects: "effects-card", premium: "premium-card", limits: "bounds-card" };
+
+function elvenAssistOff() {
+  try {
+    const v = JSON.parse(document.getElementById("eaOff")?.value || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function elvenAssistAllows(panel) {
+  return !elvenAssistOff().includes(panel);
+}
+window.cauldronElvenAssist = { allows: elvenAssistAllows };
+
+function initElvenAssistSwitches() {
+  const cfg = window.OPTIMIZER_CONFIG.elvenAssist;
+  const hidden = document.getElementById("eaOff");
+  if (!cfg || !hidden) return;
+  Object.entries(ELVENASSIST_CARDS).forEach(([panel, cls]) => {
+    const legend = document.querySelector(`.optimizer fieldset.${cls} > legend`);
+    if (!legend) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "ea-switch";
+    btn.innerHTML = `<img src="${cfg.icon}" alt="">`;
+    const show = () => {
+      const on = elvenAssistAllows(panel);
+      btn.classList.toggle("is-off", !on);
+      btn.setAttribute("aria-pressed", String(on));
+      btn.setAttribute("aria-label", on ? cfg.on : cfg.off);
+      btn.dataset.tip = on ? cfg.on : cfg.off;
+    };
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const off = new Set(elvenAssistOff());
+      if (off.has(panel)) off.delete(panel);
+      else off.add(panel);
+      hidden.value = JSON.stringify(Object.keys(ELVENASSIST_CARDS).filter((p) => off.has(p)));
+      show();
+      setUnsaved(true);
+      // The Witch Point slider ends at the world's Witch Points only with it on
+      if (panel === "limits" && window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
+    });
+    legend.append(btn);
+    show();
+  });
 }
 
 // Store current weights globally to preserve them across rebuilds
@@ -1081,6 +1160,7 @@ function initOptimizer() {
   initWitchPointLimit();
   initEffectsAll();
   initCardFolds();
+  initElvenAssistSwitches();
 
   rebuildWeights();
 

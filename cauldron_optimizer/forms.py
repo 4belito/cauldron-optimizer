@@ -292,6 +292,11 @@ class SearchForm(FlaskForm):
         default=MAX_PREMIUM_INGREDIENTS,
     )
     language = HiddenField()
+    # Panels ElvenAssist may not fill (JSON list, checked in routes.py). Not
+    # a HiddenField: hidden_tag() would render it a second time
+    elvenassist_off_json = StringField(default="[]")
+    # The world's Witch Points as ElvenAssist sent them; empty: not known
+    wp_owned = IntegerField(validators=[Optional(), NumberRange(min=1)])
 
     # Custom validation for effect weights JSON aligned with n_diploma
     def validate_effect_weights_json(self, field: Field) -> None:

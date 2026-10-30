@@ -26,6 +26,7 @@ from cauldron_optimizer.analytics import log_complement_run, log_optimization_ru
 from cauldron_optimizer.constants import (
     AVATARS,
     EFFECT_NAMES,
+    ELVENASSIST_PANELS,
     INGREDIENT_NAMES,
     LANGUAGES,
     MAX_PREMIUM_INGREDIENTS,
@@ -217,6 +218,8 @@ def index():
         form.n_premium.data = int(settings.n_premium)
         form.wp_max.data = settings.max_witch_points
         form.wonder_level.data = settings.wonder_level
+        form.elvenassist_off_json.data = json.dumps(settings.elvenassist_off or [])
+        form.wp_owned.data = settings.owned_witch_points
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
         form.excluded_effects_json.data = json.dumps(settings.excluded_effects or [])
         form.language.data = str(get_locale())
@@ -236,6 +239,10 @@ def index():
             form.n_premium.data = last.get("n_premium", settings.n_premium)
             form.wp_max.data = last.get("wp_max")
             form.wonder_level.data = last.get("wonder_level", settings.wonder_level)
+            form.elvenassist_off_json.data = json.dumps(
+                last.get("elvenassist_off", settings.elvenassist_off or [])
+            )
+            form.wp_owned.data = last.get("wp_owned", settings.owned_witch_points)
             form.effect_weights_json.data = json.dumps(last["effect_weights"])
             form.excluded_effects_json.data = json.dumps(last["excluded_effects"])
             unsaved = True
@@ -669,6 +676,18 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
                 _("Elige exactamente %(n)s ingredientes para evitar", n=n_premium)
             )
 
+    # Panels ElvenAssist may not fill: a list of known names (anything else
+    # is dropped)
+    try:
+        ea_off_raw = json.loads(form.elvenassist_off_json.data or "[]")
+    except ValueError:
+        ea_off_raw = []
+    elvenassist_off = (
+        [p for p in ELVENASSIST_PANELS if p in ea_off_raw]
+        if isinstance(ea_off_raw, list)
+        else []
+    )
+
     return {
         "effect_weights": [
             float(w) for w in getattr(form, "_parsed_effect_weights", [])
@@ -687,6 +706,9 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         # None: no Witch Point limit
         "wp_max": form.wp_max.data,
         "wonder_level": int(form.wonder_level.data or 0),
+        "elvenassist_off": elvenassist_off,
+        # None: not known
+        "wp_owned": form.wp_owned.data,
         "language": form.language.data,
     }
 
@@ -717,6 +739,8 @@ def save_settings():
             server.n_premium = s["n_premium"]
             server.max_witch_points = s["wp_max"]
             server.wonder_level = s["wonder_level"]
+            server.elvenassist_off = s["elvenassist_off"]
+            server.owned_witch_points = s["wp_owned"]
             server.updated_at = datetime.now(UTC)
     except SQLAlchemyError:
         return {"ok": False, "error": _("Error de base de datos")}, 500
@@ -1038,6 +1062,8 @@ def optimize():
             "n_premium": s["n_premium"],
             "wp_max": s["wp_max"],
             "wonder_level": s["wonder_level"],
+            "elvenassist_off": s["elvenassist_off"],
+            "wp_owned": s["wp_owned"],
         }
 
     return redirect(url_for("results"))
