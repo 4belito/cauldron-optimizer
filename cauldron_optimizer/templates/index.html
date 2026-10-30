@@ -155,7 +155,7 @@
         <!-- "Complete effects" mode (see complement.js): beside the diplomas,
              in the panel of the effects it completes -->
         <label class="complement-switch effects-mode-switch"
-               data-tip="{{ _('Busca los efectos que mejor completan tus efectos con peso hasta 10, probando todas las combinaciones de 4 ingredientes evitados. Los ajustes se cambian con el modo apagado') }}">
+               data-tip="{{ _('Busca los efectos que mejor completan tus efectos con peso hasta 10, probando todas las combinaciones de ingredientes premium evitados. Los ajustes se cambian con el modo apagado') }}">
           <input type="checkbox" id="complementToggle">
           <span class="complement-switch-track" aria-hidden="true"></span>
           <span class="effects-mode-text">{{ _("Complete effects") }}</span>
@@ -188,39 +188,62 @@
       <strong class="complement-title" hidden>{{ _("Completar efectos") }}</strong>
     </legend>
     <div class="card-body">
-      <div class="complement-panel-content" id="complementPanelContent" hidden>
-        <p class="complement-intro">
-          {{ _("Se usan tus efectos con peso (menos de 10); los demás se desmarcan. La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de 4 ingredientes evitados, y te muestra los que mejor los completan. Para cambiar los ajustes, apaga el modo.") }}
-        </p>
-        <p class="complement-hint" id="complementHint" role="status" aria-live="polite"></p>
-      </div>
-      <!-- The four chosen ingredients, at the top of the panel -->
+      <!-- How many ingredients to avoid (0-4, saved per world), picked on
+           the diamond like the goblets; the slots fill with the chosen ones
+           and the unused ones fade, so the panel keeps its size (see
+           updatePremiumLocks in optimizer.js) -->
       <div class="premium-counter" id="premiumCounter"
-           data-text-button="{{ _('Elige 4 ingredientes para evitar') }}">
-        <div class="premium-slots" aria-hidden="true">
-          {% for i in range(4) %}<span class="premium-slot"></span>{% endfor %}
-        </div>
-        <span class="premium-counter-text">{{ _("Elige los 4 ingredientes premium") }}</span>
-      </div>
-      <div class="ingredients-grid">
-        {% for name in ingredient_names %}
-          {# As in the game's cauldron: the ingredient on a green base. The base
-             holds a diamond that lights up when chosen; the name is a tooltip #}
-          <label class="ingredient-check" data-tip="{{ _(name) }}">
-            <img
-              class="ingredient-check-icon"
-              src="{{ url_for('static', filename='ingredients/ingredient' ~ loop.index ~ '.png') }}"
-              alt=""
-            >
-
-            <span class="ingredient-base">
-              <input class="ingredient-input" type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}"
-              {% if loop.index0 in premiums %}checked{% endif %}
-              aria-label="{{ _(name) }}">
-              <img class="ingredient-diamond" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
-            </span>
+           data-text-button="{{ _('Elige {n} ingredientes para evitar') }}"
+           data-text-many="{{ _('Evitar {n} ingredientes premium') }}"
+           data-text-one="{{ _('Evitar {n} ingrediente premium') }}">
+        {{ form.n_premium(type="hidden", id="nPremium") }}
+        <!-- The sentence, with the number picked inside it ({n}) -->
+        <span class="premium-counter-text">
+          <span id="premiumTextBefore"></span>
+          <label class="rounds-pick premium-pick"
+                 data-tip="{{ _('Cuántos ingredientes premium evitar (el juego tiene 4)') }}">
+            <img class="rounds-pick-icon" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
+            <span class="rounds-pick-value" id="premiumValue">{{ form.n_premium.data }}</span>
+            <span class="premium-pick-caret" aria-hidden="true">▾</span>
+            <select id="premiumSelect" class="rounds-pick-select" aria-label="{{ _('Ingredientes premium que evitar') }}">
+              {% for n in range(5) %}<option value="{{ n }}">{{ n }}</option>{% endfor %}
+            </select>
           </label>
-        {% endfor %}
+          <span id="premiumTextAfter"></span>
+        </span>
+        <span class="premium-slots" aria-hidden="true">
+          {% for i in range(4) %}<span class="premium-slot"></span>{% endfor %}
+        </span>
+      </div>
+      <!-- The grid's area: in "Completar efectos" mode its text takes the
+           grid's place (the bar above stays) -->
+      <div class="premium-grid-area">
+        <div class="complement-panel-content" id="complementPanelContent" hidden>
+          <p class="complement-intro">
+            {{ _("Se usan tus efectos con peso (menos de 10); los demás se desmarcan. La búsqueda prueba los efectos que faltan hasta 10, con todas las combinaciones de ingredientes premium evitados, y te muestra los que mejor los completan. Para cambiar los ajustes, apaga el modo.") }}
+          </p>
+          <p class="complement-hint" id="complementHint" role="status" aria-live="polite"></p>
+        </div>
+        <div class="ingredients-grid">
+          {% for name in ingredient_names %}
+            {# As in the game's cauldron: the ingredient on a green base. The base
+               holds a diamond that lights up when chosen; the name is a tooltip #}
+            <label class="ingredient-check" data-tip="{{ _(name) }}">
+              <img
+                class="ingredient-check-icon"
+                src="{{ url_for('static', filename='ingredients/ingredient' ~ loop.index ~ '.png') }}"
+                alt=""
+              >
+
+              <span class="ingredient-base">
+                <input class="ingredient-input" type="checkbox" name="premium_ingredients[]" value="{{ loop.index0 }}"
+                {% if loop.index0 in premiums %}checked{% endif %}
+                aria-label="{{ _(name) }}">
+                <img class="ingredient-diamond" src="{{ url_for('static', filename='ui/diamond.svg') }}" alt="">
+              </span>
+            </label>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </fieldset>
@@ -319,7 +342,7 @@
 </script>
 <!-- Witch Point prices, also used by the solver (solver.js) -->
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=94"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=99"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -330,7 +353,7 @@
     searchLabel: {{ _("Buscar Receta") | tojson }},
     searchTip: {{ _("Calcula la mejor receta para esta configuración") | tojson }},
     urls: {
-      worker: "{{ url_for('static', filename='js/complement-worker.js') }}",
+      worker: "{{ url_for('static', filename='js/complement-worker.js') }}?v=4",
       state: "{{ url_for('complement_state') }}",
       searchWorker: "{{ url_for('static', filename='js/search-worker.js') }}",
       save: "{{ url_for('complement_save') }}",
@@ -339,6 +362,13 @@
     },
     text: {
       savedProgress: {{ _("Progreso: {pct}%.") | tojson }},
+      depthPerRecipe: {{ _("≈ {time} por receta") | tojson }},
+      depthAllRecipes: {{ _("{recipes} recetas cada vez") | tojson }},
+      depthSets: {{ _("≈ {sets} de {total} combinaciones") | tojson }},
+      depthAllSets: {{ _("Las {total} combinaciones") | tojson }},
+      depthTotal: {{ _("Tiempo aproximado: {time} ({runs} búsquedas de receta).") | tojson }},
+      climbRuns: {{ _("Escalada {k} de {n}: {sets} combinaciones probadas") | tojson }},
+      sets: {{ _("Hay {sets} combinaciones de efectos posibles.") | tojson }},
       button: {{ _("Completar") | tojson }},
       viewResults: {{ _("Ver resultados") | tojson }},
       goTip: {{ _("Busca los efectos que mejor completan los elegidos") | tojson }},
@@ -358,7 +388,6 @@
       resumeHint: {{ _("Búsqueda con estos valores guardada al {pct}%: pulsa Continuar para seguir.") | tojson }},
       doneHint: {{ _("Búsqueda terminada con estos valores: pulsa Ver resultados.") | tojson }},
       runs: {{ _("{done} de {total} búsquedas ({pct}%)") | tojson }},
-      estimate: {{ _("Esta búsqueda necesita {total} búsquedas.") | tojson }},
       eta: {{ _("Quedan {eta}.") | tojson }},
       avg: {{ _("media") | tojson }},
       legend: {{ _("peor · media ± desviación · mejor") | tojson }},
@@ -370,21 +399,21 @@
       scores: {{ _("Puntuación media {avg} · mejor {best}") | tojson }},
       scoresChance: {{ _("Probabilidad media {avg}% · mejor {best}%") | tojson }},
       showRecipe: {{ _("Ver la mejor receta con estos efectos") | tojson }},
-      noResults: {{ _("Aún no hay resultados: cada combinación de efectos necesita 495 búsquedas.") | tojson }},
+      noResults: {{ _("Aún no hay resultados: cada combinación de efectos necesita {runs} búsquedas.") | tojson }},
     },
   };
 </script>
 <script src="{{ url_for('static', filename='js/solver.js') }}"></script>
 <!-- "Buscar receta" searches in the browser (falls back to the server) -->
-<script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/complement.js') }}?v=8"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}?v=4"></script>
+<script src="{{ url_for('static', filename='js/complement.js') }}?v=20"></script>
 <!-- Autofill API for browser extensions (see autofill.js) -->
 <script>
   window.CAULDRON_INTEGRATION = {
     selectWorldUrl: {{ url_for('select_world_integration') | tojson }},
   };
 </script>
-<script src="{{ url_for('static', filename='js/autofill.js') }}?v=6"></script>
+<script src="{{ url_for('static', filename='js/autofill.js') }}?v=7"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 
@@ -442,7 +471,7 @@
         <span id="complementCounts"></span> <span id="complementEta"></span>
       </p>
       <p class="complement-message" id="complementMessage" role="status" aria-live="polite"></p>
-      <!-- Complementary set being tested and its progress over 495 ingredient sets -->
+      <!-- Complementary set being tested and its progress over its ingredient sets -->
       <div class="complement-current" id="complementCurrent" hidden>
         <span class="complement-current-label">{{ _("Testing") }}:</span>
         <span class="complement-effects" id="complementCurrentEffects"></span>
@@ -484,10 +513,14 @@
   <div class="avatar-window search-window" role="dialog" aria-modal="true" aria-labelledby="searchWindowTitle">
     <div class="avatar-header">
       <h2 id="searchWindowTitle" class="avatar-title">{{ _("Receta óptima") }}</h2>
+      <!-- Stops the search (search.js) -->
+      <button type="button" class="avatar-close" data-search-close aria-label="{{ _('Cerrar') }}"></button>
     </div>
     <div class="avatar-body search-body">
       <p class="complement-status">{{ _("Comprobando todas las recetas posibles…") }}</p>
       <div class="complement-bar"><div class="complement-bar-fill" id="searchBarFill"></div></div>
+      <!-- Time left, from the share of recipes checked (search.js) -->
+      <p class="search-eta" id="searchEta" data-text="{{ _('Quedan {eta}.') }}"></p>
     </div>
   </div>
 </div>
@@ -514,6 +547,70 @@
         </button>
         <button type="button" id="complementConfirmNew" class="avatar-btn avatar-btn-cancel">
           <span>{{ _("Nueva búsqueda") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Starting a search: its two depths (complement.js, askSearch). Recipes:
+     the search of each recipe (as "Limitar búsqueda"); effects: which sets
+     of effects are tried. Each one a depth or "Óptima" (everything) -->
+<div id="complementExact" class="avatar-overlay" hidden>
+  <div class="avatar-window delete-window complement-confirm-window complement-depths-window" role="dialog" aria-modal="true" aria-labelledby="complementExactTitle">
+    <div class="avatar-header">
+      <h2 id="complementExactTitle" class="avatar-title">{{ _("Profundidad de la búsqueda") }}</h2>
+      <button type="button" class="avatar-close" data-exact-cancel aria-label="{{ _('Cancelar') }}"></button>
+    </div>
+    <div class="avatar-body delete-body">
+      <p class="delete-text">
+        {{ _("«Óptima» lo comprueba todo y garantiza el mejor resultado, pero puede tardar muchísimo. Con una profundidad suficiente (200 o más en recetas, 10 escaladas en efectos) casi siempre se encuentra el mismo resultado, mucho más rápido; con menos es más rápido pero menos fiable.") }}
+      </p>
+      <div class="exact-depths">
+        <div class="weight-card exact-depth-card" id="depthRecipeCard">
+          <div class="exact-depth-title">{{ _('Recetas') }}</div>
+          <div class="weight-top-row">
+            <input type="text" id="depthRecipeInput" class="exact-depth-input"
+                   inputmode="numeric" autocomplete="off" aria-label="{{ _('profundidad de búsqueda') }}">
+            <label class="exact-check" data-tip="{{ _('Comprueba todas las recetas posibles de cada combinación') }}">
+              <input type="checkbox" id="depthRecipeExact">
+              <span class="exact-check-box" aria-hidden="true">
+                <img src="{{ url_for('static', filename='checkbox.png') }}" alt="">
+                <img class="exact-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+              </span>
+              <span>{{ _("Óptima") }}</span>
+            </label>
+          </div>
+          <input type="range" id="depthRecipeSlider" min="1" step="1" aria-label="{{ _('profundidad de búsqueda') }}">
+          <div class="weight-label">{{ _('profundidad de búsqueda') }}</div>
+          <div class="exact-depth-note" id="depthRecipeNote"></div>
+        </div>
+        <div class="weight-card exact-depth-card" id="depthEffectsCard">
+          <div class="exact-depth-title">{{ _('Efectos') }}</div>
+          <div class="weight-top-row">
+            <input type="text" id="depthEffectsInput" class="exact-depth-input"
+                   inputmode="numeric" autocomplete="off" aria-label="{{ _('escaladas') }}">
+            <label class="exact-check" data-tip="{{ _('Prueba todas las combinaciones de efectos') }}">
+              <input type="checkbox" id="depthEffectsExact">
+              <span class="exact-check-box" aria-hidden="true">
+                <img src="{{ url_for('static', filename='checkbox.png') }}" alt="">
+                <img class="exact-check-mark" src="{{ url_for('static', filename='check_small.png') }}" alt="">
+              </span>
+              <span>{{ _("Óptima") }}</span>
+            </label>
+          </div>
+          <input type="range" id="depthEffectsSlider" min="1" step="1" aria-label="{{ _('escaladas') }}">
+          <div class="weight-label">{{ _('escaladas') }}</div>
+          <div class="exact-depth-note" id="depthEffectsNote"></div>
+        </div>
+      </div>
+      <p class="exact-depth-total" id="complementExactTotal" aria-live="polite"></p>
+      <div class="avatar-actions complement-exact-actions">
+        <button type="button" id="complementExactGo" class="avatar-btn avatar-btn-save">
+          <span>{{ _("Buscar") }}</span>
+        </button>
+        <button type="button" class="avatar-btn avatar-btn-cancel" data-exact-cancel>
+          <span>{{ _("Cancelar") }}</span>
         </button>
       </div>
     </div>

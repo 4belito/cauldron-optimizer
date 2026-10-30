@@ -214,6 +214,7 @@ def index():
         form.all_effects.data = bool(settings.all_effects)
         form.n_rounds.data = int(settings.n_rounds)
         form.min_effects.data = int(settings.min_effects)
+        form.n_premium.data = int(settings.n_premium)
         form.wp_max.data = settings.max_witch_points
         form.wonder_level.data = settings.wonder_level
         form.effect_weights_json.data = json.dumps(settings.effect_weights)
@@ -232,6 +233,7 @@ def index():
             form.all_effects.data = last.get("all_effects", False)
             form.n_rounds.data = last.get("n_rounds", settings.n_rounds)
             form.min_effects.data = last.get("min_effects", settings.min_effects)
+            form.n_premium.data = last.get("n_premium", settings.n_premium)
             form.wp_max.data = last.get("wp_max")
             form.wonder_level.data = last.get("wonder_level", settings.wonder_level)
             form.effect_weights_json.data = json.dumps(last["effect_weights"])
@@ -651,6 +653,9 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
     if not form.validate_on_submit():
         raise ValueError(first_form_error(form))
 
+    n_premium = (
+        MAX_PREMIUM_INGREDIENTS if form.n_premium.data is None else form.n_premium.data
+    )
     premium_ingr: list[int] = []
     if include_premium:
         premium_ingr = sorted(
@@ -658,13 +663,10 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         )
         if any(i < 0 or i >= len(INGREDIENT_NAMES) for i in premium_ingr):
             raise ValueError(_("Ingredientes premium no válidos"))
-        # The game always avoids exactly this many
-        if len(premium_ingr) != MAX_PREMIUM_INGREDIENTS:
+        # Exactly as many as the world avoids
+        if len(premium_ingr) != n_premium:
             raise ValueError(
-                _(
-                    "Elige exactamente %(n)s ingredientes para evitar",
-                    n=MAX_PREMIUM_INGREDIENTS,
-                )
+                _("Elige exactamente %(n)s ingredientes para evitar", n=n_premium)
             )
 
     return {
@@ -673,6 +675,7 @@ def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
         ],
         "excluded_effects": getattr(form, "_parsed_excluded_effects", []),
         "premium_ingr": premium_ingr,
+        "n_premium": n_premium,
         # Never None here: the fields are DataRequired
         "alpha_ub": int(form.alpha_UB.data or 0),
         "prob_ub": int(form.prob_UB.data or 0),
@@ -711,6 +714,7 @@ def save_settings():
             server.all_effects = s["all_effects"]
             server.n_rounds = s["n_rounds"]
             server.min_effects = s["min_effects"]
+            server.n_premium = s["n_premium"]
             server.max_witch_points = s["wp_max"]
             server.wonder_level = s["wonder_level"]
             server.updated_at = datetime.now(UTC)
@@ -735,9 +739,13 @@ def reset_settings():
 # "Complete effects" search: runs in the browser, progress saved per world
 # ---------------------------------------------------------------------------
 
-# A saved state holds 3 lists of 5 results (~3 KB); anything far bigger is
-# not ours
-MAX_COMPLEMENT_STATE_BYTES = 50_000
+# A saved state holds 3 lists of 5 results (~3 KB) and, climbing, the mean
+# of every set tried (~40 bytes each: tens of thousands of sets fit);
+# anything far bigger is not ours
+MAX_COMPLEMENT_STATE_BYTES = 8_000_000
+# Climbs of the effects search (complement.js maxEffectDepth: up to as
+# many as would try every set)
+MAX_EFFECT_DEPTH = 1000
 
 
 def clean_complement_params(raw: Any) -> dict[str, Any]:
@@ -755,6 +763,11 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         "alpha_ub": int(p["alpha_ub"]),
         "prob_ub": int(p["prob_ub"]),
         "depth": int(p["depth"]),
+        # "Óptima": exact runs; searches saved before it have none: off
+        "exact": p.get("exact") is True,
+        # Effects: every set (searches saved before the climb), or climbing
+        "effect_exact": p.get("effect_exact") is not False,
+        "effect_depth": int(p.get("effect_depth") or 1),
         # Searches saved before the Witch Point limit have neither: no limit
         "wp_max": None if p.get("wp_max") is None else int(p["wp_max"]),
         "wonder_level": int(p.get("wonder_level") or 0),
@@ -762,6 +775,8 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         "n_rounds": int(p.get("n_rounds") or 0),
         # ...and at least this many wanted effects (0, or none saved: all)
         "min_effects": int(p.get("min_effects") or 0),
+        # Avoided ingredients per run; searches saved before it avoided 4
+        "n_avoid": int(p.get("n_avoid", MAX_PREMIUM_INGREDIENTS)),
     }
     ok = (
         MIN_CHECKED_EFFECTS <= n <= len(EFFECT_NAMES)
@@ -773,10 +788,12 @@ def clean_complement_params(raw: Any) -> dict[str, Any]:
         and 1 <= params["alpha_ub"] <= CauldronOptimizer.sum_ingredients
         and 1 <= params["prob_ub"] <= 100
         and 1 <= params["depth"] <= MAX_STARTS
+        and 1 <= params["effect_depth"] <= MAX_EFFECT_DEPTH
         and (params["wp_max"] is None or params["wp_max"] >= 1)
         and 0 <= params["wonder_level"] < len(WONDER_REDUCTION)
         and 0 <= params["n_rounds"] <= MAX_ROUNDS
         and -1 <= params["min_effects"] <= MAX_ROUNDS
+        and 0 <= params["n_avoid"] <= MAX_PREMIUM_INGREDIENTS
     )
     if not ok:
         raise ValueError
@@ -1018,6 +1035,7 @@ def optimize():
             "all_effects": s["all_effects"],
             "n_rounds": s["n_rounds"],
             "min_effects": s["min_effects"],
+            "n_premium": s["n_premium"],
             "wp_max": s["wp_max"],
             "wonder_level": s["wonder_level"],
         }

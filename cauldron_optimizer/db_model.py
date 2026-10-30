@@ -147,6 +147,10 @@ class Server(Base):
     min_effects: Mapped[int] = mapped_column(
         Integer, nullable=False, default=-1, server_default="-1"
     )
+    # How many premium ingredients the recipe avoids (0 to 4; the game has 4)
+    n_premium: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=4, server_default="4"
+    )
 
     user: Mapped["User"] = relationship("User", back_populates="servers")
 

@@ -418,7 +418,9 @@ class CauldronSolver {
   // Guaranteed optimum: checks every recipe (each free ingredient 0..alphaUB,
   // total <= 25, within the Witch Point limit). With 4 ingredients avoided that is ~12-14 million recipes,
   // about 1-2 s. Ties keep the first recipe found, so the same settings
-  // always give the same recipe. onProgress(fraction) is called now and then.
+  // always give the same recipe. onProgress(fraction) is called now and then,
+  // with the share of the recipes checked (or skipped by the Witch Point
+  // limit), so the time left can be estimated.
   // Returns {score, recipe} (recipe: 12 amounts)
   exact(onProgress = () => {}) {
     const { n, m, Vc, Bc, wpMax } = this;
@@ -429,6 +431,23 @@ class CauldronSolver {
     let bestVal = -1e18;
     let bestAlpha = new Int32Array(n);
     const self = this;
+
+    // count[j][s]: recipes of ingredients j..n-1 (each 0..ub) using at most
+    // s units; count[0][SUM_INGREDIENTS] is all of them
+    const count = Array.from({ length: n + 1 }, () => new Float64Array(SUM_INGREDIENTS + 1));
+    count[n].fill(1);
+    for (let j = n - 1; j >= 0; j--) {
+      for (let s = 0; s <= SUM_INGREDIENTS; s++) {
+        let c = 0;
+        for (let x = 0; x <= Math.min(ub, s); x++) c += count[j + 1][s - x];
+        count[j][s] = c;
+      }
+    }
+    const all = count[0][SUM_INGREDIENTS];
+    // Progress is counted on the first four ingredients: steps of well
+    // under 1% of the recipes, at a negligible cost
+    const level = Math.min(n, 4) - 1;
+    let checked = 0;
 
     function visit(j, total) {
       if (j === n) {
@@ -445,9 +464,19 @@ class CauldronSolver {
       for (; x <= maxHere; x++) {
         alpha[j] = x;
         // A unit more never costs less: neither will the next amounts
-        if (x > 0 && wpMax < Infinity && self.witchPoints(alpha) > wpMax) break;
+        if (x > 0 && wpMax < Infinity && self.witchPoints(alpha) > wpMax) {
+          // The amounts left are skipped: they count as checked
+          if (j <= level) {
+            for (let y = x; y <= maxHere; y++) checked += count[j + 1][SUM_INGREDIENTS - total - y];
+            onProgress(checked / all);
+          }
+          break;
+        }
         visit(j + 1, total + x);
-        if (j === 0) onProgress((x + 1) / (maxHere + 1));
+        if (j === level) {
+          checked += count[j + 1][SUM_INGREDIENTS - total - x];
+          onProgress(checked / all);
+        }
         // next amount: one more unit of ingredient j
         for (let i = 0; i < m; i++) {
           Sv[i] += Vc[j][i];

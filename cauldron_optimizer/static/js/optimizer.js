@@ -187,29 +187,64 @@ function updateHiddenExcluded(n) {
   excludedHidden.value = JSON.stringify(excluded);
 }
 
-// The game always avoids exactly this many premium ingredients: once they
-// are chosen the rest lock, and "Buscar receta" waits until they are
+// The game has 4 premium ingredients a week; the world avoids 0 to 4 of
+// them (its n_premium setting, saved). Once that many are chosen the rest
+// lock, and "Buscar receta" waits until they are
 const MAX_PREMIUM_INGREDIENTS = 4;
+
+function nPremium() {
+  const el = document.getElementById("nPremium");
+  const n = el ? parseInt(el.value, 10) : NaN;
+  return Number.isInteger(n) ? Math.min(MAX_PREMIUM_INGREDIENTS, Math.max(0, n)) : MAX_PREMIUM_INGREDIENTS;
+}
+
+// Set how many to avoid; chosen ones beyond the new number are let go
+// (the last chosen first)
+function setNPremium(n) {
+  const el = document.getElementById("nPremium");
+  if (!el) return;
+  el.value = Math.min(MAX_PREMIUM_INGREDIENTS, Math.max(0, n));
+  const chosen = [...document.querySelectorAll("input[name='premium_ingredients[]']")]
+    .filter((cb) => cb.checked);
+  chosen.slice(nPremium()).forEach((cb) => {
+    cb.checked = false;
+  });
+  updatePremiumLocks();
+}
+
+function initPremiumSelect() {
+  const select = document.getElementById("premiumSelect");
+  if (!select) return;
+  select.addEventListener("change", (e) => {
+    e.stopPropagation(); // the hidden field below is the setting
+    setNPremium(Number(select.value));
+    document.getElementById("nPremium").dispatchEvent(new Event("change", { bubbles: true }));
+  });
+}
 
 function updatePremiumLocks() {
   const inputs = [...document.querySelectorAll("input[name='premium_ingredients[]']")];
   const chosen = inputs.filter((el) => el.checked);
-  const full = chosen.length >= MAX_PREMIUM_INGREDIENTS;
+  const full = chosen.length >= nPremium();
   inputs.forEach((el) => {
-    const isLocked = full && !el.checked;
+    // "Completar efectos" keeps them all off (complement.js)
+    const isLocked = complementMode || (full && !el.checked);
     el.disabled = isLocked;
     el.closest(".ingredient-check").classList.toggle("locked", isLocked);
   });
   updatePremiumCounter(chosen);
 }
 
-// Four slots that fill with the chosen ingredients, and the search button
-// enabled only with exactly four.
+// One slot per ingredient to avoid, filled with the chosen ones, and the
+// search button enabled only with exactly that many
 function updatePremiumCounter(chosen) {
   const counter = document.getElementById("premiumCounter");
   if (!counter) return;
+  const n = nPremium();
   const slots = counter.querySelectorAll(".premium-slot");
   slots.forEach((slot, k) => {
+    // Beyond the number to avoid: faded, not removed (the panel keeps its size)
+    slot.classList.toggle("unused", k >= n);
     const el = chosen[k];
     const icon = el && el.closest(".ingredient-check").querySelector(".ingredient-check-icon");
     slot.style.backgroundImage = icon ? `url("${icon.src}")` : "";
@@ -217,9 +252,19 @@ function updatePremiumCounter(chosen) {
     if (el) slot.dataset.tip = el.closest(".ingredient-check").dataset.tip;
     else delete slot.dataset.tip;
   });
-  const missing = MAX_PREMIUM_INGREDIENTS - chosen.length;
-  counter.classList.toggle("is-complete", missing <= 0);
-  premiumProblem = missing !== 0 ? counter.dataset.textButton : null;
+  const select = document.getElementById("premiumSelect");
+  if (select) select.value = String(n);
+  document.getElementById("premiumValue").textContent = n;
+  const d = counter.dataset;
+  // The sentence around the number: "Evitar {n} ingredientes premium"
+  const [before, after = ""] = (n === 1 ? d.textOne : d.textMany).split("{n}");
+  document.getElementById("premiumTextBefore").textContent = before.trim();
+  document.getElementById("premiumTextAfter").textContent = after.trim();
+  const missing = n - chosen.length;
+  // In "Completar efectos" no ingredient is chosen (every combination is
+  // tried): the bar only says how many, so it reads as done
+  counter.classList.toggle("is-complete", missing <= 0 || complementMode);
+  premiumProblem = missing !== 0 ? d.textButton.replace("{n}", n) : null;
   updateSearchButton();
 }
 
@@ -825,6 +870,13 @@ window.cauldronForm = {
         el.dispatchEvent(new Event("input", { bubbles: true }));
       }
     );
+    // "Óptima" as the search had it (searches saved before it: off). After
+    // the depth, whose code-set value leaves it as it is
+    const exact = document.getElementById("exactSearch");
+    if (exact) {
+      exact.checked = Boolean(p.exact);
+      exact.dispatchEvent(new Event("change"));
+    }
     // The school's level first: the limit is priced with it (searches saved
     // before it have none: not built)
     const wpLimit = window.cauldronWitchPoints;
@@ -838,6 +890,8 @@ window.cauldronForm = {
     dom.nDiploma.dispatchEvent(new Event("input"));
     // At least k: after the weights, which set its maximum
     if (all) all.setMinEffects(p.n_rounds ? p.min_effects || 0 : 0);
+    // Avoided ingredients per run (searches saved before it: 4)
+    setNPremium(p.n_avoid ?? MAX_PREMIUM_INGREDIENTS);
   },
   // The effects the user wants (checked), with their weights
   chosen() {
@@ -973,7 +1027,7 @@ window.cauldronSaveSettings = saveSettings;
 // user typed the new number (so the weights are rebuilt)
 function initDiplomaSteppers() {
   const input = window.OPTIMIZER_CONFIG.dom.nDiploma;
-  const buttons = document.querySelectorAll(".step-btn");
+  const buttons = document.querySelectorAll(".diploma-input .step-btn");
   const min = () => Number(input.min || 1);
   const max = () => Number(input.max || window.OPTIMIZER_CONFIG.effectNames.length);
 
@@ -1031,6 +1085,7 @@ function initOptimizer() {
   rebuildWeights();
 
   // Premium ingredients: lock unchecked ones once the maximum is reached
+  initPremiumSelect();
   document
     .querySelectorAll("input[name='premium_ingredients[]']")
     .forEach((el) => el.addEventListener("change", updatePremiumLocks));

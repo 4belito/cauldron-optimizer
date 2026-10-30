@@ -65,7 +65,7 @@ EFFECT_NAMES = [
 ]
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
-MAX_STARTS = 200
+MAX_STARTS = 1000
 # "Todos" mode: goblets (brews) the wanted effects must come out in
 MAX_ROUNDS = 5
 # With this many or fewer effects checked, they cannot be unchecked (as in the game)

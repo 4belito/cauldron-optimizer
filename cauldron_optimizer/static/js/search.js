@@ -16,7 +16,15 @@ function initBrowserSearch() {
   const toggle = document.getElementById("complementToggle");
   const modal = document.getElementById("searchWindow");
   const fill = document.getElementById("searchBarFill");
+  const etaEl = document.getElementById("searchEta");
   let busy = false;
+  let running = null; // the search's worker while it runs
+
+  // "12 s", "1 min 20 s"
+  const formatSeconds = (sec) => {
+    const s = Math.max(1, Math.round(sec));
+    return s < 60 ? `${s} s` : `${Math.floor(s / 60)} min${s % 60 ? ` ${s % 60} s` : ""}`;
+  };
 
   const clearRecipe = () => {
     recipeInput.value = "";
@@ -64,6 +72,7 @@ function initBrowserSearch() {
     modal.hidden = !on;
     document.body.classList.toggle("avatar-open", on);
     fill.style.width = "0%";
+    if (etaEl) etaEl.textContent = "";
   }
 
   form.addEventListener("submit", (e) => {
@@ -87,14 +96,24 @@ function initBrowserSearch() {
     if (exact) showWindow(true);
 
     const worker = new Worker(C.urls.searchWorker);
+    running = worker;
+    const started = Date.now();
     const send = () => {
       worker.terminate();
+      running = null;
       busy = false;
       form.submit(); // no submit event: goes straight to the server
     };
     worker.onmessage = (msg) => {
       if (msg.data.type === "progress") {
-        fill.style.width = `${Math.round(100 * msg.data.fraction)}%`;
+        const f = msg.data.fraction;
+        fill.style.width = `${Math.round(100 * f)}%`;
+        // Time left: the time so far scaled by the share still to check.
+        // Only once it is a fair guess, and not for searches of a moment
+        const secs = (Date.now() - started) / 1000;
+        if (etaEl && f >= 0.05 && secs >= 1 && f < 1) {
+          etaEl.textContent = etaEl.dataset.text.replace("{eta}", formatSeconds((secs * (1 - f)) / f));
+        }
         return;
       }
       fill.style.width = "100%";
@@ -109,6 +128,19 @@ function initBrowserSearch() {
     };
     const { depth, ...solverConfig } = cfg;
     worker.postMessage({ B: C.matrices.B, V: C.matrices.V, config: solverConfig, exact, depth });
+  });
+
+  // The window's X (or Escape): stop the search, nothing is sent
+  function cancel() {
+    if (running) running.terminate();
+    running = null;
+    busy = false;
+    clearRecipe();
+    showWindow(false);
+  }
+  modal.querySelector("[data-search-close]")?.addEventListener("click", cancel);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) cancel();
   });
 
   // Coming back with the browser's back button: no window left open

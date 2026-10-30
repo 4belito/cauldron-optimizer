@@ -611,8 +611,9 @@ button:disabled[data-tip] {
 }
 
 /* In complete mode, the premium panel keeps its exact footprint: the
-   ingredient grid remains in layout but becomes the message surface. */
-.premium-card .card-body {
+   ingredient grid remains in layout but becomes the message surface (the
+   bar above it, how many to avoid, stays) */
+.premium-grid-area {
   position: relative;
 }
 
@@ -1442,7 +1443,8 @@ button:disabled[data-tip] {
   line-height: 1.4;
 }
 
-/* ---- Exactly 4 avoided ingredients: slots that fill with the chosen ---- */
+/* ---- 0 to 4 avoided ingredients, picked on the diamond: one slot each,
+   filled with the chosen; the unused ones fade ---- */
 .premium-counter {
   display: flex;
   align-items: center;
@@ -1466,6 +1468,27 @@ button:disabled[data-tip] {
 
 .premium-counter {
   gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.premium-pick-caret {
+  font-size: 0.7rem;
+  line-height: 1;
+  color: #f1dfb8;
+}
+
+/* The sentence with the number picked inside it */
+.premium-card .premium-counter-text {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.premium-slot.unused {
+  opacity: 0.3;
+  border-style: dotted;
 }
 
 /* Diamond after the title: premium, as the game marks it */
@@ -1506,8 +1529,10 @@ button:disabled[data-tip] {
   background-color: #f6ead0;
 }
 
-/* "Completar efectos" mode uses this panel for its own content */
-.premium-card.is-complement .premium-counter {
+/* "Completar efectos" mode: the bar stays (each run avoids that many, every
+   combination is tried), without the slots for chosen ingredients; hidden,
+   not removed, so the bar keeps its size */
+.premium-card.is-complement .premium-slots {
   visibility: hidden;
 }
 
@@ -1899,6 +1924,103 @@ button:disabled[data-tip] {
   box-shadow: 0 0 0 2px rgba(226, 184, 90, 0.9);
 }
 
+/* "Óptima" warning: the depth to search with instead, as the Witch Point
+   box (a number that can be typed, a slider, a label) with its time */
+.exact-depth-card {
+  align-self: stretch;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+
+.exact-depth-card .weight-top-row {
+  gap: 0.75rem;
+}
+
+.exact-depth-input {
+  width: 6rem;
+  min-width: 0;
+  padding: 0.05rem 0.35rem;
+  border: 1px solid rgba(184, 154, 99, 0.7);
+  border-radius: 0.3rem;
+  background: rgba(255, 250, 235, 0.6);
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #51200d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.exact-depth-input:hover {
+  border-color: #b89a63;
+}
+
+.exact-depth-input:focus-visible {
+  outline: none;
+  border-color: #b89a63;
+  box-shadow: 0 0 0 2px rgba(226, 184, 90, 0.9);
+}
+
+.exact-depth-time {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #51200d;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.exact-depth-card input[type="range"] {
+  width: 100%;
+}
+
+/* Search depths window: the recipes' box and the effects' box, side by
+   side (stacked when narrow), each with its "Óptima" */
+.complement-depths-window {
+  width: min(40rem, 100%);
+}
+
+.exact-depths {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.75rem;
+}
+
+.exact-depths .exact-depth-card {
+  gap: 0.35rem;
+}
+
+.exact-depth-title {
+  font-weight: 800;
+  color: #51200d;
+}
+
+.exact-depths .weight-top-row {
+  justify-content: space-between;
+}
+
+.exact-depth-note {
+  min-height: 1.3em;
+  font-size: 0.85rem;
+  color: #6b3a1f;
+  font-variant-numeric: tabular-nums;
+}
+
+/* "Óptima": ∞ in the box and the slider dimmed (still usable: moving it
+   turns "Óptima" off) */
+.exact-depth-card.is-exact input[type="range"],
+.exact-depth-card.is-exact .weight-label {
+  opacity: 0.45;
+}
+
+.exact-depth-total {
+  margin: 0;
+  font-weight: 700;
+  color: #51200d;
+  text-align: center;
+}
+
 /* Progress window of the exact search */
 .search-window {
   width: min(26rem, 100%);
@@ -1908,6 +2030,14 @@ button:disabled[data-tip] {
   gap: 0.6rem;
   padding-block: 1rem 1.4rem;
   text-align: center;
+}
+
+/* Time left under the bar; its line is kept so the window does not grow */
+.search-eta {
+  min-height: 1.3em;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #51200d;
 }
 
 /* Results page */

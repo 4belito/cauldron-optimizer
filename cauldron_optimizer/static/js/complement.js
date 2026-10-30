@@ -2,8 +2,9 @@
 // the rest unchecked, and the form is locked while the mode is on: the
 // settings are changed with the mode off. A long
 // search (complement-worker.js, in the browser) finds the complementary
-// effects that complete them to 10, trying all 495 sets of 4 avoided
-// ingredients for each. The search runs in a window opened by "Completar";
+// effects that complete them to 10, trying every set of avoided premium
+// ingredients for each (495 sets of 4 of the 12, the default). The search
+// runs in a window opened by "Completar";
 // stopping it saves the progress (per world) so "Completar" continues later.
 // Uses window.cauldronForm (optimizer.js) and window.COMPLEMENT (index.html).
 
@@ -12,7 +13,7 @@ function initComplement() {
   if (!C) return;
   const T = C.text;
   const MAX_CHOSEN = 9;
-  const RUNS_PER_SET = 495;
+  const N_INGREDIENTS = 12;
   const SHOWN = 5;
 
   const $ = (id) => document.getElementById(id);
@@ -64,6 +65,17 @@ function initComplement() {
     return `${Math.max(1, m)} min`;
   }
 
+  // Estimates are rough: two significant digits at most ("1900 d", "2.5 d")
+  function roughDuration(sec) {
+    if (!isFinite(sec) || sec < 2 * 3600) return formatDuration(sec);
+    const h = sec / 3600;
+    if (h < 48) return `${Math.round(h)} h`;
+    const d = h / 24;
+    if (d < 10) return `${(Math.round(d * 10) / 10).toLocaleString()} d`;
+    const digits = 10 ** Math.max(0, Math.floor(Math.log10(d)) - 1);
+    return `${(Math.round(d / digits) * digits).toLocaleString()} d`;
+  }
+
   // ---- Current parameters from the page ----
   function currentParams() {
     const { n, effects, weights } = window.cauldronForm.chosen();
@@ -75,12 +87,16 @@ function initComplement() {
       alpha_ub: val("alpha_UB"),
       prob_ub: val("prob_UB"),
       depth: val("n_starts"),
+      // "Óptima": every run checks every recipe (the depth is not used)
+      exact: Boolean(document.getElementById("exactSearch")?.checked),
       wp_max: val("wp_max") || null, // empty: no limit
       wonder_level: val("wonder_level"),
       // "Todos en": goblets of its objective (0: scored by the weights)
       n_rounds: document.getElementById("allEffects")?.checked ? val("n_rounds") : 0,
       // ...at least this many of the wanted effects (0: all that can be)
       min_effects: document.getElementById("allEffects")?.checked ? val("min_effects") : 0,
+      // Premium ingredients avoided in each run (the world's setting)
+      n_avoid: nPremium(),
     };
   }
 
@@ -92,7 +108,34 @@ function initComplement() {
     return null;
   }
 
-  const totalRuns = (p) => binom(p.n - p.effects.length, 10 - p.effects.length) * RUNS_PER_SET;
+  // Runs per complementary set: one per set of avoided ingredients
+  // (searches saved before the setting avoided 4)
+  const runsPerSet = (p) => binom(N_INGREDIENTS, p && p.n_avoid !== undefined ? p.n_avoid : 4);
+  // Sets of complementary effects, all of them
+  const setsOf = (p) => binom(p.n - p.effects.length, 10 - p.effects.length);
+  // Effects search by climbing (effect_exact false): climbs of about
+  // SETS_PER_CLIMB times a set's neighbors (one effect swapped for another)
+  // each, measured; the worker refines it as climbs finish
+  const SETS_PER_CLIMB = 1;
+  const DEFAULT_EFFECT_DEPTH = 10;
+  // Most climbs worth choosing: as many as would try every set (more is
+  // what "Óptima" does), at least 10 and at most 1000 (routes.py)
+  const maxEffectDepth = (p) => {
+    const r = 10 - p.effects.length;
+    const neighbors = r * (p.n - p.effects.length - r);
+    const cover = neighbors ? Math.ceil(setsOf(p) / (SETS_PER_CLIMB * neighbors)) : 1;
+    return Math.min(1000, Math.max(DEFAULT_EFFECT_DEPTH, cover));
+  };
+  const estimatedSets = (p, climbs) => {
+    const r = 10 - p.effects.length;
+    const neighbors = r * (p.n - p.effects.length - r);
+    return Math.min(setsOf(p), climbs * SETS_PER_CLIMB * neighbors);
+  };
+  // Runs of a search: one per set tried and set of avoided ingredients
+  // (searches saved before the climb tried every set)
+  const totalRuns = (p) => Math.round(
+    (p.effect_exact === false ? estimatedSets(p, p.effect_depth) : setsOf(p)) * runsPerSet(p)
+  );
 
   // ---- Mode on / off ----
   // The form is locked for the whole mode: it searches with the settings it
@@ -105,6 +148,8 @@ function initComplement() {
     $("boundsContainer"),
     // Witch Point limit and school level: part of the search too
     $("wpCard"),
+    // How many premium ingredients each run avoids
+    $("premiumCounter"),
   ];
 
   function setLocked(locked) {
@@ -145,8 +190,9 @@ function initComplement() {
       if (on) el.checked = false;
       el.disabled = on;
     });
-    // Back to the normal search: the 4-ingredient counter and its button
-    if (!on && typeof updatePremiumLocks === "function") updatePremiumLocks();
+    // The bar follows the mode: done-looking while on (no ingredient is
+    // chosen there), the normal counter and its button when off
+    if (typeof updatePremiumLocks === "function") updatePremiumLocks();
     // Off again: Save follows the effects counter (optimizer.js)
     if (on) saveSettingsBtn.disabled = true;
     else updateSaveButton();
@@ -167,11 +213,15 @@ function initComplement() {
   // Same search settings? (weights compared to 2 decimals, as the sliders)
   const sameParams = (a, b) => {
     const key = (p) => JSON.stringify([
-      p.n, p.effects, p.weights.map((w) => Math.round(w * 100)), p.alpha_ub, p.prob_ub, p.depth,
+      p.n, p.effects, p.weights.map((w) => Math.round(w * 100)), p.alpha_ub, p.prob_ub,
+      // With "Óptima" the depth is not used (searches saved before it: off)
+      p.exact ? "exact" : p.depth,
       // Searches saved before the Witch Point limit have none
       p.wp_max ?? null, p.wp_max ? p.wonder_level ?? 0 : 0,
       // ...nor before "Todos en": scored by the weights
       p.n_rounds || 0, p.n_rounds ? p.min_effects || 0 : 0,
+      // ...nor before the number of avoided ingredients: 4
+      p.n_avoid ?? 4,
     ]);
     return key(a) === key(b);
   };
@@ -237,14 +287,20 @@ function initComplement() {
     openWindow(win);
     worker = new Worker(C.urls.worker);
     runStart = { time: Date.now(), done: state.done };
+    lastAutoSave = Date.now();
     worker.onmessage = (e) => {
       // The worker does not know the id: keep it in the state we save
       state = { ...e.data.state, run_id: runId };
       const secs = (Date.now() - runStart.time) / 1000;
-      if (secs > 2) rate = (state.done - runStart.done) / secs;
+      if (secs > 2) rate = (doneSoFar(state) - runStart.done) / secs;
       if (e.data.type === "done") {
         worker = null;
         save();
+      } else if (Date.now() - lastAutoSave >= AUTOSAVE_MS && !saving) {
+        // Saved now and then while running: closing the tab (or a crash)
+        // loses at most this much
+        lastAutoSave = Date.now();
+        save({ quiet: true });
       }
       render();
     };
@@ -261,9 +317,14 @@ function initComplement() {
     render();
   }
 
-  async function save() {
+  // Quiet saves (while running) show nothing unless they fail
+  const AUTOSAVE_MS = 60_000;
+  let lastAutoSave = 0;
+  let saving = false;
+  async function save({ quiet = false } = {}) {
     if (!state) return;
-    msgEl.textContent = "";
+    if (!quiet) msgEl.textContent = "";
+    saving = true;
     try {
       const resp = await fetch(C.urls.save, {
         method: "POST",
@@ -276,11 +337,15 @@ function initComplement() {
       });
       const data = await resp.json().catch(() => ({}));
       if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
+      // A quiet save only clears an earlier failure's message
+      if (!quiet) msgEl.textContent = state.done >= state.total ? "" : T.saved;
+      else if (msgEl.classList.contains("is-error")) msgEl.textContent = "";
       msgEl.classList.remove("is-error");
-      msgEl.textContent = state.done >= state.total ? "" : T.saved;
     } catch (err) {
       msgEl.classList.add("is-error");
       msgEl.textContent = err.message;
+    } finally {
+      saving = false;
     }
     render();
   }
@@ -333,8 +398,220 @@ function initComplement() {
       render();
       return;
     }
-    start(p, null);
-    setLocked(true);
+    // The search's two depths are chosen first (askSearch starts it)
+    askSearch(p);
+  }
+
+  // ---- "Óptima" on: warn how long it takes, offer the depth search ----
+  // Speeds measured here, on this device, with the search's own settings
+  // (~0.1 s): exact runs with 6 free ingredients give the recipes checked
+  // per second; a short depth search gives the time per start
+  function measureSpeeds(p) {
+    const chosen = new Set(p.effects);
+    const others = [];
+    for (let i = 0; i < p.n; i++) if (!chosen.has(i)) others.push(i);
+    // A random set of complementary effects (the search's cost varies a
+    // little from one set to another)
+    const randomComp = () => {
+      const a = others.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a.slice(0, 10 - p.effects.length);
+    };
+    let comp = randomComp();
+    const solverFor = (premiumIngr) => new CauldronSolver({
+      B: C.matrices.B,
+      V: C.matrices.V,
+      effects: [...p.effects, ...comp],
+      weights: [...p.weights, ...comp.map(() => 0)],
+      premiumIngr,
+      alphaUB: p.alpha_ub,
+      probUB: p.prob_ub,
+      // The Witch Point limit is checked on every recipe: part of the cost
+      wpMax: p.wp_max,
+      wonderLevel: p.wonder_level,
+      nRounds: p.n_rounds || 0,
+      minEffects: p.min_effects || 0,
+    });
+    const timed = (f) => {
+      const t = performance.now();
+      f();
+      return Math.max(performance.now() - t, 1) / 1000;
+    };
+    // A first, untimed run of each warms the JavaScript engine up: the
+    // first calls are several times slower than the long search's
+    const small = { ...p, n_avoid: 6 };
+    solverFor([0, 1, 2, 3, 4, 5, 6]).exact();
+    const exactSecs = timed(() => solverFor([0, 1, 2, 3, 4, 5]).exact());
+    const avoid = Array.from({ length: p.n_avoid ?? 4 }, (_, i) => i);
+    solverFor(avoid).multistart(30);
+    // Median of five sets of 60 starts, each with other complementary
+    // effects (one odd timing does not move it)
+    const starts = 60;
+    const times = [];
+    for (let k = 0; k < 5; k++) {
+      comp = randomComp();
+      times.push(timed(() => solverFor(avoid).multistart(starts)));
+    }
+    times.sort((a, b) => a - b);
+    const depthSecs = times[2];
+    return {
+      recipesPerSec: recipesPerRun(small) / exactSecs,
+      secsPerStart: depthSecs / starts,
+    };
+  }
+
+  // Recipes an exact run checks: each free ingredient 0..alpha_ub, total <= 25
+  function recipesPerRun(p) {
+    const nFree = N_INGREDIENTS - (p.n_avoid ?? 4);
+    const ub = Math.min(p.alpha_ub, 25);
+    let count = new Array(26).fill(1);
+    for (let j = 0; j < nFree; j++) {
+      const next = new Array(26).fill(0);
+      for (let t = 0; t <= 25; t++) {
+        for (let x = 0; x <= Math.min(ub, t); x++) next[t] += count[t - x];
+      }
+      count = next;
+    }
+    return count[25];
+  }
+
+  // A depth box of the window (as the depth of "Limitar búsqueda"): a
+  // number typed or slid, or "Óptima" (∞, the slider dimmed; typing or
+  // sliding turns it off). onChange() after every change
+  function depthBox(prefix, { max, value, exact, onChange }) {
+    const card = $(`${prefix}Card`);
+    const input = $(`${prefix}Input`);
+    const slider = $(`${prefix}Slider`);
+    const check = $(`${prefix}Exact`);
+    slider.max = String(max);
+    const clamp = (v) => Math.min(max, Math.max(1, Math.round(Number(v)) || 1));
+    const box = { depth: clamp(value), exact: !!exact };
+    const show = () => {
+      card.classList.toggle("is-exact", box.exact);
+      input.value = box.exact ? "∞" : String(box.depth);
+      slider.value = String(box.depth);
+      check.checked = box.exact;
+      onChange();
+    };
+    slider.oninput = () => {
+      box.depth = clamp(slider.value);
+      box.exact = false;
+      show();
+    };
+    // While typing, an empty or partial number is left as it is
+    input.oninput = () => {
+      const digits = input.value.replace(/\D/g, "");
+      if (digits === "") return;
+      box.depth = clamp(digits);
+      box.exact = false;
+      card.classList.remove("is-exact");
+      check.checked = false;
+      slider.value = String(box.depth);
+      onChange();
+    };
+    input.onfocus = () => {
+      if (box.exact) input.select();
+    };
+    input.onchange = show;
+    input.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        $("complementExactGo").click();
+      }
+    };
+    check.onchange = () => {
+      box.exact = check.checked;
+      show();
+    };
+    show();
+    return box;
+  }
+
+  // Short times too ("70 ms", "1.2 s"), for one recipe
+  const shortDuration = (sec) => {
+    if (sec < 1) return `${Math.max(1, Math.round(sec * 1000))} ms`;
+    if (sec < 60) return `${(Math.round(sec * 10) / 10).toLocaleString()} s`;
+    return roughDuration(sec);
+  };
+
+  // The effects depth last chosen (per browser): the next search starts there
+  const EFFECT_DEPTH_KEY = "complementEffectDepth";
+  function lastEffectDepth() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(EFFECT_DEPTH_KEY));
+      if (saved && Number.isFinite(saved.depth)) return saved;
+    } catch (e) {}
+    return { depth: DEFAULT_EFFECT_DEPTH, exact: false };
+  }
+
+  function askSearch(p) {
+    const modal = $("complementExact");
+    const depthInput = document.querySelector("input[name='n_starts']");
+    const exactInput = document.getElementById("exactSearch");
+    const nSets = setsOf(p);
+    const perSet = runsPerSet(p);
+    const recipes = recipesPerRun(p);
+    const speed = measureSpeeds(p);
+
+    let recipeBox = null;
+    let effectsBox = null;
+    const update = () => {
+      if (!recipeBox || !effectsBox) return;
+      const perRecipe = recipeBox.exact
+        ? recipes / speed.recipesPerSec
+        : recipeBox.depth * speed.secsPerStart;
+      const sets = effectsBox.exact ? nSets : estimatedSets(p, effectsBox.depth);
+      $("depthRecipeNote").textContent = recipeBox.exact
+        ? fmt(T.depthAllRecipes, { recipes: recipes.toLocaleString() })
+        : fmt(T.depthPerRecipe, { time: shortDuration(perRecipe) });
+      $("depthEffectsNote").textContent = effectsBox.exact || sets >= nSets
+        ? fmt(T.depthAllSets, { total: nSets.toLocaleString() })
+        : fmt(T.depthSets, { sets: Math.round(sets).toLocaleString(), total: nSets.toLocaleString() });
+      const runs = Math.round(sets * perSet);
+      $("complementExactTotal").textContent = fmt(T.depthTotal, {
+        time: roughDuration(runs * perRecipe),
+        runs: runs.toLocaleString(),
+      });
+    };
+    // Recipes: as on the form ("Limitar búsqueda"); effects: as last time
+    recipeBox = depthBox("depthRecipe", {
+      max: Number(depthInput.max),
+      value: Number(depthInput.value),
+      exact: exactInput.checked,
+      onChange: update,
+    });
+    const last = lastEffectDepth();
+    effectsBox = depthBox("depthEffects", {
+      max: maxEffectDepth(p),
+      value: last.depth,
+      exact: last.exact,
+      onChange: update,
+    });
+    update();
+
+    openWindow(modal);
+    const close = () => closeWindow(modal);
+    $("complementExactGo").onclick = () => {
+      close();
+      // The recipe depth goes to the form (it is that setting); the effects
+      // one is remembered for next time
+      exactInput.checked = recipeBox.exact;
+      exactInput.dispatchEvent(new Event("change"));
+      depthInput.value = String(recipeBox.depth);
+      depthInput.dispatchEvent(new Event("input", { bubbles: true }));
+      try {
+        localStorage.setItem(EFFECT_DEPTH_KEY, JSON.stringify({ depth: effectsBox.depth, exact: effectsBox.exact }));
+      } catch (e) {}
+      start({ ...currentParams(), effect_exact: effectsBox.exact, effect_depth: effectsBox.depth }, null);
+      setLocked(true);
+    };
+    modal.querySelectorAll("[data-exact-cancel]").forEach((b) => {
+      b.onclick = close;
+    });
+    $("complementExactGo").focus();
   }
 
   // ---- Saved search with other settings: continue it or start a new one ----
@@ -390,6 +667,8 @@ function initComplement() {
     const effects = [...params.effects, ...entry.comp];
     effects
       .map((e, i) => ({ e, p: probs[i], comp: i >= params.effects.length }))
+      // Effects the recipe cannot give (they would read 0.00%) are left out
+      .filter(({ p }) => p >= 0.005)
       .sort((a, b) => b.p - a.p)
       .forEach(({ e, p, comp }) => {
         const row = document.createElement("div");
@@ -430,7 +709,7 @@ function initComplement() {
     return shown.find((e) => keyOf(e) === selectedKey) || shown[0];
   }
 
-  // Stats of a combination over its 495 ingredient sets (tooltip.js table)
+  // Stats of a combination over its ingredient sets (tooltip.js table)
   function statsRows(entry) {
     const v = (x) => (Number.isFinite(x) ? x.toFixed(4) : "—");
     return JSON.stringify([
@@ -459,6 +738,10 @@ function initComplement() {
   }
 
   // ---- Drawing ----
+  // Runs done, with the share of the one in progress (exact runs can take
+  // minutes each; a paused run starts over, so only while running)
+  const doneSoFar = (s) => s.done + (worker ? s.partial || 0 : 0);
+
   function render() {
     const on = toggle.checked;
     const running = !!worker;
@@ -499,19 +782,27 @@ function initComplement() {
       const cur = currentParams();
       const problem = validate(cur);
       hint.classList.toggle("is-error", !!problem);
-      hint.textContent = problem || fmt(T.estimate, { total: totalRuns(cur).toLocaleString() });
+      hint.textContent = problem || fmt(T.sets, { sets: setsOf(cur).toLocaleString() });
     }
 
     if (s) {
-      const pct = s.total ? (100 * s.done) / s.total : 0;
+      // Below 100% until it is done (a climb's total is an estimate)
+      const pct = s.done >= s.total ? 100 : s.total ? Math.min(99.9, (100 * doneSoFar(s)) / s.total) : 0;
       barFill.style.width = `${pct}%`;
       bar.setAttribute("aria-valuenow", pct.toFixed(1));
-      countsEl.textContent = fmt(T.runs, {
-        done: s.done.toLocaleString(),
-        total: s.total.toLocaleString(),
-        pct: pct.toFixed(pct < 10 ? 2 : 1),
-      });
-      const left = s.total - s.done;
+      // Climbing: its climbs and the sets tried (the total is an estimate)
+      countsEl.textContent = s.climb
+        ? `${fmt(T.climbRuns, {
+          k: Math.min(s.climb.k + 1, params.effect_depth),
+          n: params.effect_depth,
+          sets: s.climb.tried.toLocaleString(),
+        })} (${pct.toFixed(pct < 10 ? 2 : 1)}%)`
+        : fmt(T.runs, {
+          done: s.done.toLocaleString(),
+          total: s.total.toLocaleString(),
+          pct: pct.toFixed(pct < 10 ? 2 : 1),
+        });
+      const left = s.total - doneSoFar(s);
       // Time left only while running (needs the measured speed)
       etaEl.textContent = left === 0 || !running || !rate ? "" : fmt(T.eta, {
         eta: rate ? formatDuration(left / rate) : "…",
@@ -521,13 +812,13 @@ function initComplement() {
     } else {
       barFill.style.width = "0%";
       countsEl.textContent = p && !validate(p)
-        ? fmt(T.estimate, { total: totalRuns(p).toLocaleString() })
+        ? fmt(T.sets, { sets: setsOf(p).toLocaleString() })
         : "";
       etaEl.textContent = "";
       statusEl.textContent = T.ready;
     }
 
-    // The set being tested now, with its progress over the 495 ingredient sets
+    // The set being tested now, with its progress over its ingredient sets
     const testing = s && s.done < s.total ? s.current : null;
     const curBox = $("complementCurrent");
     curBox.hidden = !testing;
@@ -539,8 +830,8 @@ function initComplement() {
           .map((e) => `<img src="/static/effects/effect${e + 1}.png" alt="${C.effectNames[e]}" title="${C.effectNames[e]}">`)
           .join("");
       }
-      $("complementCurrentFill").style.width = `${(100 * testing.count) / RUNS_PER_SET}%`;
-      $("complementCurrentCount").textContent = `${testing.count}/${RUNS_PER_SET}`;
+      $("complementCurrentFill").style.width = `${(100 * (testing.count + (running ? s.partial || 0 : 0))) / runsPerSet(params)}%`;
+      $("complementCurrentCount").textContent = `${testing.count}/${runsPerSet(params)}`;
     }
 
     topList.innerHTML = "";
@@ -597,7 +888,7 @@ function initComplement() {
         `<span class="range-avg" style="left:50%"></span></span> ${T.legend}`;
       topList.appendChild(legend);
     } else if (s) {
-      topList.innerHTML = `<p class="complement-empty">${T.noResults}</p>`;
+      topList.innerHTML = `<p class="complement-empty">${fmt(T.noResults, { runs: runsPerSet(params) })}</p>`;
     }
   }
 

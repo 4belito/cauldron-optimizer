@@ -15,7 +15,9 @@
 //
 // Fields (all optional):
 //   n_diploma     integer, 1..number of effects; rebuilds the effect sliders
-//   premium_ingr  ingredient indexes 0..11 (game order), at most 4
+//   premium_ingr  ingredient indexes 0..11 (game order), at most 4. When the
+//                 world avoids fewer (its premium setting, 0..3) and more come,
+//                 none are applied: the user picks which ones to avoid
 //   selected_effects  effect indexes 0..n_diploma - 1 to check; the rest are
 //                 unchecked and lose their weight (applied after n_diploma)
 //   wonder_level  integer, 0..35: level of the Escuela de hechicería
@@ -90,6 +92,10 @@ function applyAutofill(data) {
       result.errors.push(`premium_ingr must be a list of integers from 0 to ${N_INGREDIENTS - 1}`);
     } else if (unique.length > MAX_PREMIUM_INGREDIENTS) {
       result.errors.push(`premium_ingr can have at most ${MAX_PREMIUM_INGREDIENTS} ingredients`);
+    } else if (unique.length > nPremium()) {
+      result.errors.push(
+        `premium_ingr has ${unique.length} ingredients but this world avoids ${nPremium()}: not applied`
+      );
     } else {
       document
         .querySelectorAll("input[name='premium_ingredients[]']")

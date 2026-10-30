@@ -24,6 +24,7 @@ from wtforms.validators import (
 
 from cauldron_optimizer.constants import (
     LANGUAGES,
+    MAX_PREMIUM_INGREDIENTS,
     MAX_ROUNDS,
     MAX_SERVER_NAME_LENGTH,
     MAX_STARTS,
@@ -209,9 +210,7 @@ class SearchForm(FlaskForm):
                 min=1,
                 max=MAX_STARTS,
                 message=_l(
-                    N_("La profundidad de búsqueda debe estar entre 1 y {}").format(
-                        MAX_STARTS
-                    )
+                    N_("La profundidad de búsqueda debe estar entre %(min)s y %(max)s")
                 ),
             ),
         ],
@@ -279,6 +278,19 @@ class SearchForm(FlaskForm):
     effect_weights_json = HiddenField()
     excluded_effects_json = HiddenField(default="[]")
     premium_ingr = FieldList(unbound_field=IntegerField(), min_entries=0)
+    # How many premium ingredients to avoid (the game has 4 a week); empty: 4
+    n_premium = IntegerField(
+        validators=[
+            Optional(),
+            NumberRange(
+                min=0,
+                max=MAX_PREMIUM_INGREDIENTS,
+                # The number written in: a formatted message is not translated
+                message=_l(N_("Los ingredientes premium deben estar entre 0 y 4")),
+            ),
+        ],
+        default=MAX_PREMIUM_INGREDIENTS,
+    )
     language = HiddenField()
 
     # Custom validation for effect weights JSON aligned with n_diploma
