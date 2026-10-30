@@ -35,6 +35,18 @@
   </form>
 
   <div class="server-actions">
+  <!-- Fill from the game: asks ElvenAssist for the game's data (the panels'
+       ElvenAssist icons say which ones it fills); no answer: how to get it
+       (initElvenAssistFill in optimizer.js) -->
+  <button type="button" id="eaFillBtn" class="save-btn ea-fill-btn"
+          data-tip="{{ _('Rellena los paneles con los datos del juego (ElvenAssist). Para que no rellene un panel, pulsa su icono de ElvenAssist: en gris queda bloqueado') }}"
+          aria-label="{{ _('Rellena los paneles con los datos del juego (ElvenAssist). Para que no rellene un panel, pulsa su icono de ElvenAssist: en gris queda bloqueado') }}">
+    <!-- Download: an arrow into a tray (white, as the other buttons' icons) -->
+    <svg class="ea-fill-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path class="ea-fill-arrow" d="M10.5 3h3v7.5h3.5L12 16 7 10.5h3.5z"/>
+      <path d="M4 14h2.5v3.5h11V14H20v6H4z"/>
+    </svg>
+  </button>
   <!-- Saves the search settings below to the selected server -->
   <button
     type="button" id="saveSettingsBtn" class="save-btn"
@@ -321,9 +333,10 @@
       icon: {{ url_for('static', filename='seo/elvenassist.png') | tojson }},
       on: {{ _("ElvenAssist rellena este panel con los datos del juego. Pulsa para bloquearlo.") | tojson }},
       off: {{ _("ElvenAssist no rellena este panel. Pulsa para permitirlo.") | tojson }},
-      worldOn: {{ _("ElvenAssist elige el mundo de tu ciudad (y pone su nombre a un mundo sin nombre). Pulsa para bloquearlo.") | tojson }},
-      worldOff: {{ _("ElvenAssist no cambia de mundo ni le cambia el nombre: rellena este. Pulsa para permitirlo.") | tojson }},
       saveUrl: {{ url_for('save_elvenassist') | tojson }},
+      asking: {{ _("Pidiendo los datos a ElvenAssist…") | tojson }},
+      filled: {{ _("Datos del juego recibidos.") | tojson }},
+      noData: {{ _("ElvenAssist todavía no tiene los datos: abre el caldero en el juego.") | tojson }},
     },
     defaultWeights: JSON.parse({{ form.effect_weights_json.data | tojson }}),
     defaultExcluded: JSON.parse({{ form.excluded_effects_json.data | tojson }}),
@@ -355,7 +368,7 @@
 </script>
 <!-- Witch Point prices, also used by the solver (solver.js) -->
 <script src="{{ url_for('static', filename='js/cauldron-order.js') }}"></script>
-<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=101"></script>
+<script src="{{ url_for('static', filename='js/optimizer.js') }}?v=104"></script>
 <!-- "Complete effects" search: solver + page logic, texts in both languages -->
 <script>
   window.COMPLEMENT = {
@@ -426,7 +439,7 @@
     selectWorldUrl: {{ url_for('select_world_integration') | tojson }},
   };
 </script>
-<script src="{{ url_for('static', filename='js/autofill.js') }}?v=10"></script>
+<script src="{{ url_for('static', filename='js/autofill.js') }}?v=13"></script>
 <!-- Game-styled help tooltips for elements with data-tip (see tooltip.js) -->
 <script src="{{ url_for('static', filename='js/tooltip.js') }}"></script>
 
@@ -461,6 +474,37 @@
         </button>
         <button type="button" id="deleteConfirm" class="avatar-btn avatar-btn-cancel">
           <span>{{ _("Eliminar") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- "Fill from the game" with no answer from ElvenAssist: how to get the
+     game's data here (optimizer.js, initElvenAssistFill) -->
+<div id="eaMissing" class="avatar-overlay" hidden>
+  <div class="avatar-window delete-window" role="alertdialog" aria-modal="true"
+       aria-labelledby="eaMissingTitle" aria-describedby="eaMissingText">
+    <div class="avatar-header">
+      <h2 id="eaMissingTitle" class="avatar-title">ElvenAssist</h2>
+      <button type="button" class="avatar-close" data-ea-close aria-label="{{ _('Cerrar') }}"></button>
+    </div>
+    <div class="avatar-body delete-body">
+      <img class="ea-missing-icon" src="{{ url_for('static', filename='seo/elvenassist.png') }}" alt="">
+      <p id="eaMissingText" class="delete-text">
+        {{ _("ElvenAssist no ha respondido. Para rellenar la app con los datos del juego:") }}
+      </p>
+      <ol class="ea-missing-steps">
+        {% set ea_link %}<a href="https://chromewebstore.google.com/detail/kikdpnpfhakidgkojboebobjlknflilc" target="_blank" rel="noopener">ElvenAssist</a>{% endset %}
+        <li>{{ _("Instala la extensión %(link)s en Chrome.") | format(link=ea_link) | safe }}</li>
+        <li>{{ _("Abre el caldero en el juego: ElvenAssist enviará aquí tus datos.") }}</li>
+      </ol>
+      <p class="delete-text ea-missing-note">
+        {{ _("Si ya la tienes: este botón necesita una versión de ElvenAssist que todavía no está publicada. Mientras tanto, los datos llegan al abrir el caldero en el juego.") }}
+      </p>
+      <div class="avatar-actions">
+        <button type="button" class="avatar-btn avatar-btn-save" data-ea-close>
+          <span>{{ _("Entendido") }}</span>
         </button>
       </div>
     </div>

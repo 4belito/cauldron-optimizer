@@ -711,16 +711,17 @@ function initWitchPointLimit() {
 }
 
 // ElvenAssist on each panel: a switch in its title (the extension's icon).
-// Off: autofill.js leaves that panel as it is. One more on the world bar:
-// off, ElvenAssist neither picks nor renames the world. Saved per world
-// (eaOff, the ones off) as soon as one is clicked: the extension reloads
-// the page when it changes the world, which must not undo them
+// Off: autofill.js leaves that panel as it is. Saved per world (eaOff, the
+// ones off) as soon as one is clicked: the extension reloads the page when
+// it changes the world, which must not undo them
+const ELVENASSIST_ALL = ["effects", "premium", "limits"];
 const ELVENASSIST_CARDS = {
-  world: ".server-select-form",
   effects: "fieldset.effects-card > legend",
   premium: "fieldset.premium-card > legend",
   limits: "fieldset.bounds-card > legend",
 };
+// When ElvenAssist last sent something (autofill.js), in this browser
+const ELVENASSIST_SEEN_KEY = "elvenAssistSeen";
 
 function elvenAssistOff() {
   try {
@@ -734,60 +735,129 @@ function elvenAssistOff() {
 function elvenAssistAllows(panel) {
   return !elvenAssistOff().includes(panel);
 }
-window.cauldronElvenAssist = { allows: elvenAssistAllows };
+
+function elvenAssistSeen() {
+  try {
+    return Boolean(localStorage.getItem(ELVENASSIST_SEEN_KEY));
+  } catch (e) {
+    return false;
+  }
+}
+window.cauldronElvenAssist = {
+  allows: elvenAssistAllows,
+  // Called by autofill.js on every message from the extension
+  seen() {
+    try {
+      localStorage.setItem(ELVENASSIST_SEEN_KEY, String(Date.now()));
+    } catch (e) {}
+  },
+};
 
 function initElvenAssistSwitches() {
   const cfg = window.OPTIMIZER_CONFIG.elvenAssist;
   const hidden = document.getElementById("eaOff");
   if (!cfg || !hidden) return;
-  const buttons = [];
-  const showAll = () => buttons.forEach((show) => show());
-  const store = async (value) => {
-    const body = new FormData();
-    body.append("elvenassist_off_json", value);
-    body.append("csrf_token", document.querySelector("input[name='csrf_token']").value);
-    const resp = await fetch(cfg.saveUrl, { method: "POST", body, headers: { Accept: "application/json" } });
-    const data = await resp.json().catch(() => ({}));
-    if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
+  const shows = [];
+  const showAll = () => shows.forEach((show) => show());
+  const refreshLimits = () => {
+    // The Witch Point slider ends at the world's Witch Points only with it on
+    if (window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
   };
+  // Sets the switches off (a set) and saves them; not saved: back as before
+  const setOff = async (off) => {
+    const before = hidden.value;
+    hidden.value = JSON.stringify(ELVENASSIST_ALL.filter((p) => off.has(p)));
+    showAll();
+    refreshLimits();
+    try {
+      const body = new FormData();
+      body.append("elvenassist_off_json", hidden.value);
+      body.append("csrf_token", document.querySelector("input[name='csrf_token']").value);
+      const resp = await fetch(cfg.saveUrl, { method: "POST", body, headers: { Accept: "application/json" } });
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
+    } catch (err) {
+      hidden.value = before;
+      showAll();
+      refreshLimits();
+    }
+  };
+
+  // One per panel, in its title
   Object.entries(ELVENASSIST_CARDS).forEach(([panel, selector]) => {
     const host = document.querySelector(`.optimizer-page ${selector}`);
     if (!host) return;
-    const isWorld = panel === "world";
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "ea-switch" + (isWorld ? " ea-switch-world" : "");
+    btn.className = "ea-switch";
     btn.innerHTML = `<img src="${cfg.icon}" alt="">`;
     const show = () => {
       const on = elvenAssistAllows(panel);
-      const tip = isWorld ? (on ? cfg.worldOn : cfg.worldOff) : on ? cfg.on : cfg.off;
       btn.classList.toggle("is-off", !on);
       btn.setAttribute("aria-pressed", String(on));
-      btn.setAttribute("aria-label", tip);
-      btn.dataset.tip = tip;
+      btn.setAttribute("aria-label", on ? cfg.on : cfg.off);
+      btn.dataset.tip = on ? cfg.on : cfg.off;
     };
-    btn.addEventListener("click", async (e) => {
-      e.stopPropagation();
-      const before = hidden.value;
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation(); // not the panel's fold
       const off = new Set(elvenAssistOff());
       if (off.has(panel)) off.delete(panel);
       else off.add(panel);
-      hidden.value = JSON.stringify(Object.keys(ELVENASSIST_CARDS).filter((p) => off.has(p)));
-      show();
-      // The Witch Point slider ends at the world's Witch Points only with it on
-      if (panel === "limits" && window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
-      try {
-        await store(hidden.value);
-      } catch (err) {
-        // Not saved: back as it was
-        hidden.value = before;
-        showAll();
-        if (panel === "limits" && window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
-      }
+      setOff(off);
     });
     host.append(btn);
-    buttons.push(show);
+    shows.push(show);
     show();
+  });
+
+}
+
+// "Fill from the game": asks ElvenAssist for the data (autofill.js); the
+// panels' switches say what it fills. No answer: a window says how to get it
+function initElvenAssistFill() {
+  const cfg = window.OPTIMIZER_CONFIG.elvenAssist;
+  const btn = document.getElementById("eaFillBtn");
+  const missing = document.getElementById("eaMissing");
+  const status = document.getElementById("saveStatus");
+  if (!cfg || !btn || !window.cauldronRequestFill) return;
+  const say = (text, isError = false) => {
+    status.textContent = text;
+    status.classList.toggle("error", isError);
+  };
+  const close = () => {
+    missing.hidden = true;
+    const anyOpen = [...document.querySelectorAll(".avatar-overlay")].some((m) => !m.hidden);
+    document.body.classList.toggle("avatar-open", anyOpen);
+    btn.focus();
+  };
+  if (missing) {
+    missing.querySelectorAll("[data-ea-close]").forEach((b) => b.addEventListener("click", close));
+    missing.addEventListener("click", (e) => {
+      if (e.target === missing) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !missing.hidden) close();
+    });
+  }
+  btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    btn.classList.add("is-asking");
+    say(cfg.asking);
+    const result = await window.cauldronRequestFill();
+    btn.disabled = false;
+    btn.classList.remove("is-asking");
+    if (result === "filled") {
+      say(cfg.filled);
+    } else if (result === "no_data") {
+      say(cfg.noData, true);
+    } else {
+      say("");
+      if (missing) {
+        missing.hidden = false;
+        document.body.classList.add("avatar-open");
+        missing.querySelector(".avatar-btn[data-ea-close]")?.focus();
+      }
+    }
   });
 }
 
@@ -1189,6 +1259,7 @@ function initOptimizer() {
   initEffectsAll();
   initCardFolds();
   initElvenAssistSwitches();
+  initElvenAssistFill();
 
   rebuildWeights();
 

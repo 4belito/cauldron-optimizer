@@ -43,9 +43,7 @@
 // With create and no world of that name, no world is made: the active one
 // is used, renamed to that name only if the player never named it (no
 // name, or "Mundo 1" / "World 1" as suggested; result: renamed). A name the
-// player chose stays: the data fills that world as it is. With the world
-// bar's ElvenAssist switch off, the active world is always the one (never
-// another, never renamed).
+// player chose stays: the data fills that world as it is.
 //
 // Each panel of the page has an ElvenAssist switch (saved per world, as
 // soon as it is clicked). With
@@ -53,6 +51,16 @@
 // `blocked` (ok stays true). Panels: diplomas and effects (n_diploma,
 // selected_effects, goblets, all_in, at_least), premium ingredients
 // (premium_ingr), limits (wonder_level, wp_max).
+//
+// "Fill from the game" (the button beside Save) asks the extension:
+//   page -> { type: "cauldron:request", version }
+//   extension -> the usual cauldron:selectWorld + cauldron:autofill with the
+//     last data it has, or { type: "cauldron:request:result", ok: false,
+//     code: "no_data" } when it has none yet (the cauldron not opened)
+// The extension may also announce itself, in answer to cauldron:ready:
+//   { type: "cauldron:extension", name: "ElvenAssist", version,
+//     supports: ["request"] }
+// With no answer in 3 s the page explains how to get the data.
 //
 // Failed results carry a stable `code` (besides the readable `errors`):
 //   complement_mode  "Completar efectos" is on: nothing is changed
@@ -68,7 +76,7 @@ function complementActive() {
 
 const COMPLEMENT_ERROR = "Complete effects mode is on: turn it off first";
 
-const AUTOFILL_VERSION = 8;
+const AUTOFILL_VERSION = 9;
 const N_INGREDIENTS = 12;
 
 // The panel each field fills: with its ElvenAssist switch off (optimizer.js,
@@ -281,22 +289,6 @@ async function selectWorld(data) {
   // search would also stop the reload with a "leave page?" dialog)
   if (complementActive()) return selectWorldError("complement_mode", COMPLEMENT_ERROR);
 
-  // World switch off (optimizer.js): no other world, no new name. The
-  // active world is the one, as it is (its panels' switches still apply)
-  const ea = window.cauldronElvenAssist;
-  if (ea && !ea.allows("world")) {
-    const select = document.getElementById("serverSelect");
-    const option = select && select.selectedOptions[0];
-    return {
-      ok: true,
-      created: false,
-      renamed: false,
-      reloading: false,
-      errors: [],
-      world: option ? { name: option.textContent.trim(), number: Number(option.value) } : undefined,
-    };
-  }
-
   const url = window.CAULDRON_INTEGRATION?.selectWorldUrl;
   if (!url) return selectWorldError("invalid_data", "world selection is not available");
 
@@ -334,6 +326,16 @@ async function selectWorld(data) {
 // messages sent from this same window and origin.
 window.addEventListener("message", async (event) => {
   if (!trustedMessage(event)) return;
+  // A sign of the extension (the page's own replies end in ":result")
+  if (EXTENSION_MESSAGES.includes(event.data.type)) {
+    window.cauldronElvenAssist?.seen();
+    pendingRequest?.(event.data);
+  }
+  if (event.data.type === "cauldron:extension") {
+    extensionInfo = event.data;
+    return;
+  }
+  if (event.data.type === "cauldron:request:result") return;
 
   if (event.data.type === "cauldron:autofill") {
     const result = await applyAndMaybeSave(event.data);
@@ -355,6 +357,42 @@ window.addEventListener("message", async (event) => {
     }
   }
 });
+
+// ---- Asking the extension for the game's data ("Fill from the game") ----
+// Messages only the extension sends: any of them answers a request
+const EXTENSION_MESSAGES = [
+  "cauldron:selectWorld",
+  "cauldron:autofill",
+  "cauldron:request:result",
+  "cauldron:extension",
+];
+const REQUEST_TIMEOUT_MS = 3000;
+let extensionInfo = null; // its cauldron:extension announcement, if any
+let pendingRequest = null;
+
+// Resolves "filled" (the data is coming: selectWorld / autofill),
+// "no_data" (the extension has none yet) or "no_reply"
+function requestFill() {
+  return new Promise((resolve) => {
+    const timer = setTimeout(() => finish("no_reply"), REQUEST_TIMEOUT_MS);
+    function finish(status) {
+      clearTimeout(timer);
+      pendingRequest = null;
+      resolve(status);
+    }
+    pendingRequest = (msg) => {
+      if (msg.type === "cauldron:extension") return; // an announcement, not the answer
+      if (msg.type === "cauldron:request:result" && !msg.ok) {
+        finish(msg.code === "no_data" ? "no_data" : "no_reply");
+      } else {
+        finish("filled");
+      }
+    };
+    window.postMessage({ type: "cauldron:request", version: AUTOFILL_VERSION }, window.location.origin);
+  });
+}
+window.cauldronRequestFill = requestFill;
+window.cauldronExtensionInfo = () => extensionInfo;
 
 // Announced after optimizer.js has built the form (its DOMContentLoaded
 // handler was registered first, so it runs first)

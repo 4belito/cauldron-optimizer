@@ -66,10 +66,9 @@ EFFECT_NAMES = [
 
 N_INGREDIENTS = len(INGREDIENT_NAMES)
 MAX_STARTS = 1000
-# What ElvenAssist may do, each with its own on/off (saved per world): pick
-# and rename the world, and fill each panel (diplomas and effects, premium
-# ingredients, Witch Point limit and school)
-ELVENASSIST_PANELS = ("world", "effects", "premium", "limits")
+# Panels ElvenAssist may fill, each with its own on/off (saved per world):
+# diplomas and effects, premium ingredients, Witch Point limit and school
+ELVENASSIST_PANELS = ("effects", "premium", "limits")
 # "Todos" mode: goblets (brews) the wanted effects must come out in
 MAX_ROUNDS = 5
 # With this many or fewer effects checked, they cannot be unchecked (as in the game)
@@ -89,9 +88,12 @@ MAX_SERVER_NAME_LENGTH = 24
 #     "La selección de efectos (las casillas) es nueva y todavía está en "
 #     "pruebas. Si notas algún problema, avísame desde {contact}."
 # )
-ANNOUNCEMENT = N_("")
+ANNOUNCEMENT = N_(
+    "El botón de ElvenAssist junto a Guardar cargará los datos del juego. "
+    "Todavía está en desarrollo."
+)
 # Small tag before the text ("Beta", "Nuevo"...); empty for none
-ANNOUNCEMENT_TAG = N_("Beta")
+ANNOUNCEMENT_TAG = N_("Nuevo")
 
 # Usernames allowed to see the admin pages (/stats)
 ADMIN_USERNAMES = {"4bel"}

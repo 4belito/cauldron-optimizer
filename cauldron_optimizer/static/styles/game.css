@@ -458,6 +458,60 @@ input[type="range"]::-moz-range-thumb {
   cursor: default;
 }
 
+/* "Fill from the game": a white download icon on the green button, as
+   the other buttons' icons */
+.ea-fill-btn {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.ea-fill-icon path {
+  fill: currentColor;
+}
+
+/* Waiting for ElvenAssist: the arrow bobs down into the tray */
+.ea-fill-btn.is-asking .ea-fill-arrow {
+  animation: ea-asking 0.7s ease-in-out infinite alternate;
+}
+
+@keyframes ea-asking {
+  to { transform: translateY(2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ea-fill-btn.is-asking .ea-fill-arrow { animation: none; }
+  .ea-fill-btn.is-asking svg { opacity: 0.7; }
+}
+
+/* No answer from ElvenAssist: how to get its data here */
+.ea-missing-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.ea-missing-steps {
+  margin: 0;
+  padding-left: 1.4rem;
+  color: #51200d;
+  text-align: left;
+}
+
+.ea-missing-steps li + li {
+  margin-top: 0.35rem;
+}
+
+.ea-missing-note {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.ea-missing-steps a {
+  font-weight: 700;
+  color: #3f6f10;
+}
+
 /* ---- Help tooltips (tooltip.js): dark parchment bubble with gold edge ---- */
 .game-tip {
   position: absolute;
@@ -1296,10 +1350,10 @@ button:disabled[data-tip] {
   display: grid;
   place-items: center;
   position: absolute;
-  top: 0.7rem;
-  left: -0.75rem;
-  width: 2rem;
-  height: 2rem;
+  top: 0.5rem;
+  left: -0.95rem;
+  width: 2.4rem;
+  height: 2.4rem;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -1308,8 +1362,8 @@ button:disabled[data-tip] {
 }
 
 .ea-switch img {
-  width: 1.65rem;
-  height: 1.65rem;
+  width: 2.1rem;
+  height: 2.1rem;
   transition: filter 0.15s, opacity 0.15s;
 }
 
@@ -1324,12 +1378,6 @@ button:disabled[data-tip] {
 
 .ea-switch.is-off:hover img {
   filter: grayscale(1) brightness(1.08);
-}
-
-/* The world bar's: in line, after the world's name */
-.ea-switch.ea-switch-world {
-  position: static;
-  flex: 0 0 auto;
 }
 
 .ea-switch:focus-visible {

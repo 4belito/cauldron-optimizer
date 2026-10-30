@@ -500,11 +500,6 @@ def select_world_integration():
             )
             renamed = False
 
-            # With its world switch off, ElvenAssist neither picks nor
-            # renames the world: the active one is filled as it is
-            if "world" in (current.elvenassist_off or []):
-                target = current
-
             if target is None:
                 # code: stable, for the extension; error: for the player
                 if not create:
