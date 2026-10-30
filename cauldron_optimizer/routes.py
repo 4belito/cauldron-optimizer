@@ -638,25 +638,6 @@ def clean_elvenassist_off(raw: str | None) -> list[str]:
     return [p for p in ELVENASSIST_PANELS if p in value]
 
 
-@app.route("/settings/elvenassist", methods=["POST"])
-@login_required
-def save_elvenassist():
-    """Save the ElvenAssist switches of the active world at once (called via
-    fetch when one is clicked): a reload by the extension must not undo them"""
-    off = clean_elvenassist_off(request.form.get("elvenassist_off_json"))
-    try:
-        with db_session() as db_sa:
-            _account, server = get_active_server(db_sa, session["user_id"])
-            server.elvenassist_off = off
-    except SQLAlchemyError:
-        return {"ok": False, "error": _("Error de base de datos")}, 500
-    last = session.get("last_search")
-    if last:
-        last["elvenassist_off"] = off
-        session["last_search"] = last
-    return {"ok": True, "off": off}
-
-
 def parse_search_form(include_premium: bool = True) -> dict[str, Any]:
     """Validate the optimizer form and return its settings.
 

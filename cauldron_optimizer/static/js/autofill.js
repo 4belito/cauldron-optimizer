@@ -45,8 +45,8 @@
 // name, or "Mundo 1" / "World 1" as suggested; result: renamed). A name the
 // player chose stays.
 //
-// Each panel of the page has an ElvenAssist switch (saved per world, as
-// soon as it is clicked). With
+// Each panel of the page has an ElvenAssist switch (saved per world with
+// the Save button). With
 // it off, that panel's fields are skipped: the result lists them in
 // `blocked` (ok stays true). Panels: diplomas and effects (n_diploma,
 // selected_effects, goblets, all_in, at_least), premium ingredients

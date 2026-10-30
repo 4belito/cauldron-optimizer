@@ -709,8 +709,7 @@ function initWitchPointLimit() {
 
 // ElvenAssist on each panel: a switch in its title (the extension's icon).
 // Off: autofill.js leaves that panel as it is. Saved per world (eaOff, the
-// ones off) as soon as one is clicked: the extension reloads the page when
-// it changes the world, which must not undo them
+// ones off) with the Save button, as the other settings
 const ELVENASSIST_ALL = ["effects", "premium", "limits"];
 const ELVENASSIST_CARDS = {
   effects: "fieldset.effects-card > legend",
@@ -756,22 +755,12 @@ function initElvenAssistSwitches() {
   if (!cfg || !hidden) return;
   const shows = [];
   const showAll = () => shows.forEach((show) => show());
-  // Sets the switches off (a set) and saves them; not saved: back as before
-  const setOff = async (off) => {
-    const before = hidden.value;
+  // Sets the switches off (a set): an unsaved change, kept with Save (and
+  // undone with Restore) as the rest of the settings
+  const setOff = (off) => {
     hidden.value = JSON.stringify(ELVENASSIST_ALL.filter((p) => off.has(p)));
     showAll();
-    try {
-      const body = new FormData();
-      body.append("elvenassist_off_json", hidden.value);
-      body.append("csrf_token", document.querySelector("input[name='csrf_token']").value);
-      const resp = await fetch(cfg.saveUrl, { method: "POST", body, headers: { Accept: "application/json" } });
-      const data = await resp.json().catch(() => ({}));
-      if (!resp.ok || !data.ok) throw new Error(data.error || resp.statusText);
-    } catch (err) {
-      hidden.value = before;
-      showAll();
-    }
+    setUnsaved(true);
   };
 
   // One per panel, in its title
