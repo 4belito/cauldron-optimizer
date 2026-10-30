@@ -40,6 +40,10 @@
 //   window.postMessage({ type: "cauldron:selectWorld",
 //                        name: "EA-Balrogville-en3", create: true },
 //                      window.location.origin)
+// With create and no world of that name, a world the player never named
+// (no name, or "Mundo 1" / "World 1" as suggested) takes it, the active one
+// first (result: renamed); only without one is a new world made (created).
+// Worlds the player named are never renamed.
 //
 // Each panel of the page has an ElvenAssist switch (saved per world). With
 // it off, that panel's fields are skipped: the result lists them in
@@ -298,6 +302,7 @@ async function selectWorld(data) {
     return {
       ok: true,
       created: Boolean(payload.created),
+      renamed: Boolean(payload.renamed),
       reloading: Boolean(payload.changed),
       errors: [],
       world: payload.world,

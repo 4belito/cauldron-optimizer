@@ -1,4 +1,5 @@
 import json
+import re
 import time
 from datetime import UTC, datetime
 from pathlib import Path
@@ -310,6 +311,18 @@ def server_label(server: Server) -> str:
     return server.name or _("Mundo %(n)s", n=server.server_number)
 
 
+# The name a world gets when the player does not choose one: none, or the
+# suggested "Mundo 1" / "World 1" left as it was
+DEFAULT_SERVER_NAME_RE = re.compile(r"(mundo|world) \d+", re.IGNORECASE)
+
+
+def has_default_name(server: Server) -> bool:
+    """True if the player never named this world (it may be renamed for them)"""
+    return server.name is None or bool(
+        DEFAULT_SERVER_NAME_RE.fullmatch(" ".join(server.name.split()))
+    )
+
+
 def clean_server_name(
     raw: str | None, servers: list[Server], current: Server | None
 ) -> str:
@@ -480,6 +493,28 @@ def select_world_integration():
                 None,
             )
             created = False
+            renamed = False
+
+            # A new city: a world the player never named takes its name (the
+            # active one first) instead of a new world. Worlds the player
+            # named are never renamed
+            unnamed = None
+            if target is None and create:
+                unnamed = current if has_default_name(current) else next(
+                    (
+                        s
+                        for s in sorted(servers, key=lambda s: s.server_number)
+                        if has_default_name(s)
+                    ),
+                    None,
+                )
+            if unnamed is not None:
+                try:
+                    unnamed.name = clean_server_name(raw_name, servers, unnamed)
+                except ValueError as e:
+                    return {"ok": False, "code": "invalid_name", "error": str(e)}, 400
+                target = unnamed
+                renamed = True
 
             if target is None:
                 # code: stable, for the extension; error: for the player
@@ -524,7 +559,8 @@ def select_world_integration():
                 account.n_servers = len(servers)
                 created = True
 
-            changed = account.active_server != target.server_number
+            # Renamed: the page reloads too, to show the new name
+            changed = account.active_server != target.server_number or renamed
             account.active_server = target.server_number
             avatar = target.avatar
             world = {
@@ -544,6 +580,7 @@ def select_world_integration():
     return {
         "ok": True,
         "created": created,
+        "renamed": renamed,
         "changed": changed,
         "world": world,
     }
