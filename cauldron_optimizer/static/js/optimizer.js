@@ -588,12 +588,13 @@ function initWitchPointLimit() {
   level = Math.min(Math.max(Math.trunc(level) || 0, 0), WONDER_REDUCTION.length - 1);
   saveLevel();
 
-  // The world's Witch Points as ElvenAssist sent them, while its switch on
-  // this panel is on; null: not known (or not used)
+  // The world's Witch Points as ElvenAssist last sent them (saved with the
+  // world); null: not known. The panel's ElvenAssist switch only says
+  // whether ElvenAssist may send new ones: it does not move the slider
   const ownedInput = document.getElementById("wpOwned");
   const owned = () => {
     const v = Number(ownedInput && ownedInput.value);
-    return v > 0 && elvenAssistAllows("limits") ? v : null;
+    return v > 0 ? v : null;
   };
   // Cheapest single ingredient and dearest recipe at the current level. With
   // fewer Witch Points than the dearest recipe, the slider ends at them: its
@@ -703,10 +704,6 @@ function initWitchPointLimit() {
       setLimit(v == null ? Infinity : v);
       return hidden.value === "" ? null : Number(hidden.value);
     },
-    // After ElvenAssist is switched on or off on this panel
-    refresh() {
-      setLimit(limit());
-    },
   };
 }
 
@@ -759,16 +756,11 @@ function initElvenAssistSwitches() {
   if (!cfg || !hidden) return;
   const shows = [];
   const showAll = () => shows.forEach((show) => show());
-  const refreshLimits = () => {
-    // The Witch Point slider ends at the world's Witch Points only with it on
-    if (window.cauldronWitchPoints) window.cauldronWitchPoints.refresh();
-  };
   // Sets the switches off (a set) and saves them; not saved: back as before
   const setOff = async (off) => {
     const before = hidden.value;
     hidden.value = JSON.stringify(ELVENASSIST_ALL.filter((p) => off.has(p)));
     showAll();
-    refreshLimits();
     try {
       const body = new FormData();
       body.append("elvenassist_off_json", hidden.value);
@@ -779,7 +771,6 @@ function initElvenAssistSwitches() {
     } catch (err) {
       hidden.value = before;
       showAll();
-      refreshLimits();
     }
   };
 
