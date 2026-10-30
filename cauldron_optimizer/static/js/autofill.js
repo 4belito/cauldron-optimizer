@@ -40,10 +40,10 @@
 //   window.postMessage({ type: "cauldron:selectWorld",
 //                        name: "EA-Balrogville-en3", create: true },
 //                      window.location.origin)
-// With create and no world of that name, a world the player never named
-// (no name, or "Mundo 1" / "World 1" as suggested) takes it, the active one
-// first (result: renamed); only without one is a new world made (created).
-// Worlds the player named are never renamed.
+// With create and no world of that name, no world is made: the active one
+// is used, renamed to that name only if the player never named it (no
+// name, or "Mundo 1" / "World 1" as suggested; result: renamed). A name the
+// player chose stays: the data fills that world as it is.
 //
 // Each panel of the page has an ElvenAssist switch (saved per world). With
 // it off, that panel's fields are skipped: the result lists them in
@@ -54,7 +54,6 @@
 // Failed results carry a stable `code` (besides the readable `errors`):
 //   complement_mode  "Completar efectos" is on: nothing is changed
 //   not_found        no world with that name (and create was not true)
-//   too_many_worlds  the account already has the maximum number of worlds
 //   invalid_name     empty or too long name
 //   invalid_data     wrong fields (see errors)
 //   network, db_error, save_failed

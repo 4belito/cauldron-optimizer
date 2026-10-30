@@ -475,7 +475,13 @@ def select_server():
 @app.route("/integration/world/select", methods=["POST"])
 @login_required
 def select_world_integration():
-    """Select or create a named world for the page's postMessage API."""
+    """Select the world of a city for the page's postMessage API.
+
+    A world of that name is selected. Otherwise (with create) no world is
+    made: the active one is used, renamed to the city only if the player
+    never named it (no name, or "Mundo N" / "World N" as suggested); a name
+    the player chose stays.
+    """
     create = request.form.get("create") == "1"
     raw_name = request.form.get("name")
 
@@ -492,29 +498,7 @@ def select_world_integration():
                 ),
                 None,
             )
-            created = False
             renamed = False
-
-            # A new city: a world the player never named takes its name (the
-            # active one first) instead of a new world. Worlds the player
-            # named are never renamed
-            unnamed = None
-            if target is None and create:
-                unnamed = current if has_default_name(current) else next(
-                    (
-                        s
-                        for s in sorted(servers, key=lambda s: s.server_number)
-                        if has_default_name(s)
-                    ),
-                    None,
-                )
-            if unnamed is not None:
-                try:
-                    unnamed.name = clean_server_name(raw_name, servers, unnamed)
-                except ValueError as e:
-                    return {"ok": False, "code": "invalid_name", "error": str(e)}, 400
-                target = unnamed
-                renamed = True
 
             if target is None:
                 # code: stable, for the extension; error: for the player
@@ -524,40 +508,17 @@ def select_world_integration():
                         "code": "not_found",
                         "error": _("Mundo no válido"),
                     }, 404
-                if len(servers) >= MAX_SERVERS_PER_USER:
-                    return {
-                        "ok": False,
-                        "code": "too_many_worlds",
-                        "error": _(
-                            "Puedes tener como máximo %(n)s mundos",
-                            n=MAX_SERVERS_PER_USER,
-                        ),
-                    }, 400
-                try:
-                    name = clean_server_name(raw_name, servers, None)
-                except ValueError as e:
-                    return {"ok": False, "code": "invalid_name", "error": str(e)}, 400
-
-                target = Server(
-                    server_number=max(s.server_number for s in servers) + 1,
-                    name=name,
-                    avatar=None,
-                    effect_weights=list(current.effect_weights),
-                    excluded_effects=list(current.excluded_effects or []),
-                    max_ingredients=current.max_ingredients,
-                    max_effects=current.max_effects,
-                    search_depth=current.search_depth,
-                    exact_search=current.exact_search,
-                    all_effects=current.all_effects,
-                    n_rounds=current.n_rounds,
-                    min_effects=current.min_effects,
-                    max_witch_points=current.max_witch_points,
-                    # Each world has its own school: a new one starts not built
-                    wonder_level=None,
-                )
-                servers.append(target)
-                account.n_servers = len(servers)
-                created = True
+                target = current
+                if has_default_name(current):
+                    try:
+                        current.name = clean_server_name(raw_name, servers, current)
+                    except ValueError as e:
+                        return {
+                            "ok": False,
+                            "code": "invalid_name",
+                            "error": str(e),
+                        }, 400
+                    renamed = True
 
             # Renamed: the page reloads too, to show the new name
             changed = account.active_server != target.server_number or renamed
@@ -579,7 +540,8 @@ def select_world_integration():
         session.pop("last_search", None)
     return {
         "ok": True,
-        "created": created,
+        # Worlds are never made here (kept for the extension's API)
+        "created": False,
         "renamed": renamed,
         "changed": changed,
         "world": world,
